@@ -9,3 +9,6 @@ const kMainWhiteColor = Color(0xffFFFFFF);
 const kTransparent = Colors.transparent;
 
 const kUnselectedTagColor = Color(0xffDEDEDE);
+const kSelectedCategoryBorderColor = Color(0xffE2A122);
+const kSelectedCategoryColor = Color(0xffFFF8D0);
+const kSearchBarPressedColor = Color.fromARGB(255, 75, 75, 75);

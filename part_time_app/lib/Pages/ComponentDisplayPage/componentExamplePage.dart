@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
+import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
+import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
 import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -15,6 +17,8 @@ class ComponentExample extends StatefulWidget {
 
 class _ComponentExampleState extends State<ComponentExample> {
   int selectIndex = 0;
+  List<String> selectedCategory = [];
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                     ),
                   )
                 ],
-              )
+              ),
+              SearchBarComponent()
             ],
           ),
         ),

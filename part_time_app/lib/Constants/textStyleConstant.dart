@@ -31,3 +31,30 @@ const unselectedTagTextStyle = TextStyle(
     fontWeight: FontWeight.w400,
     color: kMainBlackColor,
     height: 0.8);
+
+const unselectedCategoryTextStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: kMainBlackColor,
+    height: 1);
+const selectedCategoryTextStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: kSelectedCategoryBorderColor,
+    height: 0.7);
+
+const searchBarHintTextStyle = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: kSecondGreyColor,
+    height: 1.3);
+const searchBarTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMainBlackColor,
+);
+const searchBarCancelTextStyle = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: kMainBlackColor,
+);
