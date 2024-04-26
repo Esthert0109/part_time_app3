@@ -102,3 +102,13 @@ const missionPriceTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
   color: kMainRedColor,
 );
+const missionUsernameTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kMainBlackColor,
+);
+const missionDateTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);

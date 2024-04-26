@@ -55,7 +55,7 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -107,12 +107,32 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar()
-            ],
+          Container(
+            height: 24,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundColor: kSecondGreyColor,
+                  foregroundImage: NetworkImage(
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s"),
+                ),
+                Text(
+                  "微笑姐",
+                  style: missionUsernameTextStyle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                RichText(
+                    text: TextSpan(
+                        text: "发布日期 ",
+                        style: missionDateTextStyle,
+                        children: [
+                      TextSpan(text: "2024.04.26", style: missionDateTextStyle)
+                    ]))
+              ],
+            ),
           )
         ],
       ),
