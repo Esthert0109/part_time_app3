@@ -20,3 +20,14 @@ const unselectedThirdStatusTextStyle = TextStyle(
     fontWeight: FontWeight.w400,
     color: kMainGreyColor,
     height: 1);
+
+const selectedTagTextStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: kMainBlackColor,
+    height: 0.8);
+const unselectedTagTextStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: kMainBlackColor,
+    height: 0.8);
