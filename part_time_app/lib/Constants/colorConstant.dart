@@ -13,3 +13,4 @@ const kSelectedCategoryBorderColor = Color(0xffE2A122);
 const kSelectedCategoryColor = Color(0xffFFF8D0);
 const kSearchBarPressedColor = Color.fromARGB(255, 75, 75, 75);
 const kCheckTextColor = Color(0xff31A6F3);
+const kTagColor = Color(0xffAE7A3D);

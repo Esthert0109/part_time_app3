@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
+import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Card/missionReviewRecipientCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
@@ -86,8 +87,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                 isCompleted: true,
                 duration: "48:00:00",
                 userAvatar:
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
-                username: '新鲜哥',
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s',
+                username: '微笑姐',
               ),
               MissionReviewRecipientCardComponent(
                 isReviewing: false,
@@ -96,7 +97,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
                 username: '新鲜哥',
-              )
+              ),
+              MissionCardComponent()
             ],
           ),
         ),

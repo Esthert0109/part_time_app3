@@ -75,3 +75,30 @@ const checkTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kCheckTextColor,
 );
+
+const missionCardTitleTextStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
+const missionCardDescTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
+
+const missionHashtagTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: kTagColor,
+);
+const missionTagTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kTagColor,
+);
+const missionPriceTextStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
+  color: kMainRedColor,
+);
