@@ -58,3 +58,20 @@ const searchBarCancelTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kMainBlackColor,
 );
+
+const recipientCardTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
+
+const durationTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: kMainGreyColor,
+);
+const checkTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kCheckTextColor,
+);

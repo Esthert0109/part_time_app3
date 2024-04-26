@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
+import '../../Components/Card/missionReviewRecipientCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
@@ -71,7 +72,31 @@ class _ComponentExampleState extends State<ComponentExample> {
                   )
                 ],
               ),
-              SearchBarComponent()
+              const SearchBarComponent(),
+              MissionReviewRecipientCardComponent(
+                isReviewing: false,
+                isCompleted: true,
+                duration: "48:00:00",
+                userAvatar:
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
+                username: '新鲜哥',
+              ),
+              MissionReviewRecipientCardComponent(
+                isReviewing: false,
+                isCompleted: true,
+                duration: "48:00:00",
+                userAvatar:
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
+                username: '新鲜哥',
+              ),
+              MissionReviewRecipientCardComponent(
+                isReviewing: false,
+                isCompleted: true,
+                duration: "48:00:00",
+                userAvatar:
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
+                username: '新鲜哥',
+              )
             ],
           ),
         ),
