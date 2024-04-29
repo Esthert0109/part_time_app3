@@ -330,6 +330,7 @@ Widget _buildTextFormField2(
               textAlign: TextAlign.center,
               style: missionCheckoutTextStyle,
             )),
+        SizedBox(width: 20),
         Expanded(
             flex: 4,
             child: TextFormField(

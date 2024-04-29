@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:part_time_app/Components/CommonComponents/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
@@ -95,13 +96,7 @@ class _RejectReasonDialogComponentState
                   )
                 : SizedBox(),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Do something with selected index
-                print("Selected Index: $_selectedIndex");
-              },
-              child: Text('OK'),
-            ),
+            primaryButtonComponent(text: "提交", onPressed: () {})
           ],
         ),
       ),

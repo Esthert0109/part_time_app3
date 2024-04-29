@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:part_time_app/Components/CommonComponents/primaryButtonComponent.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
@@ -198,15 +199,25 @@ class _ComponentExampleState extends State<ComponentExample> {
               Divider(),
               Text("Primary Status Response Component:"),
               SizedBox(height: 20),
-              ElevatedButton(
+              primaryButtonComponent(
+                  text: "验证码",
                   onPressed: () {
                     PrimaryStatusBottomSheetComponent.show(
                       context,
                       //true for need button, false for no need.
                       false,
                     );
-                  },
-                  child: Text("验证码")),
+                  }),
+              SizedBox(height: 10),
+              primaryButtonComponent(
+                  text: "密码修改成功",
+                  onPressed: () {
+                    PrimaryStatusBottomSheetComponent.show(
+                      context,
+                      //true for need button, false for no need.
+                      true,
+                    );
+                  }),
               SizedBox(height: 10),
               Divider(),
               Text("Primary Status Response Component:"),
@@ -228,7 +239,8 @@ class _ComponentExampleState extends State<ComponentExample> {
               Divider(),
               Text("Reject Reason Dialog Component:"),
               SizedBox(height: 20),
-              ElevatedButton(
+              primaryButtonComponent(
+                  text: "拒绝理由",
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -236,13 +248,13 @@ class _ComponentExampleState extends State<ComponentExample> {
                         return RejectReasonDialogComponent();
                       },
                     );
-                  },
-                  child: Text("验证码")),
+                  }),
               SizedBox(height: 10),
               Divider(),
               Text("Status Dialog Component:"),
               SizedBox(height: 20),
-              ElevatedButton(
+              primaryButtonComponent(
+                  text: "提交成功",
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -250,10 +262,10 @@ class _ComponentExampleState extends State<ComponentExample> {
                         return StatusDialogComponent(complete: true);
                       },
                     );
-                  },
-                  child: Text("提交成功")),
+                  }),
               SizedBox(height: 10),
-              ElevatedButton(
+              primaryButtonComponent(
+                  text: "继续编辑",
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -261,8 +273,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                         return StatusDialogComponent(complete: false);
                       },
                     );
-                  },
-                  child: Text("继续编辑")),
+                  }),
               SizedBox(height: 10),
               Divider(),
             ],

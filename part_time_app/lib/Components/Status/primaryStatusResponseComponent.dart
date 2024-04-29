@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../CommonComponents/primaryButtonComponent.dart';
 
 class PrimaryStatusBottomSheetComponent {
   static void show(BuildContext context, bool needButton) {
@@ -66,8 +67,8 @@ class PrimaryStatusBottomSheetComponent {
                     SizedBox(
                       width: 351,
                       child: needButton
-                          ? ElevatedButton(
-                              onPressed: () {}, child: Text("重新登入"))
+                          ? primaryButtonComponent(
+                              onPressed: () {}, text: "重新登入")
                           : null,
                     ),
                   ],

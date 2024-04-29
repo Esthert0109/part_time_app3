@@ -188,8 +188,8 @@ Widget _buildMessageCard(
                     if (totalMessage != null && totalMessage >= 1)
                       Container(
                         padding: totalMessage != null && totalMessage >= 100
-                            ? EdgeInsets.only(left: 15)
-                            : EdgeInsets.only(left: 20),
+                            ? EdgeInsets.only(left: 30)
+                            : EdgeInsets.only(left: 35),
                         child: badges.Badge(
                           badgeContent: Text(
                             totalMessage.toString(),
