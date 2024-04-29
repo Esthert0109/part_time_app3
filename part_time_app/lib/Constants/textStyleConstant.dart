@@ -5,6 +5,9 @@ import 'colorConstant.dart';
 const bottomNaviBarTextStyle = TextStyle(
     fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
+const bottomTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+
 const selectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 22, fontWeight: FontWeight.w700, color: kMainBlackColor);
 const unselectedSecondaryTitleTextStyle = TextStyle(
