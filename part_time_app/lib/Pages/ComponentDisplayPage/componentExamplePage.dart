@@ -4,6 +4,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Card/missionReviewRecipientCardComponent.dart';
 import '../../Components/Card/missionSubmissionCardComponent.dart';
+import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
@@ -77,15 +78,15 @@ class _ComponentExampleState extends State<ComponentExample> {
               const SearchBarComponent(),
               MissionReviewRecipientCardComponent(
                 isReviewing: false,
-                isCompleted: true,
+                isCompleted: false,
                 duration: "48:00:00",
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
                 username: '新鲜哥',
               ),
               MissionReviewRecipientCardComponent(
-                isReviewing: false,
-                isCompleted: true,
+                isReviewing: true,
+                isCompleted: false,
                 duration: "48:00:00",
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s',
@@ -123,6 +124,22 @@ class _ComponentExampleState extends State<ComponentExample> {
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRySQFxddtDb33k6xrkiIeVe6j3Hko6WLhEIurtPKjCVQ&s"
                 ],
                 isEdit: true,
+              ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialogComponent();
+                      });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    "打开我",
+                    style: missionPriceTextStyle,
+                  ),
+                ),
               )
             ],
           ),

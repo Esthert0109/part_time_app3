@@ -148,3 +148,9 @@ const missionSubmissionNoPicsTextStyle = TextStyle(
 
 const submissionPicErrorTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const alertDialogTitleTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w600, color: kMainBlackColor);
+
+const alertDialogContentTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
