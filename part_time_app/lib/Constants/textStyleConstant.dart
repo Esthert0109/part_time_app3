@@ -112,3 +112,24 @@ const missionDateTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kSecondGreyColor,
 );
+
+const missionStatusOrangeTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMissionWaitingStatusTextColor,
+);
+const missionStatusRedTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMissionFailedStatusTextColor,
+);
+const missionStatusGreenTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMissionPassedStatusTextColor,
+);
+const missionStatusGreyTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMissionCompletedStatusTextColor,
+);

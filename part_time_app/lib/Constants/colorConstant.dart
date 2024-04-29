@@ -14,3 +14,8 @@ const kSelectedCategoryColor = Color(0xffFFF8D0);
 const kSearchBarPressedColor = Color.fromARGB(255, 75, 75, 75);
 const kCheckTextColor = Color(0xff31A6F3);
 const kTagColor = Color(0xffAE7A3D);
+
+const kMissionWaitingStatusTextColor = Color(0xffF08829);
+const kMissionFailedStatusTextColor = Color(0xffEF4C54);
+const kMissionPassedStatusTextColor = Color(0xff16BC34);
+const kMissionCompletedStatusTextColor = Color(0xff999999);
