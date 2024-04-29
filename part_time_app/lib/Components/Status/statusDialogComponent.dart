@@ -29,7 +29,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
               widget.complete
                   ? Column(
                       children: [
-                        SizedBox(height: 25),
+                        SizedBox(height: 20),
                         SvgPicture.asset("assets/status/submitSuccess.svg"),
                         SizedBox(height: 10),
                         Text(
@@ -41,12 +41,21 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                           "系统将审核你的内容，审核通过后将发布该悬赏。",
                           style: missionDetailText2,
                         ),
+                        SizedBox(height: 10),
+                        ElevatedButton(onPressed: () {}, child: Text("返回首页"))
                       ],
                     )
                   : Column(
                       children: [
+                        SizedBox(height: 25),
                         SvgPicture.asset("assets/status/submitFail.svg"),
-                        Text("请完整悬赏详情"),
+                        SizedBox(height: 10),
+                        Text(
+                          "请完整悬赏详情",
+                          style: dialogText2,
+                        ),
+                        SizedBox(height: 50),
+                        ElevatedButton(onPressed: () {}, child: Text("继续编辑"))
                       ],
                     ),
             ],

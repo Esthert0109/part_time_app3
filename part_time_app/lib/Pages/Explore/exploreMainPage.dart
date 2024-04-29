@@ -116,7 +116,18 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
                       },
                     );
                   },
-                  child: Text("验证码")),
+                  child: Text("提交成功")),
+              SizedBox(height: 10),
+              ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return StatusDialogComponent(complete: false);
+                      },
+                    );
+                  },
+                  child: Text("继续编辑")),
               SizedBox(height: 10),
               Divider(),
             ],
