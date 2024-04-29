@@ -4,18 +4,14 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
 class missionNoticeCardComponent extends StatelessWidget {
-  final String textFirstRow;
-  final String clickableTextFirstRow;
-  final String textSecondRow;
-  final String clickableTextSecondRow;
+  final String text;
+  final String clickableText;
   final String noticeText;
 
   const missionNoticeCardComponent({
     Key? key,
-    required this.textFirstRow,
-    required this.clickableTextFirstRow,
-    required this.textSecondRow,
-    required this.clickableTextSecondRow,
+    required this.text,
+    required this.clickableText,
     required this.noticeText,
   }) : super(key: key);
 
@@ -38,26 +34,11 @@ class missionNoticeCardComponent extends StatelessWidget {
             children: [
               RichText(
                   text: TextSpan(
-                      text: textFirstRow,
+                      text: text,
                       style: bottomNaviBarTextStyle,
                       children: <TextSpan>[
                     TextSpan(
-                      text: clickableTextFirstRow,
-                      style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: kMainBlueColor),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
-                    )
-                  ])),
-              const SizedBox(height: 12),
-              RichText(
-                  text: TextSpan(
-                      text: textSecondRow,
-                      style: bottomNaviBarTextStyle,
-                      children: <TextSpan>[
-                    TextSpan(
-                      text: clickableTextSecondRow,
+                      text: clickableText,
                       style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,

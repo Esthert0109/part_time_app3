@@ -7,11 +7,13 @@ import 'package:part_time_app/Constants/textStyleConstant.dart';
 class secondarySystemMessageCardComponent extends StatelessWidget {
   final String messageTitle;
   final String messageContent;
+  final String imageUrl;
 
   const secondarySystemMessageCardComponent({
     Key? key,
     required this.messageTitle,
     required this.messageContent,
+    required this.imageUrl,
   }) : super(key: key);
 
   @override
@@ -47,7 +49,8 @@ class secondarySystemMessageCardComponent extends StatelessWidget {
                     color: kMainGreyColor),
               ),
               SvgPicture.asset(
-                "assets/report/report_image.svg",
+                imageUrl,
+                width: screenWidth,
               ),
             ],
           )),
