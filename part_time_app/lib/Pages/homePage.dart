@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:part_time_app/Pages/ComponentDisplayPage/componentExamplePage.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/Message/messageMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   double size = 24;
 
   static const List<Widget> homePageOptions = <Widget>[
-    ExploreMainPage(),
+    ComponentExample(),
     MissionStatusMainPage(),
     MissionPublishMainPage(),
     MessageMainPage(),
