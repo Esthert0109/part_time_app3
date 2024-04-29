@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
+import '../../Components/Card/missionMessageCardComponent.dart';
 import '../../Components/Card/missionReviewRecipientCardComponent.dart';
 import '../../Components/Card/missionSubmissionCardComponent.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
@@ -140,6 +143,16 @@ class _ComponentExampleState extends State<ComponentExample> {
                     style: missionPriceTextStyle,
                   ),
                 ),
+              ),
+              MissionMessageCardComponent(
+                messageTitle: '悬赏预付赏金成功支付!',
+                messageDesc: '您已预付200USDT的赏金至悬赏 [标题] 。',
+                onTap: () {
+                  setState(() {
+                    Get.to(() => MissionPublishMainPage());
+                    print("click");
+                  });
+                },
               )
             ],
           ),

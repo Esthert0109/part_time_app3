@@ -75,6 +75,11 @@ const checkTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kCheckTextColor,
 );
+const checkTextStyle2 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: kCheckTextColor,
+);
 
 const missionCardTitleTextStyle = TextStyle(
   fontSize: 18,
@@ -153,4 +158,10 @@ const alertDialogTitleTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w600, color: kMainBlackColor);
 
 const alertDialogContentTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const messageTitleTextStyle = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const messageDescTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);

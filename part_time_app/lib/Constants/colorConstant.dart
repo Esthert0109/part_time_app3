@@ -8,6 +8,7 @@ const kThirdGreyColor = Color(0xffF9F9F9);
 const kMainRedColor = Color(0xffEF4C54);
 const kMainWhiteColor = Color(0xffFFFFFF);
 const kTransparent = Colors.transparent;
+const kBorderColor = Color(0xffF2F2F2);
 
 const kUnselectedTagColor = Color(0xffDEDEDE);
 const kSelectedCategoryBorderColor = Color(0xffE2A122);
