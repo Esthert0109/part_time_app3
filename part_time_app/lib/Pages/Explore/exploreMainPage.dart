@@ -4,7 +4,6 @@ import 'package:part_time_app/Components/Card/missionDetailDescriptionCardCompon
 import 'package:part_time_app/Components/Card/missionDetailIssuerCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Card/paymentMessageCardComponent.dart';
-import 'package:part_time_app/Components/Card/testCardComponent.dart';
 import 'package:part_time_app/Components/Dialog/rejectReasonDialogComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Components/Status/primaryStatusResponseComponent.dart';
