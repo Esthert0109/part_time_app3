@@ -19,7 +19,9 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
   Widget build(BuildContext context) {
     return secondarySystemMessageCardComponent(
       messageTitle: '举报成功！',
-      messageContent: '举报理由：XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      messageContent:
+          '举报理由：XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      imageUrl: '',
     );
   }
 }
