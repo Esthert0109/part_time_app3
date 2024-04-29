@@ -33,15 +33,15 @@ const unselectedTagTextStyle = TextStyle(
     height: 0.8);
 
 const unselectedCategoryTextStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: kMainBlackColor,
-    height: 1);
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
 const selectedCategoryTextStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: kSelectedCategoryBorderColor,
-    height: 0.7);
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+  color: kSelectedCategoryBorderColor,
+);
 
 const searchBarHintTextStyle = TextStyle(
     fontSize: 12,
@@ -165,3 +165,6 @@ const messageTitleTextStyle = TextStyle(
 
 const messageDescTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const categoryTitleKetTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainGreyColor);

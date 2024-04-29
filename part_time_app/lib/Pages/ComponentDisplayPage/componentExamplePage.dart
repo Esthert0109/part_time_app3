@@ -22,6 +22,26 @@ class ComponentExample extends StatefulWidget {
   State<ComponentExample> createState() => _ComponentExampleState();
 }
 
+Map<String, dynamic> sorts = {
+  "工作期限": [
+    {1, '短期'},
+    {2, '长期'}
+  ],
+  "工作内容": [
+    {3, '写作'},
+    {4, '录入'},
+    {5, '游戏'},
+    {6, '发帖'},
+    {7, '网页设计'},
+    {8, '平面设计'}
+  ],
+  "工作性质": [
+    {9, '新任务'},
+    {10, '易审核'},
+    {11, '高悬赏'}
+  ],
+};
+
 class _ComponentExampleState extends State<ComponentExample> {
   int selectIndex = 0;
   List<String> selectedCategory = [];
@@ -153,6 +173,9 @@ class _ComponentExampleState extends State<ComponentExample> {
                     print("click");
                   });
                 },
+              ),
+              SecondaryCategorySelectionComponent(
+                sorts: sorts,
               )
             ],
           ),
