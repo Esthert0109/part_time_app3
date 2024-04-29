@@ -133,3 +133,18 @@ const missionStatusGreyTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kMissionCompletedStatusTextColor,
 );
+
+const missionSubmissionTitleTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+  color: kMainBlackColor,
+);
+
+const missionSubmissionNoPicsTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
+
+const submissionPicErrorTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);

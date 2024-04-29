@@ -3,6 +3,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Card/missionReviewRecipientCardComponent.dart';
+import '../../Components/Card/missionSubmissionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
@@ -111,6 +112,17 @@ class _ComponentExampleState extends State<ComponentExample> {
                 isStatus: true,
                 isFavorite: false,
                 missionStatus: 0,
+              ),
+              MissionSubmissionCardComponent(
+                submissionPics: [
+                  "https://qph.cf2.quoracdn.net/main-qimg-606d28746f1e0115cb4e043e321b9501-lq",
+                  "https://www.digitaltrends.com/wp-content/uploads/2018/08/screenshot_20200507-124725_settings.jpg?fit=1080%2C2400&p=1",
+                  "https://qna.smzdm.com/202302/08/63e37a1b58c238447.jpg_e1080.jpg",
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGutWfApTFtuVCIENR5EUgr4QtkrrEYeeVqrAA7qrhKg&s",
+                  "https://p9-pc-sign.douyinpic.com/image-cut-tos-priv/6a709835de6890caa16f8b48a26c1f94~tplv-dy-resize-origshort-autoq-75:330.jpeg?x-expires=2029204800&x-signature=E4qvBWyLDjKqKyApep51PJidq8Q%3D&from=3213915784&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=pcweb_cover&l=20240423121342A2500492FD1762012DBB",
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRySQFxddtDb33k6xrkiIeVe6j3Hko6WLhEIurtPKjCVQ&s"
+                ],
+                isEdit: true,
               )
             ],
           ),
