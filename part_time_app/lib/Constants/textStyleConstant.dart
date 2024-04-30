@@ -173,6 +173,8 @@ const messageTitleTextStyle = TextStyle(
 
 const messageDescTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const messageDescTextStyle2 = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 
 const categoryTitleKetTextStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainGreyColor);

@@ -7,6 +7,7 @@ import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Card/missionMessageCardComponent.dart';
 import '../../Components/Card/missionReviewRecipientCardComponent.dart';
 import '../../Components/Card/missionSubmissionCardComponent.dart';
+import '../../Components/Card/ticketingCardComponent.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
@@ -188,6 +189,11 @@ class _ComponentExampleState extends State<ComponentExample> {
               ),
               SecondaryCategorySelectionComponent(
                 sorts: sorts,
+              ),
+              TicketingCardComponent(
+                ticketTitle: '举报 -- 工单 举报 -- 工单 举报 -- 工单 举报 -- 工单',
+                ticketDesc: '举报类型工单已成功提交举报类型工单已成功提交举报类型工单已成功提交',
+                ticketStatus: 0,
               )
             ],
           ),
