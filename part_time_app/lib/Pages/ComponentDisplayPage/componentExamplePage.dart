@@ -166,7 +166,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               Divider(),
               Text("Mission Publish Checkout Component:"),
               SizedBox(height: 20),
-              MissionPublishCheckoutCardComponent(isSubmit: false),
+              MissionPublishCheckoutCardComponent(isSubmit: true),
               SizedBox(height: 10),
               Divider(),
               Text("Mission Detail Description Component:"),

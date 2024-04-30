@@ -88,6 +88,7 @@ class _MissionPublishCheckoutCardComponentState
               "悬赏单价",
               "USDT /人",
               widget.isSubmit,
+              widget.isSubmit,
               priceController,
               validator: null,
               inputFormatters: [
@@ -107,7 +108,9 @@ class _MissionPublishCheckoutCardComponentState
               "总名额",
               " /人",
               widget.isSubmit,
+              widget.isSubmit,
               peopleController,
+
               // validator: (value) {
               //   if (value == null || value.isEmpty) {
               //     return '人数不能为空';
@@ -135,6 +138,7 @@ class _MissionPublishCheckoutCardComponentState
               "悬赏时限",
               "天",
               widget.isSubmit,
+              widget.isSubmit,
               dayController,
               // validator: (value) {
               //   if (value == null || value.isEmpty) {
@@ -161,6 +165,7 @@ class _MissionPublishCheckoutCardComponentState
             _buildTextFormField2(
               "预计耗时",
               "小时",
+              widget.isSubmit,
               widget.isSubmit,
               durationController,
               validator: null,
@@ -235,7 +240,7 @@ class _MissionPublishCheckoutCardComponentState
                       child: Text(
                         "${formatValue(totalPrice)} USDT",
                         textAlign: TextAlign.right,
-                        style: missionCheckoutInputTextStyle,
+                        style: missionCheckoutTotalPriceTextStyle,
                       ))
                 ],
               ),
@@ -251,6 +256,7 @@ Widget _buildTextFormField1(
   String text,
   String text2,
   bool readOnly,
+  bool isSubmitted,
   TextEditingController? controller, {
   String? Function(String?)? validator,
   List<TextInputFormatter>? inputFormatters,
@@ -278,8 +284,10 @@ Widget _buildTextFormField1(
               validator: validator,
               inputFormatters: inputFormatters,
               maxLines: 1,
+              style: isSubmitted
+                  ? missionCheckoutTextStyle
+                  : missionCheckoutInputTextStyle,
               textAlign: TextAlign.right,
-              style: missionCheckoutInputTextStyle,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(bottom: 15),
                 filled: true,
@@ -295,9 +303,15 @@ Widget _buildTextFormField1(
         Container(
           width: text2.length > 4 ? 80 : 40,
           child: Container(
-              padding: EdgeInsets.only(top: 11, right: 10),
+              padding: EdgeInsets.only(top: 13, right: 10),
               height: 47,
-              decoration: BoxDecoration(color: kInputBackGreyColor),
+              decoration: BoxDecoration(
+                color: kInputBackGreyColor,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4.0),
+                  bottomRight: Radius.circular(4.0),
+                ),
+              ),
               child: Text(
                 text2,
                 style: missionCheckoutHintTextStyle,
@@ -313,6 +327,7 @@ Widget _buildTextFormField2(
   String text,
   String text2,
   bool readOnly,
+  bool isSubmitted,
   TextEditingController? controller, {
   String? Function(String?)? validator,
   List<TextInputFormatter>? inputFormatters,
@@ -342,7 +357,9 @@ Widget _buildTextFormField2(
               inputFormatters: inputFormatters,
               maxLines: 1,
               textAlign: TextAlign.right,
-              style: missionCheckoutInputTextStyle,
+              style: isSubmitted
+                  ? missionCheckoutTextStyle
+                  : missionCheckoutInputTextStyle,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10),
                 filled: true,
@@ -359,10 +376,15 @@ Widget _buildTextFormField2(
           child: Container(
               padding: EdgeInsets.all(10),
               height: 47,
-              decoration: BoxDecoration(color: kInputBackGreyColor),
+              decoration: BoxDecoration(
+                color: kInputBackGreyColor,
+                borderRadius: BorderRadius.circular(4),
+              ),
               child: Text(
                 text2,
-                style: missionCheckoutInputTextStyle,
+                style: isSubmitted
+                    ? missionCheckoutTextStyle
+                    : missionCheckoutInputTextStyle,
                 textAlign: TextAlign.center,
               )),
         ),
