@@ -70,11 +70,12 @@ class _RecommendationPageState extends State<RecommendationPage> {
 
         // Sort the missionAvailable list
         _sortMissionAvailable();
-
-        setState(() {
-          isLoading = false;
-          currentPage++;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+            currentPage++;
+          });
+        }
       } else {
         // No more data to load
         setState(() {
@@ -86,9 +87,8 @@ class _RecommendationPageState extends State<RecommendationPage> {
   }
 
   void _sortMissionAvailable() {
-    // Sort the missionAvailable list based on mission price
-
-    // Update missionAvailableAsec and missionAvailableDesc
+    //control time
+    missionAvailable!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
     missionAvailableAsec = List.from(missionAvailable!)
       ..sort((a, b) => a.missionPrice.compareTo(b.missionPrice));
     missionAvailableDesc = List.from(missionAvailable!)
@@ -179,7 +179,6 @@ class _RecommendationPageState extends State<RecommendationPage> {
       padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      // controller: _scrollController,
       itemCount: missionList.length + (isLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
         if (index < missionList.length) {
