@@ -122,32 +122,34 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
           ),
         ),
         Flexible(
-          flex: 15,
+          flex: 14,
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-            child: isSearching
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSearching = false;
-                        if (searchText.isNotEmpty && searchText != "") {
-                          searchController.clear();
-                          searchText = "";
-                        }
-                        focusNode.unfocus();
-                      });
-                    },
-                    child: const Text(
-                      "取消",
-                      style: searchBarCancelTextStyle,
-                    ),
-                  )
-                : SvgPicture.asset(
-                    "assets/recommendation/category.svg",
-                    width: 24,
-                    height: 24,
-                  ),
-          ),
+              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              child: isSearching
+                  ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isSearching = false;
+                          if (searchText.isNotEmpty && searchText != "") {
+                            searchController.clear();
+                            searchText = "";
+                          }
+                          focusNode.unfocus();
+                        });
+                      },
+                      child: const Text(
+                        "取消",
+                        style: searchBarCancelTextStyle,
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: SvgPicture.asset(
+                        "assets/recommendation/category.svg",
+                        width: 24,
+                        height: 24,
+                      ),
+                    )),
         )
       ],
     );

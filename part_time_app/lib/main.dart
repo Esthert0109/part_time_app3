@@ -25,10 +25,24 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.black),
+          color: Color(0xFFFCEEA5),
+          foregroundColor: Colors.black,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Color(0xFFFCEEA5),
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+          ),
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: kMainYellowColor),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      // home: const HomePage(),
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => const HomePage()),
+      ],
     );
   }
 }
