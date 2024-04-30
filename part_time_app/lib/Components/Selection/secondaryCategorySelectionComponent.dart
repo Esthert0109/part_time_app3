@@ -1,73 +1,107 @@
-// import 'package:flutter/material.dart';
-// import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:part_time_app/Constants/colorConstant.dart';
 
-// import '../../Constants/textStyleConstant.dart';
+import '../../Constants/textStyleConstant.dart';
 
-// class SecondaryCategorySelectionComponent extends StatefulWidget {
-//   final List<String> categoryList;
-//   final List<String> selectedCategory;
-//   final bool isSelected;
-//   final Function(String) onTap;
-//   const SecondaryCategorySelectionComponent(
-//       {super.key,
-//       required this.categoryList,
-//       required this.onTap,
-//       required this.selectedCategory,
-//       required this.isSelected});
+class SecondaryCategorySelectionComponent extends StatefulWidget {
+  final Map<String, dynamic>? sorts;
+  const SecondaryCategorySelectionComponent({super.key, this.sorts});
 
-//   @override
-//   State<SecondaryCategorySelectionComponent> createState() =>
-//       _SecondaryCategorySelectionComponentState();
-// }
+  @override
+  State<SecondaryCategorySelectionComponent> createState() =>
+      _SecondaryCategorySelectionComponentState();
+}
 
-// class _SecondaryCategorySelectionComponentState
-//     extends State<SecondaryCategorySelectionComponent> {
-//   List<String> selectedList = [];
-//   @override
-//   Widget build(BuildContext context) {
-//     return Wrap(
-//       direction: Axis.horizontal,
-//       spacing: 10,
-//       runSpacing: 12,
-//       children: List.generate(
-//         widget.categoryList.length,
-//         (index) {
-//           isSelected = selectedList.contains(widget.categoryList[index]);
-//           return GestureDetector(
-//             onTap: () {
-//               setState(() {
-//                 print("check: ${widget.categoryList[index]}");
-//                 print("check list: ${selectedList}");
-//                 print("check boolean: ${isSelected}");
+class _SecondaryCategorySelectionComponentState
+    extends State<SecondaryCategorySelectionComponent> {
+  List<int> selectedIndex = [];
+  List<String> selectedIndexName = [];
 
-//                 if (isSelected) {
-//                   setState(() {
-//                     selectedList.remove(widget.categoryList[index]);
-//                   });
-//                 } else {
-//                   setState(() {
-//                     selectedList.add(widget.categoryList[index]);
-//                   });
-//                 }
-
-//                 widget.onTap(widget.categoryList[index]);
-//               });
-//             },
-//             child: Container(
-//               height: 29,
-//               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-//               decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(39),
-//                   border: Border.all(color: kMainBlackColor, width: 1.3),
-//                   color: kTransparent),
-//               child: Text(
-//                 widget.categoryList[index],
-//                 style: unselectedCategoryTextStyle,
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widget.sorts!.entries.map((entry) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 9),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Text(entry.key, // Display category name
+                    style: categoryTitleKetTextStyle),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: (entry.value as List<Set<Object>>).map((optionSet) {
+                    final option = optionSet.first as int;
+                    final name = optionSet.last as String;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (selectedIndex.contains(option) &&
+                              selectedIndexName.contains(name)) {
+                            selectedIndex.remove(option);
+                            selectedIndexName.remove(name);
+                          } else {
+                            selectedIndex.add(option);
+                            selectedIndexName.add(name);
+                          }
+                        });
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(39),
+                            color: selectedIndex.contains(option)
+                                ? kSelectedCategoryColor
+                                : Colors.transparent,
+                            border: Border.all(
+                              width: selectedIndex.contains(option) ? 2 : 1.3,
+                              style: BorderStyle.solid,
+                              color: selectedIndex.contains(option)
+                                  ? kSelectedCategoryBorderColor
+                                  : kMainBlackColor,
+                            ),
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+                          child: selectedIndex.contains(option)
+                              ? IntrinsicWidth(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        name,
+                                        style: selectedCategoryTextStyle,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(12, 6, 0, 5),
+                                        child: SvgPicture.asset(
+                                            "assets/common/close.svg"),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : Text(
+                                  name,
+                                  style: unselectedCategoryTextStyle,
+                                )),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
