@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   double size = 24;
 
   static const List<Widget> homePageOptions = <Widget>[
-    ComponentExample(),
+    ExploreMainPage(),
     MissionStatusMainPage(),
     MissionPublishMainPage(),
     ComponentExample(),

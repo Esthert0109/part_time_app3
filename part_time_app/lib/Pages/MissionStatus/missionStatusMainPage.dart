@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:part_time_app/Pages/MissionStatus/missionAcceptedMainPage.dart';
+import 'package:part_time_app/Pages/MissionStatus/missionIssuedMainPage.dart';
 
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../../Constants/colorConstant.dart';
 import '../Main/RecommendationPage.dart';
 
 class MissionStatusMainPage extends StatefulWidget {
@@ -12,53 +15,72 @@ class MissionStatusMainPage extends StatefulWidget {
 }
 
 class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
-  int selectIndex = 0;
+  final PageController _controller = PageController();
+  int titleSelection = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        constraints: BoxConstraints.expand(),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFFCEEA5), Color(0xFFF9F9F9)],
-            stops: [0.0, 0.15],
-          ),
-          color: Color(0xFFf8f8f8),
+      extendBodyBehindAppBar: false,
+      appBar: AppBar(
+          title: Container(
+        color: kTransparent,
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: SecondaryTitleComponent(
+          titleList: ["我接收的", "我发布的"],
+          selectedIndex: titleSelection,
+          onTap: (index) {
+            setState(() {
+              titleSelection = index;
+              _controller.animateToPage(index,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            });
+          },
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 245.0),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                scrolledUnderElevation: 0.0,
-                surfaceTintColor: Colors.transparent,
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 17),
-                    child: SecondaryTitleComponent(
-                      titleList: ["推荐", "收藏"],
-                      selectedIndex: selectIndex,
-                      onTap: (index) {
-                        setState(() {
-                          selectIndex = index;
-                        });
-                      },
-                    ),
-                  )
+      )),
+      body: PageView(
+        controller: _controller,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (index) {
+          setState(() {
+            titleSelection = index;
+          });
+        },
+        children: <Widget>[
+          Container(
+            constraints: const BoxConstraints.expand(),
+            decoration: BoxDecoration(
+              color: kThirdGreyColor,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
                 ],
+                stops: [0.0, 0.15],
               ),
             ),
-            Container(
-              child: selectIndex == 0 ? RecommendationPage() : null,
+            child: MissionAcceptedMainPage(),
+          ),
+          Container(
+            constraints: const BoxConstraints.expand(),
+            decoration: BoxDecoration(
+              color: kThirdGreyColor,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
+                ],
+                stops: [0.0, 0.15],
+              ),
             ),
-          ],
-        ),
+            child: MissionIssuedMainPage(),
+          ),
+        ],
       ),
     );
   }
