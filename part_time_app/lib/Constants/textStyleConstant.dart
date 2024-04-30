@@ -49,7 +49,7 @@ const dialogText1 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w600, color: kMainBlackColor);
 const dialogText2 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
-const bottomTextStyle = TextStyle(
+const buttonTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
 
 const selectedSecondaryTitleTextStyle = TextStyle(
@@ -225,3 +225,6 @@ const categoryTitleKetTextStyle =
 
 const paymentScreenShotDialogTitleTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const thirdButtonTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kSecondGreyColor);
