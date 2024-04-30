@@ -206,6 +206,12 @@ const missionSubmissionNoPicsTextStyle = TextStyle(
   color: kSecondGreyColor,
 );
 
+const missionIDtextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
+
 const submissionPicErrorTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 
@@ -236,3 +242,6 @@ const paymentScreenShotDialogTitleTextStyle = TextStyle(
 
 const thirdButtonTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const clickableTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlueColor);
