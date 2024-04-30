@@ -166,7 +166,21 @@ class _ComponentExampleState extends State<ComponentExample> {
                       builder: (context) {
                         return AlertDialogComponent(
                           alertTitle: '提交前请检查',
-                          alertDesc: '是否从相册选择了正确的截图截图是否符合悬赏要求',
+                          alertDesc: RichText(
+                            text: TextSpan(
+                              style: alertDialogContentTextStyle,
+                              children: [
+                                TextSpan(text: '是否从相册选择了正确的截图\n'),
+                                TextSpan(
+                                  text: '截图是否符合悬赏要求\n\n',
+                                ),
+                                TextSpan(text: '提交后将无法修改\n'),
+                                TextSpan(
+                                  text: '恶意提交将受到禁止报名/永久封号等惩罚。',
+                                )
+                              ],
+                            ),
+                          ),
                           descTextStyle: alertDialogContentTextStyle,
                           firstButtonText: '檢查一下',
                           firstButtonTextStyle: alertDialogFirstButtonTextStyle,

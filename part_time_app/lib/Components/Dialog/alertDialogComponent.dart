@@ -9,7 +9,7 @@ import '../../Constants/textStyleConstant.dart';
 
 class AlertDialogComponent extends StatefulWidget {
   final String alertTitle;
-  final String alertDesc;
+  final Widget alertDesc;
   final TextStyle descTextStyle;
   final String firstButtonText;
   final TextStyle firstButtonTextStyle;
@@ -51,9 +51,7 @@ class _AlertDialogComponentState extends State<AlertDialogComponent> {
         widget.alertTitle,
       ),
       titleTextStyle: alertDialogTitleTextStyle,
-      content: Text(
-        widget.alertDesc,
-      ),
+      content: widget.alertDesc,
       contentTextStyle: widget.descTextStyle,
       actions: [
         Row(
