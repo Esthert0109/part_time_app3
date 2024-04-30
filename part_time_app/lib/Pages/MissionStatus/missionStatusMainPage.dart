@@ -33,7 +33,7 @@ class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
             setState(() {
               titleSelection = index;
               _controller.animateToPage(index,
-                  duration: Duration(milliseconds: 300),
+                  duration: Duration(milliseconds: 600),
                   curve: Curves.easeInOut);
             });
           },

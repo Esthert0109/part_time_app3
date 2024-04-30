@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
     ExploreMainPage(),
     MissionStatusMainPage(),
     MissionPublishMainPage(),
-    ComponentExample(),
     MessageMainPage(),
     UserProfileMainPage()
   ];
