@@ -50,7 +50,8 @@ class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
         children: <Widget>[
           Container(
             constraints: const BoxConstraints.expand(),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
               color: kThirdGreyColor,
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -62,11 +63,12 @@ class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
                 stops: [0.0, 0.15],
               ),
             ),
-            child: MissionAcceptedMainPage(),
+            child: const MissionAcceptedMainPage(),
           ),
           Container(
             constraints: const BoxConstraints.expand(),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
               color: kThirdGreyColor,
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -78,7 +80,7 @@ class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
                 stops: [0.0, 0.15],
               ),
             ),
-            child: MissionIssuedMainPage(),
+            child: const MissionIssuedMainPage(),
           ),
         ],
       ),

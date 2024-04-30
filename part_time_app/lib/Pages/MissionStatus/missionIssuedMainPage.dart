@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../Components/Selection/thirdStatusSelectionComponent.dart';
+
 class MissionIssuedMainPage extends StatefulWidget {
   const MissionIssuedMainPage({super.key});
 
@@ -8,11 +10,23 @@ class MissionIssuedMainPage extends StatefulWidget {
 }
 
 class _MissionIssuedMainPageState extends State<MissionIssuedMainPage> {
+  int statusSelected = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text("2"),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ThirdStatusSelectionComponent(
+            statusList: const ['待审核', '未通过', '已通过', '已完成', '待退款', '已退款'],
+            selectedIndex: statusSelected,
+            onTap: (index) {
+              setState(() {
+                statusSelected = index;
+              });
+            })
+      ],
     );
   }
 }
