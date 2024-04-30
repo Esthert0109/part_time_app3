@@ -9,6 +9,8 @@ const kMainRedColor = Color(0xffEF4C54);
 const kMainWhiteColor = Color(0xffFFFFFF);
 const kInputBackGreyColor = Color(0xffF9F9F9);
 const kTransparentColor = Colors.transparent;
+const kMainLoadingColor = Color.fromARGB(255, 217, 226, 215);
+const kSecondaryLoadingColor = Color.fromARGB(255, 243, 245, 242);
 //dialog
 const kDialogInputColor = Color(0xffF5F5F5);
 const kMainTextFieldGreyColor = Color(0xffF5F5F5);

@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   static const List<Widget> homePageOptions = <Widget>[
     // ComponentExample(),
-    MissionStatusMainPage(),
+    ExploreMainPage(),
     // MissionPublishMainPage(),
     ComponentExample(),
     MessageMainPage(),

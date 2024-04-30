@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:part_time_app/Components/CommonComponents/primaryButtonComponent.dart';
+import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
@@ -274,6 +275,11 @@ class _ComponentExampleState extends State<ComponentExample> {
                       },
                     );
                   }),
+              SizedBox(height: 10),
+              Divider(),
+              Text("Status Dialog Component:"),
+              SizedBox(height: 20),
+              MissionCardLoadingComponent(),
               SizedBox(height: 10),
               Divider(),
             ],
