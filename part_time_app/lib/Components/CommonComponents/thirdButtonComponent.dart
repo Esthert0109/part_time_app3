@@ -14,18 +14,12 @@ class thirdButtonComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-        margin: const EdgeInsets.only(left: 12, right: 12),
-        width: screenWidth,
         height: 46,
         child: TextButton(
           style: TextButton.styleFrom(
             backgroundColor: kMainYellowColor,
-            textStyle: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: kSecondGreyColor),
+            textStyle: thirdButtonTextStyle,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
             elevation: 0,
