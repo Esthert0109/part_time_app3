@@ -7,6 +7,10 @@ const kSecondGreyColor = Color(0xff999999);
 const kThirdGreyColor = Color(0xffF9F9F9);
 const kMainRedColor = Color(0xffEF4C54);
 const kMainWhiteColor = Color(0xffFFFFFF);
+const kInputBackGreyColor = Color(0xffF9F9F9);
+const kTransparentColor = Colors.transparent;
+//dialog
+const kDialogInputColor = Color(0xffF5F5F5);
 const kMainTextFieldGreyColor = Color(0xffF5F5F5);
 const kSecondTextFieldGreyColor = Color(0xffF9F9F9);
 const kMainBlueColor = Color(0xff31A6F3);
