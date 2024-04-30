@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:part_time_app/Components/CommonComponents/primaryButtonComponent.dart';
+import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../Button/secondaryButtonComponent.dart';
 
 class RejectReasonDialogComponent extends StatefulWidget {
   const RejectReasonDialogComponent({super.key});
@@ -34,7 +35,7 @@ class _RejectReasonDialogComponentState
         padding: EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
@@ -96,7 +97,15 @@ class _RejectReasonDialogComponentState
                   )
                 : SizedBox(),
             SizedBox(height: 20),
-            primaryButtonComponent(text: "提交", onPressed: () {})
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: secondaryButtonComponent(
+                text: "提交",
+                onPressed: () {},
+                buttonColor: kMainYellowColor,
+                textStyle: buttonTextStyle2,
+              ),
+            )
           ],
         ),
       ),

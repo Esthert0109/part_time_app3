@@ -50,7 +50,15 @@ const dialogText1 = TextStyle(
 const dialogText2 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
 const buttonTextStyle = TextStyle(
-    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: kMainBlackColor,
+    height: 1.2);
+const buttonTextStyle2 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: kMainBlackColor,
+    height: 1.2); 
 
 const selectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 22, fontWeight: FontWeight.w700, color: kMainBlackColor);

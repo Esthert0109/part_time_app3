@@ -53,19 +53,25 @@ class _AlertDialogComponentState extends State<AlertDialogComponent> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             secondaryButtonComponent(
-                text: widget.firstButtonText,
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                }),
+              text: widget.firstButtonText,
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                });
+              },
+              buttonColor: kMainYellowColor,
+              textStyle: alertDialogSecondButtonTextStyle,
+            ),
             secondaryButtonComponent(
-                text: widget.secondButtonText,
-                onPressed: () {
-                  setState(() {
-                    print("pressed");
-                  });
-                })
+              text: widget.secondButtonText,
+              onPressed: () {
+                setState(() {
+                  print("pressed");
+                });
+              },
+              buttonColor: kMainYellowColor,
+              textStyle: alertDialogSecondButtonTextStyle,
+            )
           ],
         )
       ],
