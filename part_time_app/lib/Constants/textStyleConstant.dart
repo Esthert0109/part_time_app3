@@ -163,6 +163,11 @@ const alertDialogTitleTextStyle = TextStyle(
 const alertDialogContentTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 
+const alertDialogFirstButtonTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const alertDialogSecondButtonTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
 const messageTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
@@ -171,3 +176,6 @@ const messageDescTextStyle = TextStyle(
 
 const categoryTitleKetTextStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainGreyColor);
+
+const paymentScreenShotDialogTitleTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);

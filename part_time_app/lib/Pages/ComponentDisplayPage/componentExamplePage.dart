@@ -13,6 +13,7 @@ import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
 import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class ComponentExample extends StatefulWidget {
@@ -153,7 +154,18 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialogComponent();
+                        return AlertDialogComponent(
+                          alertTitle: '提交前请检查',
+                          alertDesc: '是否从相册选择了正确的截图截图是否符合悬赏要求',
+                          descTextStyle: alertDialogContentTextStyle,
+                          firstButtonText: '檢查一下',
+                          firstButtonTextStyle: alertDialogFirstButtonTextStyle,
+                          firstButtonColor: kThirdGreyColor,
+                          secondButtonText: '確認無誤馬上提交',
+                          secondButtonTextStyle:
+                              alertDialogSecondButtonTextStyle,
+                          secondButtonColor: kMainYellowColor,
+                        );
                       });
                 },
                 child: Padding(

@@ -24,3 +24,5 @@ const kMissionWaitingStatusTextColor = Color(0xffF08829);
 const kMissionFailedStatusTextColor = Color(0xffEF4C54);
 const kMissionPassedStatusTextColor = Color(0xff16BC34);
 const kMissionCompletedStatusTextColor = Color(0xff999999);
+
+const kPaymentScreenShotColor = Color(0xffEEEEEE);

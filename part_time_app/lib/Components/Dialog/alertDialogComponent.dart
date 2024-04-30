@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:part_time_app/Components/Button/secondaryButtonComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 
 import '../../Constants/textStyleConstant.dart';
 
 class AlertDialogComponent extends StatefulWidget {
-  const AlertDialogComponent({super.key});
+  final String alertTitle;
+  final String alertDesc;
+  final TextStyle descTextStyle;
+  final String firstButtonText;
+  final TextStyle firstButtonTextStyle;
+  final Color firstButtonColor;
+  final String secondButtonText;
+  final TextStyle secondButtonTextStyle;
+  final Color secondButtonColor;
+
+  const AlertDialogComponent(
+      {super.key,
+      required this.alertTitle,
+      required this.alertDesc,
+      required this.descTextStyle,
+      required this.firstButtonText,
+      required this.firstButtonTextStyle,
+      required this.firstButtonColor,
+      required this.secondButtonText,
+      required this.secondButtonTextStyle,
+      required this.secondButtonColor});
 
   @override
   State<AlertDialogComponent> createState() => _AlertDialogComponentState();
@@ -18,16 +40,34 @@ class _AlertDialogComponentState extends State<AlertDialogComponent> {
       backgroundColor: kMainWhiteColor,
       surfaceTintColor: kMainWhiteColor,
       title: Text(
-        "提交前请检查",
+        widget.alertTitle,
       ),
       titleTextStyle: alertDialogTitleTextStyle,
       content: Text(
-        "是否从相册选择了正确的截图 截图是否符合悬赏要求",
-        style: alertDialogContentTextStyle,
+        widget.alertDesc,
       ),
-      contentTextStyle: alertDialogContentTextStyle,
+      contentTextStyle: widget.descTextStyle,
       actions: [
-        
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            secondaryButtonComponent(
+                text: widget.firstButtonText,
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                }),
+            secondaryButtonComponent(
+                text: widget.secondButtonText,
+                onPressed: () {
+                  setState(() {
+                    print("pressed");
+                  });
+                })
+          ],
+        )
       ],
     );
   }
