@@ -6,7 +6,7 @@ import '../../Constants/textStyleConstant.dart';
 class MissionDetailDescriptionCardComponent extends StatefulWidget {
   final String title;
   final String detail;
-  final String tag;
+  final List<String> tag;
   final String totalSlot;
   final String leaveSlot;
   final String day;
@@ -81,12 +81,23 @@ class _MissionDetailDescriptionCardComponentState
           SizedBox(height: 8),
           Container(
             child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                widget.tag,
-                style: missionDetailText3,
-              ),
-            ),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                    children: List.generate(
+                        widget.tag.length,
+                        (index) => Container(
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              child: RichText(
+                                text: TextSpan(
+                                    text: "#",
+                                    style: missionHashtagTextStyle,
+                                    children: [
+                                      TextSpan(
+                                          text: widget.tag[index],
+                                          style: missionTagTextStyle)
+                                    ]),
+                              ),
+                            )))),
           ),
           SizedBox(height: 8),
           Container(
@@ -126,7 +137,7 @@ class _MissionDetailDescriptionCardComponentState
                 SizedBox(width: 5),
                 Expanded(
                     child: Text(widget.date, style: bottomNaviBarTextStyle)),
-                Text(widget.price + "USDT", style: missionDetailText5),
+                Text(widget.price + " USDT", style: missionDetailText5),
               ],
             ),
           ),

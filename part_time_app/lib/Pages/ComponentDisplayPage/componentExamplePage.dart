@@ -237,7 +237,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                   title: "文案写作文案写作文",
                   detail:
                       "负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公",
-                  tag: "#写作 #长期 #写作 #长期#写作 #长期 #写作 #长期 #写作 #写作 #长期 #写作 ",
+                  tag: ["写作", "写作", "写作", "写作"],
                   totalSlot: "50",
                   leaveSlot: "49",
                   day: "10",

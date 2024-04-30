@@ -58,7 +58,7 @@ const buttonTextStyle2 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: kMainBlackColor,
-    height: 1.2); 
+    height: 1.2);
 
 const selectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 22, fontWeight: FontWeight.w700, color: kMainBlackColor);
@@ -148,8 +148,8 @@ const missionCardDescTextStyle = TextStyle(
 );
 
 const missionHashtagTextStyle = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
   color: kTagColor,
 );
 const missionTagTextStyle = TextStyle(
