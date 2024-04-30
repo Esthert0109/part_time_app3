@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/secondaryButtonComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
@@ -12,9 +14,12 @@ class AlertDialogComponent extends StatefulWidget {
   final String firstButtonText;
   final TextStyle firstButtonTextStyle;
   final Color firstButtonColor;
+  final Function()? firstButtonOnTap;
   final String secondButtonText;
   final TextStyle secondButtonTextStyle;
   final Color secondButtonColor;
+  final Function()? secondButtonOnTap;
+  final bool isButtonExpanded;
 
   const AlertDialogComponent(
       {super.key,
@@ -26,7 +31,10 @@ class AlertDialogComponent extends StatefulWidget {
       required this.firstButtonColor,
       required this.secondButtonText,
       required this.secondButtonTextStyle,
-      required this.secondButtonColor});
+      required this.secondButtonColor,
+      required this.isButtonExpanded,
+      this.firstButtonOnTap,
+      this.secondButtonOnTap});
 
   @override
   State<AlertDialogComponent> createState() => _AlertDialogComponentState();
@@ -52,26 +60,39 @@ class _AlertDialogComponentState extends State<AlertDialogComponent> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            secondaryButtonComponent(
-              text: widget.firstButtonText,
-              onPressed: () {
-                setState(() {
-                  Navigator.pop(context);
-                });
-              },
-              buttonColor: kMainYellowColor,
-              textStyle: alertDialogSecondButtonTextStyle,
+            widget.isButtonExpanded
+                ? Expanded(
+                    child: secondaryButtonComponent(
+                      text: widget.firstButtonText,
+                      onPressed: widget.firstButtonOnTap,
+                      buttonColor: widget.firstButtonColor,
+                      textStyle: widget.firstButtonTextStyle,
+                    ),
+                  )
+                : secondaryButtonComponent(
+                    text: widget.firstButtonText,
+                    onPressed: widget.firstButtonOnTap,
+                    buttonColor: widget.firstButtonColor,
+                    textStyle: widget.firstButtonTextStyle,
+                  ),
+            SizedBox(
+              width: 6,
             ),
-            secondaryButtonComponent(
-              text: widget.secondButtonText,
-              onPressed: () {
-                setState(() {
-                  print("pressed");
-                });
-              },
-              buttonColor: kMainYellowColor,
-              textStyle: alertDialogSecondButtonTextStyle,
-            )
+            widget.isButtonExpanded
+                ? Expanded(
+                    child: secondaryButtonComponent(
+                      text: widget.secondButtonText,
+                      onPressed: widget.secondButtonOnTap,
+                      buttonColor: widget.secondButtonColor,
+                      textStyle: widget.secondButtonTextStyle,
+                    ),
+                  )
+                : secondaryButtonComponent(
+                    text: widget.secondButtonText,
+                    onPressed: widget.secondButtonOnTap,
+                    buttonColor: widget.secondButtonColor,
+                    textStyle: widget.secondButtonTextStyle,
+                  ),
           ],
         )
       ],

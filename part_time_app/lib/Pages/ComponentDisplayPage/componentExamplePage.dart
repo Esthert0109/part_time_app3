@@ -175,6 +175,13 @@ class _ComponentExampleState extends State<ComponentExample> {
                           secondButtonTextStyle:
                               alertDialogSecondButtonTextStyle,
                           secondButtonColor: kMainYellowColor,
+                          isButtonExpanded: false,
+                          firstButtonOnTap: () {
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+                          },
+                          secondButtonOnTap: () {},
                         );
                       });
                 },
