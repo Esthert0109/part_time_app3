@@ -49,8 +49,16 @@ const dialogText1 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w600, color: kMainBlackColor);
 const dialogText2 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
-const bottomTextStyle = TextStyle(
-    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+const buttonTextStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: kMainBlackColor,
+    height: 1.2);
+const buttonTextStyle2 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: kMainBlackColor,
+    height: 1.2); 
 
 const selectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 22, fontWeight: FontWeight.w700, color: kMainBlackColor);
@@ -80,15 +88,15 @@ const unselectedTagTextStyle = TextStyle(
     height: 0.8);
 
 const unselectedCategoryTextStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: kMainBlackColor,
-    height: 1);
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
 const selectedCategoryTextStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: kSelectedCategoryBorderColor,
-    height: 0.7);
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+  color: kSelectedCategoryBorderColor,
+);
 
 const searchBarHintTextStyle = TextStyle(
     fontSize: 12,
@@ -207,8 +215,24 @@ const alertDialogTitleTextStyle = TextStyle(
 const alertDialogContentTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 
+const alertDialogFirstButtonTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const alertDialogSecondButtonTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
 const messageTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
 const messageDescTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const messageDescTextStyle2 = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const categoryTitleKetTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainGreyColor);
+
+const paymentScreenShotDialogTitleTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const thirdButtonTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kSecondGreyColor);

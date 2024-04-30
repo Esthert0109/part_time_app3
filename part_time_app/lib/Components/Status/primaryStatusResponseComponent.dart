@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../CommonComponents/primaryButtonComponent.dart';
+import '../Button/primaryButtonComponent.dart';
 
 class PrimaryStatusBottomSheetComponent {
   static void show(BuildContext context, bool needButton) {
@@ -68,7 +68,11 @@ class PrimaryStatusBottomSheetComponent {
                       width: 351,
                       child: needButton
                           ? primaryButtonComponent(
-                              onPressed: () {}, text: "重新登入")
+                              onPressed: () {},
+                              text: "重新登入",
+                              buttonColor: kMainYellowColor,
+                              textStyle: buttonTextStyle,
+                            )
                           : null,
                     ),
                   ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:part_time_app/Pages/ComponentDisplayPage/componentExamplePage.dart';
 import 'package:part_time_app/Pages/Main/collectPage.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../Main/RecommendationPage.dart';

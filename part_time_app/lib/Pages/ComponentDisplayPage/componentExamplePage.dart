@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:part_time_app/Components/CommonComponents/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
+import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Card/missionMessageCardComponent.dart';
 import '../../Components/Card/missionReviewRecipientCardComponent.dart';
 import '../../Components/Card/missionSubmissionCardComponent.dart';
+import '../../Components/Card/ticketingCardComponent.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
 import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:part_time_app/Components/Card/missionDetailDescriptionCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailIssuerCardComponent.dart';
@@ -32,6 +34,26 @@ class ComponentExample extends StatefulWidget {
   State<ComponentExample> createState() => _ComponentExampleState();
 }
 
+Map<String, dynamic> sorts = {
+  "工作期限": [
+    {1, '短期'},
+    {2, '长期'}
+  ],
+  "工作内容": [
+    {3, '写作'},
+    {4, '录入'},
+    {5, '游戏'},
+    {6, '发帖'},
+    {7, '网页设计'},
+    {8, '平面设计'}
+  ],
+  "工作性质": [
+    {9, '新任务'},
+    {10, '易审核'},
+    {11, '高悬赏'}
+  ],
+};
+
 class _ComponentExampleState extends State<ComponentExample> {
   int selectIndex = 0;
   List<String> selectedCategory = [];
@@ -45,7 +67,7 @@ class _ComponentExampleState extends State<ComponentExample> {
           padding: EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SecondaryTitleComponent(
                 titleList: ["推荐", "收藏", "我接收的", "我发布的", "发布悬赏"],
@@ -143,7 +165,39 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialogComponent();
+                        return AlertDialogComponent(
+                          alertTitle: '提交前请检查',
+                          alertDesc: RichText(
+                            text: TextSpan(
+                              style: alertDialogContentTextStyle,
+                              children: [
+                                TextSpan(text: '是否从相册选择了正确的截图\n'),
+                                TextSpan(
+                                  text: '截图是否符合悬赏要求\n\n',
+                                ),
+                                TextSpan(text: '提交后将无法修改\n'),
+                                TextSpan(
+                                  text: '恶意提交将受到禁止报名/永久封号等惩罚。',
+                                )
+                              ],
+                            ),
+                          ),
+                          descTextStyle: alertDialogContentTextStyle,
+                          firstButtonText: '檢查一下',
+                          firstButtonTextStyle: alertDialogFirstButtonTextStyle,
+                          firstButtonColor: kThirdGreyColor,
+                          secondButtonText: '確認無誤馬上提交',
+                          secondButtonTextStyle:
+                              alertDialogSecondButtonTextStyle,
+                          secondButtonColor: kMainYellowColor,
+                          isButtonExpanded: false,
+                          firstButtonOnTap: () {
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+                          },
+                          secondButtonOnTap: () {},
+                        );
                       });
                 },
                 child: Padding(
@@ -163,6 +217,14 @@ class _ComponentExampleState extends State<ComponentExample> {
                     print("click");
                   });
                 },
+              ),
+              SecondaryCategorySelectionComponent(
+                sorts: sorts,
+              ),
+              TicketingCardComponent(
+                ticketTitle: '举报 -- 工单 举报 -- 工单 举报 -- 工单 举报 -- 工单',
+                ticketDesc: '举报类型工单已成功提交举报类型工单已成功提交举报类型工单已成功提交',
+                ticketStatus: 0,
               ),
               Divider(),
               Text("Mission Publish Checkout Component:"),
@@ -201,24 +263,30 @@ class _ComponentExampleState extends State<ComponentExample> {
               Text("Primary Status Response Component:"),
               SizedBox(height: 20),
               primaryButtonComponent(
-                  text: "验证码",
-                  onPressed: () {
-                    PrimaryStatusBottomSheetComponent.show(
-                      context,
-                      //true for need button, false for no need.
-                      false,
-                    );
-                  }),
+                text: "验证码",
+                onPressed: () {
+                  PrimaryStatusBottomSheetComponent.show(
+                    context,
+                    //true for need button, false for no need.
+                    false,
+                  );
+                },
+                buttonColor: kMainYellowColor,
+                textStyle: buttonTextStyle,
+              ),
               SizedBox(height: 10),
               primaryButtonComponent(
-                  text: "密码修改成功",
-                  onPressed: () {
-                    PrimaryStatusBottomSheetComponent.show(
-                      context,
-                      //true for need button, false for no need.
-                      true,
-                    );
-                  }),
+                text: "密码修改成功",
+                onPressed: () {
+                  PrimaryStatusBottomSheetComponent.show(
+                    context,
+                    //true for need button, false for no need.
+                    true,
+                  );
+                },
+                buttonColor: kMainYellowColor,
+                textStyle: buttonTextStyle,
+              ),
               SizedBox(height: 10),
               Divider(),
               Text("Primary Status Response Component:"),
@@ -241,40 +309,49 @@ class _ComponentExampleState extends State<ComponentExample> {
               Text("Reject Reason Dialog Component:"),
               SizedBox(height: 20),
               primaryButtonComponent(
-                  text: "拒绝理由",
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return RejectReasonDialogComponent();
-                      },
-                    );
-                  }),
+                text: "拒绝理由",
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return RejectReasonDialogComponent();
+                    },
+                  );
+                },
+                buttonColor: kMainYellowColor,
+                textStyle: buttonTextStyle,
+              ),
               SizedBox(height: 10),
               Divider(),
               Text("Status Dialog Component:"),
               SizedBox(height: 20),
               primaryButtonComponent(
-                  text: "提交成功",
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return StatusDialogComponent(complete: true);
-                      },
-                    );
-                  }),
+                text: "提交成功",
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return StatusDialogComponent(complete: true);
+                    },
+                  );
+                },
+                buttonColor: kMainYellowColor,
+                textStyle: buttonTextStyle,
+              ),
               SizedBox(height: 10),
               primaryButtonComponent(
-                  text: "继续编辑",
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return StatusDialogComponent(complete: false);
-                      },
-                    );
-                  }),
+                text: "继续编辑",
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return StatusDialogComponent(complete: false);
+                    },
+                  );
+                },
+                buttonColor: kMainYellowColor,
+                textStyle: alertDialogSecondButtonTextStyle,
+              ),
               SizedBox(height: 10),
               Divider(),
               Text("Status Dialog Component:"),
