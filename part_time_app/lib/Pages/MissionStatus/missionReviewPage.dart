@@ -7,6 +7,7 @@ import 'package:part_time_app/Components/Card/missionReviewRecipientCardComponen
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import 'missionReviewDetailPage.dart';
 
 class MissionReviewPage extends StatefulWidget {
   const MissionReviewPage({super.key});
@@ -100,12 +101,16 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                       children: List.generate(
                           10,
                           (index) => MissionReviewRecipientCardComponent(
-                              isReviewing: true,
-                              isCompleted: false,
-                              duration: "00:00",
+                              isReviewing: false,
+                              isCompleted: true,
+                              duration: "240:00:00",
+                              onTap: () {
+                                Get.to(() => MissionReviewDetailPage(),
+                                    transition: Transition.rightToLeft);
+                              },
                               userAvatar:
                                   "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                              username: "鸡鸡")),
+                              username: "鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡")),
                     ),
                   ),
                 ),
