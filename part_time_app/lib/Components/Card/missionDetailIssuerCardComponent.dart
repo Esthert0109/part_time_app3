@@ -33,7 +33,7 @@ class _MissionDetailIssuerCardComponentState
         color: kMainWhiteColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

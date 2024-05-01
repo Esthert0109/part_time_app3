@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
+import '../../Components/Card/missionDetailIssuerCardComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 
@@ -13,6 +15,8 @@ class MissionReviewDetailPage extends StatefulWidget {
 }
 
 class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
+  bool isFavourite = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,7 +54,37 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
               stops: [0.0, 0.15],
             ),
           ),
-          child: SingleChildScrollView(),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MissionDetailIssuerCardComponent(
+                    image:
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
+                    title: "墩墩鸡",
+                    action: "留言咨询 >",
+                    onTap: () {}),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: MissionDetailDescriptionCardComponent(
+                    title:
+                        "文案写作文案写作文文案写作文文案写作文案写作文文案写作文文案写作文案写作文文案写作文文案写作文案写作文文案写作文文案写作文案写作文文案写作文文案写作文案写作文文案写作文",
+                    detail:
+                        "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
+                    tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
+                    totalSlot: "50",
+                    leaveSlot: "45",
+                    day: "3",
+                    duration: "4",
+                    date: "2024.04.30",
+                    price: "50",
+                    isFavourite: isFavourite,
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

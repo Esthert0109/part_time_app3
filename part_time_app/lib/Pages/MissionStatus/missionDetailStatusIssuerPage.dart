@@ -97,16 +97,17 @@ class _MissionDetailStatusIssuerPageState
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: MissionDetailDescriptionCardComponent(
-                        title: "文案写作文案写作文",
-                        detail:
-                            "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
-                        tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-                        totalSlot: "50",
-                        leaveSlot: "45",
-                        day: "3",
-                        duration: "4",
-                        date: "2024.04.30",
-                        price: "50"),
+                      title: "文案写作文案写作文",
+                      detail:
+                          "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
+                      tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
+                      totalSlot: "50",
+                      leaveSlot: "45",
+                      day: "3",
+                      duration: "4",
+                      date: "2024.04.30",
+                      price: "50",
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
