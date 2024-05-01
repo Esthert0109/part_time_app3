@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
@@ -15,7 +16,8 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class MissionReviewDetailPage extends StatefulWidget {
-  const MissionReviewDetailPage({super.key});
+  final bool isCompleted;
+  const MissionReviewDetailPage({super.key, required this.isCompleted});
 
   @override
   State<MissionReviewDetailPage> createState() =>
@@ -24,6 +26,7 @@ class MissionReviewDetailPage extends StatefulWidget {
 
 class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
   bool isFavourite = false;
+  bool isMissionFailed = true;
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +101,15 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
                     ],
                   ),
+                  (widget.isCompleted && isMissionFailed)
+                      ? Container(
+                          width: double.infinity,
+                          child: missionFailedReasonCardComponent(
+                              reasonTitle: "拒绝理由",
+                              reasonDesc:
+                                  "评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价"),
+                        )
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Row(
@@ -149,115 +161,130 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                   spreadRadius: 0,
                 ),
               ]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: primaryButtonComponent(
-                      buttonColor: kRejectMissionButtonColor,
-                      text: '拒绝',
-                      textStyle: missionRejectButtonTextStyle,
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialogComponent(
-                                alertTitle: '您是否确认拒绝该悬赏提交',
-                                alertDesc: RichText(
-                                  text: TextSpan(
-                                    style: alertDialogContentTextStyle,
-                                    children: [
-                                      TextSpan(text: '该用户的悬赏提交将被拒绝,\n'),
-                                      TextSpan(
-                                          text: '赏金将不被发放。\n',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600)),
-                                      TextSpan(text: '是否继续？'),
-                                    ],
-                                  ),
-                                ),
-                                descTextStyle: alertDialogContentTextStyle,
-                                firstButtonText: '返回',
-                                firstButtonTextStyle:
-                                    alertDialogFirstButtonTextStyle,
-                                firstButtonColor: kThirdGreyColor,
-                                secondButtonText: '拒绝',
-                                secondButtonTextStyle:
-                                    alertDialogRejectButtonTextStyle,
-                                secondButtonColor: kRejectMissionButtonColor,
-                                isButtonExpanded: true,
-                                firstButtonOnTap: () {
-                                  setState(() {
-                                    Navigator.pop(context);
+              child: widget.isCompleted
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: primaryButtonComponent(
+                        buttonColor: kMainYellowColor,
+                        text: '提交',
+                        textStyle: buttonTextStyle,
+                        onPressed: () {},
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: primaryButtonComponent(
+                            buttonColor: kRejectMissionButtonColor,
+                            text: '拒绝',
+                            textStyle: missionRejectButtonTextStyle,
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogComponent(
+                                      alertTitle: '您是否确认拒绝该悬赏提交',
+                                      alertDesc: RichText(
+                                        text: TextSpan(
+                                          style: alertDialogContentTextStyle,
+                                          children: [
+                                            TextSpan(text: '该用户的悬赏提交将被拒绝,\n'),
+                                            TextSpan(
+                                                text: '赏金将不被发放。\n',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            TextSpan(text: '是否继续？'),
+                                          ],
+                                        ),
+                                      ),
+                                      descTextStyle:
+                                          alertDialogContentTextStyle,
+                                      firstButtonText: '返回',
+                                      firstButtonTextStyle:
+                                          alertDialogFirstButtonTextStyle,
+                                      firstButtonColor: kThirdGreyColor,
+                                      secondButtonText: '拒绝',
+                                      secondButtonTextStyle:
+                                          alertDialogRejectButtonTextStyle,
+                                      secondButtonColor:
+                                          kRejectMissionButtonColor,
+                                      isButtonExpanded: true,
+                                      firstButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      secondButtonOnTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return RejectReasonDialogComponent();
+                                          },
+                                        );
+                                      },
+                                    );
                                   });
-                                },
-                                secondButtonOnTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return RejectReasonDialogComponent();
-                                    },
-                                  );
-                                },
-                              );
-                            });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Expanded(
-                    child: primaryButtonComponent(
-                      buttonColor: kMainYellowColor,
-                      text: '通过',
-                      textStyle: missionDetailText1,
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialogComponent(
-                                alertTitle: '您是否确认通过该悬赏提交',
-                                alertDesc: RichText(
-                                  text: TextSpan(
-                                    style: alertDialogContentTextStyle,
-                                    children: [
-                                      TextSpan(text: '该用户的悬赏提交将被通过,\n'),
-                                      TextSpan(
-                                          text: '赏金将发放给该用户。\n',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600)),
-                                      TextSpan(text: '是否继续？'),
-                                    ],
-                                  ),
-                                ),
-                                descTextStyle: alertDialogContentTextStyle,
-                                firstButtonText: '返回',
-                                firstButtonTextStyle:
-                                    alertDialogFirstButtonTextStyle,
-                                firstButtonColor: kThirdGreyColor,
-                                secondButtonText: '通过',
-                                secondButtonTextStyle:
-                                    alertDialogSecondButtonTextStyle,
-                                secondButtonColor: kMainYellowColor,
-                                isButtonExpanded: true,
-                                firstButtonOnTap: () {
-                                  setState(() {
-                                    Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Expanded(
+                          child: primaryButtonComponent(
+                            buttonColor: kMainYellowColor,
+                            text: '通过',
+                            textStyle: missionDetailText1,
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogComponent(
+                                      alertTitle: '您是否确认通过该悬赏提交',
+                                      alertDesc: RichText(
+                                        text: TextSpan(
+                                          style: alertDialogContentTextStyle,
+                                          children: [
+                                            TextSpan(text: '该用户的悬赏提交将被通过,\n'),
+                                            TextSpan(
+                                                text: '赏金将发放给该用户。\n',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            TextSpan(text: '是否继续？'),
+                                          ],
+                                        ),
+                                      ),
+                                      descTextStyle:
+                                          alertDialogContentTextStyle,
+                                      firstButtonText: '返回',
+                                      firstButtonTextStyle:
+                                          alertDialogFirstButtonTextStyle,
+                                      firstButtonColor: kThirdGreyColor,
+                                      secondButtonText: '通过',
+                                      secondButtonTextStyle:
+                                          alertDialogSecondButtonTextStyle,
+                                      secondButtonColor: kMainYellowColor,
+                                      isButtonExpanded: true,
+                                      firstButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      secondButtonOnTap: () {
+                                        Navigator.pop(context);
+                                        Get.back();
+                                      },
+                                    );
                                   });
-                                },
-                                secondButtonOnTap: () {
-                                  Navigator.pop(context);
-                                  Get.back();
-                                },
-                              );
-                            });
-                      },
-                    ),
-                  ),
-                ],
-              ))),
+                            },
+                          ),
+                        ),
+                      ],
+                    ))),
     );
   }
 }

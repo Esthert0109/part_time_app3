@@ -16,37 +16,34 @@ class missionFailedReasonCardComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Card(
-      margin: const EdgeInsets.only(left: 12, right: 12),
-      elevation: 0,
-      child: Container(
-          width: screenWidth,
-          padding: const EdgeInsetsDirectional.all(12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: kMainWhiteColor,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                reasonTitle,
-                style: const TextStyle(
-                    color: kMainBlackColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 12),
-              Text(
+    return Container(
+        padding: const EdgeInsetsDirectional.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: kMainWhiteColor,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              reasonTitle,
+              style: const TextStyle(
+                  color: kMainBlackColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
                 reasonDesc,
                 style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: kSecondGreyColor),
-              )
-            ],
-          )),
-    );
+              ),
+            )
+          ],
+        ));
   }
 }

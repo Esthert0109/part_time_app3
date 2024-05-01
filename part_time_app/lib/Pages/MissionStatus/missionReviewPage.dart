@@ -22,6 +22,7 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   int missionImcomplete = 2;
   int missionReviewing = 6;
   int missionCompleted = 9;
+  bool isMissionFailed = true;
 
   calculateTotalMission() {
     totalMissionReview =
@@ -105,7 +106,10 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                               isCompleted: true,
                               duration: "240:00:00",
                               onTap: () {
-                                Get.to(() => MissionReviewDetailPage(),
+                                Get.to(
+                                    () => MissionReviewDetailPage(
+                                          isCompleted: true,
+                                        ),
                                     transition: Transition.rightToLeft);
                               },
                               userAvatar:
