@@ -166,9 +166,10 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       width: double.infinity,
                       child: primaryButtonComponent(
                         buttonColor: kMainYellowColor,
-                        text: '提交',
-                        textStyle: buttonTextStyle,
-                        onPressed: () {},
+                        disableButtonColor: kThirdGreyColor,
+                        text: '已通过',
+                        textStyle: disableButtonTextStyle,
+                        onPressed: null,
                       ),
                     )
                   : Row(
