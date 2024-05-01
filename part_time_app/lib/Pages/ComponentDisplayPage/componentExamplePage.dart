@@ -166,7 +166,21 @@ class _ComponentExampleState extends State<ComponentExample> {
                       builder: (context) {
                         return AlertDialogComponent(
                           alertTitle: '提交前请检查',
-                          alertDesc: '是否从相册选择了正确的截图截图是否符合悬赏要求',
+                          alertDesc: RichText(
+                            text: TextSpan(
+                              style: alertDialogContentTextStyle,
+                              children: [
+                                TextSpan(text: '是否从相册选择了正确的截图\n'),
+                                TextSpan(
+                                  text: '截图是否符合悬赏要求\n\n',
+                                ),
+                                TextSpan(text: '提交后将无法修改\n'),
+                                TextSpan(
+                                  text: '恶意提交将受到禁止报名/永久封号等惩罚。',
+                                )
+                              ],
+                            ),
+                          ),
                           descTextStyle: alertDialogContentTextStyle,
                           firstButtonText: '檢查一下',
                           firstButtonTextStyle: alertDialogFirstButtonTextStyle,
@@ -175,6 +189,13 @@ class _ComponentExampleState extends State<ComponentExample> {
                           secondButtonTextStyle:
                               alertDialogSecondButtonTextStyle,
                           secondButtonColor: kMainYellowColor,
+                          isButtonExpanded: false,
+                          firstButtonOnTap: () {
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+                          },
+                          secondButtonOnTap: () {},
                         );
                       });
                 },
@@ -207,7 +228,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               Divider(),
               Text("Mission Publish Checkout Component:"),
               SizedBox(height: 20),
-              MissionPublishCheckoutCardComponent(isSubmit: false),
+              MissionPublishCheckoutCardComponent(isSubmit: true),
               SizedBox(height: 10),
               Divider(),
               Text("Mission Detail Description Component:"),
@@ -216,7 +237,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                   title: "文案写作文案写作文",
                   detail:
                       "负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公负责公",
-                  tag: "#写作 #长期 #写作 #长期#写作 #长期 #写作 #长期 #写作 #写作 #长期 #写作 ",
+                  tag: ["写作", "写作", "写作", "写作"],
                   totalSlot: "50",
                   leaveSlot: "49",
                   day: "10",

@@ -92,12 +92,12 @@ const selectedTagTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
     color: kMainBlackColor,
-    height: 0.8);
+    height: 0.7);
 const unselectedTagTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: kMainBlackColor,
-    height: 0.8);
+    height: 0.7);
 
 const unselectedCategoryTextStyle = TextStyle(
   fontSize: 14,
@@ -160,8 +160,8 @@ const missionCardDescTextStyle = TextStyle(
 );
 
 const missionHashtagTextStyle = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
   color: kTagColor,
 );
 const missionTagTextStyle = TextStyle(
@@ -214,6 +214,12 @@ const missionSubmissionTitleTextStyle = TextStyle(
 
 const missionSubmissionNoPicsTextStyle = TextStyle(
   fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
+
+const missionIDtextStyle = TextStyle(
+  fontSize: 12,
   fontWeight: FontWeight.w400,
   color: kSecondGreyColor,
 );
@@ -290,3 +296,6 @@ const paymentScreenShotDialogTitleTextStyle = TextStyle(
 
 const thirdButtonTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const clickableTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlueColor);
