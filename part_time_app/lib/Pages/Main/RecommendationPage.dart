@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
+import 'package:part_time_app/Pages/Main/highCommisionPage.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
@@ -120,7 +122,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         missionAvailableAsec = [];
         missionAvailableDesc = [];
         reachEndOfList = false;
-        dataEndExplore = true;
+        dataEndExplore = false;
       });
       await _loadData();
     }
@@ -146,7 +148,9 @@ class _RecommendationPageState extends State<RecommendationPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SearchBarComponent(),
-                Image.asset("assets/main/banner.png"),
+                Container(
+                  child: Image.asset("assets/main/banner.png"),
+                ),
                 _buildCategoryComponent(),
                 Padding(
                   padding: EdgeInsets.only(top: 20, right: 120),
@@ -213,12 +217,16 @@ class _RecommendationPageState extends State<RecommendationPage> {
 
 Widget _buildCategoryComponent() {
   return Container(
-    padding: EdgeInsets.only(top: 25),
+    padding: EdgeInsets.only(top: 20),
     child: Row(
       children: [
         Expanded(
           flex: 2,
           child: GestureDetector(
+            onTap: () {
+              Get.to(() => HighCommisionPage(),
+                  transition: Transition.rightToLeft);
+            },
             child: Column(
               children: [
                 SvgPicture.asset("assets/main/hightCom.svg"),

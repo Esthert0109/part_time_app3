@@ -9,11 +9,13 @@ import '../MockData/missionMockData.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String? searchKeyword;
+  final List<String>? selectedTags;
   bool byTag;
 
   SearchResultPage({
     super.key,
     this.searchKeyword,
+    this.selectedTags,
     required this.byTag,
   });
 
@@ -23,7 +25,7 @@ class SearchResultPage extends StatefulWidget {
 
 class _SearchResultPageState extends State<SearchResultPage> {
   List<MissionMockClass>? missionSearch = [];
-
+  dynamic tag = '';
   int selectIndex = 0;
   int currentPage = 1;
   int itemsPerPage = 10;
@@ -31,9 +33,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+    tag = widget.selectedTags;
     _loadData();
     _scrollController.addListener(_scrollListener);
   }
@@ -154,11 +158,32 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "“ ${widget.searchKeyword} ”",
-                              textAlign: TextAlign.end,
-                              style: dialogText1,
-                            ),
+                            widget.byTag
+                                ? Wrap(
+                                    children: List.generate(
+                                      (tag as List<String>).length,
+                                      (index) => RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: '#',
+                                              style: missionTagTextStyle,
+                                            ),
+                                            TextSpan(
+                                              text: ' ${tag[index]} ',
+                                              style: dialogText1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    "“ ${widget.searchKeyword} ”",
+                                    textAlign: TextAlign.end,
+                                    style: dialogText1,
+                                  ),
                             SizedBox(height: 10),
                             Row(
                               children: [
@@ -175,7 +200,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
                                     },
                                   ),
                                 ),
-                                Expanded(flex: 3, child: Text("60条相关"))
+                                Expanded(
+                                    flex: 3,
+                                    child: Text("${missionSearch?.length}条相关"))
                               ],
                             ),
                             SizedBox(height: 10),

@@ -92,15 +92,6 @@ class _SortPageState extends State<SortPage> {
                 flex: 8,
                 child: SecondaryCategorySelectionComponent(
                   sorts: sorts,
-                  onSelectionChanged: (selectedIndexes) {
-                    setState(() {
-                      selectedIndex = selectedIndexes;
-                      strings = selectedIndex
-                          .map((number) => stringMap[number] ?? "")
-                          .toList();
-                      searchKeyword = strings.join(", ");
-                    });
-                  },
                 ),
               ),
               Container(
@@ -111,12 +102,13 @@ class _SortPageState extends State<SortPage> {
                   child: primaryButtonComponent(
                     text: "确认",
                     onPressed: () {
-                      print(strings);
+                      // print(strings);
                       setState(() {
+                        print(selectedIndexName);
                         Get.to(
                             () => SearchResultPage(
-                                  searchKeyword: searchKeyword,
-                                  byTag: false,
+                                  selectedTags: selectedIndexName,
+                                  byTag: true,
                                 ),
                             transition: Transition.rightToLeft);
                       });
