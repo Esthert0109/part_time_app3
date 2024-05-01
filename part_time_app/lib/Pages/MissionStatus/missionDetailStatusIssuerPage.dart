@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -23,6 +24,7 @@ class MissionDetailStatusIssuerPage extends StatefulWidget {
 
 class _MissionDetailStatusIssuerPageState
     extends State<MissionDetailStatusIssuerPage> {
+  bool picPreview = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,6 +112,60 @@ class _MissionDetailStatusIssuerPageState
                   peopleInitial: "50",
                   durationInitial: "60",
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "图片预览",
+                    style: missionDetailText6,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            picPreview ? "开始悬赏可见" : "公开",
+                            style: tStatusFieldText1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          height: 40,
+                          child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: Switch(
+                                value: picPreview,
+                                activeColor: kMainBlackColor,
+                                activeTrackColor: kMainYellowColor,
+                                inactiveTrackColor: kTransparent,
+                                inactiveThumbColor: kMainBlackColor,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.padded,
+                                trackOutlineColor:
+                                    MaterialStateProperty.resolveWith<Color?>(
+                                  (Set<MaterialState> states) {
+                                    if (picPreview) {
+                                      return kMainBlackColor;
+                                    }
+                                    return kMainBlackColor; // Use the default color.
+                                  },
+                                ),
+                                trackOutlineWidth: MaterialStateProperty.all(1),
+                                onChanged: (preview) {
+                                  setState(() {
+                                    picPreview = preview;
+                                  });
+                                }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
