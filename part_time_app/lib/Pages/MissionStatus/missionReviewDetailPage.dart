@@ -130,8 +130,8 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                                 msg: "已复制",
                                 toastLength: Toast.LENGTH_LONG,
                                 gravity: ToastGravity.BOTTOM,
-                                backgroundColor: kThirdGreyColor,
-                                textColor: kMainBlackColor);
+                                backgroundColor: kMainGreyColor,
+                                textColor: kThirdGreyColor);
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 2),

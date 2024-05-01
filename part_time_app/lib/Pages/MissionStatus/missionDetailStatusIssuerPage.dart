@@ -194,17 +194,17 @@ class _MissionDetailStatusIssuerPageState
                         GestureDetector(
                           onTap: () {
                             print("copied");
-                            Clipboard.setData(
-                                ClipboardData(text: "0292938DHFKAAUBCVAVC"));
+                            Clipboard.setData(const ClipboardData(
+                                text: "0292938DHFKAAUBCVAVC"));
                             Fluttertoast.showToast(
                                 msg: "已复制",
                                 toastLength: Toast.LENGTH_LONG,
                                 gravity: ToastGravity.BOTTOM,
-                                backgroundColor: kThirdGreyColor,
-                                textColor: kMainBlackColor);
+                                backgroundColor: kMainGreyColor,
+                                textColor: kThirdGreyColor);
                           },
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
                             child: SvgPicture.asset(
                               "assets/mission/copy.svg",
                               width: 24,
