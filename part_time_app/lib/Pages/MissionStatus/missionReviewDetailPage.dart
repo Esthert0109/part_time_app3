@@ -8,6 +8,8 @@ import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dar
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
 import '../../Components/Card/missionDetailIssuerCardComponent.dart';
+import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Dialog/rejectReasonDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -136,27 +138,86 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
             ),
           ),
           bottomNavigationBar: Container(
-            height: 84,
-            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            alignment: Alignment.topCenter,
-            decoration: BoxDecoration(color: kMainWhiteColor, boxShadow: [
-              BoxShadow(
-                color: Color(0x1A000000),
-                offset: Offset(1, 0),
-                blurRadius: 2,
-                spreadRadius: 0,
-              ),
-            ]),
-            child: SizedBox(
-              width: double.infinity,
-              child: primaryButtonComponent(
-                buttonColor: kMainYellowColor,
-                text: '提交',
-                textStyle: buttonTextStyle,
-                onPressed: () {},
-              ),
-            ),
-          )),
+              height: 84,
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              alignment: Alignment.topCenter,
+              decoration: BoxDecoration(color: kMainWhiteColor, boxShadow: [
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  offset: Offset(1, 0),
+                  blurRadius: 2,
+                  spreadRadius: 0,
+                ),
+              ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: primaryButtonComponent(
+                      buttonColor: kRejectMissionButtonColor,
+                      text: '拒绝',
+                      textStyle: missionRejectButtonTextStyle,
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialogComponent(
+                                alertTitle: '您是否确认拒绝该悬赏提交',
+                                alertDesc: RichText(
+                                  text: TextSpan(
+                                    style: alertDialogContentTextStyle,
+                                    children: [
+                                      TextSpan(text: '该用户的悬赏提交将被拒绝,\n'),
+                                      TextSpan(
+                                          text: '赏金将不被发放。\n',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600)),
+                                      TextSpan(text: '是否继续？'),
+                                    ],
+                                  ),
+                                ),
+                                descTextStyle: alertDialogContentTextStyle,
+                                firstButtonText: '返回',
+                                firstButtonTextStyle:
+                                    alertDialogFirstButtonTextStyle,
+                                firstButtonColor: kThirdGreyColor,
+                                secondButtonText: '拒绝',
+                                secondButtonTextStyle:
+                                    alertDialogRejectButtonTextStyle,
+                                secondButtonColor: kRejectMissionButtonColor,
+                                isButtonExpanded: true,
+                                firstButtonOnTap: () {
+                                  setState(() {
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                secondButtonOnTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return RejectReasonDialogComponent();
+                                    },
+                                  );
+                                },
+                              );
+                            });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Expanded(
+                    child: primaryButtonComponent(
+                      buttonColor: kMainYellowColor,
+                      text: '通过',
+                      textStyle: missionDetailText1,
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ))),
     );
   }
 }

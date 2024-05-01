@@ -225,6 +225,8 @@ const alertDialogFirstButtonTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 const alertDialogSecondButtonTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+const alertDialogRejectButtonTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kRejectMissionButtonTextColor);
 
 const messageTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -245,3 +247,8 @@ const thirdButtonTextStyle = TextStyle(
 
 const clickableTextStyle =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlueColor);
+
+const missionRejectButtonTextStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: kRejectMissionButtonTextColor);
