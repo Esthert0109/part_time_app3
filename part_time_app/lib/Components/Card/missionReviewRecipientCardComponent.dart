@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 
 import '../../Constants/textStyleConstant.dart';
@@ -10,6 +11,7 @@ class MissionReviewRecipientCardComponent extends StatefulWidget {
   final bool isCompleted;
   final String userAvatar;
   final String username;
+  Function()? onTap;
   String? duration;
 
   MissionReviewRecipientCardComponent(
@@ -18,6 +20,7 @@ class MissionReviewRecipientCardComponent extends StatefulWidget {
       required this.isCompleted,
       required this.userAvatar,
       required this.username,
+      this.onTap,
       this.duration});
 
   @override
@@ -73,12 +76,15 @@ class _MissionReviewRecipientCardComponentState
                   ),
                 ),
           (widget.isReviewing || widget.isCompleted)
-              ? Expanded(
-                  flex: 10,
-                  child: Text(
-                    "查看",
-                    style: checkTextStyle,
-                    textAlign: TextAlign.right,
+              ? GestureDetector(
+                  onTap: widget.onTap,
+                  child: Expanded(
+                    flex: 10,
+                    child: Text(
+                      "查看",
+                      style: checkTextStyle,
+                      textAlign: TextAlign.right,
+                    ),
                   ),
                 )
               : Container()

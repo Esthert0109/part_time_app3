@@ -14,6 +14,7 @@ import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import 'missionReviewPage.dart';
 
 class MissionDetailStatusIssuerPage extends StatefulWidget {
   const MissionDetailStatusIssuerPage({super.key});
@@ -45,6 +46,8 @@ class _MissionDetailStatusIssuerPageState
                 GestureDetector(
                   onTap: () {
                     print("complain this mission");
+                    Get.to(() => MissionReviewPage(),
+                        transition: Transition.rightToLeft);
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

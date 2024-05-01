@@ -80,12 +80,12 @@ const selectedTagTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
     color: kMainBlackColor,
-    height: 0.8);
+    height: 0.7);
 const unselectedTagTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: kMainBlackColor,
-    height: 0.8);
+    height: 0.7);
 
 const unselectedCategoryTextStyle = TextStyle(
   fontSize: 14,
