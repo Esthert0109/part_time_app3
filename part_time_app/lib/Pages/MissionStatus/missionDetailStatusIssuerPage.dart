@@ -105,6 +105,10 @@ class _MissionDetailStatusIssuerPageState
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: MissionPublishCheckoutCardComponent(
                   isSubmit: true,
+                  dayInitial: "10",
+                  priceInitial: "20",
+                  peopleInitial: "50",
+                  durationInitial: "60",
                 ),
               ),
               Padding(
