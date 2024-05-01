@@ -17,12 +17,9 @@ class missionNoticeCardComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Card(
-      margin: const EdgeInsets.only(left: 12, right: 12),
       elevation: 0,
       child: Container(
-          width: screenWidth,
           padding: const EdgeInsetsDirectional.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -35,24 +32,18 @@ class missionNoticeCardComponent extends StatelessWidget {
               RichText(
                   text: TextSpan(
                       text: text,
-                      style: bottomNaviBarTextStyle,
+                      style: missionNoticeBlackTextStyle,
                       children: <TextSpan>[
                     TextSpan(
                       text: clickableText,
-                      style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: kMainBlueColor),
+                      style: missionNoticeCardBlueTextStyle,
                       recognizer: TapGestureRecognizer()..onTap = () {},
                     )
                   ])),
               const SizedBox(height: 12),
               Text(
                 noticeText,
-                style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: kSecondGreyColor),
+                style: missionNoticeGreyTextStyle,
               )
             ],
           )),

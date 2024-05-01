@@ -30,3 +30,8 @@ const kMissionPassedStatusTextColor = Color(0xff16BC34);
 const kMissionCompletedStatusTextColor = Color(0xff999999);
 
 const kPaymentScreenShotColor = Color(0xffEEEEEE);
+
+const kPrimaryButtonDisableColor = Color.fromRGBO(255, 228, 87, 0.5);
+const kPrimaryButtonDisableTextColor = Color.fromRGBO(51, 51, 51, 0.5);
+const kPrimaryRedButtonColor = Color.fromRGBO(255, 236, 225, 1);
+const kPrimaryButtonRedTextColor = Color(0xffD6323A);

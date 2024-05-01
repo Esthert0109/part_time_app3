@@ -3,24 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
-class primarySystemMessageCardComponent extends StatelessWidget {
+class primarySystemMessageCardComponent extends StatefulWidget {
   final String messageTitle;
   final String messageContent;
 
   const primarySystemMessageCardComponent({
-    Key? key,
+    super.key,
     required this.messageTitle,
     required this.messageContent,
-  }) : super(key: key);
+  });
 
   @override
+  State<primarySystemMessageCardComponent> createState() =>
+      _primarySystemMessageCardComponentState();
+}
+
+class _primarySystemMessageCardComponentState
+    extends State<primarySystemMessageCardComponent> {
+  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Card(
-      margin: const EdgeInsets.only(left: 12, right: 12),
       elevation: 0,
       child: Container(
-          width: screenWidth,
           padding: const EdgeInsetsDirectional.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -31,19 +35,13 @@ class primarySystemMessageCardComponent extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                messageTitle,
-                style: const TextStyle(
-                    color: kMainBlackColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400),
+                widget.messageTitle,
+                style: primarySystemMessageTitleTextStyle,
               ),
               const SizedBox(height: 12),
               Text(
-                messageContent,
-                style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: kMainGreyColor),
+                widget.messageContent,
+                style: primarySystemMessageContentTextStyle,
               )
             ],
           )),

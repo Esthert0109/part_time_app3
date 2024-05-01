@@ -2,35 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
-class primaryButtonComponent extends StatelessWidget {
+class primaryButtonComponent extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
-  final Color buttonColor;
+  final Color? buttonColor;
+  final Color? disableButtonColor;
   final TextStyle textStyle;
+  final int? buttonStatus;
 
   const primaryButtonComponent({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
-    required this.buttonColor,
+    this.buttonColor,
+    this.disableButtonColor,
     required this.textStyle,
-  }) : super(key: key);
+    this.buttonStatus,
+  });
+
+  @override
+  State<primaryButtonComponent> createState() => _primaryButtonComponentState();
+}
+
+class _primaryButtonComponentState extends State<primaryButtonComponent> {
 
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 46,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: buttonColor,
-            textStyle: textStyle,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: widget.buttonColor,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 0,
+            disabledBackgroundColor: widget.disableButtonColor,
           ),
-          onPressed: onPressed,
+          onPressed: widget.onPressed,
           child: Text(
-            text,
+            widget.text,
+            style: widget.textStyle,
           ),
         ));
   }

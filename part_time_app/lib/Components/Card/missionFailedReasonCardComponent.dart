@@ -3,24 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
-class missionFailedReasonCardComponent extends StatelessWidget {
+class missionFailedReasonCardComponent extends StatefulWidget {
   final String reasonTitle;
   final String reasonDesc;
 
   const missionFailedReasonCardComponent({
-    Key? key,
+    super.key,
     required this.reasonTitle,
     required this.reasonDesc,
-  }) : super(key: key);
+  });
 
   @override
+  State<missionFailedReasonCardComponent> createState() =>
+      _missionFailedReasonCardComponentState();
+}
+
+class _missionFailedReasonCardComponentState
+    extends State<missionFailedReasonCardComponent> {
+  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Card(
-      margin: const EdgeInsets.only(left: 12, right: 12),
       elevation: 0,
       child: Container(
-          width: screenWidth,
           padding: const EdgeInsetsDirectional.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -31,19 +35,13 @@ class missionFailedReasonCardComponent extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                reasonTitle,
-                style: const TextStyle(
-                    color: kMainBlackColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600),
+                widget.reasonTitle,
+                style: missionFailedReasonTitleTextStyle,
               ),
               const SizedBox(height: 12),
               Text(
-                reasonDesc,
-                style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: kSecondGreyColor),
+                widget.reasonDesc,
+                style: missionFailedReasonDescTextStyle,
               )
             ],
           )),

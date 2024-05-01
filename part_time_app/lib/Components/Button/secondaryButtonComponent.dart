@@ -22,14 +22,15 @@ class secondaryButtonComponent extends StatelessWidget {
         height: 40,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               backgroundColor: buttonColor,
-              textStyle: textStyle,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(2)),
               elevation: 0),
           onPressed: onPressed,
           child: Text(
             text,
+            style: textStyle,
           ),
         ));
   }
