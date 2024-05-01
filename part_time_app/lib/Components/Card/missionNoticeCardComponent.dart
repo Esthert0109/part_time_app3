@@ -4,15 +4,9 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
 class missionNoticeCardComponent extends StatelessWidget {
-  final String text;
-  final String clickableText;
-  final String noticeText;
 
   const missionNoticeCardComponent({
     Key? key,
-    required this.text,
-    required this.clickableText,
-    required this.noticeText,
   }) : super(key: key);
 
   @override

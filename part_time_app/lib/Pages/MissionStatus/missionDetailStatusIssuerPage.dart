@@ -109,11 +109,7 @@ class _MissionDetailStatusIssuerPageState
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: missionNoticeCardComponent(
-                  text: "报名悬赏前，请阅读",
-                  clickableText: '《众人帮做悬赏须知规范》',
-                  noticeText: '投资理财有风险，请勿与他人私下交易，谨防上当',
-                ),
+                child: missionNoticeCardComponent(),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
