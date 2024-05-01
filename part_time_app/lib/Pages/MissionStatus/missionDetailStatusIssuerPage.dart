@@ -171,7 +171,8 @@ class _MissionDetailStatusIssuerPageState
                       )
                     ],
                   ),
-                  Padding(
+                  Container(
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: missionNoticeCardComponent(),
                   ),

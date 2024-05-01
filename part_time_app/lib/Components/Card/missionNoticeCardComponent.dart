@@ -4,7 +4,6 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
 class missionNoticeCardComponent extends StatelessWidget {
-
   const missionNoticeCardComponent({
     Key? key,
   }) : super(key: key);
@@ -54,18 +53,12 @@ class missionNoticeCardComponent extends StatelessWidget {
                     ]),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "投资理财有风险，请勿与他人私下交易，谨防上当",
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: kSecondGreyColor),
-                ),
-              ],
+            Text(
+              "投资理财有风险，请勿与他人私下交易，谨防上当",
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: kSecondGreyColor),
             )
           ],
         ));
