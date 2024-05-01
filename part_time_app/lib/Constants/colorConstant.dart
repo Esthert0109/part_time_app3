@@ -38,3 +38,8 @@ const kPaymentScreenShotColor = Color(0xffEEEEEE);
 // button
 const kRejectMissionButtonColor = Color(0xffFFECE1);
 const kRejectMissionButtonTextColor = Color(0xffD6323A);
+
+const kPrimaryButtonDisableColor = Color.fromRGBO(255, 228, 87, 0.5);
+const kPrimaryButtonDisableTextColor = Color.fromRGBO(51, 51, 51, 0.5);
+const kPrimaryRedButtonColor = Color.fromRGBO(255, 236, 225, 1);
+const kPrimaryButtonRedTextColor = Color(0xffD6323A);

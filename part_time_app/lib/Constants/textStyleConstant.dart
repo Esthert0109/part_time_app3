@@ -14,6 +14,18 @@ const missionCheckoutHintTextStyle =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kMainGreyColor);
 const missionCheckoutTotalPriceTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+const missionDetailStepsNumTextStyle = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w600, color: kMainBlackColor);
+const missionDetailImgNumTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const missionDetailStepsDescTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w400);
+const missionNoticeCardBlueTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlueColor);
+const missionNoticeGreyTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const missionNoticeBlackTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
 const missionDetailText1 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
@@ -211,6 +223,48 @@ const missionIDtextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kSecondGreyColor,
 );
+
+const missionFailReasonTitleTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+  color: kMainBlackColor,
+);
+
+const primaryTitleTextStyle = TextStyle(
+    fontSize: 30, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const thirdTitleTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const missionFailReasonDescTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const primaryTextFieldTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w400);
+
+const primaryTextFieldHintTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const primaryTextFieldErrorTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainRedColor);
+
+const secondaryTextFieldTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w400);
+
+const secondaryTextFieldHintTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const primarySystemMessageTitleTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 16, fontWeight: FontWeight.w400);
+
+const primarySystemMessageContentTextStyle =
+    TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: kMainGreyColor);
+
+const missionFailedReasonTitleTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w600);
+
+const missionFailedReasonDescTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 
 const submissionPicErrorTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);

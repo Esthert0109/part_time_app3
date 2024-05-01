@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
-class missionFailedReasonCardComponent extends StatelessWidget {
+class missionFailedReasonCardComponent extends StatefulWidget {
   final String reasonTitle;
   final String reasonDesc;
 
   const missionFailedReasonCardComponent({
-    Key? key,
+    super.key,
     required this.reasonTitle,
     required this.reasonDesc,
-  }) : super(key: key);
+  });
 
+  @override
+  State<missionFailedReasonCardComponent> createState() =>
+      _missionFailedReasonCardComponentState();
+}
+
+class _missionFailedReasonCardComponentState
+    extends State<missionFailedReasonCardComponent> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -27,7 +34,7 @@ class missionFailedReasonCardComponent extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              reasonTitle,
+              widget.reasonTitle,
               style: const TextStyle(
                   color: kMainBlackColor,
                   fontSize: 14,
@@ -36,7 +43,7 @@ class missionFailedReasonCardComponent extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                reasonDesc,
+                widget.reasonDesc,
                 style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
