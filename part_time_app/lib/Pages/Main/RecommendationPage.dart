@@ -10,6 +10,10 @@ import '../../Constants/textStyleConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
+bool dataFetchedExplore = false;
+bool dataEndExplore = false;
+List<MissionMockClass>? missionAvailable = [];
+
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
 
@@ -19,11 +23,10 @@ class RecommendationPage extends StatefulWidget {
 
 class _RecommendationPageState extends State<RecommendationPage> {
   int selectIndex = 0;
-  List<MissionMockClass>? missionAvailable = [];
   List<MissionMockClass>? missionAvailableAsec = [];
   List<MissionMockClass>? missionAvailableDesc = [];
   int currentPage = 1;
-  int itemsPerPage = 3;
+  int itemsPerPage = 10;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
@@ -32,7 +35,10 @@ class _RecommendationPageState extends State<RecommendationPage> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    if (!dataFetchedExplore && !dataEndExplore) {
+      // Fetch data only if it hasn't been fetched before
+      _loadData();
+    }
     _scrollController.addListener(_scrollListener);
   }
 
@@ -44,7 +50,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
   }
 
   _loadData() async {
-    if (!isLoading && !reachEndOfList) {
+    if (!isLoading && !reachEndOfList && !dataEndExplore) {
       setState(() {
         isLoading = true;
       });
@@ -80,9 +86,11 @@ class _RecommendationPageState extends State<RecommendationPage> {
         // No more data to load
         setState(() {
           reachEndOfList = true;
+          dataEndExplore = true;
           isLoading = false;
         });
       }
+      dataFetchedExplore = true;
     }
   }
 
@@ -112,6 +120,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         missionAvailableAsec = [];
         missionAvailableDesc = [];
         reachEndOfList = false;
+        dataEndExplore = true;
       });
       await _loadData();
     }
@@ -119,7 +128,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (!isLoading &&

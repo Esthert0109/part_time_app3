@@ -2,7 +2,7 @@ import 'missionMockClass.dart';
 
 List<MissionMockClass> MissionAvailableList = [
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '1',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -16,7 +16,7 @@ List<MissionMockClass> MissionAvailableList = [
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '2',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -26,11 +26,11 @@ List<MissionMockClass> MissionAvailableList = [
       username: "微笑姐微笑姐",
       missionDate: "2024-04-29",
       isStatus: false,
-      isFavorite: false,
+      isFavorite: true,
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '3',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -40,11 +40,11 @@ List<MissionMockClass> MissionAvailableList = [
       username: "微笑姐微笑姐",
       missionDate: "2024-04-29",
       isStatus: false,
-      isFavorite: false,
+      isFavorite: true,
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '4',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -54,11 +54,11 @@ List<MissionMockClass> MissionAvailableList = [
       username: "微笑姐微笑姐",
       missionDate: "2024-04-29",
       isStatus: false,
-      isFavorite: false,
+      isFavorite: true,
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '5',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -68,11 +68,39 @@ List<MissionMockClass> MissionAvailableList = [
       username: "微笑姐微笑姐",
       missionDate: "2024-04-29",
       isStatus: false,
-      isFavorite: false,
+      isFavorite: true,
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '6',
+      missionDesc:
+          '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
+      tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
+      missionPrice: 886222.51,
+      userAvatar:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
+      username: "微笑姐微笑姐",
+      missionDate: "2024-04-29",
+      isStatus: false,
+      isFavorite: true,
+      missionStatus: 1,
+      updatedTime: "2024-05-30"),
+  MissionMockClass(
+      missionTitle: '7',
+      missionDesc:
+          '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
+      tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
+      missionPrice: 886222.51,
+      userAvatar:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
+      username: "微笑姐微笑姐",
+      missionDate: "2024-04-29",
+      isStatus: false,
+      isFavorite: true,
+      missionStatus: 1,
+      updatedTime: "2024-05-30"),
+  MissionMockClass(
+      missionTitle: '8',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -86,7 +114,7 @@ List<MissionMockClass> MissionAvailableList = [
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '8',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -100,35 +128,7 @@ List<MissionMockClass> MissionAvailableList = [
       missionStatus: 1,
       updatedTime: "2024-05-30"),
   MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
-      missionDesc:
-          '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
-      tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-      missionPrice: 886222.51,
-      userAvatar:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
-      username: "微笑姐微笑姐",
-      missionDate: "2024-04-29",
-      isStatus: false,
-      isFavorite: false,
-      missionStatus: 1,
-      updatedTime: "2024-05-30"),
-  MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
-      missionDesc:
-          '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
-      tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-      missionPrice: 886222.51,
-      userAvatar:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
-      username: "微笑姐微笑姐",
-      missionDate: "2024-04-29",
-      isStatus: false,
-      isFavorite: false,
-      missionStatus: 1,
-      updatedTime: "2024-05-30"),
-  MissionMockClass(
-      missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
+      missionTitle: '10',
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
@@ -230,7 +230,7 @@ List<MissionMockClass> MissionAvailableList = [
       missionDesc:
           '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
       tagList: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-      missionPrice: 886222.51,
+      missionPrice: 0.0001,
       userAvatar:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
       username: "微笑姐微笑姐",

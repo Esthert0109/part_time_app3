@@ -6,7 +6,12 @@ import '../../Constants/textStyleConstant.dart';
 
 class SecondaryCategorySelectionComponent extends StatefulWidget {
   final Map<String, dynamic>? sorts;
-  const SecondaryCategorySelectionComponent({super.key, this.sorts});
+  final Function(List<int> selectedIndex) onSelectionChanged;
+  const SecondaryCategorySelectionComponent({
+    super.key,
+    this.sorts,
+    required this.onSelectionChanged,
+  });
 
   @override
   State<SecondaryCategorySelectionComponent> createState() =>
@@ -17,7 +22,6 @@ class _SecondaryCategorySelectionComponentState
     extends State<SecondaryCategorySelectionComponent> {
   List<int> selectedIndex = [];
   List<String> selectedIndexName = [];
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -52,6 +56,7 @@ class _SecondaryCategorySelectionComponentState
                             selectedIndex.add(option);
                             selectedIndexName.add(name);
                           }
+                          widget.onSelectionChanged(selectedIndex);
                         });
                       },
                       child: Container(

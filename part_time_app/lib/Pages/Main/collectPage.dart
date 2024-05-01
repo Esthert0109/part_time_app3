@@ -5,6 +5,10 @@ import '../../Components/Loading/missionCardLoading.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
+bool dataFetchedCollect = false;
+bool dataEndCollect = false;
+List<MissionMockClass>? missionAvailableForCollect = [];
+
 class CollectPage extends StatefulWidget {
   const CollectPage({super.key});
 
@@ -13,10 +17,8 @@ class CollectPage extends StatefulWidget {
 }
 
 class _CollectPageState extends State<CollectPage> {
-  List<MissionMockClass>? missionAvailable = [];
-
   int currentPage = 1;
-  int itemsPerPage = 10;
+  int itemsPerPage = 4;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
@@ -25,7 +27,10 @@ class _CollectPageState extends State<CollectPage> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    if (!dataFetchedCollect && !dataEndCollect) {
+      // Fetch data only if it hasn't been fetched before
+      _loadData();
+    }
     _scrollController.addListener(_scrollListener);
   }
 
@@ -37,7 +42,7 @@ class _CollectPageState extends State<CollectPage> {
   }
 
   _loadData() async {
-    if (!isLoading && !reachEndOfList) {
+    if (!isLoading && !reachEndOfList && !dataEndCollect) {
       setState(() {
         isLoading = true;
       });
@@ -49,11 +54,11 @@ class _CollectPageState extends State<CollectPage> {
           MissionAvailableList.where((mission) => mission.isFavorite!).toList();
       if (filteredList.length > start) {
         if (isFirstLaunch) {
-          missionAvailable = filteredList.sublist(
+          missionAvailableForCollect = filteredList.sublist(
               start, end > filteredList.length ? filteredList.length : end);
           isFirstLaunch = false;
         } else {
-          missionAvailable!.addAll(filteredList.sublist(
+          missionAvailableForCollect!.addAll(filteredList.sublist(
               start, end > filteredList.length ? filteredList.length : end));
         }
 
@@ -70,15 +75,18 @@ class _CollectPageState extends State<CollectPage> {
         // No more data to load
         setState(() {
           reachEndOfList = true;
+          dataEndCollect = true;
           isLoading = false;
         });
       }
+      dataFetchedCollect = true;
     }
   }
 
   void _sortMissionAvailable() {
     //control time
-    missionAvailable!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
+    missionAvailableForCollect!
+        .sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
   }
 
   _scrollListener() {
@@ -94,8 +102,9 @@ class _CollectPageState extends State<CollectPage> {
     if (!isLoading) {
       setState(() {
         currentPage = 1;
-        missionAvailable = [];
+        missionAvailableForCollect = [];
         reachEndOfList = false;
+        dataEndCollect = false;
       });
       await _loadData();
     }
@@ -103,7 +112,7 @@ class _CollectPageState extends State<CollectPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (!isLoading &&
@@ -112,13 +121,7 @@ class _CollectPageState extends State<CollectPage> {
           }
           return true;
         },
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          child: SingleChildScrollView(
-              padding: EdgeInsets.all(10),
-              controller: _scrollController,
-              child: buildListView()),
-        ),
+        child: RefreshIndicator(onRefresh: _refresh, child: buildListView()),
       ),
     );
   }
@@ -129,20 +132,20 @@ class _CollectPageState extends State<CollectPage> {
       shrinkWrap: true,
       physics: AlwaysScrollableScrollPhysics(),
       // controller: _scrollController,
-      itemCount: missionAvailable!.length + (isLoading ? 1 : 0),
+      itemCount: missionAvailableForCollect!.length + (isLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
-        if (index < missionAvailable!.length) {
+        if (index < missionAvailableForCollect!.length) {
           return MissionCardComponent(
-            missionTitle: missionAvailable![index].missionTitle,
-            missionDesc: missionAvailable![index].missionDesc,
-            tagList: missionAvailable![index].tagList ?? [],
-            missionPrice: missionAvailable![index].missionPrice,
-            userAvatar: missionAvailable![index].userAvatar,
-            username: missionAvailable![index].username,
-            missionDate: missionAvailable![index].missionDate,
-            isStatus: missionAvailable![index].isStatus,
-            isFavorite: missionAvailable![index].isFavorite,
-            missionStatus: missionAvailable![index].missionStatus,
+            missionTitle: missionAvailableForCollect![index].missionTitle,
+            missionDesc: missionAvailableForCollect![index].missionDesc,
+            tagList: missionAvailableForCollect![index].tagList ?? [],
+            missionPrice: missionAvailableForCollect![index].missionPrice,
+            userAvatar: missionAvailableForCollect![index].userAvatar,
+            username: missionAvailableForCollect![index].username,
+            missionDate: missionAvailableForCollect![index].missionDate,
+            isStatus: missionAvailableForCollect![index].isStatus,
+            isFavorite: missionAvailableForCollect![index].isFavorite,
+            missionStatus: missionAvailableForCollect![index].missionStatus,
           );
         } else {
           return MissionCardLoadingComponent();

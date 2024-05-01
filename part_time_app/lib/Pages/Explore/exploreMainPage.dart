@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:part_time_app/Pages/Main/collectPage.dart';
+import 'package:part_time_app/Pages/Main/collectPageTest.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../Main/RecommendationPage.dart';
 
@@ -49,7 +50,7 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
                         setState(() {
                           selectIndex = index;
                           _controller.animateToPage(index,
-                              duration: Duration(milliseconds: 300),
+                              duration: Duration(milliseconds: 1000),
                               curve: Curves.easeInOut);
                         });
                       },
