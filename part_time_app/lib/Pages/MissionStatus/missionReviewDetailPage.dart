@@ -213,7 +213,47 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       buttonColor: kMainYellowColor,
                       text: '通过',
                       textStyle: missionDetailText1,
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialogComponent(
+                                alertTitle: '您是否确认通过该悬赏提交',
+                                alertDesc: RichText(
+                                  text: TextSpan(
+                                    style: alertDialogContentTextStyle,
+                                    children: [
+                                      TextSpan(text: '该用户的悬赏提交将被通过,\n'),
+                                      TextSpan(
+                                          text: '赏金将发放给该用户。\n',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600)),
+                                      TextSpan(text: '是否继续？'),
+                                    ],
+                                  ),
+                                ),
+                                descTextStyle: alertDialogContentTextStyle,
+                                firstButtonText: '返回',
+                                firstButtonTextStyle:
+                                    alertDialogFirstButtonTextStyle,
+                                firstButtonColor: kThirdGreyColor,
+                                secondButtonText: '通过',
+                                secondButtonTextStyle:
+                                    alertDialogSecondButtonTextStyle,
+                                secondButtonColor: kMainYellowColor,
+                                isButtonExpanded: true,
+                                firstButtonOnTap: () {
+                                  setState(() {
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                secondButtonOnTap: () {
+                                  Navigator.pop(context);
+                                  Get.back();
+                                },
+                              );
+                            });
+                      },
                     ),
                   ),
                 ],
