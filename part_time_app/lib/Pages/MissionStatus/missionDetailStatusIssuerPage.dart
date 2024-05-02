@@ -36,6 +36,37 @@ class MissionDetailStatusIssuerPage extends StatefulWidget {
       _MissionDetailStatusIssuerPageState();
 }
 
+// when preview (from publish mission page)
+// steps: isCollapsed - false, isCollapseAble - false
+// checkout: non-editable
+// button: 提交
+// 
+// waiting for review
+// steps: isCollapsed - false, isCollapseAble - false
+// checkout: non-editable
+// button: 待审核
+// 
+// review failed
+// - mission delete on right (appbar)
+// steps: isCollapsed - false, isCollapseAble - false
+// checkout: non-editable
+// button: 计时器 + 重新编辑
+// 
+// review passed
+// - mission delete on right (appbar): check if got submission waiting for review
+// steps: isCollapsed - false, isCollapseAble - false
+// checkout: no checkout
+// button: 查看悬赏进度
+// 
+// mission removed
+// - mission submission on right (appbar): check if got submission waiting for review
+// steps: isCollapsed - false, isCollapseAble - false
+// checkout: no checkout
+// button: 已下架
+// 
+// 
+// 
+
 class _MissionDetailStatusIssuerPageState
     extends State<MissionDetailStatusIssuerPage> {
   bool picPreview = false;
