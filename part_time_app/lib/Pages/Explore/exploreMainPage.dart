@@ -23,63 +23,68 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        constraints: BoxConstraints.expand(),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              kBackgroundFirstGradientColor,
-              kBackgroundSecondGradientColor
-            ],
-            stops: [0.0, 0.15],
-          ),
-          color: kInputBackGreyColor,
+      extendBodyBehindAppBar: false,
+      appBar: AppBar(
+          title: Container(
+        color: kTransparent,
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: SecondaryTitleComponent(
+          titleList: ["推荐", "收藏"],
+          selectedIndex: selectIndex,
+          onTap: (index) {
+            setState(() {
+              selectIndex = index;
+              _controller.animateToPage(index,
+                  duration: Duration(milliseconds: 600),
+                  curve: Curves.easeInOut);
+            });
+          },
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 245.0),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                scrolledUnderElevation: 0.0,
-                surfaceTintColor: Colors.transparent,
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 17),
-                    child: SecondaryTitleComponent(
-                      titleList: ["推荐", "收藏"],
-                      selectedIndex: selectIndex,
-                      onTap: (index) {
-                        setState(() {
-                          selectIndex = index;
-                          _controller.animateToPage(index,
-                              duration: Duration(milliseconds: 1000),
-                              curve: Curves.easeInOut);
-                        });
-                      },
-                    ),
-                  )
+      )),
+      body: PageView(
+        controller: _controller,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (index) {
+          setState(() {
+            selectIndex = index;
+          });
+        },
+        children: <Widget>[
+          Container(
+            constraints: const BoxConstraints.expand(),
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
+              color: kThirdGreyColor,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
                 ],
+                stops: [0.0, 0.15],
               ),
             ),
-            Expanded(
-              child: PageView(
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index) {
-                  setState(() {
-                    selectIndex = index;
-                  });
-                },
-                children: [RecommendationPage(), CollectPage()],
+            child: const RecommendationPage(),
+          ),
+          Container(
+            constraints: const BoxConstraints.expand(),
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
+              color: kThirdGreyColor,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
+                ],
+                stops: [0.0, 0.15],
               ),
             ),
-          ],
-        ),
+            child: const CollectPage(),
+          ),
+        ],
       ),
     );
   }

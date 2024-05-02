@@ -4,7 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
+import 'package:part_time_app/Pages/Main/easyPassPage.dart';
 import 'package:part_time_app/Pages/Main/highCommisionPage.dart';
+import 'package:part_time_app/Pages/Main/newMissionPage.dart';
+import 'package:part_time_app/Pages/Main/shortTimePage.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
@@ -142,7 +145,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
             controller: _scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -153,7 +156,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
                 ),
                 _buildCategoryComponent(),
                 Padding(
-                  padding: EdgeInsets.only(top: 20, right: 120),
+                  padding: EdgeInsets.only(top: 20, right: 110),
                   child: PrimaryTagSelectionComponent(
                     tagList: ["全部", "价格降序", "价格升序"],
                     selectedIndex: selectIndex,
@@ -239,6 +242,9 @@ Widget _buildCategoryComponent() {
         Expanded(
           flex: 2,
           child: GestureDetector(
+            onTap: () {
+              Get.to(() => ShortTimePage(), transition: Transition.rightToLeft);
+            },
             child: Column(
               children: [
                 SvgPicture.asset("assets/main/shortTime.svg"),
@@ -251,6 +257,9 @@ Widget _buildCategoryComponent() {
         Expanded(
           flex: 2,
           child: GestureDetector(
+            onTap: () {
+              Get.to(() => EasyPassPage(), transition: Transition.rightToLeft);
+            },
             child: Column(
               children: [
                 SvgPicture.asset("assets/main/easyGo.svg"),
@@ -263,6 +272,10 @@ Widget _buildCategoryComponent() {
         Expanded(
           flex: 2,
           child: GestureDetector(
+            onTap: () {
+              Get.to(() => NewMissionPage(),
+                  transition: Transition.rightToLeft);
+            },
             child: Column(
               children: [
                 SvgPicture.asset("assets/main/newMission.svg"),

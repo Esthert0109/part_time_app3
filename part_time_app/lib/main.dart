@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Pages/Main/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 
@@ -44,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const HomePage()),
-        GetPage(name: '/sort', page: () => SortPage()),
+        GetPage(name: '/sort', page: () => HighCommisionPage()),
       ],
     );
   }

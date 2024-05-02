@@ -18,7 +18,7 @@ class CollectPage extends StatefulWidget {
 
 class _CollectPageState extends State<CollectPage> {
   int currentPage = 1;
-  int itemsPerPage = 4;
+  int itemsPerPage = 1;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
