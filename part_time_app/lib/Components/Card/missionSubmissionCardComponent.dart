@@ -178,8 +178,6 @@ class _MissionSubmissionCardComponentState
                       widget.submissionPics?.length ?? 0,
                       (index) => GestureDetector(
                             onTap: () {
-                              // enlargePictureDialog(
-                              //     context, widget.submissionPics?[index] ?? "");
                               showZoomImage(context, index);
                             },
                             child: Container(
