@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:part_time_app/Pages/Main/collectPage.dart';
+import 'package:part_time_app/Pages/Main/collectPageTest.dart';
+import '../../Components/Title/secondaryTitleComponent.dart';
+import '../Main/RecommendationPage.dart';
 
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -13,6 +17,7 @@ class ExploreMainPage extends StatefulWidget {
 }
 
 class _ExploreMainPageState extends State<ExploreMainPage> {
+  final PageController _controller = PageController();
   int selectIndex = 0;
 
   @override
@@ -51,6 +56,9 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
                       onTap: (index) {
                         setState(() {
                           selectIndex = index;
+                          _controller.animateToPage(index,
+                              duration: Duration(milliseconds: 1000),
+                              curve: Curves.easeInOut);
                         });
                       },
                     ),
@@ -58,8 +66,17 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
                 ],
               ),
             ),
-            Container(
-              child: selectIndex == 0 ? RecommendationPage() : null,
+            Expanded(
+              child: PageView(
+                controller: _controller,
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index) {
+                  setState(() {
+                    selectIndex = index;
+                  });
+                },
+                children: [RecommendationPage(), CollectPage()],
+              ),
             ),
           ],
         ),

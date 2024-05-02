@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 
@@ -217,9 +218,9 @@ class _ComponentExampleState extends State<ComponentExample> {
                   });
                 },
               ),
-              SecondaryCategorySelectionComponent(
-                sorts: sorts,
-              ),
+              // SecondaryCategorySelectionComponent(
+              //   sorts: sorts,
+              // ),
               TicketingCardComponent(
                 ticketTitle: '举报 -- 工单 举报 -- 工单 举报 -- 工单 举报 -- 工单',
                 ticketDesc: '举报类型工单已成功提交举报类型工单已成功提交举报类型工单已成功提交',
@@ -228,7 +229,10 @@ class _ComponentExampleState extends State<ComponentExample> {
               Divider(),
               Text("Mission Publish Checkout Component:"),
               SizedBox(height: 20),
-              MissionPublishCheckoutCardComponent(isSubmit: true),
+              MissionPublishCheckoutCardComponent(
+                isSubmit: true,
+                priceInitial: "1000",
+              ),
               SizedBox(height: 10),
               Divider(),
               Text("Mission Detail Description Component:"),
@@ -352,6 +356,11 @@ class _ComponentExampleState extends State<ComponentExample> {
                 buttonColor: kMainYellowColor,
                 textStyle: alertDialogSecondButtonTextStyle,
               ),
+              SizedBox(height: 10),
+              Divider(),
+              Text("Status Dialog Component:"),
+              SizedBox(height: 20),
+              MissionCardLoadingComponent(),
               SizedBox(height: 10),
               Divider(),
             ],

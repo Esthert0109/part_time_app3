@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Pages/Search/sortPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
+import '../../Pages/Search/searchResultPage.dart';
 
 class SearchBarComponent extends StatefulWidget {
   const SearchBarComponent({super.key});
@@ -89,11 +92,22 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
                   flex: 18,
                   child: GestureDetector(
                     onTapDown: (_) {
+                      String searchText = searchController.text;
                       setState(() {
                         buttonColor = kSearchBarPressedColor;
                         if (searchText.isNotEmpty && searchText != "") {
-                          searchController.clear();
-                          searchText = "";
+                          print(searchText);
+                          Get.to(
+                              () => SearchResultPage(
+                                    searchKeyword: searchText,
+                                    byTag: false,
+                                  ),
+                              transition: Transition.rightToLeft);
+                          setState(() {
+                            searchController.clear();
+                            focusNode.unfocus();
+                            isSearching = false;
+                          });
                         }
                         focusNode.unfocus();
                       });
@@ -144,10 +158,16 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
                     )
                   : Padding(
                       padding: EdgeInsets.only(left: 10),
-                      child: SvgPicture.asset(
-                        "assets/recommendation/category.svg",
-                        width: 24,
-                        height: 24,
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(() => SortPage(),
+                              transition: Transition.rightToLeft);
+                        },
+                        child: SvgPicture.asset(
+                          "assets/recommendation/category.svg",
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                     )),
         )

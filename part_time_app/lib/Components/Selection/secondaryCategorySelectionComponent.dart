@@ -6,18 +6,22 @@ import '../../Constants/textStyleConstant.dart';
 
 class SecondaryCategorySelectionComponent extends StatefulWidget {
   final Map<String, dynamic>? sorts;
-  const SecondaryCategorySelectionComponent({super.key, this.sorts});
+
+  const SecondaryCategorySelectionComponent({
+    super.key,
+    this.sorts,
+  });
 
   @override
   State<SecondaryCategorySelectionComponent> createState() =>
       _SecondaryCategorySelectionComponentState();
 }
 
+List<int> selectedIndex = [];
+List<String> selectedIndexName = [];
+
 class _SecondaryCategorySelectionComponentState
     extends State<SecondaryCategorySelectionComponent> {
-  List<int> selectedIndex = [];
-  List<String> selectedIndexName = [];
-
   @override
   Widget build(BuildContext context) {
     return Column(

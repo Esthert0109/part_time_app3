@@ -31,8 +31,8 @@ class MissionPublishCheckoutCardComponent extends StatefulWidget {
     this.dayInitial,
     this.durationInitial,
     this.onPriceChange,
-    this.onPersonChange, // Add this line
-    this.onDayChange, // Add this line
+    this.onPersonChange,
+    this.onDayChange,
     this.onDurationChange,
   });
 
