@@ -5,6 +5,10 @@ import 'package:part_time_app/Pages/Main/collectPageTest.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../Main/RecommendationPage.dart';
 
+import '../../Components/Title/secondaryTitleComponent.dart';
+import '../../Constants/colorConstant.dart';
+import '../Main/RecommendationPage.dart';
+
 class ExploreMainPage extends StatefulWidget {
   const ExploreMainPage({super.key});
 
@@ -25,10 +29,13 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFFCEEA5), Color(0xFFF9F9F9)],
+            colors: [
+              kBackgroundFirstGradientColor,
+              kBackgroundSecondGradientColor
+            ],
             stops: [0.0, 0.15],
           ),
-          color: Color(0xFFf8f8f8),
+          color: kInputBackGreyColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

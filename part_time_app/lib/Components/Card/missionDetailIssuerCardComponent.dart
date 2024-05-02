@@ -33,7 +33,7 @@ class _MissionDetailIssuerCardComponentState
         color: kMainWhiteColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,6 +42,7 @@ class _MissionDetailIssuerCardComponentState
             width: 50,
             height: 50,
             decoration: BoxDecoration(
+              color: kThirdGreyColor,
               borderRadius: BorderRadius.circular(25),
               image: DecorationImage(
                 image: NetworkImage(
@@ -62,6 +63,8 @@ class _MissionDetailIssuerCardComponentState
                       child: Text(
                         widget.title,
                         style: missionDetailText6,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     GestureDetector(

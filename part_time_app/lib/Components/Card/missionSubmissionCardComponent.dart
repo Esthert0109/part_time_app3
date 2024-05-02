@@ -139,7 +139,7 @@ class _MissionSubmissionCardComponentState
                   style: missionSubmissionTitleTextStyle,
                 ),
                 Text(
-                  "已上传（${imageSelected.toString()}）",
+                  "已上传（${widget.isEdit ? imageSelected.toString() : widget.submissionPics?.length}）",
                   style: missionSubmissionNoPicsTextStyle,
                   textAlign: TextAlign.center,
                 )

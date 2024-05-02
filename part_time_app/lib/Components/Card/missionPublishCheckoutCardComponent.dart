@@ -83,7 +83,7 @@ class _MissionPublishCheckoutCardComponentState
         ),
         child: Column(
           children: [
-            SizedBox(height: 8),
+            SizedBox(height: 12),
             _buildTextFormField1(
               "悬赏单价",
               "USDT /人",
@@ -182,10 +182,11 @@ class _MissionPublishCheckoutCardComponentState
             ),
             SizedBox(height: 20),
             Container(
+              padding: const EdgeInsets.only(right: 12),
               child: Row(
                 children: [
-                  SizedBox(width: 20),
-                  Expanded(
+                  const SizedBox(width: 20),
+                  const Expanded(
                       flex: 3,
                       child: Text(
                         "赏金预付",
@@ -203,6 +204,7 @@ class _MissionPublishCheckoutCardComponentState
             ),
             SizedBox(height: 12),
             Container(
+              padding: const EdgeInsets.only(right: 12),
               child: Row(
                 children: [
                   SizedBox(width: 20),
@@ -224,6 +226,7 @@ class _MissionPublishCheckoutCardComponentState
             ),
             SizedBox(height: 12),
             Container(
+              padding: const EdgeInsets.only(right: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

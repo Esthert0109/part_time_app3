@@ -2,45 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
-class primaryTextFieldComponent extends StatelessWidget {
+class primaryTextFieldComponent extends StatefulWidget {
   final String hintText;
-  final Icon suffixIcon;
+  final Icon? suffixIcon;
 
   const primaryTextFieldComponent({
-    Key? key,
+    super.key,
     required this.hintText,
-    required this.suffixIcon,
-  }) : super(key: key);
+    this.suffixIcon,
+  });
 
   @override
+  State<primaryTextFieldComponent> createState() =>
+      _primaryTextFieldComponentState();
+}
+
+class _primaryTextFieldComponentState extends State<primaryTextFieldComponent> {
+  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-        margin: const EdgeInsets.only(left: 12, right: 12),
-        width: screenWidth,
         height: 40,
         child: TextField(
-          style: const TextStyle(
-              color: kMainBlackColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w400),
+          style: primaryTextFieldTextStyle,
           decoration: InputDecoration(
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none),
-              hintText: hintText,
+              hintText: widget.hintText,
               filled: true,
               fillColor: kMainTextFieldGreyColor,
               contentPadding: const EdgeInsetsDirectional.all(10),
-              hintStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: kSecondGreyColor),
-              errorStyle: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: kMainRedColor),
-              suffixIcon: suffixIcon,
+              hintStyle: primaryTextFieldHintTextStyle,
+              errorStyle: primaryTextFieldErrorTextStyle,
+              suffixIcon: widget.suffixIcon,
               errorBorder: const OutlineInputBorder(
                   borderSide: BorderSide(color: kMainRedColor))),
         ));

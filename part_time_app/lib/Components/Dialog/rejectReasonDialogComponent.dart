@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -101,7 +102,11 @@ class _RejectReasonDialogComponentState
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: secondaryButtonComponent(
                 text: "提交",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Get.back();
+                },
                 buttonColor: kMainYellowColor,
                 textStyle: buttonTextStyle2,
               ),

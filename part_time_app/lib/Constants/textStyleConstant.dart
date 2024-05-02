@@ -14,6 +14,18 @@ const missionCheckoutHintTextStyle =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kMainGreyColor);
 const missionCheckoutTotalPriceTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+const missionDetailStepsNumTextStyle = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w600, color: kMainBlackColor);
+const missionDetailImgNumTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const missionDetailStepsDescTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w400);
+const missionNoticeCardBlueTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlueColor);
+const missionNoticeGreyTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const missionNoticeBlackTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
 const missionDetailText1 = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
@@ -58,7 +70,7 @@ const buttonTextStyle2 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: kMainBlackColor,
-    height: 1.2); 
+    height: 1.2);
 
 const selectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 22, fontWeight: FontWeight.w700, color: kMainBlackColor);
@@ -80,12 +92,12 @@ const selectedTagTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
     color: kMainBlackColor,
-    height: 0.8);
+    height: 0.7);
 const unselectedTagTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: kMainBlackColor,
-    height: 0.8);
+    height: 0.7);
 
 const unselectedCategoryTextStyle = TextStyle(
   fontSize: 14,
@@ -148,8 +160,8 @@ const missionCardDescTextStyle = TextStyle(
 );
 
 const missionHashtagTextStyle = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
+  fontSize: 16,
+  fontWeight: FontWeight.w700,
   color: kTagColor,
 );
 const missionTagTextStyle = TextStyle(
@@ -206,6 +218,54 @@ const missionSubmissionNoPicsTextStyle = TextStyle(
   color: kSecondGreyColor,
 );
 
+const missionIDtextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
+
+const missionFailReasonTitleTextStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+  color: kMainBlackColor,
+);
+
+const primaryTitleTextStyle = TextStyle(
+    fontSize: 30, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const thirdTitleTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const missionFailReasonDescTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const primaryTextFieldTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w400);
+
+const primaryTextFieldHintTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const primaryTextFieldErrorTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainRedColor);
+
+const secondaryTextFieldTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w400);
+
+const secondaryTextFieldHintTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const primarySystemMessageTitleTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 16, fontWeight: FontWeight.w400);
+
+const primarySystemMessageContentTextStyle =
+    TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: kMainGreyColor);
+
+const missionFailedReasonTitleTextStyle = TextStyle(
+    color: kMainBlackColor, fontSize: 14, fontWeight: FontWeight.w600);
+
+const missionFailedReasonDescTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
 const submissionPicErrorTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 
@@ -219,6 +279,8 @@ const alertDialogFirstButtonTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
 const alertDialogSecondButtonTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+const alertDialogRejectButtonTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kRejectMissionButtonTextColor);
 
 const messageTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -236,3 +298,13 @@ const paymentScreenShotDialogTitleTextStyle = TextStyle(
 
 const thirdButtonTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const disableButtonTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: kSecondGreyColor);
+
+const clickableTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlueColor);
+
+const missionRejectButtonTextStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: kRejectMissionButtonTextColor);
