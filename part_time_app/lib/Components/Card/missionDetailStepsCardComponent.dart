@@ -7,18 +7,22 @@ import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../../Model/MockModel/missionStepMockModel.dart';
+
 class missionDetailStepsCardComponent extends StatefulWidget {
-  final String stepTitle;
-  final List<String> stepDesc;
-  List<String>? stepPic;
-  // final String stepPicAmount;
+  // final String stepTitle;
+  // final List<String> stepDesc;
+  // List<String>? stepPic;
   final bool isConfidential;
+
+  final List<MissionStepMockModel> steps;
+
   missionDetailStepsCardComponent({
     Key? key,
-    required this.stepTitle,
-    required this.stepDesc,
-    this.stepPic,
-    // required this.stepPicAmount,
+    required this.steps,
+    // required this.stepTitle,
+    // required this.stepDesc,
+    // this.stepPic,
     required this.isConfidential,
   }) : super(key: key);
 
@@ -57,7 +61,9 @@ class _missionDetailStepsCardComponentState
                                 pageController: pageController,
                                 backgroundDecoration:
                                     const BoxDecoration(color: kTransparent),
-                                itemCount: widget.stepPic?.length ?? 0,
+                                itemCount:
+                                    widget.steps[index].stepPicList?.length ??
+                                        0,
                                 loadingBuilder: (context, event) {
                                   if (event == null) {}
                                   return Center(
@@ -66,15 +72,18 @@ class _missionDetailStepsCardComponentState
                                               color: kMainYellowColor,
                                               size: 50));
                                 },
-                                builder: (context, index) {
+                                builder: (context, i) {
                                   return PhotoViewGalleryPageOptions(
                                       imageProvider: NetworkImage(
-                                          widget.stepPic?[index] ?? ""),
+                                          widget.steps[index].stepPicList?[i] ??
+                                              ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
                                       heroAttributes: PhotoViewHeroAttributes(
-                                          tag: widget.stepPic?[index] ?? ""));
+                                          tag: widget.steps[index]
+                                                  .stepPicList?[i] ??
+                                              ""));
                                 }))
                       ],
                     ),
@@ -102,7 +111,7 @@ class _missionDetailStepsCardComponentState
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(left: 12, right: 12),
+      margin: const EdgeInsets.all(0),
       color: kMainWhiteColor,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -112,7 +121,7 @@ class _missionDetailStepsCardComponentState
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           title: Text(
-            widget.stepTitle,
+            "操作步骤预览",
             style: const TextStyle(
                 color: kMainBlackColor,
                 fontSize: 14,
@@ -120,219 +129,146 @@ class _missionDetailStepsCardComponentState
           ),
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i < widget.stepDesc.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: kMainYellowColor,
-                                borderRadius: BorderRadius.circular(100)),
-                            child: Text(
-                              '${i + 1}',
-                              style: missionDetailStepsNumTextStyle,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: Text(
-                              widget.stepDesc[i],
-                              style: missionDetailStepsDescTextStyle,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: widget.isConfidential
-                        ? Stack(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: List.generate(
-                                  widget.stepPic?.length ?? 0,
-                                  (index) => Stack(
-                                    children: [
-                                      Container(
-                                        height: 100,
-                                        width: 157,
-                                        margin: const EdgeInsets.fromLTRB(
-                                            0, 6, 6, 0),
-                                        decoration: BoxDecoration(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                      widget.steps.length,
+                      (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: kMainYellowColor,
                                           borderRadius:
-                                              BorderRadius.circular(4),
-                                          color: kThirdGreyColor,
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Image.network(
-                                            widget.stepPic?[index] ?? "",
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (context, child,
-                                                loadingProgress) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              }
-                                              return Center(
-                                                child: LoadingAnimationWidget
-                                                    .stretchedDots(
-                                                  color: kMainYellowColor,
-                                                  size: 50,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
+                                              BorderRadius.circular(100)),
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: missionDetailStepsNumTextStyle,
                                       ),
-                                      Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            color: kMainBlackColor
-                                                .withOpacity(0.5),
-                                            height: 28,
-                                            child: const Center(
-                                              child: Text(
-                                                '无法预览图片',
-                                                style: TextStyle(
-                                                  color: kMainWhiteColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        widget.steps[index].stepDesc,
+                                        style: missionDetailStepsDescTextStyle,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          )
-                        : Stack(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: List.generate(
-                                  widget.stepPic?.length ?? 0,
-                                  (index) => GestureDetector(
-                                    onTap: () {
-                                      showZoomImage(context, index);
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          height: 100,
-                                          width: 157,
-                                          margin: const EdgeInsets.fromLTRB(
-                                              0, 6, 6, 0),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: kThirdGreyColor,
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            child: Image.network(
-                                              widget.stepPic?[index] ?? "",
-                                              fit: BoxFit.cover,
-                                              loadingBuilder: (context, child,
-                                                  loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return Center(
-                                                  child: LoadingAnimationWidget
-                                                      .stretchedDots(
-                                                    color: kMainYellowColor,
-                                                    size: 50,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 0,
-                                          right: 0,
-                                          child: IconButton(
-                                            icon: SvgPicture.asset(
-                                              'assets/mission/enlarge_icon.svg',
-                                            ),
-                                            onPressed: () {
-                                              showZoomImage(context, index);
-                                            },
-                                          ),
-                                        ),
-                                      ],
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 12, 0, 6),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: List.generate(
+                                          widget.steps[index].stepPicList
+                                                  ?.length ??
+                                              0,
+                                          (i) => GestureDetector(
+                                                onTap: () {
+                                                  widget.isConfidential
+                                                      ? null
+                                                      : showZoomImage(
+                                                          context, i);
+                                                },
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      height: 100,
+                                                      width: 157,
+                                                      margin: const EdgeInsets
+                                                          .fromLTRB(0, 6, 6, 0),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                          color:
+                                                              kThirdGreyColor),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                        child: Image.network(
+                                                          widget.steps[index]
+                                                                      .stepPicList?[
+                                                                  i] ??
+                                                              "",
+                                                          fit: BoxFit.cover,
+                                                          loadingBuilder: (context,
+                                                              child,
+                                                              loadingProgress) {
+                                                            if (loadingProgress ==
+                                                                null) {
+                                                              return child;
+                                                            }
+                                                            return Center(
+                                                                child: LoadingAnimationWidget
+                                                                    .stretchedDots(
+                                                                        color:
+                                                                            kMainYellowColor,
+                                                                        size:
+                                                                            50));
+                                                          },
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                            return Center(
+                                                              child: Text(
+                                                                "无法显示图片",
+                                                                style:
+                                                                    submissionPicErrorTextStyle,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    widget.isConfidential
+                                                        ? Positioned(
+                                                            bottom: 0,
+                                                            child: Container(
+                                                                height: 100,
+                                                                width: 157,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                decoration: BoxDecoration(
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            51,
+                                                                            51,
+                                                                            51,
+                                                                            0.8),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            4)),
+                                                                child: SvgPicture
+                                                                    .asset(
+                                                                        "assets/mission/noPreview.svg")))
+                                                        : Container()
+                                                  ],
+                                                ),
+                                              )),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Text(
-                        "图片数量 ",
-                        style: missionDetailImgNumTextStyle,
-                      ),
-                      SizedBox(
-                        width: 6,
-                      ),
-                      Text('(${widget.stepPic?.length ?? 0})',
-                          style: missionDetailImgNumTextStyle),
-                    ],
-                  ),
-                  // const SizedBox(height: 6),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 6),
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Container(
-                  //         width: 24,
-                  //         height: 24,
-                  //         alignment: Alignment.center,
-                  //         decoration: BoxDecoration(
-                  //             color: kMainYellowColor,
-                  //             borderRadius: BorderRadius.circular(100)),
-                  //         child: Text(
-                  //           '${widget.stepDesc.length}',
-                  //           style: missionDetailStepsNumTextStyle,
-                  //         ),
-                  //       ),
-                  //       const SizedBox(width: 6),
-                  //       Expanded(
-                  //         child: Text(
-                  //           widget.stepDesc.length > 0
-                  //               ? widget.stepDesc[widget.stepDesc.length + 1]
-                  //               : '',
-                  //           style: missionDetailStepsDescTextStyle,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                ],
-              ),
+                                Text(
+                                  "图片数量 (${widget.steps[index].stepPicList?.length ?? 0})",
+                                  style: missionNoticeGreyTextStyle,
+                                )
+                              ],
+                            ),
+                          ))),
             ),
           ],
         ),

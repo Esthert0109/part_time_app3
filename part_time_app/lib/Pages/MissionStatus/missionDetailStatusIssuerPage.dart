@@ -8,12 +8,15 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailDescriptionCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailIssuerCardComponent.dart';
+import 'package:part_time_app/Components/Card/missionDetailStepsCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionNoticeCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
+import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/MockModel/missionStepMockModel.dart';
 import 'missionReviewPage.dart';
 
 class MissionDetailStatusIssuerPage extends StatefulWidget {
@@ -108,6 +111,10 @@ class _MissionDetailStatusIssuerPageState
                       date: "2024.04.30",
                       price: "50",
                     ),
+                  ),
+                  missionDetailStepsCardComponent(
+                    steps: mockData,
+                    isConfidential: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -244,3 +251,33 @@ class _MissionDetailStatusIssuerPageState
     );
   }
 }
+
+List<MissionStepMockModel> mockData = [
+  MissionStepMockModel(
+    stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
+    stepPicList: [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+    ],
+  ),
+  MissionStepMockModel(
+    stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
+    stepPicList: [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+    ],
+  ),
+  MissionStepMockModel(
+    stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
+    stepPicList: [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+    ],
+  )
+];
