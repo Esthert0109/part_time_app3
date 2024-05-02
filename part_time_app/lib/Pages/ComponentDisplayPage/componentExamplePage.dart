@@ -159,6 +159,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRySQFxddtDb33k6xrkiIeVe6j3Hko6WLhEIurtPKjCVQ&s"
                 ],
                 isEdit: true,
+                isCollapsed: true,
+                isCollapseAble: true,
               ),
               GestureDetector(
                 onTap: () {

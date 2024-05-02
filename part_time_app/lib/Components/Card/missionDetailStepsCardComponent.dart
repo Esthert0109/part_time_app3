@@ -10,20 +10,17 @@ import 'package:photo_view/photo_view_gallery.dart';
 import '../../Model/MockModel/missionStepMockModel.dart';
 
 class missionDetailStepsCardComponent extends StatefulWidget {
-  // final String stepTitle;
-  // final List<String> stepDesc;
-  // List<String>? stepPic;
   final bool isConfidential;
-
+  final bool isCollapsed;
+  final bool isCollapseAble;
   final List<MissionStepMockModel> steps;
 
   missionDetailStepsCardComponent({
     Key? key,
     required this.steps,
-    // required this.stepTitle,
-    // required this.stepDesc,
-    // this.stepPic,
     required this.isConfidential,
+    required this.isCollapsed,
+    required this.isCollapseAble,
   }) : super(key: key);
 
   @override
@@ -120,6 +117,8 @@ class _missionDetailStepsCardComponentState
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
+          enabled: widget.isCollapseAble,
+          initiallyExpanded: widget.isCollapsed,
           title: Text(
             "操作步骤预览",
             style: const TextStyle(

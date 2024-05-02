@@ -115,6 +115,8 @@ class _MissionDetailStatusIssuerPageState
                   missionDetailStepsCardComponent(
                     steps: mockData,
                     isConfidential: true,
+                    isCollapsed: true,
+                    isCollapseAble: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),

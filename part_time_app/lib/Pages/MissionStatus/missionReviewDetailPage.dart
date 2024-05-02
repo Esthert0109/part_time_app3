@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Components/Card/missionDetailStepsCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dart';
+import 'package:part_time_app/Pages/MissionStatus/missionDetailStatusIssuerPage.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
@@ -26,6 +28,8 @@ class MissionReviewDetailPage extends StatefulWidget {
 
 class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
   bool isFavourite = false;
+
+  // if mission failed, show reason card
   bool isMissionFailed = true;
 
   @override
@@ -93,13 +97,24 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       isFavourite: isFavourite,
                     ),
                   ),
-                  MissionSubmissionCardComponent(
-                    isEdit: false,
-                    submissionPics: [
-                      "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                      "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
-                      "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
-                    ],
+                  missionDetailStepsCardComponent(
+                    steps: mockData,
+                    isConfidential: false,
+                    isCollapsed: false,
+                    isCollapseAble: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: MissionSubmissionCardComponent(
+                      isEdit: false,
+                      submissionPics: [
+                        "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
+                        "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
+                        "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
+                      ],
+                      isCollapsed: widget.isCompleted ? false : true,
+                      isCollapseAble: true,
+                    ),
                   ),
                   (widget.isCompleted && isMissionFailed)
                       ? Container(
@@ -161,6 +176,8 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                   spreadRadius: 0,
                 ),
               ]),
+
+              // if mission completed, the button can't be pressed
               child: widget.isCompleted
                   ? SizedBox(
                       width: double.infinity,
