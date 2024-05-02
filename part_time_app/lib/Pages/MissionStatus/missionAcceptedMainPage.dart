@@ -52,7 +52,13 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
                     5,
                     (index) => GestureDetector(
                       onTap: () {
-                        Get.to(() => MissionDetailStatusIssuerPage(),
+                        Get.to(
+                            () => MissionDetailStatusIssuerPage(
+                                  isWaiting: false,
+                                  isFailed: false,
+                                  isPassed: false,
+                                  isRemoved: false,
+                                ),
                             transition: Transition.rightToLeft);
                       },
                       child: MissionCardComponent(

@@ -35,8 +35,8 @@ class _missionDetailStepsCardComponentState
   int imageSelected = 0;
   PageController pageController = PageController();
 
-  showZoomImage(BuildContext context, int index) {
-    pageController = PageController(initialPage: index);
+  showZoomImage(BuildContext context, int index, int i) {
+    pageController = PageController(initialPage: i);
     showDialog(
         context: context,
         builder: (context) {
@@ -119,6 +119,7 @@ class _missionDetailStepsCardComponentState
         child: ExpansionTile(
           enabled: widget.isCollapseAble,
           initiallyExpanded: widget.isCollapsed,
+          trailing: widget.isCollapseAble ? null : SizedBox.shrink(),
           title: Text(
             "操作步骤预览",
             style: const TextStyle(
@@ -178,7 +179,7 @@ class _missionDetailStepsCardComponentState
                                                   widget.isConfidential
                                                       ? null
                                                       : showZoomImage(
-                                                          context, i);
+                                                          context, index, i);
                                                 },
                                                 child: Stack(
                                                   children: [

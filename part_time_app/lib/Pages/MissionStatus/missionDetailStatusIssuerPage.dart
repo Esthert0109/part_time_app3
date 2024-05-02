@@ -20,7 +20,16 @@ import '../../Model/MockModel/missionStepMockModel.dart';
 import 'missionReviewPage.dart';
 
 class MissionDetailStatusIssuerPage extends StatefulWidget {
-  const MissionDetailStatusIssuerPage({super.key});
+  final bool isWaiting;
+  final bool isFailed;
+  final bool isPassed;
+  final bool isRemoved;
+  const MissionDetailStatusIssuerPage(
+      {super.key,
+      required this.isWaiting,
+      required this.isFailed,
+      required this.isPassed,
+      required this.isRemoved});
 
   @override
   State<MissionDetailStatusIssuerPage> createState() =>
@@ -114,9 +123,9 @@ class _MissionDetailStatusIssuerPageState
                   ),
                   missionDetailStepsCardComponent(
                     steps: mockData,
-                    isConfidential: true,
+                    isConfidential: false,
                     isCollapsed: true,
-                    isCollapseAble: true,
+                    isCollapseAble: false,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
