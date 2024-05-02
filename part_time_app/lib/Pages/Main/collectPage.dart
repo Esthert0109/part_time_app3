@@ -121,7 +121,12 @@ class _CollectPageState extends State<CollectPage> {
           }
           return true;
         },
-        child: RefreshIndicator(onRefresh: _refresh, child: buildListView()),
+        child: RefreshIndicator(
+            onRefresh: _refresh,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: buildListView(),
+            )),
       ),
     );
   }
