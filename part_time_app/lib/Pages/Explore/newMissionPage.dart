@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
+import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
-List<MissionMockClass>? missionEasyPass = [];
+List<MissionMockClass>? missionNewMiss = [];
 
-class EasyPassPage extends StatefulWidget {
-  const EasyPassPage({super.key});
+class NewMissionPage extends StatefulWidget {
+  const NewMissionPage({super.key});
 
   @override
-  State<EasyPassPage> createState() => _EasyPassPageState();
+  State<NewMissionPage> createState() => _NewMissionPageState();
 }
 
-class _EasyPassPageState extends State<EasyPassPage> {
+class _NewMissionPageState extends State<NewMissionPage> {
   int currentPage = 1;
   int itemsPerPage = 6;
   bool isLoading = false;
@@ -50,14 +51,14 @@ class _EasyPassPageState extends State<EasyPassPage> {
 
       if (MissionAvailableList.length > start) {
         if (isFirstLaunch) {
-          missionEasyPass = MissionAvailableList.sublist(
+          missionNewMiss = MissionAvailableList.sublist(
               start,
               end > MissionAvailableList.length
                   ? MissionAvailableList.length
                   : end);
           isFirstLaunch = false;
         } else {
-          missionEasyPass!.addAll(MissionAvailableList.sublist(
+          missionNewMiss!.addAll(MissionAvailableList.sublist(
               start,
               end > MissionAvailableList.length
                   ? MissionAvailableList.length
@@ -85,7 +86,7 @@ class _EasyPassPageState extends State<EasyPassPage> {
 
   void _sortMissionAvailable() {
     //control time
-    missionEasyPass!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
+    missionNewMiss!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
   }
 
   _scrollListener() {
@@ -101,7 +102,7 @@ class _EasyPassPageState extends State<EasyPassPage> {
     if (!isLoading) {
       setState(() {
         currentPage = 1;
-        missionEasyPass = [];
+        missionNewMiss = [];
         reachEndOfList = false;
       });
       await _loadData();
@@ -133,6 +134,7 @@ class _EasyPassPageState extends State<EasyPassPage> {
           },
           child: RefreshIndicator(
               onRefresh: _refresh,
+              color: kMainYellowColor,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -141,7 +143,7 @@ class _EasyPassPageState extends State<EasyPassPage> {
                       scrolledUnderElevation: 0.0,
                       surfaceTintColor: Colors.transparent,
                       title: const Text(
-                        "易审核",
+                        "新悬赏",
                         textAlign: TextAlign.center,
                         style: dialogText2,
                       ),
@@ -157,12 +159,12 @@ class _EasyPassPageState extends State<EasyPassPage> {
                       ),
                     ),
                     Container(
-                        padding: EdgeInsets.all(15),
+                        padding: EdgeInsets.all(12),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildMissionListView(missionEasyPass!),
+                            _buildMissionListView(missionNewMiss!),
                           ],
                         )),
                   ],

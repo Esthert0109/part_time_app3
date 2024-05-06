@@ -46,6 +46,7 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
             height: 34,
             margin: const EdgeInsets.symmetric(vertical: 11),
             decoration: BoxDecoration(
+                color: kMainWhiteColor,
                 borderRadius: BorderRadius.circular(17),
                 border: Border.all(width: 1.6, color: kMainBlackColor)),
             child: Row(

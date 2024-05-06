@@ -4,13 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
-import 'package:part_time_app/Pages/Main/easyPassPage.dart';
-import 'package:part_time_app/Pages/Main/highCommisionPage.dart';
-import 'package:part_time_app/Pages/Main/newMissionPage.dart';
-import 'package:part_time_app/Pages/Main/shortTimePage.dart';
+import 'package:part_time_app/Pages/Explore/easyPassPage.dart';
+import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
+import 'package:part_time_app/Pages/Explore/newMissionPage.dart';
+import 'package:part_time_app/Pages/Explore/shortTimePage.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
+import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
@@ -143,16 +144,27 @@ class _RecommendationPageState extends State<RecommendationPage> {
           return true;
         },
         child: RefreshIndicator(
+          color: kMainYellowColor,
           onRefresh: _refresh,
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
+            padding: EdgeInsets.only(
+              bottom: 10,
+            ),
             controller: _scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SearchBarComponent(),
                 Container(
-                  child: Image.asset("assets/main/banner.png"),
+                  height: 132,
+                  decoration: BoxDecoration(
+                      color: kSecondGreyColor,
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                          image: AssetImage(
+                            "assets/main/banner.png",
+                          ),
+                          fit: BoxFit.cover)),
                 ),
                 _buildCategoryComponent(),
                 Padding(
@@ -220,7 +232,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
 
 Widget _buildCategoryComponent() {
   return Container(
-    padding: EdgeInsets.only(top: 20),
+    padding: EdgeInsets.only(top: 17),
     child: Row(
       children: [
         Expanded(

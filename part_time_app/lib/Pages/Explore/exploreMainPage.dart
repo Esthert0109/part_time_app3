@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:part_time_app/Pages/Main/collectPage.dart';
-import 'package:part_time_app/Pages/Main/collectPageTest.dart';
+import 'package:part_time_app/Pages/Explore/collectPage.dart';
+import 'package:part_time_app/Pages/Explore/collectPageTest.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
-import '../Main/RecommendationPage.dart';
+import 'RecommendationPage.dart';
 
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
-import '../Main/RecommendationPage.dart';
+import 'RecommendationPage.dart';
 
 class ExploreMainPage extends StatefulWidget {
   const ExploreMainPage({super.key});
@@ -25,22 +25,23 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Container(
-        color: kTransparent,
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: SecondaryTitleComponent(
-          titleList: ["推荐", "收藏"],
-          selectedIndex: selectIndex,
-          onTap: (index) {
-            setState(() {
-              selectIndex = index;
-              _controller.animateToPage(index,
-                  duration: Duration(milliseconds: 600),
-                  curve: Curves.easeInOut);
-            });
-          },
-        ),
-      )),
+            color: kTransparent,
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: SecondaryTitleComponent(
+              titleList: ["推荐", "收藏"],
+              selectedIndex: selectIndex,
+              onTap: (index) {
+                setState(() {
+                  selectIndex = index;
+                  _controller.animateToPage(index,
+                      duration: Duration(milliseconds: 600),
+                      curve: Curves.easeInOut);
+                });
+              },
+            ),
+          )),
       body: PageView(
         controller: _controller,
         scrollDirection: Axis.horizontal,
