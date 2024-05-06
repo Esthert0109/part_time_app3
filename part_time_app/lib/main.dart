@@ -5,6 +5,8 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
+import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
+import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
 
 import 'Pages/homePage.dart';
 
@@ -42,8 +44,10 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       // home: const HomePage(),
-      initialRoute: '/',
+      initialRoute: '/opening',
       getPages: [
+        GetPage(name: '/opening', page: () => const OpeningPage()),
+        GetPage(name: '/onboarding', page: () => const OnboradingPage()),
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage())
