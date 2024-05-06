@@ -28,7 +28,7 @@ class _OpeningPageState extends State<OpeningPage> {
 
   void getDataAndNavigate() {
     Timer(const Duration(seconds: 2), () {
-      Get.offAllNamed('/');
+      Get.offAllNamed('/onboarding');
     });
   }
 

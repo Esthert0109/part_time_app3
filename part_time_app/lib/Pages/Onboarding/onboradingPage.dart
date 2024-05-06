@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
+import 'package:part_time_app/Pages/homePage.dart';
 
 class OnboradingPage extends StatefulWidget {
   const OnboradingPage({super.key});
@@ -70,9 +73,14 @@ class _OnboradingPageState extends State<OnboradingPage> {
               SizedBox(
                 height: 90 * fem,
               ),
-              const Text(
-                '游客模式',
-                style: onboradingPageText3Style,
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => HomePage());
+                },
+                child: const Text(
+                  '游客模式',
+                  style: onboradingPageText3Style,
+                ),
               )
             ],
           ),
