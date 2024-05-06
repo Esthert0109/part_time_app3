@@ -33,22 +33,7 @@ Map<String, dynamic> sorts = {
     {11, '高悬赏'}
   ],
 };
-Map<int, String> stringMap = {
-  1: '短期',
-  2: '长期',
-  3: '写作',
-  4: '录入',
-  5: '游戏',
-  6: '发帖',
-  7: '网页设计',
-  8: '平面设计',
-  9: '新任务',
-  10: '易审核',
-  11: '高悬赏'
-};
 List<int> selectedIndex = [];
-List<String> strings = [];
-String searchKeyword = "";
 
 class _SortPageState extends State<SortPage> {
   @override
@@ -56,14 +41,17 @@ class _SortPageState extends State<SortPage> {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
+            color: kThirdGreyColor,
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFFFCEEA5), Color(0xFFF9F9F9)],
-              stops: [0.0, 0.1],
+              colors: [
+                kBackgroundFirstGradientColor,
+                kBackgroundSecondGradientColor
+              ],
+              stops: [0.0, 0.15],
             ),
-            color: Color(0xFFf8f8f8),
           ),
           child: Column(
             children: [
@@ -102,9 +90,7 @@ class _SortPageState extends State<SortPage> {
                   child: primaryButtonComponent(
                     text: "确认",
                     onPressed: () {
-                      // print(strings);
                       setState(() {
-                        print(selectedIndexName);
                         Get.to(
                             () => SearchResultPage(
                                   selectedTags: selectedIndexName,

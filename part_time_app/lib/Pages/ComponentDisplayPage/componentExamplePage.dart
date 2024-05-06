@@ -58,6 +58,10 @@ class _ComponentExampleState extends State<ComponentExample> {
   int selectIndex = 0;
   List<String> selectedCategory = [];
   bool isSelected = false;
+  final _formKey = GlobalKey<FormState>();
+  String price = "";
+  String selectedDurationUnit = "";
+  String selectedEndUnit = "";
 
   @override
   Widget build(BuildContext context) {
@@ -371,6 +375,26 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionCardLoadingComponent(),
               SizedBox(height: 10),
               Divider(),
+              Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      MissionPublishCheckoutCardComponent(
+                        isSubmit: false,
+                      ),
+                      primaryButtonComponent(
+                          text: "提交",
+                          onPressed: () {
+                            setState(() {
+                              selectedDurationUnit = selectedDuration;
+                              selectedEndUnit = selectedEndTime;
+                              print(selectedDurationUnit);
+                              print(selectedEndUnit);
+                            });
+                          },
+                          textStyle: missionDetailText1)
+                    ],
+                  ))
             ],
           ),
         ),

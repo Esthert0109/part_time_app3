@@ -335,3 +335,12 @@ const missionRejectButtonTextStyle = TextStyle(
 
 const inputCounterTextStyle = TextStyle(
     fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const loginPageTextStyle1 =
+    TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: kMainGreyColor);
+
+const loginPageTextStyle2 = TextStyle(
+    fontSize: 15, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const otpErrorTextStyle1 =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMainRedColor);

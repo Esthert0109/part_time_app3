@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:part_time_app/Components/Dialog/unitDropDownDialogComponent.dart';
+import 'package:part_time_app/Pages/Message/messageMainPage.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -11,6 +13,11 @@ late TextEditingController priceController;
 late TextEditingController peopleController;
 late TextEditingController dayController;
 late TextEditingController durationController;
+String selectedDuration = '天';
+String selectedEndTime = '小时';
+double totalPrepaidPrice = 0;
+double handingFee = 0;
+double totalPrice = 0;
 
 class MissionPublishCheckoutCardComponent extends StatefulWidget {
   final Function(String)? onPriceChange;
@@ -43,10 +50,6 @@ class MissionPublishCheckoutCardComponent extends StatefulWidget {
 
 class _MissionPublishCheckoutCardComponentState
     extends State<MissionPublishCheckoutCardComponent> {
-  double totalPrepaidPrice = 0;
-  double handingFee = 0;
-  double totalPrice = 0;
-
   @override
   void initState() {
     super.initState();
@@ -69,6 +72,18 @@ class _MissionPublishCheckoutCardComponentState
 
   String formatValue(double value) {
     return value.toStringAsFixed(2);
+  }
+
+  void setSelectedString1(String string) {
+    setState(() {
+      selectedDuration = string;
+    });
+  }
+
+  void setSelectedString2(String string) {
+    setState(() {
+      selectedEndTime = string;
+    });
   }
 
   @override
@@ -97,8 +112,8 @@ class _MissionPublishCheckoutCardComponentState
               ],
               keyboardType: TextInputType.number,
               onChanged: (value) {
-                if (widget.onPersonChange != null) {
-                  widget.onPersonChange!(value);
+                if (widget.onPriceChange != null) {
+                  widget.onPriceChange!(value);
                 }
                 calculateTotalPrice(); // Add this line
               },
@@ -136,7 +151,17 @@ class _MissionPublishCheckoutCardComponentState
             SizedBox(height: 8),
             _buildTextFormField2(
               "悬赏时限",
-              "天",
+              selectedDuration,
+              () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return unitDropDownDialogComponent(
+                      callback: setSelectedString1,
+                    );
+                  },
+                );
+              },
               widget.isSubmit,
               widget.isSubmit,
               dayController,
@@ -164,7 +189,17 @@ class _MissionPublishCheckoutCardComponentState
             SizedBox(height: 8),
             _buildTextFormField2(
               "预计耗时",
-              "小时",
+              selectedEndTime,
+              () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return unitDropDownDialogComponent(
+                      callback: setSelectedString2,
+                    );
+                  },
+                );
+              },
               widget.isSubmit,
               widget.isSubmit,
               durationController,
@@ -329,6 +364,7 @@ Widget _buildTextFormField1(
 Widget _buildTextFormField2(
   String text,
   String text2,
+  Function() unit,
   bool readOnly,
   bool isSubmitted,
   TextEditingController? controller, {
@@ -383,12 +419,15 @@ Widget _buildTextFormField2(
                 color: kInputBackGreyColor,
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Text(
-                text2,
-                style: isSubmitted
-                    ? missionCheckoutTextStyle
-                    : missionCheckoutInputTextStyle,
-                textAlign: TextAlign.center,
+              child: GestureDetector(
+                onTap: isSubmitted ? () {} : unit,
+                child: Text(
+                  text2,
+                  style: isSubmitted
+                      ? missionCheckoutTextStyle
+                      : missionCheckoutInputTextStyle,
+                  textAlign: TextAlign.center,
+                ),
               )),
         ),
       ],
