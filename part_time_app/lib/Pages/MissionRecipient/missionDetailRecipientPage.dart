@@ -17,6 +17,7 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
+import 'recipientInfoPage.dart';
 
 class MissionDetailRecipientPage extends StatefulWidget {
   final bool isStarted;
@@ -59,7 +60,7 @@ class MissionDetailRecipientPage extends StatefulWidget {
 // waiting for paid
 // Use Mission Detail Steps Card Component (foldable, default as folded)
 // Use Mission Submission Card Component (foldable, not editable, default as folded)
-// 
+//
 // paid
 // Use Mission Detail Steps Card Component (foldable, default as folded)
 // Use Mission Submission Card Component (foldable, not editable, default as folded)
@@ -420,6 +421,9 @@ class _MissionDetailRecipientPageState
                                       secondButtonOnTap: () {
                                         setState(() {
                                           Navigator.pop(context);
+                                          Get.to(() => RecipientInfoPage(),
+                                              transition:
+                                                  Transition.rightToLeft);
 
                                           Fluttertoast.showToast(
                                               msg: "悬赏开始",
