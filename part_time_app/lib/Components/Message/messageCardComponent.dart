@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Pages/Message/userMessagePage.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
-import '../../Pages/Message/chatConfig.dart';
+import '../../Pages/Message/user/userMessagePage.dart';
+
 
 class MessageCardComponent extends StatefulWidget {
   String? systemDetail;
