@@ -9,8 +9,8 @@ const kMainRedColor = Color(0xffEF4C54);
 const kMainWhiteColor = Color(0xffFFFFFF);
 const kInputBackGreyColor = Color(0xffF9F9F9);
 const kTransparentColor = Colors.transparent;
-const kMainLoadingColor = Color.fromARGB(255, 217, 226, 215);
-const kSecondaryLoadingColor = Color.fromARGB(255, 243, 245, 242);
+const kMainLoadingColor = Color.fromARGB(255, 250, 245, 218);
+const kSecondaryLoadingColor = Color.fromARGB(255, 248, 247, 238);
 
 const kBackgroundFirstGradientColor = Color(0xffFCEEA5);
 const kBackgroundSecondGradientColor = Color(0xffF9F9F9);
