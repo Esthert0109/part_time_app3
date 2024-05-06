@@ -295,6 +295,12 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                                       secondButtonOnTap: () {
                                         Navigator.pop(context);
                                         Get.back();
+                                        Fluttertoast.showToast(
+                                            msg: "已通过",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: kMainGreyColor,
+                                            textColor: kThirdGreyColor);
                                       },
                                     );
                                   });

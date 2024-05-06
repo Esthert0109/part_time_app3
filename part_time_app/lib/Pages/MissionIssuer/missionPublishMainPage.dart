@@ -16,6 +16,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../MissionStatus/missionDetailStatusIssuerPage.dart';
 
 class StepModel {
   String? description;
@@ -834,7 +835,16 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           fixedSize: const Size.fromHeight(40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(26))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(
+                            () => MissionDetailStatusIssuerPage(
+                                  isWaiting: false,
+                                  isFailed: false,
+                                  isPassed: false,
+                                  isRemoved: false,
+                                ),
+                            transition: Transition.rightToLeft);
+                      },
                       child: Text(
                         "预览发布",
                         style: missionCheckoutTotalPriceTextStyle,

@@ -337,7 +337,10 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return StatusDialogComponent(complete: true);
+                      return StatusDialogComponent(
+                        complete: true,
+                        onTap: () {},
+                      );
                     },
                   );
                 },
@@ -351,7 +354,10 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return StatusDialogComponent(complete: false);
+                      return StatusDialogComponent(
+                        complete: false,
+                        onTap: () {},
+                      );
                     },
                   );
                 },

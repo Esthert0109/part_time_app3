@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -106,6 +107,12 @@ class _RejectReasonDialogComponentState
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Get.back();
+                  Fluttertoast.showToast(
+                      msg: "已提交",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: kMainGreyColor,
+                      textColor: kThirdGreyColor);
                 },
                 buttonColor: kMainYellowColor,
                 textStyle: buttonTextStyle2,

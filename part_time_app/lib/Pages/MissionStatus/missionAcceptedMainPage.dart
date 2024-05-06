@@ -57,7 +57,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
                                   isWaiting: false,
                                   isFailed: false,
                                   isPassed: false,
-                                  isRemoved: false,
+                                  isRemoved: true,
                                 ),
                             transition: Transition.rightToLeft);
                       },

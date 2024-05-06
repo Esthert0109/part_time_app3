@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,8 +14,11 @@ import 'package:part_time_app/Components/Card/missionDetailStepsCardComponent.da
 import 'package:part_time_app/Components/Card/missionNoticeCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
+import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
 
+import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Status/statusDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/MockModel/missionStepMockModel.dart';
@@ -36,40 +41,39 @@ class MissionDetailStatusIssuerPage extends StatefulWidget {
       _MissionDetailStatusIssuerPageState();
 }
 
+//
 // when preview (from publish mission page)
 // steps: isCollapsed - false, isCollapseAble - false
 // checkout: non-editable
 // button: 提交
-// 
+//
 // waiting for review
 // steps: isCollapsed - false, isCollapseAble - false
 // checkout: non-editable
 // button: 待审核
-// 
+//
 // review failed
 // - mission delete on right (appbar)
 // steps: isCollapsed - false, isCollapseAble - false
 // checkout: non-editable
 // button: 计时器 + 重新编辑
-// 
+//
 // review passed
 // - mission delete on right (appbar): check if got submission waiting for review
 // steps: isCollapsed - false, isCollapseAble - false
 // checkout: no checkout
 // button: 查看悬赏进度
-// 
+//
 // mission removed
 // - mission submission on right (appbar): check if got submission waiting for review
 // steps: isCollapsed - false, isCollapseAble - false
 // checkout: no checkout
 // button: 已下架
-// 
-// 
-// 
+//
 
 class _MissionDetailStatusIssuerPageState
     extends State<MissionDetailStatusIssuerPage> {
-  bool picPreview = false;
+  bool picPreview = true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -85,31 +89,90 @@ class _MissionDetailStatusIssuerPageState
                   Get.back();
                 },
               ),
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    print("complain this mission");
-                    Get.to(() => MissionReviewPage(),
-                        transition: Transition.rightToLeft);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                    ),
-                    child: SvgPicture.asset(
-                      "assets/mission/complaint.svg",
-                      width: 16,
-                      height: 14,
-                    ),
-                  ),
-                )
-              ],
+              actions: (widget.isFailed || widget.isPassed || widget.isRemoved)
+                  ? [
+                      GestureDetector(
+                        onTap: () {
+                          print("complain this mission");
+
+                          (widget.isFailed || widget.isPassed)
+                              ? showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogComponent(
+                                      alertTitle: '您即将删除该悬赏',
+                                      alertDesc: RichText(
+                                        text: TextSpan(
+                                          style: alertDialogContentTextStyle,
+                                          children: [
+                                            TextSpan(text: '点击确认后，所有内容将被删除。\n'),
+                                            TextSpan(
+                                              text: '已预付的赏金将',
+                                            ),
+                                            TextSpan(
+                                                text: '全额退款',
+                                                style: alertDialogTextStyle),
+                                            TextSpan(
+                                              text: '。是否继续？',
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      descTextStyle:
+                                          alertDialogContentTextStyle,
+                                      firstButtonText: '返回',
+                                      firstButtonTextStyle:
+                                          alertDialogFirstButtonTextStyle,
+                                      firstButtonColor: kThirdGreyColor,
+                                      secondButtonText: '确认',
+                                      secondButtonTextStyle:
+                                          alertDialogRejectButtonTextStyle,
+                                      secondButtonColor:
+                                          kRejectMissionButtonColor,
+                                      isButtonExpanded: true,
+                                      firstButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      secondButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                          Get.back();
+                                          Fluttertoast.showToast(
+                                              msg: "已删除",
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: kMainGreyColor,
+                                              textColor: kThirdGreyColor);
+                                        });
+                                      },
+                                    );
+                                  })
+                              : Get.to(() => MissionReviewPage(),
+                                  transition: Transition.rightToLeft);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                          ),
+                          child: SvgPicture.asset(
+                            (widget.isFailed || widget.isPassed)
+                                ? "assets/mission/delete.svg"
+                                : "assets/mission/review.svg",
+                            width: 24,
+                            height: 24,
+                          ),
+                        ),
+                      )
+                    ]
+                  : null,
               centerTitle: true,
               title: Container(
                   color: kTransparent,
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: thirdTitleComponent(
-                    text: "开始悬赏",
+                    text: "悬赏详情",
                   ))),
           body: Container(
             constraints: const BoxConstraints.expand(),
@@ -131,12 +194,14 @@ class _MissionDetailStatusIssuerPageState
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MissionDetailIssuerCardComponent(
-                      image:
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
-                      title: "墩墩鸡",
-                      action: "留言咨询 >",
-                      onTap: () {}),
+                  (widget.isPassed || widget.isRemoved)
+                      ? Container()
+                      : MissionDetailIssuerCardComponent(
+                          image:
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
+                          title: "墩墩鸡",
+                          action: "留言咨询 >",
+                          onTap: () {}),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: MissionDetailDescriptionCardComponent(
@@ -158,111 +223,126 @@ class _MissionDetailStatusIssuerPageState
                     isCollapsed: true,
                     isCollapseAble: false,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: MissionPublishCheckoutCardComponent(
-                      isSubmit: true,
-                      dayInitial: "10",
-                      priceInitial: "20",
-                      peopleInitial: "50",
-                      durationInitial: "60",
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "图片预览",
-                        style: missionDetailText6,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Row(
+                  (widget.isPassed || widget.isRemoved)
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: MissionPublishCheckoutCardComponent(
+                            isSubmit: true,
+                            dayInitial: "10",
+                            priceInitial: "20",
+                            peopleInitial: "50",
+                            durationInitial: "60",
+                          ),
+                        ),
+                  (widget.isPassed || widget.isRemoved)
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: Text(
-                                picPreview ? "开始悬赏可见" : "公开",
-                                style: tStatusFieldText1,
-                              ),
+                            Text(
+                              "图片预览",
+                              style: missionDetailText6,
                             ),
-                            SizedBox(
-                              width: 50,
-                              height: 40,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: Switch(
-                                    value: picPreview,
-                                    activeColor: kMainBlackColor,
-                                    activeTrackColor: kMainYellowColor,
-                                    inactiveTrackColor: kTransparent,
-                                    inactiveThumbColor: kMainBlackColor,
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.padded,
-                                    trackOutlineColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (picPreview) {
-                                          return kMainBlackColor;
-                                        }
-                                        return kMainBlackColor; // Use the default color.
-                                      },
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0),
+                                    child: Text(
+                                      picPreview ? "开始悬赏可见" : "公开",
+                                      style: tStatusFieldText1,
                                     ),
-                                    trackOutlineWidth:
-                                        MaterialStateProperty.all(1),
-                                    onChanged: (preview) {
-                                      setState(() {
-                                        picPreview = preview;
-                                      });
-                                    }),
+                                  ),
+                                  SizedBox(
+                                    width: 50,
+                                    height: 40,
+                                    child: FittedBox(
+                                      fit: BoxFit.fill,
+                                      child: Switch(
+                                          value: picPreview,
+                                          activeColor: kMainBlackColor,
+                                          activeTrackColor: kMainYellowColor,
+                                          inactiveTrackColor: kTransparent,
+                                          inactiveThumbColor: kMainBlackColor,
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.padded,
+                                          trackOutlineColor:
+                                              MaterialStateProperty.resolveWith<
+                                                  Color?>(
+                                            (Set<MaterialState> states) {
+                                              if (picPreview) {
+                                                return kMainBlackColor;
+                                              }
+                                              return kMainBlackColor; // Use the default color.
+                                            },
+                                          ),
+                                          trackOutlineWidth:
+                                              MaterialStateProperty.all(1),
+                                          onChanged: null
+                                          //  (preview) {
+                                          //   setState(() {
+                                          //     picPreview = preview;
+                                          //   });
+                                          // }
+                                          ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: missionNoticeCardComponent(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        RichText(
-                            text: TextSpan(
-                                style: missionIDtextStyle,
-                                children: [
-                              TextSpan(text: "悬赏ID: "),
-                              TextSpan(text: "0292938DHFKAAUBCVAVC")
-                            ])),
-                        GestureDetector(
-                          onTap: () {
-                            print("copied");
-                            Clipboard.setData(const ClipboardData(
-                                text: "0292938DHFKAAUBCVAVC"));
-                            Fluttertoast.showToast(
-                                msg: "已复制",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: kMainGreyColor,
-                                textColor: kThirdGreyColor);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: SvgPicture.asset(
-                              "assets/mission/copy.svg",
-                              width: 24,
-                              height: 24,
-                            ),
-                          ),
+                  (widget.isPassed || widget.isRemoved)
+                      ? Container()
+                      : Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: missionNoticeCardComponent(),
+                        ),
+                  (widget.isWaiting ||
+                          widget.isFailed ||
+                          widget.isPassed ||
+                          widget.isRemoved)
+                      ? Row(
+                          children: [
+                            RichText(
+                                text: TextSpan(
+                                    style: missionIDtextStyle,
+                                    children: [
+                                  TextSpan(text: "悬赏ID: "),
+                                  TextSpan(text: "0292938DHFKAAUBCVAVC")
+                                ])),
+                            GestureDetector(
+                              onTap: () {
+                                print("copied");
+                                Clipboard.setData(const ClipboardData(
+                                    text: "0292938DHFKAAUBCVAVC"));
+                                Fluttertoast.showToast(
+                                    msg: "已复制",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: kMainGreyColor,
+                                    textColor: kThirdGreyColor);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                child: SvgPicture.asset(
+                                  "assets/mission/copy.svg",
+                                  width: 24,
+                                  height: 24,
+                                ),
+                              ),
+                            )
+                          ],
                         )
-                      ],
-                    ),
+                      : Container(),
+                  SizedBox(
+                    height: 37,
                   )
                 ],
               ),
@@ -280,15 +360,125 @@ class _MissionDetailStatusIssuerPageState
                 spreadRadius: 0,
               ),
             ]),
-            child: SizedBox(
-              width: double.infinity,
-              child: primaryButtonComponent(
-                buttonColor: kMainYellowColor,
-                text: '提交',
-                textStyle: buttonTextStyle,
-                onPressed: () {},
-              ),
-            ),
+            child: widget.isFailed
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RichText(
+                          text: TextSpan(
+                              style: messageDescTextStyle2,
+                              children: [
+                            TextSpan(text: '剩余时间 '),
+                            TextSpan(text: '240:02:09')
+                          ])),
+                      Padding(
+                        padding: EdgeInsets.only(left: 24),
+                        child: SizedBox(
+                          width: 180,
+                          child: primaryButtonComponent(
+                            text: '重新编辑',
+                            textStyle: missionRejectButtonTextStyle,
+                            buttonColor: kRejectMissionButtonColor,
+                            onPressed: () {
+                              Timer.periodic(Duration(seconds: 1), (timer) {
+                                print(" ?? ${timer.tick}");
+                              });
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : SizedBox(
+                    width: double.infinity,
+                    child: primaryButtonComponent(
+                      buttonColor: kMainYellowColor,
+                      disableButtonColor: kThirdGreyColor,
+                      text: widget.isWaiting
+                          ? '待审核'
+                          : widget.isPassed
+                              ? '查看悬赏进度'
+                              : widget.isRemoved
+                                  ? "已下架"
+                                  : '提交',
+                      textStyle: (widget.isWaiting || widget.isRemoved)
+                          ? disableButtonTextStyle
+                          : buttonTextStyle,
+                      onPressed: (widget.isWaiting || widget.isRemoved)
+                          ? null
+                          : widget.isPassed
+                              ? () {
+                                  Get.to(() => MissionReviewPage(),
+                                      transition: Transition.rightToLeft);
+                                }
+                              : () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialogComponent(
+                                          alertTitle: '提交前请检查',
+                                          alertDesc: RichText(
+                                            text: TextSpan(
+                                              style:
+                                                  alertDialogContentTextStyle,
+                                              children: [
+                                                TextSpan(
+                                                    text: '是否从相册选择了正确的截图\n'),
+                                                TextSpan(
+                                                  text: '截图是否符合悬赏要求\n\n',
+                                                ),
+                                                TextSpan(text: '提交后将无法修改\n'),
+                                                TextSpan(
+                                                  text: '恶意提交将受到禁止报名/永久封号等惩罚。',
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          descTextStyle:
+                                              alertDialogContentTextStyle,
+                                          firstButtonText: '检查一下',
+                                          firstButtonTextStyle:
+                                              alertDialogFirstButtonTextStyle,
+                                          firstButtonColor: kThirdGreyColor,
+                                          secondButtonText: '确认无误马上提交',
+                                          secondButtonTextStyle:
+                                              alertDialogSecondButtonTextStyle,
+                                          secondButtonColor: kMainYellowColor,
+                                          isButtonExpanded: false,
+                                          firstButtonOnTap: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          secondButtonOnTap: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+
+                                              // Get.back();
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return StatusDialogComponent(
+                                                    complete: true,
+                                                    onTap: () {
+                                                      setState(() {
+                                                        Navigator.pop(context);
+                                                        Get.offAllNamed(
+                                                            '/home');
+                                                      });
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            });
+                                          },
+                                        );
+                                      });
+                                },
+                    ),
+                  ),
           )),
     );
   }

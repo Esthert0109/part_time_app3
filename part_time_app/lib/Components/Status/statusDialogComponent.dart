@@ -8,7 +8,9 @@ import '../Button/thirdButtonComponent.dart';
 
 class StatusDialogComponent extends StatefulWidget {
   bool complete;
-  StatusDialogComponent({super.key, required this.complete});
+  Function() onTap;
+  StatusDialogComponent(
+      {super.key, required this.complete, required this.onTap});
 
   @override
   State<StatusDialogComponent> createState() => _StatusDialogComponentState();
@@ -53,7 +55,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                           width: 291,
                           child: thirdButtonComponent(
                             text: "返回首页",
-                            onPressed: () {},
+                            onPressed: widget.onTap,
                           ),
                         )
                       ],
@@ -72,7 +74,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                           width: 291,
                           child: thirdButtonComponent(
                             text: "继续编辑",
-                            onPressed: () {},
+                            onPressed: widget.onTap,
                           ),
                         )
                       ],

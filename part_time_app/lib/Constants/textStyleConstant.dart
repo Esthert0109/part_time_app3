@@ -230,6 +230,9 @@ const missionFailReasonTitleTextStyle = TextStyle(
   color: kMainBlackColor,
 );
 
+const alertDialogTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w600, color: kSecondGreyColor);
+
 const primaryTitleTextStyle = TextStyle(
     fontSize: 30, fontWeight: FontWeight.w700, color: kMainBlackColor);
 
