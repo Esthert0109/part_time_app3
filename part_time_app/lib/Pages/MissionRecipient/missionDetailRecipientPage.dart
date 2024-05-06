@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
@@ -11,6 +12,7 @@ import '../../Components/Card/missionDetailStepsCardComponent.dart';
 import '../../Components/Card/missionNoticeCardComponent.dart';
 import '../../Components/Card/missionSubmissionCardComponent.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -21,6 +23,7 @@ class MissionDetailRecipientPage extends StatefulWidget {
   final bool isSubmitted;
   final bool isExpired;
   final bool isWaitingPaid;
+  final bool isPaid;
   final bool isFailed;
   const MissionDetailRecipientPage(
       {super.key,
@@ -28,7 +31,8 @@ class MissionDetailRecipientPage extends StatefulWidget {
       required this.isSubmitted,
       required this.isExpired,
       required this.isWaitingPaid,
-      required this.isFailed});
+      required this.isFailed,
+      required this.isPaid});
 
   @override
   State<MissionDetailRecipientPage> createState() =>
@@ -53,6 +57,10 @@ class MissionDetailRecipientPage extends StatefulWidget {
 // Use Mission Submission Card Component (foldable, not editable)
 //
 // waiting for paid
+// Use Mission Detail Steps Card Component (foldable, default as folded)
+// Use Mission Submission Card Component (foldable, not editable, default as folded)
+// 
+// paid
 // Use Mission Detail Steps Card Component (foldable, default as folded)
 // Use Mission Submission Card Component (foldable, not editable, default as folded)
 //
@@ -146,25 +154,48 @@ class _MissionDetailRecipientPageState
                   child: missionDetailStepsCardComponent(
                     steps: mockData,
                     isConfidential: true,
-                    isCollapsed: true,
-                    isCollapseAble: false,
+                    isCollapsed: (widget.isSubmitted ||
+                            widget.isExpired ||
+                            widget.isFailed ||
+                            widget.isWaitingPaid ||
+                            widget.isPaid)
+                        ? false
+                        : true,
+                    isCollapseAble: (widget.isSubmitted ||
+                            widget.isExpired ||
+                            widget.isFailed ||
+                            widget.isWaitingPaid ||
+                            widget.isPaid)
+                        ? true
+                        : false,
                   ),
                 ),
-                widget.isStarted
+                (widget.isStarted ||
+                        widget.isSubmitted ||
+                        widget.isExpired ||
+                        widget.isFailed ||
+                        widget.isWaitingPaid ||
+                        widget.isPaid)
                     ? MissionSubmissionCardComponent(
-                        isEdit: true,
+                        isEdit: widget.isStarted ? true : false,
                         submissionPics: [
                           "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
                           "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
                           "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
                         ],
-                        isCollapsed: true,
-                        isCollapseAble: false,
+                        isCollapsed: widget.isStarted ? true : false,
+                        isCollapseAble: widget.isStarted ? false : true,
                       )
                     : Container(
                         width: double.infinity,
                         child: missionNoticeCardComponent(),
                       ),
+                widget.isFailed
+                    ? missionFailedReasonCardComponent(
+                        reasonTitle: "拒绝理由",
+                        reasonDesc:
+                            "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊")
+                    : Container(),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Row(
@@ -217,65 +248,191 @@ class _MissionDetailRecipientPageState
               spreadRadius: 0,
             ),
           ]),
-          child: SizedBox(
-            width: double.infinity,
-            child: primaryButtonComponent(
-                buttonColor: kMainYellowColor,
-                disableButtonColor: kThirdGreyColor,
-                text: "开始悬赏",
-                textStyle: buttonTextStyle,
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialogComponent(
-                          alertTitle: '您即将开始悬赏',
-                          alertDesc: RichText(
-                            text: TextSpan(
-                              style: alertDialogContentTextStyle,
-                              children: [
-                                TextSpan(text: '该悬赏的限时为3天（72小时）。\n'),
-                                TextSpan(
-                                  text: '请注意，用户不能重复开始同一悬赏。\n\n',
-                                ),
-                                TextSpan(text: '开始悬赏后将无法终止或放弃悬赏，\n'),
-                                TextSpan(
-                                  text: '直至该悬赏过期/被下架。\n\n',
-                                ),
-                                TextSpan(text: '是否继续？\n'),
-                              ],
-                            ),
-                          ),
-                          descTextStyle: alertDialogContentTextStyle,
-                          firstButtonText: '返回',
-                          firstButtonTextStyle: alertDialogFirstButtonTextStyle,
-                          firstButtonColor: kThirdGreyColor,
-                          secondButtonText: '开始悬赏',
-                          secondButtonTextStyle:
-                              alertDialogSecondButtonTextStyle,
-                          secondButtonColor: kMainYellowColor,
-                          isButtonExpanded: true,
-                          firstButtonOnTap: () {
+          child: widget.isStarted
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RichText(
+                        text: TextSpan(style: messageDescTextStyle2, children: [
+                      TextSpan(text: '剩余时间 '),
+                      TextSpan(text: '240:02:09')
+                    ])),
+                    Padding(
+                      padding: EdgeInsets.only(left: 24),
+                      child: SizedBox(
+                        width: 180,
+                        child: primaryButtonComponent(
+                          text: '提交',
+                          textStyle: missionCardTitleTextStyle,
+                          buttonColor: kMainYellowColor,
+                          onPressed: () {
                             setState(() {
-                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatusDialogComponent(
+                                    complete: false,
+                                    unsuccessText: "请上传任务截图",
+                                    onTap: () {
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  );
+                                },
+                              );
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (context) {
+                              //       return AlertDialogComponent(
+                              //         alertTitle: '您即将提交该任务',
+                              //         alertDesc: RichText(
+                              //           text: TextSpan(
+                              //             style: alertDialogContentTextStyle,
+                              //             children: [
+                              //               TextSpan(text: '点击确认后，该任务将被提交，\n'),
+                              //               TextSpan(
+                              //                 text: '若审核未通过需自行承担后果(雇主不付款)。\n',
+                              //               ),
+                              //               TextSpan(text: '确定提交后不可重新编辑。\n'),
+                              //               TextSpan(
+                              //                 text: '是否继续？\n',
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //         descTextStyle:
+                              //             alertDialogContentTextStyle,
+                              //         firstButtonText: '继续编辑',
+                              //         firstButtonTextStyle:
+                              //             alertDialogFirstButtonTextStyle,
+                              //         firstButtonColor: kThirdGreyColor,
+                              //         secondButtonText: '确认提交任务',
+                              //         secondButtonTextStyle:
+                              //             alertDialogSecondButtonTextStyle,
+                              //         secondButtonColor: kMainYellowColor,
+                              //         isButtonExpanded: false,
+                              //         firstButtonOnTap: () {
+                              //           setState(() {
+                              //             Navigator.pop(context);
+                              //           });
+                              //         },
+                              //         secondButtonOnTap: () {
+                              //           setState(() {
+                              //             Navigator.pop(context);
+                              //             showDialog(
+                              //               context: context,
+                              //               builder: (BuildContext context) {
+                              //                 return StatusDialogComponent(
+                              //                   complete: true,
+                              //                   successText:
+                              //                       "雇主将在48小时内审核您的悬赏成果。",
+                              //                   onTap: () {
+                              //                     setState(() {
+                              //                       Navigator.pop(context);
+                              //                       Get.offAllNamed('/home');
+                              //                     });
+                              //                   },
+                              //                 );
+                              //               },
+                              //             );
+                              //           });
+                              //         },
+                              //       );
+                              //     });
                             });
                           },
-                          secondButtonOnTap: () {
-                            setState(() {
-                              Navigator.pop(context);
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              : SizedBox(
+                  width: double.infinity,
+                  child: primaryButtonComponent(
+                      buttonColor: kMainYellowColor,
+                      disableButtonColor: kThirdGreyColor,
+                      text: widget.isSubmitted
+                          ? "待审核"
+                          : widget.isExpired
+                              ? "已失效"
+                              : widget.isFailed
+                                  ? "未通过"
+                                  : widget.isWaitingPaid
+                                      ? "待到账"
+                                      : widget.isPaid
+                                          ? "已到账"
+                                          : "开始悬赏",
+                      textStyle: (widget.isSubmitted ||
+                              widget.isExpired ||
+                              widget.isFailed ||
+                              widget.isWaitingPaid ||
+                              widget.isPaid)
+                          ? disableButtonTextStyle
+                          : buttonTextStyle,
+                      onPressed: (widget.isSubmitted ||
+                              widget.isExpired ||
+                              widget.isFailed ||
+                              widget.isWaitingPaid ||
+                              widget.isPaid)
+                          ? null
+                          : () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogComponent(
+                                      alertTitle: '您即将开始悬赏',
+                                      alertDesc: RichText(
+                                        text: TextSpan(
+                                          style: alertDialogContentTextStyle,
+                                          children: [
+                                            TextSpan(
+                                                text: '该悬赏的限时为3天（72小时）。\n'),
+                                            TextSpan(
+                                              text: '请注意，用户不能重复开始同一悬赏。\n\n',
+                                            ),
+                                            TextSpan(
+                                                text: '开始悬赏后将无法终止或放弃悬赏，\n'),
+                                            TextSpan(
+                                              text: '直至该悬赏过期/被下架。\n\n',
+                                            ),
+                                            TextSpan(text: '是否继续？\n'),
+                                          ],
+                                        ),
+                                      ),
+                                      descTextStyle:
+                                          alertDialogContentTextStyle,
+                                      firstButtonText: '返回',
+                                      firstButtonTextStyle:
+                                          alertDialogFirstButtonTextStyle,
+                                      firstButtonColor: kThirdGreyColor,
+                                      secondButtonText: '开始悬赏',
+                                      secondButtonTextStyle:
+                                          alertDialogSecondButtonTextStyle,
+                                      secondButtonColor: kMainYellowColor,
+                                      isButtonExpanded: true,
+                                      firstButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      secondButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
 
-                              Fluttertoast.showToast(
-                                  msg: "悬赏开始",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: kMainGreyColor,
-                                  textColor: kThirdGreyColor);
-                            });
-                          },
-                        );
-                      });
-                }),
-          ),
+                                          Fluttertoast.showToast(
+                                              msg: "悬赏开始",
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: kMainGreyColor,
+                                              textColor: kThirdGreyColor);
+                                        });
+                                      },
+                                    );
+                                  });
+                            }),
+                ),
         ),
       ),
     );

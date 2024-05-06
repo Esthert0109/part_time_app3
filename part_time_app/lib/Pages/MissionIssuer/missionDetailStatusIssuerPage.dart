@@ -379,9 +379,9 @@ class _MissionDetailStatusIssuerPageState
                             textStyle: missionRejectButtonTextStyle,
                             buttonColor: kRejectMissionButtonColor,
                             onPressed: () {
-                              Timer.periodic(Duration(seconds: 1), (timer) {
-                                print(" ?? ${timer.tick}");
-                              });
+                              // Timer.periodic(Duration(seconds: 1), (timer) {
+                              //   print(" ?? ${timer.tick}");
+                              // });
                             },
                           ),
                         ),
@@ -460,6 +460,7 @@ class _MissionDetailStatusIssuerPageState
                                                     (BuildContext context) {
                                                   return StatusDialogComponent(
                                                     complete: true,
+                                                    successText: "系统将审核你的内容，审核通过后将发布该悬赏。",
                                                     onTap: () {
                                                       setState(() {
                                                         Navigator.pop(context);

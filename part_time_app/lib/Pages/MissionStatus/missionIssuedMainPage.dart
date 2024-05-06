@@ -53,10 +53,11 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage> {
                       onTap: () {
                         Get.to(
                             () => MissionDetailRecipientPage(
-                                  isStarted: true,
+                                  isStarted: false,
                                   isSubmitted: false,
                                   isExpired: false,
                                   isWaitingPaid: false,
+                                  isPaid: false,
                                   isFailed: false,
                                 ),
                             transition: Transition.rightToLeft);
