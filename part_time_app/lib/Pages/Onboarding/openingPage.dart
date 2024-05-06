@@ -7,14 +7,14 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
-class openingPage extends StatefulWidget {
-  const openingPage({super.key});
+class OpeningPage extends StatefulWidget {
+  const OpeningPage({super.key});
 
   @override
-  State<openingPage> createState() => _openingPageState();
+  State<OpeningPage> createState() => _OpeningPageState();
 }
 
-class _openingPageState extends State<openingPage> {
+class _OpeningPageState extends State<OpeningPage> {
   @override
   void initState() {
     super.initState();

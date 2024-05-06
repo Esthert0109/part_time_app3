@@ -5,14 +5,14 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 
-class onboradingPage extends StatefulWidget {
-  const onboradingPage({super.key});
+class OnboradingPage extends StatefulWidget {
+  const OnboradingPage({super.key});
 
   @override
-  State<onboradingPage> createState() => _onboradingPageState();
+  State<OnboradingPage> createState() => _OnboradingPageState();
 }
 
-class _onboradingPageState extends State<onboradingPage> {
+class _OnboradingPageState extends State<OnboradingPage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
@@ -60,7 +60,7 @@ class _onboradingPageState extends State<onboradingPage> {
                         text: '注册',
                         textStyle: onboradingPageText2Style,
                         onPressed: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
+                          // Navigator.of(context).push(MaterialPageRoute(
                           //     builder: (context) => const RegistrationPage()));
                         },
                         buttonColor: kOnboradingPageBtnColor,
