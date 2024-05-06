@@ -5,7 +5,7 @@ import 'package:part_time_app/Components/Selection/thirdStatusSelectionComponent
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Constants/colorConstant.dart';
-import 'missionDetailStatusIssuerPage.dart';
+import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
 
 class MissionAcceptedMainPage extends StatefulWidget {
   const MissionAcceptedMainPage({super.key});

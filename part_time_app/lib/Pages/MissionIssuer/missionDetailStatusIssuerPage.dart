@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -22,7 +20,7 @@ import '../../Components/Status/statusDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/MockModel/missionStepMockModel.dart';
-import 'missionReviewPage.dart';
+import '../MissionStatus/missionReviewPage.dart';
 
 class MissionDetailStatusIssuerPage extends StatefulWidget {
   final bool isWaiting;

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionDetailStepsCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dart';
-import 'package:part_time_app/Pages/MissionStatus/missionDetailStatusIssuerPage.dart';
+import 'package:part_time_app/Pages/MissionIssuer/missionDetailStatusIssuerPage.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
