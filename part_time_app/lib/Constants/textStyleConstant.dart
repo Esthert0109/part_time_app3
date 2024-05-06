@@ -316,3 +316,6 @@ const loginPageTextStyle1 =
 
 const loginPageTextStyle2 = TextStyle(
     fontSize: 15, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const otpErrorTextStyle1 =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMainRedColor);

@@ -137,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Container(
                         padding: EdgeInsets.fromLTRB(12, 0, 12, 15),
                         width: 70,
-                        height: 50,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: kDialogInputColor,
                           borderRadius: BorderRadius.circular(10),

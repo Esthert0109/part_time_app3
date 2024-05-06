@@ -45,7 +45,6 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const HomePage()),
-        GetPage(name: '/sort', page: () => HighCommisionPage()),
       ],
     );
   }

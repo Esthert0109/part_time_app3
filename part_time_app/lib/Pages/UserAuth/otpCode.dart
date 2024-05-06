@@ -21,10 +21,8 @@ class _OtpCodePageState extends State<OtpCodePage> {
       List.generate(4, (index) => TextEditingController());
   @override
   Widget build(BuildContext context) {
-    const fillColor = Color.fromRGBO(243, 246, 249, 0);
-
     final defaultPinTheme = PinTheme(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.only(left: 10, right: 10),
       width: 70,
       height: 70,
       textStyle: selectedSecondaryTitleTextStyle,
@@ -65,6 +63,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
             ),
             const SizedBox(height: 10),
             Pinput(
+              errorTextStyle: otpErrorTextStyle1,
               controller: pinController,
               focusNode: focusNode,
               androidSmsAutofillMethod:
@@ -73,7 +72,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
               defaultPinTheme: defaultPinTheme,
               separatorBuilder: (index) => const SizedBox(width: 8),
               validator: (value) {
-                return value == '2222' ? null : 'Pin is incorrect';
+                return value == '2222' ? null : '   验证码错误';
               },
               hapticFeedbackType: HapticFeedbackType.lightImpact,
               onCompleted: (pin) {
@@ -96,17 +95,12 @@ class _OtpCodePageState extends State<OtpCodePage> {
                   border: Border.all(color: kMainYellowColor),
                 ),
               ),
-              errorPinTheme: defaultPinTheme.copyBorderWith(
+              errorPinTheme: defaultPinTheme.copyWith(
+                  decoration: defaultPinTheme.decoration!.copyWith(
+                color: kMainWhiteColor,
                 border: Border.all(color: Colors.redAccent),
-              ),
+              )),
             ),
-            // Form(
-            //   key: _formKey,
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: List.generate(4, (index) => buildOtpTextField(index)),
-            //   ),
-            // ),
             const SizedBox(height: 70),
             SizedBox(
               width: 372,
@@ -120,57 +114,6 @@ class _OtpCodePageState extends State<OtpCodePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildOtpTextField(int index) {
-    return SizedBox(
-      width: 60,
-      height: 60,
-      child: TextFormField(
-        controller: _controllers[index],
-        maxLength: 1,
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: kMainTextFieldGreyColor,
-          counterText: "",
-          hintStyle: TextStyle(fontSize: 24),
-          contentPadding: EdgeInsets.all(15),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: kMainYellowColor, width: 2.0),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          errorMaxLines: 1,
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter OTP';
-          }
-          return null;
-        },
-        onChanged: (value) {
-          if (value.length == 1) {
-            if (index < _controllers.length - 1) {
-              FocusScope.of(context).nextFocus();
-            } else {
-              FocusScope.of(context).unfocus();
-            }
-          }
-        },
       ),
     );
   }

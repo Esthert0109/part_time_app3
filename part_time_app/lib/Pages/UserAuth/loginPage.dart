@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Container(
                               padding: EdgeInsets.fromLTRB(12, 0, 12, 15),
                               width: 70,
-                              height: 50,
+                              height: 48,
                               decoration: BoxDecoration(
                                 color: kDialogInputColor,
                                 borderRadius: BorderRadius.circular(10),
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                           Positioned(
                             child: Container(
                               child: InternationalPhoneNumberInput(
-                                errorMessage: " ",
+                                errorMessage: "请正确的电话号码",
                                 initialValue: phoneNumber,
                                 textFieldController: phoneControllerLogin,
                                 formatInput: true,
