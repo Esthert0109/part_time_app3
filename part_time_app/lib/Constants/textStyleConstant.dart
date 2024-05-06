@@ -5,6 +5,10 @@ import 'colorConstant.dart';
 const bottomNaviBarTextStyle = TextStyle(
     fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
+//SplashScreen
+const splashScreenTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
 //Mission
 const missionCheckoutInputTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -232,6 +236,21 @@ const missionFailReasonTitleTextStyle = TextStyle(
 
 const primaryTitleTextStyle = TextStyle(
     fontSize: 30, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const onboradingPageTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const onboradingPageText2Style = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kOnboradingPageText2Color);
+
+const onboradingPageText3Style = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const forgotPassTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const forgotPassSubmitTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
 
 const thirdTitleTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);

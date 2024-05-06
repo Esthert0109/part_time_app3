@@ -39,3 +39,7 @@ const kPrimaryButtonDisableColor = Color.fromRGBO(255, 228, 87, 0.5);
 const kPrimaryButtonDisableTextColor = Color.fromRGBO(51, 51, 51, 0.5);
 const kPrimaryRedButtonColor = Color.fromRGBO(255, 236, 225, 1);
 const kPrimaryButtonRedTextColor = Color(0xffD6323A);
+
+const kSlashScreenColor = Color(0xffFFFEF4);
+const kOnboradingPageBtnColor = Color(0xffFFF7D0);
+const kOnboradingPageText2Color = Color(0xffE5B63E);
