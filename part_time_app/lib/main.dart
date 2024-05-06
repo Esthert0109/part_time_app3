@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Main/highCommisionPage.dart';
+import 'package:part_time_app/Pages/Message/chatConfig.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 
@@ -10,6 +11,8 @@ import 'Pages/homePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  initAndLoginIm();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const MyApp());
 }

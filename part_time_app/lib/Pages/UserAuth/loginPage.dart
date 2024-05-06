@@ -3,12 +3,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../Message/chatConfig.dart';
+import '../Message/userMessagePage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -221,12 +225,16 @@ class _LoginPageState extends State<LoginPage> {
                         height: 50.0,
                         child: primaryButtonComponent(
                           text: "提交",
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // If the form is valid, perform your actions
-                              _formKey.currentState!.save();
+                          onPressed: () async {
+                            bool isLoginTencent =
+                                await userTencentLogin('2206');
 
-                              // Perform actions with _password here
+                            if (isLoginTencent) {
+                              Get.to(() => UserMessagePage(),
+                                  transition: Transition.rightToLeft);
+                              // Navigate to another screen or do something else
+                            } else {
+                              print("cannot");
                             }
                           },
                           buttonColor: kMainYellowColor,
