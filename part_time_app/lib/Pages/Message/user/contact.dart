@@ -1,8 +1,8 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
-import 'package:part_time_app/Pages/Message/newContact.dart';
-import 'package:part_time_app/Pages/Message/user_profile.dart';
+import 'package:part_time_app/Pages/Message/user/newContact.dart';
+import 'package:part_time_app/Pages/Message/user/user_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:tencent_cloud_chat_uikit/data_services/core/tim_uikit_wide_modal_operation_key.dart';
 import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';

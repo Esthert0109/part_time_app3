@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:part_time_app/Pages/Message/chat.dart';
-import 'package:part_time_app/Pages/Message/search.dart';
-import 'package:part_time_app/Pages/Message/tencent_page.dart';
-import 'package:part_time_app/Pages/Message/user_profile.dart';
+import 'package:part_time_app/Pages/Message/user/chat.dart';
+import 'package:part_time_app/Pages/Message/user/search.dart';
+import 'package:part_time_app/Pages/Message/user/tencent_page.dart';
+import 'package:part_time_app/Pages/Message/user/user_profile.dart';
 import 'package:tencent_cloud_chat_uikit/business_logic/life_cycle/group_profile_life_cycle.dart';
 import 'package:tencent_cloud_chat_uikit/business_logic/view_models/tui_self_info_view_model.dart';
 import 'package:tencent_cloud_chat_uikit/data_services/services_locatar.dart';

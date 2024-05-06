@@ -1,7 +1,7 @@
-import 'package:part_time_app/Pages/Main/utils/toast.dart';
-import 'package:part_time_app/Pages/Message/chat.dart';
-import 'package:part_time_app/Pages/Message/search.dart';
-import 'package:part_time_app/Pages/Message/tencent_page.dart';
+import 'package:part_time_app/Pages/utils/toast.dart';
+import 'package:part_time_app/Pages/Message/user/chat.dart';
+import 'package:part_time_app/Pages/Message/user/search.dart';
+import 'package:part_time_app/Pages/Message/user/tencent_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tencent_cloud_chat_uikit/business_logic/life_cycle/profile_life_cycle.dart';

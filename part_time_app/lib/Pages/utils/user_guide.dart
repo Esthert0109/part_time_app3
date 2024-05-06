@@ -1,7 +1,7 @@
 // ignore_for_file: empty_catches
 
 import 'package:flutter/material.dart';
-import 'package:part_time_app/Pages/Main/utils/user_guide_provider.dart';
+import 'package:part_time_app/Pages/utils/user_guide_provider.dart';
 import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 
 import 'package:provider/provider.dart';

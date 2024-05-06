@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:part_time_app/Pages/Message/user_profile.dart';
-// import 'package:tencent_cloud_chat_uikit/business_logic/model/profile_model.dart';
+import 'package:part_time_app/Pages/Message/user/chat.dart';
 import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 import 'package:tencent_cloud_chat_uikit/ui/utils/screen_utils.dart';
 
-class AddFriend extends StatelessWidget {
+class AddGroup extends StatelessWidget {
   final ValueChanged<V2TimConversation>? directToChat;
   final VoidCallback? closeFunc;
 
-  const AddFriend({Key? key, this.directToChat, this.closeFunc})
+  const AddGroup({Key? key, this.directToChat, this.closeFunc})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TUIKitScreenUtils.getDeviceWidget(
         context: context,
-        desktopWidget: TIMUIKitAddFriend(
+        desktopWidget: TIMUIKitAddGroup(
           closeFunc: closeFunc,
-          onTapAlreadyFriendsItem: (String userID) async {
-            final V2TIMManager _sdkInstance = TIMUIKitCore.getSDKInstance();
-            final conversationID = "c2c_$userID";
-            final res = await _sdkInstance
-                .getConversationManager()
-                .getConversation(conversationID: conversationID);
-
-            if (res.code == 0) {
-              final conversation = res.data ??
-                  V2TimConversation(
-                      conversationID: conversationID, userID: userID, type: 1);
-              if (directToChat != null) {
-                directToChat!(conversation);
-              }
+          onTapExistGroup: (groupID, conversation) {
+            if (directToChat != null) {
+              directToChat!(conversation);
             }
           },
         ),
@@ -38,7 +26,7 @@ class AddFriend extends StatelessWidget {
           appBar: AppBar(
             shadowColor: Colors.white,
             title: Text(
-              TIM_t("添加好友"),
+              TIM_t("添加群聊"),
               style: TextStyle(color: hexToColor("1f2329"), fontSize: 16),
             ),
             backgroundColor: hexToColor("f2f3f5"),
@@ -54,12 +42,14 @@ class AddFriend extends StatelessWidget {
               },
             ),
           ),
-          body: TIMUIKitAddFriend(
-            onTapAlreadyFriendsItem: (String userID) {
+          body: TIMUIKitAddGroup(
+            onTapExistGroup: (groupID, conversation) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UserProfile(userID: userID),
+                    builder: (context) => Chat(
+                      selectedConversation: conversation,
+                    ),
                   ));
             },
           ),
