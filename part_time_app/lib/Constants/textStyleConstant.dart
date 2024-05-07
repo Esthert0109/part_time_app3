@@ -77,6 +77,27 @@ const selectedSecondaryTitleTextStyle = TextStyle(
 const unselectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w600, color: kMainBlackColor);
 
+const userProfileNameTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+
+const userProfileUIDTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const userProfileLinkTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const userProfileMenuTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const editProfileTitleTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w500, color: kMainGreyColor);
+
+const editProfilePassTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w500, color: kMainBlueColor);
+
+const editProfileInputTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
 const selectedThirdStatusTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
