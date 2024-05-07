@@ -55,9 +55,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
                         Get.to(
                             () => MissionDetailStatusIssuerPage(
                                   isWaiting: false,
-                                  isFailed: false,
+                                  isFailed: true,
                                   isPassed: false,
-                                  isRemoved: true,
+                                  isRemoved: false,
                                 ),
                             transition: Transition.rightToLeft);
                       },

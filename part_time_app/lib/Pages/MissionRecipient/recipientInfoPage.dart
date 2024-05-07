@@ -137,6 +137,7 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
           child: SizedBox(
             width: double.infinity,
             child: primaryButtonComponent(
+              isLoading: false,
               text: "提交",
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,

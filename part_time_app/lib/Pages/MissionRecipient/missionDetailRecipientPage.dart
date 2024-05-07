@@ -73,7 +73,7 @@ class MissionDetailRecipientPage extends StatefulWidget {
 
 class _MissionDetailRecipientPageState
     extends State<MissionDetailRecipientPage> {
-  bool isLoading = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -274,6 +274,7 @@ class _MissionDetailRecipientPageState
                       child: SizedBox(
                         width: 180,
                         child: primaryButtonComponent(
+                          isLoading: false,
                           text: '提交',
                           textStyle: missionCardTitleTextStyle,
                           buttonColor: kMainYellowColor,
@@ -362,6 +363,7 @@ class _MissionDetailRecipientPageState
               : SizedBox(
                   width: double.infinity,
                   child: primaryButtonComponent(
+                      isLoading: isLoading,
                       buttonColor: kMainYellowColor,
                       disableButtonColor: kThirdGreyColor,
                       text: widget.isSubmitted

@@ -182,6 +182,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                   ? SizedBox(
                       width: double.infinity,
                       child: primaryButtonComponent(
+                        isLoading: false,
                         buttonColor: kMainYellowColor,
                         disableButtonColor: kThirdGreyColor,
                         text: '已通过',
@@ -195,6 +196,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       children: [
                         Expanded(
                           child: primaryButtonComponent(
+                            isLoading: false,
                             buttonColor: kRejectMissionButtonColor,
                             text: '拒绝',
                             textStyle: missionRejectButtonTextStyle,
@@ -253,6 +255,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                         ),
                         Expanded(
                           child: primaryButtonComponent(
+                            isLoading: false,
                             buttonColor: kMainYellowColor,
                             text: '通过',
                             textStyle: missionDetailText1,

@@ -177,6 +177,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         width: 372,
                         height: 50.0,
                         child: primaryButtonComponent(
+                          isLoading: false,
                           text: "提交",
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {

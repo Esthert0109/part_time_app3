@@ -88,6 +88,7 @@ class _SortPageState extends State<SortPage> {
                   decoration: BoxDecoration(color: Colors.white),
                   width: double.infinity,
                   child: primaryButtonComponent(
+                    isLoading: false,
                     text: "确认",
                     onPressed: () {
                       setState(() {

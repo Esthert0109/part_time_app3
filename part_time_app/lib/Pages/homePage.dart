@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   static const List<Widget> homePageOptions = <Widget>[
     ExploreMainPage(),
     MissionStatusMainPage(),
-    MissionPublishMainPage(),
+    MissionPublishMainPage(isEdit: false,),
     MessageMainPage(),
     UserProfileMainPage()
   ];

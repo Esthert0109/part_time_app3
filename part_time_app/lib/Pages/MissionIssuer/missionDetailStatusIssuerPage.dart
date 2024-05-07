@@ -13,9 +13,11 @@ import 'package:part_time_app/Components/Card/missionNoticeCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
+import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
 
 import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Loading/missionDetailLoading.dart';
 import '../../Components/Status/statusDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -72,6 +74,7 @@ class MissionDetailStatusIssuerPage extends StatefulWidget {
 class _MissionDetailStatusIssuerPageState
     extends State<MissionDetailStatusIssuerPage> {
   bool picPreview = true;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -187,164 +190,183 @@ class _MissionDetailStatusIssuerPageState
                 stops: [0.0, 0.15],
               ),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  (widget.isPassed || widget.isRemoved)
-                      ? Container()
-                      : MissionDetailIssuerCardComponent(
-                          image:
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
-                          title: "墩墩鸡",
-                          action: "留言咨询 >",
-                          onTap: () {}),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: MissionDetailDescriptionCardComponent(
-                      title: "文案写作文案写作文",
-                      detail:
-                          "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
-                      tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-                      totalSlot: "50",
-                      leaveSlot: "45",
-                      day: "3",
-                      duration: "4",
-                      date: "2024.04.30",
-                      price: "50",
-                    ),
-                  ),
-                  missionDetailStepsCardComponent(
-                    steps: mockData,
-                    isConfidential: false,
-                    isCollapsed: true,
-                    isCollapseAble: false,
-                  ),
-                  (widget.isPassed || widget.isRemoved)
-                      ? Container()
-                      : Padding(
+            child: isLoading
+                ? MissionDetailLoading()
+                : SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        (widget.isPassed || widget.isRemoved)
+                            ? Container()
+                            : MissionDetailIssuerCardComponent(
+                                image:
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
+                                title: "墩墩鸡",
+                                action: "留言咨询 >",
+                                onTap: () {}),
+                        Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: MissionPublishCheckoutCardComponent(
-                            isSubmit: true,
-                            dayInitial: "10",
-                            priceInitial: "20",
-                            peopleInitial: "50",
-                            durationInitial: "60",
+                          child: MissionDetailDescriptionCardComponent(
+                            title: "文案写作文案写作文",
+                            detail:
+                                "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
+                            tag: [
+                              "写作",
+                              "写作",
+                              "写作",
+                              "写作",
+                              "写作",
+                              "写作",
+                              "写作",
+                              "写作"
+                            ],
+                            totalSlot: "50",
+                            leaveSlot: "45",
+                            day: "3",
+                            duration: "4",
+                            date: "2024.04.30",
+                            price: "50",
                           ),
                         ),
-                  (widget.isPassed || widget.isRemoved)
-                      ? Container()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "图片预览",
-                              style: missionDetailText6,
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0),
-                                    child: Text(
-                                      picPreview ? "开始悬赏可见" : "公开",
-                                      style: tStatusFieldText1,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 50,
-                                    height: 40,
-                                    child: FittedBox(
-                                      fit: BoxFit.fill,
-                                      child: Switch(
-                                          value: picPreview,
-                                          activeColor: kMainBlackColor,
-                                          activeTrackColor: kMainYellowColor,
-                                          inactiveTrackColor: kTransparent,
-                                          inactiveThumbColor: kMainBlackColor,
-                                          materialTapTargetSize:
-                                              MaterialTapTargetSize.padded,
-                                          trackOutlineColor:
-                                              MaterialStateProperty.resolveWith<
-                                                  Color?>(
-                                            (Set<MaterialState> states) {
-                                              if (picPreview) {
-                                                return kMainBlackColor;
-                                              }
-                                              return kMainBlackColor; // Use the default color.
-                                            },
-                                          ),
-                                          trackOutlineWidth:
-                                              MaterialStateProperty.all(1),
-                                          onChanged: null
-                                          //  (preview) {
-                                          //   setState(() {
-                                          //     picPreview = preview;
-                                          //   });
-                                          // }
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
+                        missionDetailStepsCardComponent(
+                          steps: mockData,
+                          isConfidential: false,
+                          isCollapsed: true,
+                          isCollapseAble: false,
                         ),
-                  (widget.isPassed || widget.isRemoved)
-                      ? Container()
-                      : Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: missionNoticeCardComponent(),
-                        ),
-                  (widget.isWaiting ||
-                          widget.isFailed ||
-                          widget.isPassed ||
-                          widget.isRemoved)
-                      ? Row(
-                          children: [
-                            RichText(
-                                text: TextSpan(
-                                    style: missionIDtextStyle,
-                                    children: [
-                                  TextSpan(text: "悬赏ID: "),
-                                  TextSpan(text: "0292938DHFKAAUBCVAVC")
-                                ])),
-                            GestureDetector(
-                              onTap: () {
-                                print("copied");
-                                Clipboard.setData(const ClipboardData(
-                                    text: "0292938DHFKAAUBCVAVC"));
-                                Fluttertoast.showToast(
-                                    msg: "已复制",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: kMainGreyColor,
-                                    textColor: kThirdGreyColor);
-                              },
-                              child: Padding(
+                        (widget.isPassed || widget.isRemoved)
+                            ? Container()
+                            : Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 2),
-                                child: SvgPicture.asset(
-                                  "assets/mission/copy.svg",
-                                  width: 24,
-                                  height: 24,
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: MissionPublishCheckoutCardComponent(
+                                  isSubmit: true,
+                                  dayInitial: "10",
+                                  priceInitial: "20",
+                                  peopleInitial: "50",
+                                  durationInitial: "60",
                                 ),
                               ),
-                            )
-                          ],
+                        (widget.isPassed || widget.isRemoved)
+                            ? Container()
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "图片预览",
+                                    style: missionDetailText6,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12.0),
+                                          child: Text(
+                                            picPreview ? "开始悬赏可见" : "公开",
+                                            style: tStatusFieldText1,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 50,
+                                          height: 40,
+                                          child: FittedBox(
+                                            fit: BoxFit.fill,
+                                            child: Switch(
+                                                value: picPreview,
+                                                activeColor: kMainBlackColor,
+                                                activeTrackColor:
+                                                    kMainYellowColor,
+                                                inactiveTrackColor:
+                                                    kTransparent,
+                                                inactiveThumbColor:
+                                                    kMainBlackColor,
+                                                materialTapTargetSize:
+                                                    MaterialTapTargetSize
+                                                        .padded,
+                                                trackOutlineColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color?>(
+                                                  (Set<MaterialState> states) {
+                                                    if (picPreview) {
+                                                      return kMainBlackColor;
+                                                    }
+                                                    return kMainBlackColor; // Use the default color.
+                                                  },
+                                                ),
+                                                trackOutlineWidth:
+                                                    MaterialStateProperty.all(
+                                                        1),
+                                                onChanged: null
+                                                //  (preview) {
+                                                //   setState(() {
+                                                //     picPreview = preview;
+                                                //   });
+                                                // }
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                        (widget.isPassed || widget.isRemoved)
+                            ? Container()
+                            : Container(
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: missionNoticeCardComponent(),
+                              ),
+                        (widget.isWaiting ||
+                                widget.isFailed ||
+                                widget.isPassed ||
+                                widget.isRemoved)
+                            ? Row(
+                                children: [
+                                  RichText(
+                                      text: TextSpan(
+                                          style: missionIDtextStyle,
+                                          children: [
+                                        TextSpan(text: "悬赏ID: "),
+                                        TextSpan(text: "0292938DHFKAAUBCVAVC")
+                                      ])),
+                                  GestureDetector(
+                                    onTap: () {
+                                      print("copied");
+                                      Clipboard.setData(const ClipboardData(
+                                          text: "0292938DHFKAAUBCVAVC"));
+                                      Fluttertoast.showToast(
+                                          msg: "已复制",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: kMainGreyColor,
+                                          textColor: kThirdGreyColor);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 2),
+                                      child: SvgPicture.asset(
+                                        "assets/mission/copy.svg",
+                                        width: 24,
+                                        height: 24,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 37,
                         )
-                      : Container(),
-                  SizedBox(
-                    height: 37,
-                  )
-                ],
-              ),
-            ),
+                      ],
+                    ),
+                  ),
           ),
           bottomNavigationBar: Container(
             height: 84,
@@ -375,13 +397,12 @@ class _MissionDetailStatusIssuerPageState
                         child: SizedBox(
                           width: 180,
                           child: primaryButtonComponent(
+                            isLoading: isLoading,
                             text: '重新编辑',
                             textStyle: missionRejectButtonTextStyle,
                             buttonColor: kRejectMissionButtonColor,
                             onPressed: () {
-                              // Timer.periodic(Duration(seconds: 1), (timer) {
-                              //   print(" ?? ${timer.tick}");
-                              // });
+                              Get.to(() => MissionPublishMainPage(isEdit: true,));
                             },
                           ),
                         ),
@@ -391,6 +412,7 @@ class _MissionDetailStatusIssuerPageState
                 : SizedBox(
                     width: double.infinity,
                     child: primaryButtonComponent(
+                      isLoading: isLoading,
                       buttonColor: kMainYellowColor,
                       disableButtonColor: kThirdGreyColor,
                       text: widget.isWaiting
@@ -460,7 +482,8 @@ class _MissionDetailStatusIssuerPageState
                                                     (BuildContext context) {
                                                   return StatusDialogComponent(
                                                     complete: true,
-                                                    successText: "系统将审核你的内容，审核通过后将发布该悬赏。",
+                                                    successText:
+                                                        "系统将审核你的内容，审核通过后将发布该悬赏。",
                                                     onTap: () {
                                                       setState(() {
                                                         Navigator.pop(context);

@@ -45,6 +45,7 @@ class _OnboradingPageState extends State<OnboradingPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 11),
                       width: MediaQuery.of(context).size.width,
                       child: primaryButtonComponent(
+                        isLoading: false,
                         text: '登入',
                         textStyle: onboradingPageTextStyle,
                         onPressed: () {
@@ -60,6 +61,7 @@ class _OnboradingPageState extends State<OnboradingPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 11),
                       width: MediaQuery.of(context).size.width,
                       child: primaryButtonComponent(
+                        isLoading: false,
                         text: '注册',
                         textStyle: onboradingPageText2Style,
                         onPressed: () {

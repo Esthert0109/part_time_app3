@@ -224,6 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 372,
                         height: 50.0,
                         child: primaryButtonComponent(
+                          isLoading: false,
                           text: "提交",
                           onPressed: () async {
                             bool isLoginTencent =
