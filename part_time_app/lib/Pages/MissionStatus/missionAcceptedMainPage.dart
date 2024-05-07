@@ -229,66 +229,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
               color: kMainYellowColor,
               child: buildListView()),
         ))
-
-        // Expanded(
-        //   child: LazyLoadScrollView(
-        //     onEndOfPage: () {
-        //       print("load more");
-        //     },
-        //     child: RefreshIndicator(
-        //       color: kMainYellowColor,
-        //       onRefresh: () async {
-        //         print("refresh everything");
-        //         setState(() {
-        //           statusSelected = 0;
-        //         });
-        //       },
-        //       child: SingleChildScrollView(
-        //         padding: const EdgeInsets.only(top: 10),
-        //         child: Column(
-        //           children: List.generate(
-        //             5,
-        //             (index) => GestureDetector(
-        //               onTap: () {
-        //                 Get.to(
-        //                     () => MissionDetailStatusIssuerPage(
-        //                           isWaiting: false,
-        //                           isFailed: true,
-        //                           isPassed: false,
-        //                           isRemoved: false,
-        //                         ),
-        //                     transition: Transition.rightToLeft);
-        //               },
-        //               child: MissionCardComponent(
-        //                 missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
-        //                 missionDesc:
-        //                     '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
-        //                 tagList: [
-        //                   "写作",
-        //                   "写作",
-        //                   "写作",
-        //                   "写作",
-        //                   "写作",
-        //                   "写作",
-        //                   "写作",
-        //                   "写作"
-        //                 ],
-        //                 missionPrice: 886222.51,
-        //                 userAvatar:
-        //                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
-        //                 username: "微笑姐微笑姐",
-        //                 missionDate: "2024-04-29",
-        //                 isStatus: true,
-        //                 isFavorite: false,
-        //                 missionStatus: 3,
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // )
       ],
     );
   }
