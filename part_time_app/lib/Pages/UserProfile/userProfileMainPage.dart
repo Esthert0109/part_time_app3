@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import '../../Components/Common/countdownTimer.dart';
 import '../UserAuth/changePassword.dart';
 import '../UserAuth/loginPage.dart';
 import '../UserAuth/otpCode.dart';
 import '../UserAuth/signupPage.dart';
+import 'settingPage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
   const UserProfileMainPage({super.key});
@@ -93,7 +95,12 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                     );
                   },
                   child: Text("OTP Code"))),
-          
+          Container(
+              child: ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => SettingPage());
+                  },
+                  child: Text("Setting"))),
         ],
       ),
     );
