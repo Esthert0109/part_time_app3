@@ -7,14 +7,14 @@ import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
-class SystemMessagePage extends StatefulWidget {
-  const SystemMessagePage({Key? key}) : super(key: key);
+class MissionMessagePage extends StatefulWidget {
+  const MissionMessagePage({Key? key}) : super(key: key);
 
   @override
-  State<SystemMessagePage> createState() => _SystemMessagePageState();
+  State<MissionMessagePage> createState() => _MissionMessagePageState();
 }
 
-class _SystemMessagePageState extends State<SystemMessagePage> {
+class _MissionMessagePageState extends State<MissionMessagePage> {
   ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
                   child: Padding(
                     padding: EdgeInsets.only(right: 20),
                     child: Text(
-                      "系统通知",
+                      "悬赏通知",
                       style: dialogText2,
                       textAlign: TextAlign.center,
                     ),
@@ -96,10 +96,10 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (systemMessageList.isNotEmpty)
+                if (MissionMessageList.isNotEmpty)
                   MessageList(
-                    messageList: systemMessageList,
-                    isSystem: true,
+                    messageList: MissionMessageList,
+                    isSystem: false,
                   ),
               ],
             ),
@@ -110,7 +110,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
   }
 
   @override
-  void didUpdateWidget(covariant SystemMessagePage oldWidget) {
+  void didUpdateWidget(covariant MissionMessagePage oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Scroll to bottom whenever the widget updates
     _scrollController.animateTo(
