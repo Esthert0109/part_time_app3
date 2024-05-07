@@ -205,29 +205,23 @@ class _MissionDetailStatusIssuerPageState
                                 title: "墩墩鸡",
                                 action: "留言咨询 >",
                                 onTap: () {}),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: MissionDetailDescriptionCardComponent(
-                            title: "文案写作文案写作文",
-                            detail:
-                                "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
-                            tag: [
-                              "写作",
-                              "写作",
-                              "写作",
-                              "写作",
-                              "写作",
-                              "写作",
-                              "写作",
-                              "写作"
-                            ],
-                            totalSlot: "50",
-                            leaveSlot: "45",
-                            day: "3",
-                            duration: "4",
-                            date: "2024.04.30",
-                            price: "50",
-                          ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        MissionDetailDescriptionCardComponent(
+                          title: "文案写作文案写作文",
+                          detail:
+                              "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
+                          tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
+                          totalSlot: "50",
+                          leaveSlot: "45",
+                          day: "3",
+                          duration: "4",
+                          date: "2024.04.30",
+                          price: "50",
+                        ),
+                        const SizedBox(
+                          height: 12,
                         ),
                         missionDetailStepsCardComponent(
                           steps: mockData,
@@ -319,10 +313,12 @@ class _MissionDetailStatusIssuerPageState
                             ? Container()
                             : Container(
                                 width: double.infinity,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                padding: EdgeInsets.only(top: 12),
                                 child: missionNoticeCardComponent(),
                               ),
+                        const SizedBox(
+                          height: 12,
+                        ),
                         (widget.isWaiting ||
                                 widget.isFailed ||
                                 widget.isPassed ||
@@ -402,7 +398,9 @@ class _MissionDetailStatusIssuerPageState
                             textStyle: missionRejectButtonTextStyle,
                             buttonColor: kRejectMissionButtonColor,
                             onPressed: () {
-                              Get.to(() => MissionPublishMainPage(isEdit: true,));
+                              Get.to(() => MissionPublishMainPage(
+                                    isEdit: true,
+                                  ));
                             },
                           ),
                         ),
