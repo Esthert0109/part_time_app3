@@ -58,6 +58,10 @@ class _ComponentExampleState extends State<ComponentExample> {
   int selectIndex = 0;
   List<String> selectedCategory = [];
   bool isSelected = false;
+  final _formKey = GlobalKey<FormState>();
+  String price = "";
+  String selectedDurationUnit = "";
+  String selectedEndUnit = "";
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +163,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRySQFxddtDb33k6xrkiIeVe6j3Hko6WLhEIurtPKjCVQ&s"
                 ],
                 isEdit: true,
+                isCollapsed: true,
+                isCollapseAble: true,
               ),
               GestureDetector(
                 onTap: () {
@@ -335,7 +341,10 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return StatusDialogComponent(complete: true);
+                      return StatusDialogComponent(
+                        complete: true,
+                        onTap: () {},
+                      );
                     },
                   );
                 },
@@ -349,7 +358,10 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return StatusDialogComponent(complete: false);
+                      return StatusDialogComponent(
+                        complete: false,
+                        onTap: () {},
+                      );
                     },
                   );
                 },
@@ -363,6 +375,26 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionCardLoadingComponent(),
               SizedBox(height: 10),
               Divider(),
+              Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      MissionPublishCheckoutCardComponent(
+                        isSubmit: false,
+                      ),
+                      primaryButtonComponent(
+                          text: "提交",
+                          onPressed: () {
+                            setState(() {
+                              selectedDurationUnit = selectedDuration;
+                              selectedEndUnit = selectedEndTime;
+                              print(selectedDurationUnit);
+                              print(selectedEndUnit);
+                            });
+                          },
+                          textStyle: missionDetailText1)
+                    ],
+                  ))
             ],
           ),
         ),

@@ -6,8 +6,12 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../Button/secondaryButtonComponent.dart';
 
+typedef void StringCallback(String selectedString);
+
 class unitDropDownDialogComponent extends StatefulWidget {
-  const unitDropDownDialogComponent({super.key});
+  final StringCallback callback;
+
+  const unitDropDownDialogComponent({super.key, required this.callback});
 
   @override
   State<unitDropDownDialogComponent> createState() =>
@@ -66,6 +70,7 @@ class _unitDropDownDialogComponentState
                       setState(() {
                         _selectedIndex = index;
                       });
+                      widget.callback(buttonLabels[_selectedIndex]);
                     },
                   );
                 },
@@ -76,7 +81,9 @@ class _unitDropDownDialogComponentState
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: secondaryButtonComponent(
                 text: "提交",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 buttonColor: kMainYellowColor,
                 textStyle: buttonTextStyle2,
               ),

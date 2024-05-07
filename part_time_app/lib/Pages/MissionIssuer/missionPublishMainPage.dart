@@ -14,8 +14,10 @@ import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import 'missionDetailStatusIssuerPage.dart';
 
 class StepModel {
   String? description;
@@ -119,6 +121,52 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                       ),
                       onPressed: () {
                         print("delete object");
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialogComponent(
+                                alertTitle: '删除图片',
+                                alertDesc: RichText(
+                                  text: TextSpan(
+                                    style: alertDialogContentTextStyle,
+                                    children: [
+                                      TextSpan(text: '此步骤将取消删除图片。\n'),
+                                      TextSpan(
+                                        text: '是否继续？\n',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                descTextStyle: alertDialogContentTextStyle,
+                                firstButtonText: '返回',
+                                firstButtonTextStyle:
+                                    alertDialogFirstButtonTextStyle,
+                                firstButtonColor: kThirdGreyColor,
+                                secondButtonText: '删除',
+                                secondButtonTextStyle:
+                                    alertDialogRejectButtonTextStyle,
+                                secondButtonColor: kRejectMissionButtonColor,
+                                isButtonExpanded: true,
+                                firstButtonOnTap: () {
+                                  setState(() {
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                secondButtonOnTap: () {
+                                  setState(() {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+
+                                    Fluttertoast.showToast(
+                                        msg: "已删除",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: kMainGreyColor,
+                                        textColor: kThirdGreyColor);
+                                  });
+                                },
+                              );
+                            });
                       },
                     ),
                   )
@@ -834,7 +882,16 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           fixedSize: const Size.fromHeight(40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(26))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(
+                            () => MissionDetailStatusIssuerPage(
+                                  isWaiting: false,
+                                  isFailed: false,
+                                  isPassed: false,
+                                  isRemoved: false,
+                                ),
+                            transition: Transition.rightToLeft);
+                      },
                       child: Text(
                         "预览发布",
                         style: missionCheckoutTotalPriceTextStyle,

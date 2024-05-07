@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
+import '../../Constants/colorConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
@@ -18,7 +19,7 @@ class CollectPage extends StatefulWidget {
 
 class _CollectPageState extends State<CollectPage> {
   int currentPage = 1;
-  int itemsPerPage = 4;
+  int itemsPerPage = 1;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
@@ -123,10 +124,8 @@ class _CollectPageState extends State<CollectPage> {
         },
         child: RefreshIndicator(
             onRefresh: _refresh,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: buildListView(),
-            )),
+            color: kMainYellowColor,
+            child: buildListView()),
       ),
     );
   }

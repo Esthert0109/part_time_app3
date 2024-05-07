@@ -8,7 +8,15 @@ import '../Button/thirdButtonComponent.dart';
 
 class StatusDialogComponent extends StatefulWidget {
   bool complete;
-  StatusDialogComponent({super.key, required this.complete});
+  Function() onTap;
+  String? successText;
+  String? unsuccessText;
+  StatusDialogComponent(
+      {super.key,
+      required this.complete,
+      required this.onTap,
+      this.successText,
+      this.unsuccessText});
 
   @override
   State<StatusDialogComponent> createState() => _StatusDialogComponentState();
@@ -44,7 +52,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            "系统将审核你的内容，审核通过后将发布该悬赏。",
+                            widget.successText ?? "",
                             style: missionDetailText2,
                           ),
                         ),
@@ -53,7 +61,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                           width: 291,
                           child: thirdButtonComponent(
                             text: "返回首页",
-                            onPressed: () {},
+                            onPressed: widget.onTap,
                           ),
                         )
                       ],
@@ -64,7 +72,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                         SvgPicture.asset("assets/status/submitFail.svg"),
                         SizedBox(height: 10),
                         Text(
-                          "请完整悬赏详情",
+                          widget.unsuccessText ?? "",
                           style: dialogText2,
                         ),
                         SizedBox(height: 50),
@@ -72,7 +80,7 @@ class _StatusDialogComponentState extends State<StatusDialogComponent> {
                           width: 291,
                           child: thirdButtonComponent(
                             text: "继续编辑",
-                            onPressed: () {},
+                            onPressed: widget.onTap,
                           ),
                         )
                       ],
