@@ -136,14 +136,14 @@ class _MissionDetailRecipientPageState
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: MissionDetailIssuerCardComponent(
-                            image:
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
-                            title: "墩墩鸡",
-                            action: "留言咨询 >",
-                            onTap: () {}),
+                      MissionDetailIssuerCardComponent(
+                          image:
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
+                          title: "墩墩鸡",
+                          action: "留言咨询 >",
+                          onTap: () {}),
+                      const SizedBox(
+                        height: 12,
                       ),
                       MissionDetailDescriptionCardComponent(
                         title: "文案写作文案写作文",
@@ -157,26 +157,29 @@ class _MissionDetailRecipientPageState
                         date: "2024.04.30",
                         price: "50",
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: missionDetailStepsCardComponent(
-                          steps: mockData,
-                          isConfidential: true,
-                          isCollapsed: (widget.isSubmitted ||
-                                  widget.isExpired ||
-                                  widget.isFailed ||
-                                  widget.isWaitingPaid ||
-                                  widget.isPaid)
-                              ? false
-                              : true,
-                          isCollapseAble: (widget.isSubmitted ||
-                                  widget.isExpired ||
-                                  widget.isFailed ||
-                                  widget.isWaitingPaid ||
-                                  widget.isPaid)
-                              ? true
-                              : false,
-                        ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      missionDetailStepsCardComponent(
+                        steps: mockData,
+                        isConfidential: true,
+                        isCollapsed: (widget.isSubmitted ||
+                                widget.isExpired ||
+                                widget.isFailed ||
+                                widget.isWaitingPaid ||
+                                widget.isPaid)
+                            ? false
+                            : true,
+                        isCollapseAble: (widget.isSubmitted ||
+                                widget.isExpired ||
+                                widget.isFailed ||
+                                widget.isWaitingPaid ||
+                                widget.isPaid)
+                            ? true
+                            : false,
+                      ),
+                      const SizedBox(
+                        height: 6,
                       ),
                       (widget.isStarted ||
                               widget.isSubmitted ||
@@ -199,46 +202,49 @@ class _MissionDetailRecipientPageState
                               child: missionNoticeCardComponent(),
                             ),
                       widget.isFailed
-                          ? missionFailedReasonCardComponent(
-                              reasonTitle: "拒绝理由",
-                              reasonDesc:
-                                  "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊")
-                          : Container(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          children: [
-                            RichText(
-                                text: TextSpan(
-                                    style: missionIDtextStyle,
-                                    children: [
-                                  TextSpan(text: "悬赏ID: "),
-                                  TextSpan(text: "0292938DHFKAAUBCVAVC")
-                                ])),
-                            GestureDetector(
-                              onTap: () {
-                                print("copied");
-                                Clipboard.setData(const ClipboardData(
-                                    text: "0292938DHFKAAUBCVAVC"));
-                                Fluttertoast.showToast(
-                                    msg: "已复制",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: kMainGreyColor,
-                                    textColor: kThirdGreyColor);
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 2),
-                                child: SvgPicture.asset(
-                                  "assets/mission/copy.svg",
-                                  width: 24,
-                                  height: 24,
-                                ),
-                              ),
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: missionFailedReasonCardComponent(
+                                  reasonTitle: "拒绝理由",
+                                  reasonDesc:
+                                      "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"),
                             )
-                          ],
-                        ),
+                          : Container(),
+                      const SizedBox(
+                        height: 6,
+                      ),
+                      Row(
+                        children: [
+                          RichText(
+                              text: TextSpan(
+                                  style: missionIDtextStyle,
+                                  children: [
+                                TextSpan(text: "悬赏ID: "),
+                                TextSpan(text: "0292938DHFKAAUBCVAVC")
+                              ])),
+                          GestureDetector(
+                            onTap: () {
+                              print("copied");
+                              Clipboard.setData(const ClipboardData(
+                                  text: "0292938DHFKAAUBCVAVC"));
+                              Fluttertoast.showToast(
+                                  msg: "已复制",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: kMainGreyColor,
+                                  textColor: kThirdGreyColor);
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: SvgPicture.asset(
+                                "assets/mission/copy.svg",
+                                width: 24,
+                                height: 24,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                       SizedBox(
                         height: 37,
