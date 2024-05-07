@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Main/highCommisionPage.dart';
-import 'package:part_time_app/Pages/Message/chatConfig.dart';
+import 'package:part_time_app/Pages/Message/user/chatConfig.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 

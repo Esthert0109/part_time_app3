@@ -11,8 +11,8 @@ import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../Message/chatConfig.dart';
-import '../Message/userMessagePage.dart';
+import '../Message/user/chatConfig.dart';
+import '../Message/user/userMessagePage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
