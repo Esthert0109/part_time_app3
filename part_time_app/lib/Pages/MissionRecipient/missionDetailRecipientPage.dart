@@ -11,6 +11,7 @@ import '../../Components/Card/missionDetailIssuerCardComponent.dart';
 import '../../Components/Card/missionDetailStepsCardComponent.dart';
 import '../../Components/Card/missionNoticeCardComponent.dart';
 import '../../Components/Card/missionSubmissionCardComponent.dart';
+import '../../Components/Common/countdownTimer.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Loading/missionDetailLoading.dart';
 import '../../Components/Status/statusDialogComponent.dart';
@@ -270,11 +271,10 @@ class _MissionDetailRecipientPageState
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    RichText(
-                        text: TextSpan(style: messageDescTextStyle2, children: [
-                      TextSpan(text: '剩余时间 '),
-                      TextSpan(text: '240:02:09')
-                    ])),
+                    CountdownTimer(
+                      isReview: false,
+                      expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(left: 24),
                       child: SizedBox(

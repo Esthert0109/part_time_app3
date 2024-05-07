@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../Common/countdownTimer.dart';
 
 class MissionReviewRecipientCardComponent extends StatelessWidget {
   final bool isReviewing;
@@ -58,10 +59,9 @@ class MissionReviewRecipientCardComponent extends StatelessWidget {
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  "剩余时间 $duration",
-                  style: durationTextStyle,
-                  textAlign: TextAlign.right,
+                child: CountdownTimer(
+                  isReview: true,
+                  expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
                 ),
               ),
             ),
