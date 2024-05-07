@@ -28,7 +28,7 @@ class _UserProfileCardComponentState extends State<UserProfileCardComponent> {
     return InkWell(
         onTap: widget.ontap,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          margin: EdgeInsets.only(bottom: 10, right: 10, left: 10),
           height: 48,
           decoration: BoxDecoration(
             color: kMainWhiteColor,

@@ -265,7 +265,9 @@ const onboradingPageTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
 const onboradingPageText2Style = TextStyle(
-    fontSize: 18, fontWeight: FontWeight.w400, color: kOnboradingPageText2Color);
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    color: kOnboradingPageText2Color);
 
 const onboradingPageText3Style = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -365,3 +367,17 @@ const loginPageTextStyle2 = TextStyle(
 
 const otpErrorTextStyle1 =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMainRedColor);
+
+const depositTextStyle1 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kCheckTextColor,
+);
+
+const depositTextStyle2 = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w500, color: kSecondGreyColor);
+const depositTextStyle3 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
