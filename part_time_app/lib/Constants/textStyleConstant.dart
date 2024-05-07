@@ -89,11 +89,11 @@ const userProfileLinkTextStyle = TextStyle(
 const userProfileMenuTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
-const editProfileTitleTextStyle = TextStyle(
-    fontSize: 12, fontWeight: FontWeight.w500, color: kMainGreyColor);
+const editProfileTitleTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: kMainGreyColor);
 
-const editProfilePassTextStyle = TextStyle(
-    fontSize: 12, fontWeight: FontWeight.w500, color: kMainBlueColor);
+const editProfilePassTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: kMainBlueColor);
 
 const editProfileInputTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
