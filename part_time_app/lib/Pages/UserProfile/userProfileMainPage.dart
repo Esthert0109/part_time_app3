@@ -6,6 +6,7 @@ import '../UserAuth/changePassword.dart';
 import '../UserAuth/loginPage.dart';
 import '../UserAuth/otpCode.dart';
 import '../UserAuth/signupPage.dart';
+import 'depositPaymentStatusPage.dart';
 import 'settingPage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
@@ -98,9 +99,12 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
           Container(
               child: ElevatedButton(
                   onPressed: () {
-                    Get.to(() => SettingPage());
+                    Get.to(() => DepositPaymentStatusPage(
+                          isPass: false,
+                          isFailed: true,
+                        ));
                   },
-                  child: Text("Setting"))),
+                  child: Text("DepositPaymentStatusPage"))),
         ],
       ),
     );

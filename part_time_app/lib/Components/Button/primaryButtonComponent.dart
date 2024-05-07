@@ -34,6 +34,7 @@ class _primaryButtonComponentState extends State<primaryButtonComponent> {
         height: 46,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+            shadowColor: Colors.transparent,
             backgroundColor: widget.buttonColor,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
