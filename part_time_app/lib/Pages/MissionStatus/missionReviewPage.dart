@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:part_time_app/Components/Card/missionReviewRecipientCardComponent.dart';
 
+import '../../Components/Loading/missionReviewLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -23,6 +24,7 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   int missionReviewing = 6;
   int missionCompleted = 9;
   bool isMissionFailed = true;
+  bool isLoading = true;
 
   calculateTotalMission() {
     totalMissionReview =
@@ -98,24 +100,33 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                     print("load more");
                   },
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: List.generate(
-                          10,
-                          (index) => MissionReviewRecipientCardComponent(
-                              isReviewing: false,
-                              isCompleted: true,
-                              duration: "240:00:00",
-                              onTap: () {
-                                Get.to(
-                                    () => MissionReviewDetailPage(
-                                          isCompleted: false,
-                                        ),
-                                    transition: Transition.rightToLeft);
-                              },
-                              userAvatar:
-                                  "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                              username: "鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡")),
-                    ),
+                    child: isLoading
+                        ? Column(
+                            children: List.generate(
+                            3,
+                            (index) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: MissionReviewLoading(),
+                            ),
+                          ))
+                        : Column(
+                            children: List.generate(
+                                10,
+                                (index) => MissionReviewRecipientCardComponent(
+                                    isReviewing: false,
+                                    isCompleted: true,
+                                    duration: "240:00:00",
+                                    onTap: () {
+                                      Get.to(
+                                          () => MissionReviewDetailPage(
+                                                isCompleted: false,
+                                              ),
+                                          transition: Transition.rightToLeft);
+                                    },
+                                    userAvatar:
+                                        "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
+                                    username: "鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡")),
+                          ),
                   ),
                 ),
               )

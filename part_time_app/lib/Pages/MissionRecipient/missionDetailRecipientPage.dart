@@ -93,7 +93,7 @@ class _MissionDetailRecipientPageState
             actions: [
               GestureDetector(
                 onTap: () {
-                  Get.to(() => MissionDetailLoading());
+                  print("complainnnnn");
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
