@@ -20,42 +20,10 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
         children: [
           SizedBox(height: 50),
           Container(
-              child: ElevatedButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      builder: (BuildContext context) {
-                        return ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.9,
-                              child: LoginPage(),
-                            ));
-                      },
-                    );
-                  },
-                  child: Text("Login"))),
+              child: ElevatedButton(onPressed: () {}, child: Text("Login"))),
           SizedBox(height: 30),
           Container(
-              child: ElevatedButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      builder: (BuildContext context) {
-                        return ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.9,
-                              child: SignUpPage(),
-                            ));
-                      },
-                    );
-                  },
-                  child: Text("Sign Up"))),
+              child: ElevatedButton(onPressed: () {}, child: Text("Sign Up"))),
           Container(
               child: ElevatedButton(
                   onPressed: () {

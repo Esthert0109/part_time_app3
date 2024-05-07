@@ -8,6 +8,9 @@ import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/homePage.dart';
 
+import '../UserAuth/loginPage.dart';
+import '../UserAuth/signupPage.dart';
+
 class OnboradingPage extends StatefulWidget {
   const OnboradingPage({super.key});
 
@@ -48,8 +51,20 @@ class _OnboradingPageState extends State<OnboradingPage> {
                         text: '登入',
                         textStyle: onboradingPageTextStyle,
                         onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => const LoginPage()));
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (BuildContext context) {
+                              return ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.9,
+                                    child: const LoginPage(),
+                                  ));
+                            },
+                          );
                         },
                         buttonColor: kMainYellowColor,
                       )),
@@ -63,8 +78,20 @@ class _OnboradingPageState extends State<OnboradingPage> {
                         text: '注册',
                         textStyle: onboradingPageText2Style,
                         onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => const RegistrationPage()));
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (BuildContext context) {
+                              return ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.9,
+                                    child: const SignUpPage(),
+                                  ));
+                            },
+                          );
                         },
                         buttonColor: kOnboradingPageBtnColor,
                       ))
