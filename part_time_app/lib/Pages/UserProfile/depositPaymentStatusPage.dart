@@ -274,7 +274,7 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                       price: '50000',
                                       requiredNo: 1046,
                                       completedNo: 196,
-                                      isLoading: true,
+                                      isLoading: false,
                                     ),
                                   ),
                                   Divider(

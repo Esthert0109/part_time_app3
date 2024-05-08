@@ -8,6 +8,7 @@ import '../UserAuth/otpCode.dart';
 import '../UserAuth/signupPage.dart';
 import 'depositPaymentStatusPage.dart';
 import 'settingPage.dart';
+import 'userProfilePage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
   const UserProfileMainPage({super.key});
@@ -99,12 +100,11 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
           Container(
               child: ElevatedButton(
                   onPressed: () {
-                    Get.to(() => DepositPaymentStatusPage(
-                          isPass: false,
-                          isFailed: true,
+                    Get.to(() => UserProfilePage(
+                          isOthers: true,
                         ));
                   },
-                  child: Text("DepositPaymentStatusPage"))),
+                  child: Text("UserProfilePage"))),
         ],
       ),
     );
