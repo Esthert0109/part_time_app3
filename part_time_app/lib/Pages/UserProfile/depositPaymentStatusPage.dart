@@ -274,6 +274,7 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                       price: '50000',
                                       requiredNo: 1046,
                                       completedNo: 196,
+                                      isLoading: true,
                                     ),
                                   ),
                                   Divider(
@@ -289,6 +290,7 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                       price: '50000',
                                       requiredNo: 1046,
                                       completedNo: 852,
+                                      isLoading: false,
                                     ),
                                   ),
                                 ]),
