@@ -108,7 +108,7 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                               onTap: () {
                                 Get.to(
                                     () => MissionReviewDetailPage(
-                                          isCompleted: true,
+                                          isCompleted: false,
                                         ),
                                     transition: Transition.rightToLeft);
                               },

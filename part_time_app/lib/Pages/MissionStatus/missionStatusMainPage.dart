@@ -5,7 +5,7 @@ import 'package:part_time_app/Pages/MissionStatus/missionIssuedMainPage.dart';
 
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
-import '../Main/RecommendationPage.dart';
+import '../Explore/RecommendationPage.dart';
 
 class MissionStatusMainPage extends StatefulWidget {
   const MissionStatusMainPage({super.key});
@@ -23,22 +23,23 @@ class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Container(
-        color: kTransparent,
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: SecondaryTitleComponent(
-          titleList: ["我接收的", "我发布的"],
-          selectedIndex: titleSelection,
-          onTap: (index) {
-            setState(() {
-              titleSelection = index;
-              _controller.animateToPage(index,
-                  duration: Duration(milliseconds: 600),
-                  curve: Curves.easeInOut);
-            });
-          },
-        ),
-      )),
+            color: kTransparent,
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: SecondaryTitleComponent(
+              titleList: ["我接收的", "我发布的"],
+              selectedIndex: titleSelection,
+              onTap: (index) {
+                setState(() {
+                  titleSelection = index;
+                  _controller.animateToPage(index,
+                      duration: Duration(milliseconds: 600),
+                      curve: Curves.easeInOut);
+                });
+              },
+            ),
+          )),
       body: PageView(
         controller: _controller,
         scrollDirection: Axis.horizontal,

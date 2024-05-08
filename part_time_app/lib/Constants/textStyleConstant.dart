@@ -5,6 +5,10 @@ import 'colorConstant.dart';
 const bottomNaviBarTextStyle = TextStyle(
     fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
+//SplashScreen
+const splashScreenTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
 //Mission
 const missionCheckoutInputTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -89,11 +93,11 @@ const userProfileLinkTextStyle = TextStyle(
 const userProfileMenuTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
 
-const editProfileTitleTextStyle = TextStyle(
-    fontSize: 12, fontWeight: FontWeight.w500, color: kMainGreyColor);
+const editProfileTitleTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: kMainGreyColor);
 
-const editProfilePassTextStyle = TextStyle(
-    fontSize: 12, fontWeight: FontWeight.w500, color: kMainBlueColor);
+const editProfilePassTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: kMainBlueColor);
 
 const editProfileInputTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -251,8 +255,28 @@ const missionFailReasonTitleTextStyle = TextStyle(
   color: kMainBlackColor,
 );
 
+const alertDialogTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w600, color: kSecondGreyColor);
+
 const primaryTitleTextStyle = TextStyle(
     fontSize: 30, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const onboradingPageTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const onboradingPageText2Style = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    color: kOnboradingPageText2Color);
+
+const onboradingPageText3Style = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const forgotPassTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const forgotPassSubmitTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
 
 const thirdTitleTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -334,3 +358,26 @@ const missionRejectButtonTextStyle = TextStyle(
 
 const inputCounterTextStyle = TextStyle(
     fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const loginPageTextStyle1 =
+    TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: kMainGreyColor);
+
+const loginPageTextStyle2 = TextStyle(
+    fontSize: 15, fontWeight: FontWeight.w700, color: kMainBlackColor);
+
+const otpErrorTextStyle1 =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMainRedColor);
+
+const depositTextStyle1 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kCheckTextColor,
+);
+
+const depositTextStyle2 = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w500, color: kSecondGreyColor);
+const depositTextStyle3 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);

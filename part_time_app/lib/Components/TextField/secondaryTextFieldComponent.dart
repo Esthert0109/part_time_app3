@@ -5,11 +5,15 @@ import 'package:part_time_app/Constants/textStyleConstant.dart';
 class secondaryTextFieldComponent extends StatefulWidget {
   final String hintText;
   final Icon? suffixIcon;
+  final TextEditingController inputController;
+  final Function(String?) validator;
 
   const secondaryTextFieldComponent({
     super.key,
     required this.hintText,
     this.suffixIcon,
+    required this.inputController,
+    required this.validator,
   });
 
   @override
@@ -23,8 +27,10 @@ class _secondaryTextFieldComponentState
   Widget build(BuildContext context) {
     return Container(
         height: 31,
-        child: TextField(
+        child: TextFormField(
+          controller: widget.inputController,
           style: secondaryTextFieldTextStyle,
+          cursorColor: kMainYellowColor,
           decoration: InputDecoration(
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
@@ -34,9 +40,16 @@ class _secondaryTextFieldComponentState
             fillColor: kSecondTextFieldGreyColor,
             suffixIcon: widget.suffixIcon,
             contentPadding: const EdgeInsetsDirectional.only(
-                start: 10, top: 8, bottom: 8, end: 10),
+                start: 10, top: 4, bottom: 4, end: 10),
             hintStyle: secondaryTextFieldHintTextStyle,
           ),
+          validator:
+           (value) {
+            if (value!.isEmpty) {
+              return '请输入地址';
+            }
+            return null;
+          },
         ));
   }
 }
