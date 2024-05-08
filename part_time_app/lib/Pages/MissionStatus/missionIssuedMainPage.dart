@@ -3,9 +3,22 @@ import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
+import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
+import '../MockData/missionMockClass.dart';
+import '../MockData/missionMockData.dart';
+
+bool dataFetchedIssued = false;
+bool dataEndIssued = false;
+List<MissionMockClass>? missionWaitSystemReview = [];
+List<MissionMockClass>? missionSystemFailed = [];
+List<MissionMockClass>? missionSystemPassed = [];
+List<MissionMockClass>? missionCompleted = [];
+List<MissionMockClass>? missionWaitRefund = [];
+List<MissionMockClass>? missionRefund = [];
 
 class MissionIssuedMainPage extends StatefulWidget {
   const MissionIssuedMainPage({super.key});
@@ -16,6 +29,174 @@ class MissionIssuedMainPage extends StatefulWidget {
 
 class _MissionIssuedMainPageState extends State<MissionIssuedMainPage> {
   int statusSelected = 0;
+  bool isLoading = false;
+  bool isFirstLaunch = true;
+  bool reachEndOfList = false;
+  int currentPage = 1;
+  int itemsPerPage = 1;
+  ScrollController _scrollController = ScrollController();
+
+  // set status on mission detail status issuer page
+  bool isWaiting = false;
+  bool isFailed = false;
+  bool isPassed = false;
+  bool isRemoved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!dataFetchedIssued && !dataEndIssued) {
+      // Fetch data only if it hasn't been fetched before
+      _loadData();
+    }
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  _loadData() async {
+    if (!isLoading && !reachEndOfList && !dataEndIssued) {
+      setState(() {
+        isLoading = true;
+      });
+
+      await Future.delayed(Duration(seconds: 2));
+      int start = (currentPage - 1) * itemsPerPage;
+      int end = start + itemsPerPage;
+
+      if (MissionAvailableList.length > start) {
+        if (isFirstLaunch) {
+          missionWaitSystemReview = MissionAvailableList.sublist(
+              start,
+              end > MissionAvailableList.length
+                  ? MissionAvailableList.length
+                  : end);
+          isFirstLaunch = false;
+        } else {
+          missionWaitSystemReview!.addAll(MissionAvailableList.sublist(
+              start,
+              end > MissionAvailableList.length
+                  ? MissionAvailableList.length
+                  : end));
+        }
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+            currentPage++;
+          });
+        }
+      } else {
+        setState(() {
+          reachEndOfList = true;
+          dataEndIssued = true;
+          isLoading = false;
+        });
+      }
+      dataFetchedIssued = true;
+    }
+  }
+
+  _scrollListener() {
+    if (!_scrollController.hasClients || isLoading) return;
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      _loadData();
+    }
+  }
+
+  Future<void> _refresh() async {
+    if (!isLoading) {
+      setState(() {
+        currentPage = 1;
+        missionWaitSystemReview = [];
+        reachEndOfList = false;
+        dataEndIssued = false;
+      });
+      await _loadData();
+    }
+  }
+
+  Widget buildMissionAcceptedListView(List<MissionMockClass> missionList) {
+    return ListView.builder(
+        padding: const EdgeInsets.only(top: 10),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: missionList.length + (isLoading ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index < missionList.length) {
+            return GestureDetector(
+              child: MissionCardComponent(
+                missionTitle: missionList[index].missionTitle,
+                missionDesc: missionList[index].missionDesc,
+                tagList: missionList[index].tagList ?? [],
+                missionPrice: missionList[index].missionPrice,
+                userAvatar: missionList[index].userAvatar,
+                username: missionList[index].username,
+                isStatus: true,
+                missionStatus: missionList[index].missionStatus,
+              ),
+              onTap: () {
+                Get.to(() => MissionDetailStatusIssuerPage(
+                    isWaiting: isWaiting,
+                    isFailed: isFailed,
+                    isPassed: isPassed,
+                    isRemoved: isRemoved));
+              },
+            );
+          } else {
+            return MissionCardLoadingComponent();
+          }
+        });
+  }
+
+  Widget buildListView() {
+    switch (statusSelected) {
+      case 0:
+        isWaiting = true;
+        isFailed = false;
+        isPassed = false;
+        isRemoved = false;
+        return buildMissionAcceptedListView(missionWaitSystemReview!);
+      case 1:
+        isWaiting = false;
+        isFailed = true;
+        isPassed = false;
+        isRemoved = false;
+        return buildMissionAcceptedListView(missionWaitSystemReview!);
+      case 2:
+        isWaiting = false;
+        isFailed = false;
+        isPassed = true;
+        isRemoved = false;
+        return buildMissionAcceptedListView(missionWaitSystemReview!);
+      case 3:
+        isWaiting = false;
+        isFailed = false;
+        isPassed = false;
+        isRemoved = true;
+        return buildMissionAcceptedListView(missionWaitSystemReview!);
+      case 4:
+        isWaiting = false;
+        isFailed = false;
+        isPassed = false;
+        isRemoved = true;
+        return buildMissionAcceptedListView(missionWaitSystemReview!);
+      case 5:
+        isWaiting = false;
+        isFailed = false;
+        isPassed = false;
+        isRemoved = true;
+        return buildMissionAcceptedListView(missionWaitSystemReview!);
+      default:
+        return SizedBox();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,68 +210,17 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage> {
             onTap: (index) {
               setState(() {
                 statusSelected = index;
+                _loadData();
               });
             }),
         Expanded(
-          child: LazyLoadScrollView(
-            onEndOfPage: () {
-              print("load more");
-            },
-            child: RefreshIndicator(
-              color: kMainYellowColor,
-              onRefresh: () async {
-                print("refresh everything");
-                setState(() {
-                  statusSelected = 0;
-                });
-              },
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(top: 10),
-                child: Column(
-                  children: List.generate(
-                    15,
-                    (index) => GestureDetector(
-                      onTap: () {
-                        Get.to(
-                            () => MissionDetailRecipientPage(
-                                  isStarted: false,
-                                  isSubmitted: false,
-                                  isExpired: false,
-                                  isWaitingPaid: false,
-                                  isPaid: false,
-                                  isFailed: false,
-                                ),
-                            transition: Transition.rightToLeft);
-                      },
-                      child: MissionCardComponent(
-                        missionTitle: '文案写作文案写作文文案写作文案写作文文案写作文案写作文',
-                        missionDesc:
-                            '负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写，负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写',
-                        tagList: [
-                          "写作",
-                          "写作",
-                          "写作",
-                          "写作",
-                          "写作",
-                          "写作",
-                          "写作",
-                          "写作"
-                        ],
-                        missionPrice: 886222.51,
-                        userAvatar:
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s",
-                        username: "微笑姐微笑姐",
-                        missionDate: "2024-04-29",
-                        isStatus: true,
-                        isFavorite: false,
-                        missionStatus: 0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          child: SingleChildScrollView(
+              controller: _scrollController,
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                color: kMainYellowColor,
+                child: buildListView(),
+              )),
         )
       ],
     );

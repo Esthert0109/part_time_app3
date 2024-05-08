@@ -157,6 +157,12 @@ const recipientCardTextStyle = TextStyle(
   color: kMainBlackColor,
 );
 
+const suggestTitleTextStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
+
 const durationTextStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w500,
@@ -194,6 +200,14 @@ const missionTagTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kTagColor,
 );
+const suggestTagTextStyle = TextStyle(
+  fontSize: 10,
+  fontWeight: FontWeight.w400,
+  color: kTagColor,
+);
+const suggestNoTextStyle = TextStyle(
+    fontSize: 10, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+    
 const missionPriceTextStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w500,
@@ -328,6 +342,8 @@ const alertDialogRejectButtonTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: kRejectMissionButtonTextColor);
+const rejectReasonTextStyle =
+    TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kMainRedColor);
 
 const messageTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -355,6 +371,8 @@ const missionRejectButtonTextStyle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: kRejectMissionButtonTextColor);
+const suggestPriceTextStyle =
+    TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: kMainRedColor);
 
 const inputCounterTextStyle = TextStyle(
     fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);

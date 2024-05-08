@@ -4,10 +4,14 @@ import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:part_time_app/Components/Card/missionReviewRecipientCardComponent.dart';
 
+import '../../Components/Loading/missionReviewLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import 'missionReviewDetailPage.dart';
+
+bool dataFetchedReview = false;
+bool dataEndReview = false;
 
 class MissionReviewPage extends StatefulWidget {
   const MissionReviewPage({super.key});
@@ -23,6 +27,17 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   int missionReviewing = 6;
   int missionCompleted = 9;
   bool isMissionFailed = true;
+  bool isLoading = false;
+
+  bool isFirstLaunch = true;
+  bool reachEndOfList = false;
+  int currentPage = 1;
+  int itemsPerPage = 1;
+  ScrollController _scrollController = ScrollController();
+
+  // set status on mission review recipient card component
+  bool isReviewing = false;
+  bool isCompleted = false;
 
   calculateTotalMission() {
     totalMissionReview =
@@ -33,6 +48,87 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   void initState() {
     super.initState();
     calculateTotalMission();
+
+    if (!dataFetchedReview && !dataEndReview) {
+      // Fetch data only if it hasn't been fetched before
+      // _loadData();
+    }
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  _scrollListener() {
+    if (!_scrollController.hasClients || isLoading) return;
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      // _loadData();
+    }
+  }
+
+  Future<void> _refresh() async {
+    if (!isLoading) {
+      setState(() {
+        currentPage = 1;
+
+        reachEndOfList = false;
+        dataEndReview = false;
+      });
+      // await _loadData();
+    }
+  }
+
+  Widget buildListView() {
+    switch (selectedStatusIndex) {
+      case 0:
+        isReviewing = false;
+        isCompleted = false;
+        return buildMissionAcceptedListView();
+      case 1:
+        isReviewing = true;
+        isCompleted = false;
+        return buildMissionAcceptedListView();
+      case 2:
+        isReviewing = false;
+        isCompleted = true;
+        return buildMissionAcceptedListView();
+      default:
+        return SizedBox();
+    }
+  }
+
+  Widget buildMissionAcceptedListView() {
+    return ListView.builder(
+        padding: const EdgeInsets.only(top: 10),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 5 + (isLoading ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index < 5) {
+            return MissionReviewRecipientCardComponent(
+                isReviewing: isReviewing,
+                isCompleted: isCompleted,
+                duration: "240:00:00",
+                onTap: () {
+                  Get.to(
+                      () => MissionReviewDetailPage(
+                            isCompleted: isCompleted,
+                          ),
+                      transition: Transition.rightToLeft);
+                },
+                userAvatar:
+                    "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
+                username: "鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡");
+          } else {
+            return MissionReviewLoading();
+          }
+        });
   }
 
   @override
@@ -93,32 +189,14 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                 ),
               ),
               Expanded(
-                child: LazyLoadScrollView(
-                  onEndOfPage: () {
-                    print("load more");
-                  },
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: List.generate(
-                          10,
-                          (index) => MissionReviewRecipientCardComponent(
-                              isReviewing: false,
-                              isCompleted: true,
-                              duration: "240:00:00",
-                              onTap: () {
-                                Get.to(
-                                    () => MissionReviewDetailPage(
-                                          isCompleted: false,
-                                        ),
-                                    transition: Transition.rightToLeft);
-                              },
-                              userAvatar:
-                                  "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                              username: "鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡")),
-                    ),
-                  ),
+                controller: _scrollController,
+                child: RefreshIndicator(
+                  onRefresh: _refresh,
+                  color: kMainYellowColor,
+                  child: buildListView(),
                 ),
-              )
+              ))
             ],
           ),
         ),

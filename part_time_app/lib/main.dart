@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
+// import 'package:part_time_app/Pages/Message/chatConfig.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
@@ -16,6 +17,8 @@ import 'Pages/homePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // initAndLoginIm();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const MyApp());
 }

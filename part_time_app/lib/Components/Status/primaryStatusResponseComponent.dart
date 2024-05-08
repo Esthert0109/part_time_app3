@@ -68,6 +68,7 @@ class PrimaryStatusBottomSheetComponent {
                       width: 351,
                       child: needButton
                           ? primaryButtonComponent(
+                            isLoading: false,
                               onPressed: () {},
                               text: "重新登入",
                               buttonColor: kMainYellowColor,

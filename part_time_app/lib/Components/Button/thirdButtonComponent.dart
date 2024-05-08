@@ -19,6 +19,7 @@ class thirdButtonComponent extends StatelessWidget {
         child: TextButton(
           style: TextButton.styleFrom(
             backgroundColor: kMainYellowColor,
+            shadowColor: Colors.transparent,
             textStyle: thirdButtonTextStyle,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),

@@ -3,8 +3,14 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_drop
+  fc_native_video_thumbnail
   file_selector_windows
+  image_clipboard
+  pasteboard
+  permission_handler_windows
   smart_auth
+  url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

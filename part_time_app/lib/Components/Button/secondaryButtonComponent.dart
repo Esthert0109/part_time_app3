@@ -22,6 +22,7 @@ class secondaryButtonComponent extends StatelessWidget {
         height: 40,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+              shadowColor: Colors.transparent,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               backgroundColor: buttonColor,
               shape: RoundedRectangleBorder(

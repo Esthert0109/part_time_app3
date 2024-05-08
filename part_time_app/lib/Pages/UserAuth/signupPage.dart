@@ -303,6 +303,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 372,
                   height: 50.0,
                   child: primaryButtonComponent(
+                    isLoading: false,
                     text: "提交",
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {

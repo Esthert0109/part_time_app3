@@ -106,6 +106,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
               width: 372,
               height: 50.0,
               child: primaryButtonComponent(
+                isLoading: false,
                 text: "提交",
                 onPressed: () {},
                 buttonColor: kMainYellowColor,
