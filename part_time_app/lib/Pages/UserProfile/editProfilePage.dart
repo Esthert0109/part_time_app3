@@ -11,7 +11,8 @@ import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
-import 'package:part_time_app/Pages/Main/collectPage.dart';
+
+import '../Explore/collectPage.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -397,7 +398,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             )
                           ],
                         ),
-
                         Padding(
                           padding: const EdgeInsets.only(left: 12, bottom: 6),
                           child: Text(
@@ -503,7 +503,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             style: editProfileTitleTextStyle,
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.only(left: 12, bottom: 6),
                           child: Text(
@@ -649,6 +648,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   width: double.infinity,
                   child: primaryButtonComponent(
                     text: "立刻保存",
+                    isLoading: false,
                     onPressed: () {
                       // print(strings);
                       // setState(() {
