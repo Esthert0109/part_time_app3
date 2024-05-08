@@ -81,6 +81,27 @@ const selectedSecondaryTitleTextStyle = TextStyle(
 const unselectedSecondaryTitleTextStyle = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w600, color: kMainBlackColor);
 
+const userProfileNameTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: kMainBlackColor);
+
+const userProfileUIDTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+
+const userProfileLinkTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const userProfileMenuTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const editProfileTitleTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: kMainGreyColor);
+
+const editProfilePassTextStyle =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: kMainBlueColor);
+
+const editProfileInputTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
 const selectedThirdStatusTextStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
@@ -364,3 +385,17 @@ const loginPageTextStyle2 = TextStyle(
 
 const otpErrorTextStyle1 =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMainRedColor);
+
+const depositTextStyle1 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kCheckTextColor,
+);
+
+const depositTextStyle2 = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w500, color: kSecondGreyColor);
+const depositTextStyle3 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);

@@ -77,11 +77,12 @@ class _SortPageState extends State<SortPage> {
               ),
               SizedBox(height: 10),
               Expanded(
-                flex: 8,
-                child: SecondaryCategorySelectionComponent(
-                  sorts: sorts,
-                ),
-              ),
+                  flex: 8,
+                  child: SingleChildScrollView(
+                    child: SecondaryCategorySelectionComponent(
+                      sorts: sorts,
+                    ),
+                  )),
               Container(
                   padding:
                       EdgeInsets.only(bottom: 30, top: 5, left: 10, right: 10),

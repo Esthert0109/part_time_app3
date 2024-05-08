@@ -82,6 +82,7 @@ flutter:
     - assets/mission/
     - assets/common/
     - assets/main/
+    - assets/profile/
     - assets/opening/
     - assets/authentication/
     - assets/userProfile/
