@@ -228,7 +228,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         ))),
                 SizedBox(width: 10),
                 Expanded(
-                    flex: 11,
+                    flex: 12,
                     child: Container(
                         padding: EdgeInsets.only(top: 5, left: 12),
                         height: 31,
@@ -252,18 +252,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 child: Stack(children: [
               Positioned(
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                  width: 66,
-                  height: 31,
-                  decoration: BoxDecoration(
-                    color: kDialogInputColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('     '),
-                ),
-              ),
-              Positioned(
-                child: Container(
                   height: 31,
                   child: InternationalPhoneNumberInput(
                     errorMessage: "手机号码不正确",
@@ -271,7 +259,9 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                     textFieldController: phoneControllerLogin,
                     formatInput: true,
                     selectorConfig: const SelectorConfig(
-                        // setSelectorButtonAsPrefixIcon: true,
+                        trailingSpace: true,
+                        leadingPadding: 10,
+                        setSelectorButtonAsPrefixIcon: true,
                         showFlags: false,
                         selectorType: PhoneInputSelectorType.DIALOG),
                     onInputChanged: (PhoneNumber number) {
@@ -289,12 +279,34 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         ),
                         filled: true,
                         fillColor: kInputBackGreyColor,
-                        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        contentPadding: EdgeInsets.only(right: 100, left: 100),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none),
                         hintText: "请输入电话号码",
                         hintStyle: missionDetailText2),
+                  ),
+                ),
+              ),
+              Positioned(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(68, 0, 12, 0),
+                  width: 3,
+                  height: 31,
+                  decoration: BoxDecoration(
+                    color: kMainWhiteColor,
+                  ),
+                  child: Text('     '),
+                ),
+              ),
+              Positioned(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(45, 0, 12, 0),
+                  width: 3,
+                  height: 31,
+                  child: Icon(
+                    Icons.arrow_drop_down,
+                    color: kSecondGreyColor,
                   ),
                 ),
               ),

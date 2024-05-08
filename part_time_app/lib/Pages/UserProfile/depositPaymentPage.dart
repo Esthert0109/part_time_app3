@@ -326,6 +326,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
           child: SizedBox(
             width: double.infinity,
             child: primaryButtonComponent(
+              isLoading: false,
               text: "提交",
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,

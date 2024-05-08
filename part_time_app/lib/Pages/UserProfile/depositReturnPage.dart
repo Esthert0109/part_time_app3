@@ -108,6 +108,7 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
               children: [
                 Expanded(
                   child: primaryButtonComponent(
+                    isLoading: false,
                     text: "放弃提交",
                     buttonColor: kRejectMissionButtonColor,
                     textStyle: missionRejectButtonTextStyle,
@@ -127,6 +128,7 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                 SizedBox(width: 10),
                 Expanded(
                   child: primaryButtonComponent(
+                    isLoading: false,
                     text: "确认提交",
                     buttonColor: kMainYellowColor,
                     textStyle: buttonTextStyle,
