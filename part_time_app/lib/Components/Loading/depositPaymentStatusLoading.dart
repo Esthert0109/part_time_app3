@@ -108,6 +108,28 @@ class _DepositPaymentStatusLoadingState
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            height: 103,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8), color: kMainWhiteColor),
+            padding: const EdgeInsets.all(12),
+            child: Shimmer.fromColors(
+              baseColor: kMainLoadingColor,
+              highlightColor: kSecondaryLoadingColor,
+              enabled: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(height: 19, width: 64, color: kMainWhiteColor),
+                  const SizedBox(height: 6),
+                  Container(height: 46, width: 327, color: kMainWhiteColor),
+                ],
+              ),
+            ),
           )
         ],
       ),

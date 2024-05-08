@@ -20,7 +20,7 @@ class DepositPaymentStatusPage extends StatefulWidget {
 }
 
 class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
-  bool isLoading = true;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
