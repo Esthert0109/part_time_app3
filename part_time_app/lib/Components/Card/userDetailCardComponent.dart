@@ -83,16 +83,29 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("用户名", style: depositTextStyle2),
-          _buildTextInput(
-              hintText: "请输入用户昵称",
-              controller: nameController,
-              onChanged: (value) {
-                if (widget.onUsernameChange != null) {
-                  widget.onUsernameChange!(value);
-                }
-              },
-              readOnly: false),
+          if (widget.isEditProfile) ...[
+            Text("用户名", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "请输入用户名",
+                controller: nameController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false)
+          ] else ...[
+            Text("真实姓名", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "真实姓名",
+                controller: nameController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false),
+          ],
           SizedBox(height: 15),
           Container(
             child: Row(
@@ -113,7 +126,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 Expanded(
                   flex: 5,
                   child: _buildTextInput(
-                      hintText: "请输入用户昵称",
+                      hintText: "请输入国家",
                       controller: nameController,
                       onChanged: (value) {
                         if (widget.onUsernameChange != null) {
@@ -126,7 +139,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 Expanded(
                   flex: 4,
                   child: _buildTextInput(
-                      hintText: "国家名字",
+                      hintText: "请输入范围",
                       controller: countryController,
                       onChanged: (value) {
                         if (widget.onCountryChange != null) {
@@ -171,28 +184,30 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             ),
           ),
           SizedBox(height: 15),
-          Text("邮箱", style: depositTextStyle2),
-          _buildTextInput(
-              hintText: "邮箱",
-              controller: emailController,
-              onChanged: (value) {
-                if (widget.onUsernameChange != null) {
-                  widget.onUsernameChange!(value);
-                }
-              },
-              readOnly: false),
-          SizedBox(height: 15),
-          Text("真实姓名", style: depositTextStyle2),
-          _buildTextInput(
-              hintText: "真实姓名",
-              controller: nameController,
-              onChanged: (value) {
-                if (widget.onUsernameChange != null) {
-                  widget.onUsernameChange!(value);
-                }
-              },
-              readOnly: false),
-          SizedBox(height: 15),
+          if (widget.isEditProfile) ...[
+            Text("邮箱", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "邮箱",
+                controller: emailController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false),
+            SizedBox(height: 15),
+            Text("真实姓名", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "真实姓名",
+                controller: nameController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false),
+            SizedBox(height: 15),
+          ],
           Text("第一联系方式", style: depositTextStyle2),
           SizedBox(height: 10),
           Container(
@@ -256,7 +271,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                     textFieldController: phoneControllerLogin,
                     formatInput: true,
                     selectorConfig: const SelectorConfig(
-                        setSelectorButtonAsPrefixIcon: true,
+                        // setSelectorButtonAsPrefixIcon: true,
                         showFlags: false,
                         selectorType: PhoneInputSelectorType.DIALOG),
                     onInputChanged: (PhoneNumber number) {

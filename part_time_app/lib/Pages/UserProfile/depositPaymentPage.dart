@@ -1,9 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dart';
 import 'package:part_time_app/Components/Card/userDetailCardComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class DepositPaymentPage extends StatefulWidget {
@@ -14,6 +22,28 @@ class DepositPaymentPage extends StatefulWidget {
 }
 
 class _DepositPaymentPageState extends State<DepositPaymentPage> {
+  final String textToCopy = "THE USDT TALALA";
+  XFile? selectedImage;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> imageSelect() async {
+    XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      selectedImage = pickedImage;
+    });
+  }
+
+  void deleteImage() {
+    setState(() {
+      selectedImage = null;
+    });
+  }
+
+  void _copyToClipboard() {
+    Clipboard.setData(ClipboardData(text: textToCopy));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -122,10 +152,14 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                             ),
                             Row(
                               children: [
-                                Text("USDT 链地址USDT 链地址USDT 链地址"),
+                                Container(
+                                  child: Expanded(
+                                    child: Text(textToCopy),
+                                  ),
+                                ),
                                 SizedBox(width: 50),
                                 GestureDetector(
-                                    onTap: () {},
+                                    onTap: _copyToClipboard,
                                     child: SvgPicture.asset(
                                         "assets/common/copy.svg",
                                         width: 15))
@@ -136,8 +170,178 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       )
                     ],
                   ),
-                )
+                ),
+                SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: kMainWhiteColor,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "押金预付",
+                                style: messageTitleTextStyle,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8, bottom: 8),
+                                child: Text(
+                                  "手续费 0%",
+                                  style: messageTitleTextStyle,
+                                ),
+                              ),
+                              Text(
+                                "预付共计",
+                                style: forgotPassSubmitTextStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "共记 20 USDT",
+                                style: depositTextStyle3,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Text(
+                                    "0 USDT",
+                                    style: messageTitleTextStyle,
+                                  )),
+                              Text(
+                                "20 USDT",
+                                style: forgotPassSubmitTextStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: kMainWhiteColor,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Text(
+                    "请支付押金至以上支付地址并截图上传已获得发布权限。(7天审核时间，7天后将自动审核成功)",
+                    style: searchBarTextStyle,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: kMainWhiteColor,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text(
+                          "请上传支付押金截图",
+                          style: onboradingPageTextStyle,
+                        ),
+                      ),
+                      Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              imageSelect();
+                            },
+                            child: Container(
+                                height: 300,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: selectedImage != null
+                                      ? null
+                                      : Colors.transparent,
+                                  image: selectedImage != null
+                                      ? DecorationImage(
+                                          image: FileImage(
+                                              File(selectedImage!.path)),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
+                                child: selectedImage == null
+                                    ? Center(
+                                        child: SvgPicture.asset(
+                                          "assets/common/addDeposit.svg",
+                                          height: 300,
+                                          width: 300,
+                                        ),
+                                      )
+                                    : null),
+                          ),
+                          if (selectedImage != null)
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: deleteImage,
+                                color: Colors.red,
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
               ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          height: 84,
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          alignment: Alignment.topCenter,
+          decoration: BoxDecoration(color: kMainWhiteColor, boxShadow: [
+            BoxShadow(
+              color: Color(0x1A000000),
+              offset: Offset(1, 0),
+              blurRadius: 2,
+              spreadRadius: 0,
+            ),
+          ]),
+          child: SizedBox(
+            width: double.infinity,
+            child: primaryButtonComponent(
+              text: "提交",
+              buttonColor: kMainYellowColor,
+              textStyle: buttonTextStyle,
+              onPressed: () {
+                setState(() {
+                  print("selectedImage: ${selectedImage?.path}");
+
+                  Get.back();
+                  Fluttertoast.showToast(
+                      msg: "已提交",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: kMainGreyColor,
+                      textColor: kThirdGreyColor);
+                });
+              },
             ),
           ),
         ),
