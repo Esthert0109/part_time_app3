@@ -71,6 +71,7 @@ class _MessageMainPageState extends State<MessageMainPage> {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Container(
           color: Colors.transparent,
           padding: const EdgeInsets.symmetric(horizontal: 5),

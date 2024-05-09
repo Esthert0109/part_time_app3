@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Components/List/messageListComponent.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
@@ -46,36 +48,22 @@ class _PostingMessagePageState extends State<PostingMessagePage> {
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: SvgPicture.asset("assets/common/back_button.svg"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                const Expanded(
-                  flex: 12,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text(
-                      "款项通知",
-                      style: dialogText2,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
+            automaticallyImplyLeading: false,
+            scrolledUnderElevation: 0.0,
+            leading: IconButton(
+              iconSize: 15,
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Get.back();
+              },
             ),
-          ),
-        ),
+            centerTitle: true,
+            title: Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "发布通知",
+                ))),
         body: Container(
           constraints: const BoxConstraints.expand(),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
