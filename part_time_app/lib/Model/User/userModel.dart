@@ -34,7 +34,7 @@ class UserData {
   final String? bilingAddress;
   final String? bilingCurrency;
   final int? validIdentity;
-  final int? collectionValid;
+  final int? collectionValid;  //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;
 
