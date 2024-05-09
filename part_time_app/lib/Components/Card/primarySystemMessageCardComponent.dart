@@ -25,6 +25,7 @@ class _primarySystemMessageCardComponentState
     return Card(
       elevation: 0,
       child: Container(
+          width: double.infinity,
           padding: const EdgeInsetsDirectional.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -41,7 +42,7 @@ class _primarySystemMessageCardComponentState
               const SizedBox(height: 12),
               Text(
                 widget.messageContent,
-                style: primarySystemMessageContentTextStyle,
+                style: missionDetailText2,
               )
             ],
           )),

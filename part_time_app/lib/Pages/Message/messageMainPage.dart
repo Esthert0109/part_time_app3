@@ -12,38 +12,84 @@ import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../MockData/missionMockData.dart';
 
 class MessageMainPage extends StatefulWidget {
-  const MessageMainPage({super.key});
+  const MessageMainPage({Key? key}) : super(key: key);
 
   @override
-  State<MessageMainPage> createState() => _MessageMainPageState();
+  _MessageMainPageState createState() => _MessageMainPageState();
 }
 
 class _MessageMainPageState extends State<MessageMainPage> {
   final PageController _controller = PageController();
   int titleSelection = 0;
+  late String latestSystemMessageDate;
+  late String? latestSystemMessageDescription;
+  late String latestMissionMessageDate;
+  late String? latestMissionMessageDescription;
+  late String latestPaymentMessageDate;
+  late String? latestPaymentMessageDescription;
+  late String latestPostingMessageDate;
+  late String? latestPostingMessageDescription;
+  late String latestToolMessageDate;
+  late String? latestToolMessageDescription;
+
+  @override
+  void initState() {
+    super.initState();
+    latestSystemMessageDate =
+        systemMessageList.isNotEmpty ? systemMessageList.last.createdTime : "";
+    latestSystemMessageDescription =
+        systemMessageList.isNotEmpty ? systemMessageList.last.description : "";
+    latestMissionMessageDate = MissionMessageList.isNotEmpty
+        ? MissionMessageList.last.createdTime
+        : "";
+    latestMissionMessageDescription = MissionMessageList.isNotEmpty
+        ? MissionMessageList.last.description
+        : "";
+    latestPaymentMessageDate = PaymentMessageList.isNotEmpty
+        ? PaymentMessageList.last.createdTime
+        : "";
+    latestPaymentMessageDescription = PaymentMessageList.isNotEmpty
+        ? PaymentMessageList.last.description
+        : "";
+    latestPostingMessageDate = PostingMessageList.isNotEmpty
+        ? PostingMessageList.last.createdTime
+        : "";
+    latestPostingMessageDescription = PostingMessageList.isNotEmpty
+        ? PostingMessageList.last.description
+        : "";
+    latestToolMessageDate =
+        ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
+    latestToolMessageDescription =
+        ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
-          title: Container(
-        color: kTransparent,
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: SecondaryTitleComponent(
-          titleList: ["我接收的"],
-          selectedIndex: titleSelection,
-          onTap: (index) {
-            setState(() {
-              titleSelection = index;
-              _controller.animateToPage(index,
-                  duration: Duration(milliseconds: 600),
-                  curve: Curves.easeInOut);
-            });
-          },
+        title: Container(
+          color: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: SecondaryTitleComponent(
+            titleList: ["我接收的"],
+            selectedIndex: titleSelection,
+            onTap: (index) {
+              setState(() {
+                titleSelection = index;
+                _controller.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOut,
+                );
+              });
+            },
+          ),
         ),
-      )),
+      ),
       body: PageView(
         controller: _controller,
         scrollDirection: Axis.horizontal,
@@ -68,7 +114,20 @@ class _MessageMainPageState extends State<MessageMainPage> {
                 stops: [0.0, 0.15],
               ),
             ),
-            child: MessageCardComponent(),
+            child: SingleChildScrollView(
+              child: MessageCardComponent(
+                systemDate: latestSystemMessageDate,
+                systemDetail: latestSystemMessageDescription,
+                missionDate: latestMissionMessageDate,
+                missionDetail: latestMissionMessageDescription,
+                paymentDate: latestPaymentMessageDate,
+                paymentDetail: latestPaymentMessageDescription,
+                postingDate: latestPostingMessageDate,
+                postingDetail: latestPostingMessageDescription,
+                toolDate: latestToolMessageDate,
+                toolDetail: latestToolMessageDescription,
+              ),
+            ),
           ),
         ],
       ),
