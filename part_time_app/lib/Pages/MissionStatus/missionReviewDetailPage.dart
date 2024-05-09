@@ -30,7 +30,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
   bool isFavourite = false;
 
   // if mission failed, show reason card
-  bool isMissionFailed = true;
+  bool isMissionFailed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -174,14 +174,14 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
               ]),
 
               // if mission completed, the button can't be pressed
-              child: widget.isCompleted
+              child: (widget.isCompleted || isMissionFailed)
                   ? SizedBox(
                       width: double.infinity,
                       child: primaryButtonComponent(
                         isLoading: false,
                         buttonColor: kMainYellowColor,
                         disableButtonColor: kThirdGreyColor,
-                        text: '已通过',
+                        text: isMissionFailed ? "未通过" : '已通过',
                         textStyle: disableButtonTextStyle,
                         onPressed: null,
                       ),
