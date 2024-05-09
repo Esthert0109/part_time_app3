@@ -45,3 +45,19 @@ class MessageMockClass {
       required this.createdTime,
       required this.updatedTime});
 }
+
+class PaymentMockClass {
+  final bool complete;
+  final String title;
+  final String description;
+  final int amount;
+  final String date;
+
+  PaymentMockClass({
+    required this.complete,
+    required this.title,
+    required this.description,
+    required this.amount,
+    required this.date,
+  });
+}
