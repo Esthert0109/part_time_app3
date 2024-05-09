@@ -83,16 +83,29 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("用户名", style: depositTextStyle2),
-          _buildTextInput(
-              hintText: "请输入用户昵称",
-              controller: nameController,
-              onChanged: (value) {
-                if (widget.onUsernameChange != null) {
-                  widget.onUsernameChange!(value);
-                }
-              },
-              readOnly: false),
+          if (widget.isEditProfile) ...[
+            Text("用户名", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "请输入用户名",
+                controller: nameController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false)
+          ] else ...[
+            Text("真实姓名", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "真实姓名",
+                controller: nameController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false),
+          ],
           SizedBox(height: 15),
           Container(
             child: Row(
@@ -113,7 +126,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 Expanded(
                   flex: 5,
                   child: _buildTextInput(
-                      hintText: "请输入用户昵称",
+                      hintText: "请输入国家",
                       controller: nameController,
                       onChanged: (value) {
                         if (widget.onUsernameChange != null) {
@@ -126,7 +139,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 Expanded(
                   flex: 4,
                   child: _buildTextInput(
-                      hintText: "国家名字",
+                      hintText: "请输入范围",
                       controller: countryController,
                       onChanged: (value) {
                         if (widget.onCountryChange != null) {
@@ -171,28 +184,30 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             ),
           ),
           SizedBox(height: 15),
-          Text("邮箱", style: depositTextStyle2),
-          _buildTextInput(
-              hintText: "邮箱",
-              controller: emailController,
-              onChanged: (value) {
-                if (widget.onUsernameChange != null) {
-                  widget.onUsernameChange!(value);
-                }
-              },
-              readOnly: false),
-          SizedBox(height: 15),
-          Text("真实姓名", style: depositTextStyle2),
-          _buildTextInput(
-              hintText: "真实姓名",
-              controller: nameController,
-              onChanged: (value) {
-                if (widget.onUsernameChange != null) {
-                  widget.onUsernameChange!(value);
-                }
-              },
-              readOnly: false),
-          SizedBox(height: 15),
+          if (widget.isEditProfile) ...[
+            Text("邮箱", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "邮箱",
+                controller: emailController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false),
+            SizedBox(height: 15),
+            Text("真实姓名", style: depositTextStyle2),
+            _buildTextInput(
+                hintText: "真实姓名",
+                controller: nameController,
+                onChanged: (value) {
+                  if (widget.onUsernameChange != null) {
+                    widget.onUsernameChange!(value);
+                  }
+                },
+                readOnly: false),
+            SizedBox(height: 15),
+          ],
           Text("第一联系方式", style: depositTextStyle2),
           SizedBox(height: 10),
           Container(
@@ -213,7 +228,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         ))),
                 SizedBox(width: 10),
                 Expanded(
-                    flex: 11,
+                    flex: 12,
                     child: Container(
                         padding: EdgeInsets.only(top: 5, left: 12),
                         height: 31,
@@ -237,18 +252,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 child: Stack(children: [
               Positioned(
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                  width: 66,
-                  height: 31,
-                  decoration: BoxDecoration(
-                    color: kDialogInputColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text('     '),
-                ),
-              ),
-              Positioned(
-                child: Container(
                   height: 31,
                   child: InternationalPhoneNumberInput(
                     errorMessage: "手机号码不正确",
@@ -256,6 +259,8 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                     textFieldController: phoneControllerLogin,
                     formatInput: true,
                     selectorConfig: const SelectorConfig(
+                        trailingSpace: true,
+                        leadingPadding: 10,
                         setSelectorButtonAsPrefixIcon: true,
                         showFlags: false,
                         selectorType: PhoneInputSelectorType.DIALOG),
@@ -274,12 +279,34 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         ),
                         filled: true,
                         fillColor: kInputBackGreyColor,
-                        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        contentPadding: EdgeInsets.only(right: 100, left: 100),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none),
                         hintText: "请输入电话号码",
                         hintStyle: missionDetailText2),
+                  ),
+                ),
+              ),
+              Positioned(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(68, 0, 12, 0),
+                  width: 3,
+                  height: 31,
+                  decoration: BoxDecoration(
+                    color: kMainWhiteColor,
+                  ),
+                  child: Text('     '),
+                ),
+              ),
+              Positioned(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(45, 0, 12, 0),
+                  width: 3,
+                  height: 31,
+                  child: Icon(
+                    Icons.arrow_drop_down,
+                    color: kSecondGreyColor,
                   ),
                 ),
               ),

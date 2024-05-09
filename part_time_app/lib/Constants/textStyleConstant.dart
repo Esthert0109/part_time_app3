@@ -399,3 +399,13 @@ const depositTextStyle3 = TextStyle(
   fontWeight: FontWeight.w500,
   color: kMainBlackColor,
 );
+const paymentHistoryTextStyle1 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kMainRedColor,
+);
+const paymentHistoryTextStyle2 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);

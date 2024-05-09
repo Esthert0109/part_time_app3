@@ -7,14 +7,14 @@ import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
 
-class DepositMainPage extends StatefulWidget {
-  const DepositMainPage({super.key});
+class TicketMainPage extends StatefulWidget {
+  const TicketMainPage({super.key});
 
   @override
-  State<DepositMainPage> createState() => _DepositMainPageState();
+  State<TicketMainPage> createState() => _TicketMainPageState();
 }
 
-class _DepositMainPageState extends State<DepositMainPage> {
+class _TicketMainPageState extends State<TicketMainPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,7 +44,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
                   child: Padding(
                     padding: EdgeInsets.only(right: 20),
                     child: Text(
-                      "押金认证",
+                      "工单",
                       style: dialogText2,
                       textAlign: TextAlign.center,
                     ),
@@ -83,7 +83,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
     return Container(
       margin: EdgeInsets.only(top: 15),
       padding: EdgeInsets.all(15),
-      height: 94,
+      height: 95,
       decoration: BoxDecoration(
           color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
       child: Row(
@@ -97,13 +97,15 @@ class _DepositMainPageState extends State<DepositMainPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    verify ? "• 押金认证" : "• 退还押金",
+                    verify ? "• 查看工单" : "• 提交工单",
                     style: primarySystemMessageTitleTextStyle,
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      "账号仅限本人使用，禁止转借共用等。",
+                      verify
+                          ? "查看已提交的工单，尽可查看不可删除或更改。"
+                          : "提交工单，一个工单仅可举报一个用户或悬赏ID。",
                       style: missionDetailText2,
                     ),
                   )
@@ -118,14 +120,14 @@ class _DepositMainPageState extends State<DepositMainPage> {
                   child: GestureDetector(
                     onTap: verify
                         ? () {
-                            Get.to(() => DepositPaymentPage(),
-                                transition: Transition.rightToLeft);
+                            // Get.to(() => DepositPaymentPage(),
+                            //     transition: Transition.rightToLeft);
                           }
                         : () {
-                            Get.to(() => DepositReturnPage(),
-                                transition: Transition.rightToLeft);
+                            // Get.to(() => DepositReturnPage(),
+                            //     transition: Transition.rightToLeft);
                           },
-                    child: Text(verify ? "立刻认证" : " 立刻退还",
+                    child: Text(verify ? "查看工单" : "  提交工单",
                         style: depositTextStyle1),
                   )))
         ],
