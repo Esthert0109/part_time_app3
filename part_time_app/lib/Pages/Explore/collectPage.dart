@@ -77,11 +77,13 @@ class _CollectPageState extends State<CollectPage>
         }
       } else {
         // No more data to load
-        setState(() {
-          reachEndOfList = true;
-          dataEndCollect = true;
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            reachEndOfList = true;
+            dataEndCollect = true;
+            isLoading = false;
+          });
+        }
       }
       dataFetchedCollect = true;
       noInitialRefresh = false;
