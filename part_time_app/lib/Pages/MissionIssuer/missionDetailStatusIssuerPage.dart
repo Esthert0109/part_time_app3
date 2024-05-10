@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailDescriptionCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailIssuerCardComponent.dart';
@@ -16,8 +21,10 @@ import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
 
+import '../../Components/Button/secondaryButtonComponent.dart';
 import '../../Components/Common/countdownTimer.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Dialog/paymentUploadDialogComponent.dart';
 import '../../Components/Loading/missionDetailLoading.dart';
 import '../../Components/Status/statusDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -76,6 +83,7 @@ class _MissionDetailStatusIssuerPageState
     extends State<MissionDetailStatusIssuerPage> {
   bool picPreview = true;
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -471,25 +479,11 @@ class _MissionDetailStatusIssuerPageState
                                             setState(() {
                                               Navigator.pop(context);
 
-                                              // Get.back();
                                               showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return StatusDialogComponent(
-                                                    complete: true,
-                                                    successText:
-                                                        "系统将审核你的内容，审核通过后将发布该悬赏。",
-                                                    onTap: () {
-                                                      setState(() {
-                                                        Navigator.pop(context);
-                                                        Get.offAllNamed(
-                                                            '/home');
-                                                      });
-                                                    },
-                                                  );
-                                                },
-                                              );
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return PaymentUploadDialogComponent();
+                                                  });
                                             });
                                           },
                                         );

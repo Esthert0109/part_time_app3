@@ -15,12 +15,13 @@ import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../MockData/missionMockData.dart';
 
 class MessageMainPage extends StatefulWidget {
-  const MessageMainPage({super.key});
+  const MessageMainPage({Key? key}) : super(key: key);
 
   @override
-  State<MessageMainPage> createState() => _MessageMainPageState();
+  _MessageMainPageState createState() => _MessageMainPageState();
 }
 
 class _MessageMainPageState extends State<MessageMainPage> {
@@ -29,6 +30,16 @@ class _MessageMainPageState extends State<MessageMainPage> {
   int titleSelection = 0;
   bool _isLoading = true;
   double _scrollPosition = 0;
+  late String latestSystemMessageDate;
+  late String? latestSystemMessageDescription;
+  late String latestMissionMessageDate;
+  late String? latestMissionMessageDescription;
+  late String latestPaymentMessageDate;
+  late String? latestPaymentMessageDescription;
+  late String latestPostingMessageDate;
+  late String? latestPostingMessageDescription;
+  late String latestToolMessageDate;
+  late String? latestToolMessageDescription;
 
   void _onRefresh() async {
     // monitor network fetch
@@ -61,9 +72,35 @@ class _MessageMainPageState extends State<MessageMainPage> {
     });
   }
 
-  Widget _buildLoadingIndicator() {
-    return LoadingAnimationWidget.stretchedDots(
-        color: kMainYellowColor, size: 50);
+  @override
+  void initState() {
+    super.initState();
+    latestSystemMessageDate =
+        systemMessageList.isNotEmpty ? systemMessageList.last.createdTime : "";
+    latestSystemMessageDescription =
+        systemMessageList.isNotEmpty ? systemMessageList.last.description : "";
+    latestMissionMessageDate = MissionMessageList.isNotEmpty
+        ? MissionMessageList.last.createdTime
+        : "";
+    latestMissionMessageDescription = MissionMessageList.isNotEmpty
+        ? MissionMessageList.last.description
+        : "";
+    latestPaymentMessageDate = PaymentMessageList.isNotEmpty
+        ? PaymentMessageList.last.createdTime
+        : "";
+    latestPaymentMessageDescription = PaymentMessageList.isNotEmpty
+        ? PaymentMessageList.last.description
+        : "";
+    latestPostingMessageDate = PostingMessageList.isNotEmpty
+        ? PostingMessageList.last.createdTime
+        : "";
+    latestPostingMessageDescription = PostingMessageList.isNotEmpty
+        ? PostingMessageList.last.description
+        : "";
+    latestToolMessageDate =
+        ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
+    latestToolMessageDescription =
+        ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
   }
 
   @override
@@ -104,7 +141,18 @@ class _MessageMainPageState extends State<MessageMainPage> {
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
-                    MessageCardComponent(),
+                    MessageCardComponent(
+                      systemDate: latestSystemMessageDate,
+                      systemDetail: latestSystemMessageDescription,
+                      missionDate: latestMissionMessageDate,
+                      missionDetail: latestMissionMessageDescription,
+                      paymentDate: latestPaymentMessageDate,
+                      paymentDetail: latestPaymentMessageDescription,
+                      postingDate: latestPostingMessageDate,
+                      postingDetail: latestPostingMessageDescription,
+                      toolDate: latestToolMessageDate,
+                      toolDetail: latestToolMessageDescription,
+                    ),
                   ],
                 ),
               )),

@@ -1,0 +1,6 @@
+// common
+const port = "http://103.159.133.27:8085/";
+
+// User Services
+const loginUrl = "api/v1/login/do-login";
+const registrationUrl = "api/v1/customers/info";

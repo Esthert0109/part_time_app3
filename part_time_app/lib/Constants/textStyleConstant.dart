@@ -423,7 +423,10 @@ const ticketUncompleteTextStyle = TextStyle(
 );
 
 const ticketCompleteTextStyle = TextStyle(
-  fontSize: 12,
+    fontSize: 12, fontWeight: FontWeight.w500, color: kSecondGreyColor);
+
+const logoutTextStyle = TextStyle(
+  fontSize: 16,
   fontWeight: FontWeight.w500,
-  color: kSecondGreyColor,
+  color: kMainBlueColor,
 );

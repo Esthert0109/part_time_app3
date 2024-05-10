@@ -6,6 +6,7 @@ import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 import 'package:part_time_app/Pages/UserProfile/ticketHistoryPage.dart';
 
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class TicketMainPage extends StatefulWidget {
@@ -22,39 +23,22 @@ class _TicketMainPageState extends State<TicketMainPage> {
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/common/back_button.svg",
-                      width: 24,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                const Expanded(
-                  flex: 12,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text(
-                      "工单",
-                      style: dialogText2,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
+            automaticallyImplyLeading: false,
+            scrolledUnderElevation: 0.0,
+            leading: IconButton(
+              iconSize: 15,
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Get.back();
+              },
             ),
-          ),
-        ),
+            centerTitle: true,
+            title: Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "工单",
+                ))),
         body: Container(
           constraints: const BoxConstraints.expand(),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),

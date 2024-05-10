@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -129,6 +132,86 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                           )
                         ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                Container(
+                  height: 92,
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      color: kMainWhiteColor,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        child: Text(
+                          "账号设置",
+                          style: secondaryTextFieldHintTextStyle,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "登出",
+                              style: missionDetailText6,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialogComponent(
+                                        alertTitle: '您即将登出账号',
+                                        alertDesc: Text(""),
+                                        descTextStyle:
+                                            alertDialogContentTextStyle,
+                                        firstButtonText: '返回',
+                                        firstButtonTextStyle:
+                                            alertDialogFirstButtonTextStyle,
+                                        firstButtonColor: kThirdGreyColor,
+                                        secondButtonText: '登出',
+                                        secondButtonTextStyle:
+                                            tStatusFieldText1,
+                                        secondButtonColor: kMainYellowColor,
+                                        isButtonExpanded: true,
+                                        firstButtonOnTap: () {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        secondButtonOnTap: () {
+                                          setState(() {
+                                            Navigator.pop(context);
+
+                                            Fluttertoast.showToast(
+                                                msg: "已登出",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: kMainGreyColor,
+                                                textColor: kThirdGreyColor);
+                                          });
+                                        },
+                                      );
+                                    });
+                              },
+                              child: Text(
+                                "登出账号",
+                                style: logoutTextStyle,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

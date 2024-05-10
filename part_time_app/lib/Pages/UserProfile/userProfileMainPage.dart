@@ -9,6 +9,7 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
+import 'package:part_time_app/Pages/UserProfile/settingPage.dart';
 import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/userProfilePage.dart';
 
@@ -150,7 +151,8 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                     image: "assets/profile/settings_icon.svg",
                     status: "设置",
                     ontap: () {
-                      print("touch the talala");
+                      Get.to(() => SettingPage(),
+                          transition: Transition.rightToLeft);
                     },
                   ),
                 ],
