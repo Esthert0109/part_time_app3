@@ -207,7 +207,7 @@ const suggestTagTextStyle = TextStyle(
 );
 const suggestNoTextStyle = TextStyle(
     fontSize: 10, fontWeight: FontWeight.w400, color: kSecondGreyColor);
-    
+
 const missionPriceTextStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w500,
@@ -408,6 +408,12 @@ const paymentHistoryTextStyle2 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500,
   color: kMainBlackColor,
+);
+
+const logoutTextStyle = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: kMainBlueColor,
 );
 
 const aboutUsTextStyle1 = TextStyle(

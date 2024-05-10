@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/userDetailCardComponent.dart';
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
@@ -24,39 +25,22 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/common/back_button.svg",
-                      width: 24,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                const Expanded(
-                  flex: 12,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text(
-                      "押金退还",
-                      style: dialogText2,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
+            automaticallyImplyLeading: false,
+            scrolledUnderElevation: 0.0,
+            leading: IconButton(
+              iconSize: 15,
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Get.back();
+              },
             ),
-          ),
-        ),
+            centerTitle: true,
+            title: Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "押金退还",
+                ))),
         body: Container(
           constraints: const BoxConstraints.expand(),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
@@ -72,24 +56,26 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
               stops: [0.0, 0.15],
             ),
           ),
-          child: Column(
-            children: [
-              UserDetailCardComponent(
-                isEditProfile: false,
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    color: kMainWhiteColor,
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text(
-                  "注意事项：退还押金后将无法使用发布功能，若想使用发布功能，需再次支付押金，并进行审核。(3-5天审核时间) \n(退还押金将下架所有正在进行中的悬赏 或 剩下已完成的悬赏)",
-                  style: searchBarTextStyle,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                UserDetailCardComponent(
+                  isEditProfile: false,
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: kMainWhiteColor,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Text(
+                    "注意事项：退还押金后将无法使用发布功能，若想使用发布功能，需再次支付押金，并进行审核。(3-5天审核时间) \n(退还押金将下架所有正在进行中的悬赏 或 剩下已完成的悬赏)",
+                    style: searchBarTextStyle,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Container(

@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Pages/Message/missionMessagePage.dart';
+import 'package:part_time_app/Pages/Message/paymentMessagePage.dart';
+import 'package:part_time_app/Pages/Message/systemMessagePage.dart';
+import 'package:part_time_app/Pages/Message/toolMessagePage.dart';
+import 'package:part_time_app/Pages/Message/user/userMessagePage.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
-import '../../Pages/Message/user/userMessagePage.dart';
+import '../../Pages/Message/postingMessagePage.dart';
 
 
 class MessageCardComponent extends StatefulWidget {
@@ -67,7 +72,8 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.systemDate,
           widget.systemTotalMessage,
           () {
-            print("touch the talala");
+            Get.to(() => const SystemMessagePage(),
+                transition: Transition.rightToLeft);
           },
         ),
         const SizedBox(height: 10),
@@ -78,7 +84,8 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.missionDate,
           widget.missionTotalMessage,
           () {
-            print("touch the talala");
+            Get.to(() => const MissionMessagePage(),
+                transition: Transition.rightToLeft);
           },
         ),
         const SizedBox(height: 10),
@@ -89,7 +96,8 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.paymentDate,
           widget.paymentTotalMessage,
           () {
-            print("touch the talala");
+            Get.to(() => const PaymentMessagePage(),
+                transition: Transition.rightToLeft);
           },
         ),
         const SizedBox(height: 10),
@@ -100,7 +108,8 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.postingDate,
           widget.postingTotalMessage,
           () {
-            print("touch the talala");
+            Get.to(() => const PostingMessagePage(),
+                transition: Transition.rightToLeft);
           },
         ),
         const SizedBox(height: 10),
@@ -111,7 +120,8 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.toolDate,
           widget.toolTotalMessage,
           () {
-            print("touch the talala");
+            Get.to(() => const ToolMessagePage(),
+                transition: Transition.rightToLeft);
           },
         ),
         const SizedBox(height: 10),
@@ -122,7 +132,8 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.userDate,
           widget.userTotalMessage,
           () {
-            Get.to(() => UserMessagePage(), transition: Transition.rightToLeft);
+            Get.to(() => const UserMessagePage(),
+                transition: Transition.rightToLeft);
           },
         ),
       ],

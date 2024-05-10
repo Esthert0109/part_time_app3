@@ -96,7 +96,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             backgroundColor: const Color(0xFFF9F9F9),
-            title: const ThirdTitleComponent(
+            title: const thirdTitleComponent(
               text: '编辑资料',
             ),
             centerTitle: true,
@@ -156,11 +156,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             bottom: 50, left: 10, right: 10, top: 5),
                         decoration: const BoxDecoration(color: kMainWhiteColor),
                         width: double.infinity,
-                        child: PrimaryButtonComponent(
+                        child: primaryButtonComponent(
                           text: "立刻保存",
                           onPressed: () {},
                           buttonColor: kMainYellowColor,
                           textStyle: missionCheckoutTotalPriceTextStyle,
+                          isLoading: isLoading,
                         )),
                   )
                 ],

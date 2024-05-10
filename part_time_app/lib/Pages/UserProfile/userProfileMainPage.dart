@@ -7,10 +7,11 @@ import 'package:part_time_app/Components/Card/userProfileCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
-import 'package:part_time_app/Pages/Ticket/ticketRecordDetailsPage.dart';
 import 'package:part_time_app/Pages/UserProfile/aboutUsPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
+import 'package:part_time_app/Pages/UserProfile/editProfilePage.dart';
 import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
+import 'package:part_time_app/Pages/UserProfile/settingPage.dart';
 import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
@@ -80,7 +81,8 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                             const SizedBox(width: 20),
                             InkWell(
                                 onTap: () {
-                                  Get.toNamed('/editProfile');
+                                  Get.to(() => EditProfilePage(),
+                                      transition: Transition.rightToLeft);
                                 },
                                 child: SvgPicture.asset(
                                     "assets/profile/edit_profile.svg"))
@@ -146,7 +148,8 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                     image: "assets/profile/settings_icon.svg",
                     status: "设置",
                     ontap: () {
-                      print("touch the talala");
+                      Get.to(() => SettingPage(),
+                          transition: Transition.rightToLeft);
                     },
                   ),
                 ],

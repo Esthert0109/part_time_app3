@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class MissionMockClass {
   final String missionTitle;
   final String missionDesc;
@@ -25,6 +23,27 @@ class MissionMockClass {
       this.isFavorite,
       this.missionStatus,
       this.updatedTime});
+}
+
+class MessageMockClass {
+  final String title;
+  bool? isApproved; // check if mission status out
+  String? description;
+  bool? isAccepted; // check it mission accepted by organize
+  String? reason;
+  double? rating;
+  final String createdTime;
+  final String updatedTime;
+
+  MessageMockClass(
+      {required this.title,
+      this.isApproved,
+      this.description,
+      this.isAccepted,
+      this.reason,
+      this.rating,
+      required this.createdTime,
+      required this.updatedTime});
 }
 
 class PaymentMockClass {
