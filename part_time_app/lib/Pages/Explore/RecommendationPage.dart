@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Pages/Explore/easyPassPage.dart';
 import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Explore/newMissionPage.dart';
 import 'package:part_time_app/Pages/Explore/shortTimePage.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Components/Card/missionCardComponent.dart';
+import '../../Components/Loading/customRefreshComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -28,6 +32,8 @@ class RecommendationPage extends StatefulWidget {
 }
 
 class _RecommendationPageState extends State<RecommendationPage> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
   int selectIndex = 0;
   List<MissionMockClass>? missionAvailableAsec = [];
   List<MissionMockClass>? missionAvailableDesc = [];
@@ -42,7 +48,6 @@ class _RecommendationPageState extends State<RecommendationPage> {
   void initState() {
     super.initState();
     if (!dataFetchedExplore && !dataEndExplore) {
-      // Fetch data only if it hasn't been fetched before
       _loadData();
     }
     _scrollController.addListener(_scrollListener);
@@ -119,6 +124,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
   }
 
   Future<void> _refresh() async {
+    await Future.delayed(Duration(milliseconds: 2000));
     if (!isLoading) {
       setState(() {
         currentPage = 1;
@@ -130,6 +136,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
       });
       await _loadData();
     }
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -138,14 +145,15 @@ class _RecommendationPageState extends State<RecommendationPage> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (!isLoading &&
-              scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+              scrollInfo.metrics.pixels >=
+                  scrollInfo.metrics.maxScrollExtent - 600.0) {
             _loadData();
           }
           return true;
         },
-        child: RefreshIndicator(
-          color: kMainYellowColor,
+        child: CustomRefreshComponent(
           onRefresh: _refresh,
+          controller: _refreshController,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(
               bottom: 10,
@@ -155,17 +163,58 @@ class _RecommendationPageState extends State<RecommendationPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SearchBarComponent(),
-                Container(
-                  height: 132,
-                  decoration: BoxDecoration(
-                      color: kSecondGreyColor,
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                          image: AssetImage(
-                            "assets/main/banner.png",
-                          ),
-                          fit: BoxFit.cover)),
+                FlutterCarousel(
+                  options: CarouselOptions(
+                    enableInfiniteScroll: true,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 10),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 1000),
+                    height: 132.0,
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 1.0,
+                    showIndicator: false,
+                    indicatorMargin: 2,
+                    slideIndicator: CircularSlideIndicator(
+                      itemSpacing: 20,
+                      currentIndicatorColor: Color.fromARGB(232, 255, 227, 87),
+                    ),
+                  ),
+                  items: [
+                    "assets/main/banner.png",
+                    "assets/main/banner.png",
+                    "assets/main/banner.png",
+                    "assets/main/banner.png",
+                    "assets/main/banner.png"
+                  ].map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 132,
+                          decoration: BoxDecoration(
+                              color: kSecondGreyColor,
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                    "$i",
+                                  ),
+                                  fit: BoxFit.cover)),
+                        );
+                      },
+                    );
+                  }).toList(),
                 ),
+                // Container(
+                //   height: 132,
+                //   decoration: BoxDecoration(
+                //       color: kSecondGreyColor,
+                //       borderRadius: BorderRadius.circular(8),
+                //       image: DecorationImage(
+                //           image: AssetImage(
+                //             "assets/main/banner.png",
+                //           ),
+                //           fit: BoxFit.cover)),
+                // ),
                 _buildCategoryComponent(),
                 Padding(
                   padding: EdgeInsets.only(top: 20, right: 110),

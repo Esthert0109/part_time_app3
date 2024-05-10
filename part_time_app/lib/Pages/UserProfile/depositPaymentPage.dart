@@ -26,6 +26,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   final String textToCopy = "THE USDT TALALA";
   XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
+  bool isLoading = false;
 
   Future<void> imageSelect() async {
     XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -310,21 +311,30 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
           child: SizedBox(
             width: double.infinity,
             child: primaryButtonComponent(
-              isLoading: false,
-              text: "提交",
+              isLoading: isLoading,
+              text: "确认提交",
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,
               onPressed: () {
                 setState(() {
-                  print("selectedImage: ${selectedImage?.path}");
+                  isLoading =
+                      true; // Set isLoading to true when the button is pressed
+                });
 
-                  Get.back();
-                  Fluttertoast.showToast(
+                // Simulate some asynchronous task
+                Future.delayed(Duration(seconds: 2), () {
+                  setState(() {
+                    isLoading =
+                        false; // Set isLoading to false after the task is complete
+                    Get.back();
+                    Fluttertoast.showToast(
                       msg: "已提交",
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       backgroundColor: kMainGreyColor,
-                      textColor: kThirdGreyColor);
+                      textColor: kThirdGreyColor,
+                    );
+                  });
                 });
               },
             ),

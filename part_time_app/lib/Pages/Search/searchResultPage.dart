@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
+import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
@@ -33,7 +35,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
-
+  bool isEmpty = false;
   @override
   void initState() {
     super.initState();
@@ -89,6 +91,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
           isLoading = false;
         });
       }
+      if (missionSearch!.isEmpty) {
+        setState(() {
+          isEmpty = true;
+        });
+      }
     }
   }
 
@@ -118,7 +125,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
               colors: [Color(0xFFFCEEA5), Color(0xFFF9F9F9)],
               stops: [0.0, 0.2],
             ),
-            color: Color(0xFFf8f8f8),
+            color: kThirdGreyColor,
           ),
           child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
@@ -206,7 +213,18 @@ class _SearchResultPageState extends State<SearchResultPage> {
                               ],
                             ),
                             SizedBox(height: 10),
-                            _buildMissionListView(missionSearch!),
+                            isEmpty
+                                ? Container(
+                                    height: 630,
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        "assets/common/searchEmpty.svg",
+                                        width: 150,
+                                        height: 150,
+                                      ),
+                                    ),
+                                  )
+                                : _buildMissionListView(missionSearch!),
                           ],
                         )),
                   ],

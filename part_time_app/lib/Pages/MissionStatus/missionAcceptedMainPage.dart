@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Components/Selection/thirdStatusSelectionComponent.dart';
 import 'package:part_time_app/Pages/MissionRecipient/missionDetailRecipientPage.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -28,12 +30,14 @@ class MissionAcceptedMainPage extends StatefulWidget {
 }
 
 class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
   int statusSelected = 0;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
   int currentPage = 1;
-  int itemsPerPage = 1;
+  int itemsPerPage = 5;
   ScrollController _scrollController = ScrollController();
 
   //set status on mission detail recipient page
@@ -122,6 +126,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
       });
       await _loadData();
     }
+    _refreshController.refreshCompleted();
   }
 
   Widget buildListView() {
@@ -175,7 +180,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         itemCount: missionList.length + (isLoading ? 1 : 0),
         itemBuilder: (context, index) {
           if (index < missionList.length) {
@@ -208,28 +213,37 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ThirdStatusSelectionComponent(
-            statusList: const ['待完成', '待审核', '未通过', '待到账', '已到账'],
-            selectedIndex: statusSelected,
-            onTap: (index) {
-              setState(() {
-                statusSelected = index;
-                _loadData();
-              });
-            }),
-        Expanded(
-            child: SingleChildScrollView(
-          controller: _scrollController,
-          child: RefreshIndicator(
-              onRefresh: _refresh,
-              color: kMainYellowColor,
-              child: buildListView()),
-        ))
-      ],
-    );
+    return Container(
+        child: NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (!isLoading &&
+            scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          _loadData();
+        }
+        return true;
+      },
+      child: CustomRefreshComponent(
+        onRefresh: _refresh,
+        controller: _refreshController,
+        child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ThirdStatusSelectionComponent(
+                    statusList: const ['待完成', '待审核', '未通过', '待到账', '已到账'],
+                    selectedIndex: statusSelected,
+                    onTap: (index) {
+                      setState(() {
+                        statusSelected = index;
+                        _loadData();
+                      });
+                    }),
+                buildListView()
+              ],
+            )),
+      ),
+    ));
   }
 }

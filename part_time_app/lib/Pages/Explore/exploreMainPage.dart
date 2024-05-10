@@ -66,7 +66,7 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
                 stops: [0.0, 0.15],
               ),
             ),
-            child: const RecommendationPage(),
+            child: RecommendationPage(),
           ),
           Container(
             constraints: const BoxConstraints.expand(),

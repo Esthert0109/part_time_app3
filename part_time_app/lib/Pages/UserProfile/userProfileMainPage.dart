@@ -13,6 +13,7 @@ import 'package:part_time_app/Pages/UserProfile/editProfilePage.dart';
 import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
 import 'package:part_time_app/Pages/UserProfile/settingPage.dart';
 import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
+import 'package:part_time_app/Pages/UserProfile/userProfilePage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
   const UserProfileMainPage({super.key});
@@ -93,7 +94,13 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           style: userProfileUIDTextStyle,
                         ),
                         trailing: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Get.to(
+                                  () => UserProfilePage(
+                                        isOthers: false,
+                                      ),
+                                  transition: Transition.rightToLeft);
+                            },
                             child: Container(
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
