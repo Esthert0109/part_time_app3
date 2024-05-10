@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
-import 'package:part_time_app/Constants/textStyleConstant.dart';
 
 class primaryButtonComponent extends StatefulWidget {
   final String text;

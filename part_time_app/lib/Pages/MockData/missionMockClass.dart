@@ -42,3 +42,17 @@ class PaymentMockClass {
     required this.date,
   });
 }
+
+class TicketMockClass {
+  final bool complete;
+  final String title;
+  final String description;
+  final String date;
+
+  TicketMockClass({
+    required this.complete,
+    required this.title,
+    required this.description,
+    required this.date,
+  });
+}

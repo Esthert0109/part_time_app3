@@ -9,6 +9,7 @@ import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
+import 'package:part_time_app/Pages/UserProfile/depositHistoryDetailPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
 import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => PaymentHistoryPage()),
+        GetPage(name: '/depo', page: () => PaymentHistoryDetailPage()),
       ],
     );
   }

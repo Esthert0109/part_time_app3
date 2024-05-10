@@ -11,7 +11,8 @@ late TextEditingController fieldController;
 late TextEditingController sexController;
 late TextEditingController emailController;
 late TextEditingController nameController;
-late TextEditingController accountController;
+late TextEditingController walletNetworkController;
+late TextEditingController walletAddressController;
 late TextEditingController usdtLinkController;
 
 class UserDetailCardComponent extends StatefulWidget {
@@ -21,6 +22,8 @@ class UserDetailCardComponent extends StatefulWidget {
   final Function(String)? onFieldChange;
   final Function(String)? onEmailChange;
   final Function(String)? onNameChange;
+  final Function(String)? onWalletNetworkChange;
+  final Function(String)? onWalletAddressChange;
   final Function(String)? onUsdtLinkChange;
   final String? usernameInitial;
   final String? countryInitial;
@@ -29,6 +32,8 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? nameInitial;
   final String? countryCode;
   final String? phoneNumber;
+  final String? walletNetworkInitial;
+  final String? walletAddressInitial;
   final String? usdtLinkInitial;
 
   UserDetailCardComponent({
@@ -39,6 +44,8 @@ class UserDetailCardComponent extends StatefulWidget {
     this.onFieldChange,
     this.onEmailChange,
     this.onNameChange,
+    this.onWalletNetworkChange,
+    this.onWalletAddressChange,
     this.onUsdtLinkChange,
     this.usernameInitial,
     this.countryInitial,
@@ -47,6 +54,8 @@ class UserDetailCardComponent extends StatefulWidget {
     this.nameInitial,
     this.countryCode,
     this.phoneNumber,
+    this.walletNetworkInitial,
+    this.walletAddressInitial,
     this.usdtLinkInitial,
   });
 
@@ -70,6 +79,10 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     fieldController = TextEditingController(text: widget.fieldInitial);
     emailController = TextEditingController(text: widget.emailInitial);
     nameController = TextEditingController(text: widget.nameInitial);
+    walletNetworkController =
+        TextEditingController(text: widget.walletNetworkInitial);
+    walletAddressController =
+        TextEditingController(text: widget.walletAddressInitial);
     usdtLinkController = TextEditingController(text: widget.usdtLinkInitial);
   }
 
@@ -87,7 +100,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("用户名", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "请输入用户名",
-                controller: nameController,
+                controller: usernameController,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -127,7 +140,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                   flex: 5,
                   child: _buildTextInput(
                       hintText: "请输入国家",
-                      controller: nameController,
+                      controller: countryController,
                       onChanged: (value) {
                         if (widget.onUsernameChange != null) {
                           widget.onUsernameChange!(value);
@@ -317,7 +330,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("收款信息", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "钱包地址 (account number)",
-                controller: nameController,
+                controller: walletAddressController,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -327,7 +340,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 5),
             _buildTextInput(
                 hintText: "NETWORK 名称",
-                controller: nameController,
+                controller: walletNetworkController,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -356,7 +369,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 5),
             _buildTextInput(
                 hintText: "USDT 链名称",
-                controller: nameController,
+                controller: walletNetworkController,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
@@ -7,19 +8,19 @@ import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
-import '../../Components/Title/thirdTitleComponent.dart';
-import '../../Constants/colorConstant.dart';
-import 'depositHistoryDetailPage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class PaymentHistoryPage extends StatefulWidget {
-  const PaymentHistoryPage({super.key});
+import '../../Components/Title/thirdTitleComponent.dart';
+import '../../Constants/colorConstant.dart';
+
+class TicketHistoryPage extends StatefulWidget {
+  const TicketHistoryPage({super.key});
 
   @override
-  State<PaymentHistoryPage> createState() => _PaymentHistoryPageState();
+  State<TicketHistoryPage> createState() => _TicketHistoryPageState();
 }
 
-class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
+class _TicketHistoryPageState extends State<TicketHistoryPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   bool _isLoading = true;
@@ -71,7 +72,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                     child: Align(
                       child: Padding(
                         padding: EdgeInsets.only(right: 20),
-                        child: thirdTitleComponent(text: "交易记录"),
+                        child: thirdTitleComponent(text: "工单通知"),
                       ),
                     ),
                   ),
@@ -98,13 +99,12 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                     ),
                   ),
                   child: CustomRefreshComponent(
-                      onRefresh: _onRefresh,
-                      controller: _refreshController,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [_buildListView(PaymentHistoryList)],
-                        ),
-                      )),
+                    onRefresh: _onRefresh,
+                    controller: _refreshController,
+                    child: SingleChildScrollView(
+                      child: _buildListView(TicketHistoryList),
+                    ),
+                  ),
                 )),
     );
   }
@@ -113,88 +113,76 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     required bool complete,
     required String title,
     required String description,
-    required int amount,
     required String date,
   }) {
-    return Container(
-      child: Column(
-        children: [
-          GestureDetector(
-              onTap: () {
-                Get.to(() => PaymentHistoryDetailPage(),
-                    transition: Transition.rightToLeft);
-              },
-              child: Container(
-                height: 92,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    color: kMainWhiteColor,
-                    borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 60,
-                          child: Text(
-                            title,
-                            style: messageTitleTextStyle,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 50,
-                          child: Text(
-                            complete
-                                ? (amount < 0 || amount == -0 ? "- " : "+ ") +
-                                    amount.abs().toStringAsFixed(2) +
-                                    " USDT"
-                                : (amount < 0 || amount == -0 ? "- " : "") +
-                                    amount.abs().toStringAsFixed(2) +
-                                    " USDT",
-                            style: complete
-                                ? paymentHistoryTextStyle2
-                                : paymentHistoryTextStyle1,
-                            textAlign: TextAlign.right,
-                          ),
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 3),
-                      child: Text(
-                        description,
-                        style: messageDescTextStyle2,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  ],
+    return GestureDetector(
+      onTap: () {
+        // Navigate to detail page
+      },
+      child: Container(
+        height: 92,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: kMainWhiteColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 60,
+                  child: Text(
+                    title,
+                    style: messageTitleTextStyle,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 ),
-              ))
-        ],
+                Expanded(
+                  flex: 50,
+                  child: Text(
+                    complete ? "已审核" : "待审核",
+                    style: complete
+                        ? ticketCompleteTextStyle
+                        : ticketUncompleteTextStyle,
+                    textAlign: TextAlign.right,
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 3),
+              child: Text(
+                description,
+                style: messageDescTextStyle2,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildListView(List<PaymentMockClass> list) {
+  Widget _buildListView(List<TicketMockClass> list) {
     // Sort the list based on time
     list.sort((a, b) => b.date.compareTo(a.date));
 
-    List<Widget> paymentWidgets = [];
+    List<Widget> ticketWidgets = [];
 
     // Determine the number of messages to load
     int messagesToLoad = list.length < 20 ? list.length : 20;
 
     for (int index = 0; index < messagesToLoad; index++) {
       if (index == 0 || list[index].date != list[index - 1].date) {
-        paymentWidgets.add(
+        ticketWidgets.add(
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -213,19 +201,17 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                 complete: list[index].complete,
                 title: list[index].title,
                 description: list[index].description,
-                amount: list[index].amount,
                 date: list[index].date,
               ),
             ],
           ),
         );
       } else {
-        paymentWidgets.add(
+        ticketWidgets.add(
           _buildCard(
             complete: list[index].complete,
             title: list[index].title,
             description: list[index].description,
-            amount: list[index].amount,
             date: list[index].date,
           ),
         );
@@ -236,7 +222,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
       padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
       physics: PageScrollPhysics(),
-      children: paymentWidgets,
+      children: ticketWidgets,
     );
   }
 }

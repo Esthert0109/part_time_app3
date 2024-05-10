@@ -18,6 +18,7 @@ class DepositReturnPage extends StatefulWidget {
 }
 
 class _DepositReturnPageState extends State<DepositReturnPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -128,23 +129,31 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                 SizedBox(width: 10),
                 Expanded(
                   child: primaryButtonComponent(
-                    isLoading: false,
+                    isLoading: isLoading,
                     text: "确认提交",
                     buttonColor: kMainYellowColor,
                     textStyle: buttonTextStyle,
                     onPressed: () {
                       setState(() {
-                        Get.back();
-                        Fluttertoast.showToast(
+                        isLoading = true;
+                      });
+
+                      Future.delayed(Duration(seconds: 2), () {
+                        setState(() {
+                          isLoading = false;
+                          Get.back();
+                          Fluttertoast.showToast(
                             msg: "已提交",
                             toastLength: Toast.LENGTH_LONG,
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: kMainGreyColor,
-                            textColor: kThirdGreyColor);
+                            textColor: kThirdGreyColor,
+                          );
+                        });
                       });
                     },
                   ),
-                )
+                ),
               ],
             )),
       ),

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
+import 'package:part_time_app/Pages/UserProfile/ticketHistoryPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
 
@@ -120,14 +121,14 @@ class _TicketMainPageState extends State<TicketMainPage> {
                   child: GestureDetector(
                     onTap: verify
                         ? () {
-                            // Get.to(() => DepositPaymentPage(),
-                            //     transition: Transition.rightToLeft);
+                            Get.to(() => TicketHistoryPage(),
+                                transition: Transition.rightToLeft);
                           }
                         : () {
                             // Get.to(() => DepositReturnPage(),
                             //     transition: Transition.rightToLeft);
                           },
-                    child: Text(verify ? "查看工单" : "  提交工单",
+                    child: Text(verify ? " 查看工单" : " 提交工单",
                         style: depositTextStyle1),
                   )))
         ],

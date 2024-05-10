@@ -12,6 +12,7 @@ import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dar
 import 'package:part_time_app/Components/Card/userDetailCardComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import '../../Components/Button/primaryButtonComponent.dart';
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class DepositPaymentPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   final String textToCopy = "THE USDT TALALA";
   XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
+  bool isLoading = false;
 
   Future<void> imageSelect() async {
     XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -69,16 +71,13 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                   ),
                 ),
                 const Expanded(
-                  flex: 12,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text(
-                      "发布权限",
-                      style: dialogText2,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
+                    flex: 12,
+                    child: Align(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 20),
+                        child: thirdTitleComponent(text: "发布权限"),
+                      ),
+                    )),
               ],
             ),
           ),
@@ -326,21 +325,30 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
           child: SizedBox(
             width: double.infinity,
             child: primaryButtonComponent(
-              isLoading: false,
-              text: "提交",
+              isLoading: isLoading,
+              text: "确认提交",
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,
               onPressed: () {
                 setState(() {
-                  print("selectedImage: ${selectedImage?.path}");
+                  isLoading =
+                      true; // Set isLoading to true when the button is pressed
+                });
 
-                  Get.back();
-                  Fluttertoast.showToast(
+                // Simulate some asynchronous task
+                Future.delayed(Duration(seconds: 2), () {
+                  setState(() {
+                    isLoading =
+                        false; // Set isLoading to false after the task is complete
+                    Get.back();
+                    Fluttertoast.showToast(
                       msg: "已提交",
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       backgroundColor: kMainGreyColor,
-                      textColor: kThirdGreyColor);
+                      textColor: kThirdGreyColor,
+                    );
+                  });
                 });
               },
             ),
