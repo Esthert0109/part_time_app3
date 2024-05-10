@@ -430,3 +430,42 @@ const logoutTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
   color: kMainBlueColor,
 );
+
+const aboutUsTextStyle1 = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: kMainGreyColor,
+);
+
+const aboutUsTextStyle2 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: kMainBlackColor,
+);
+
+const aboutUsTextStyle3 = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
+
+const aboutUsTextStyle4 = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMainBlackColor,
+);
+
+const aboutUsTextStyle5 = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: kMainGreyColor,
+);
+
+const aboutUsTextStyle6 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: kMainBlueColor,
+);
+
+const ticketRecordTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
