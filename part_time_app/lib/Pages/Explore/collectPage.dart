@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
@@ -8,6 +10,7 @@ import '../MockData/missionMockData.dart';
 
 bool dataFetchedCollect = false;
 bool dataEndCollect = false;
+bool noInitialRefresh = true;
 List<MissionMockClass>? missionAvailableForCollect = [];
 
 class CollectPage extends StatefulWidget {
@@ -18,8 +21,10 @@ class CollectPage extends StatefulWidget {
 }
 
 class _CollectPageState extends State<CollectPage> {
+  final RefreshController _refreshRecommendationController =
+      RefreshController(initialRefresh: noInitialRefresh);
   int currentPage = 1;
-  int itemsPerPage = 1;
+  int itemsPerPage = 5;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
@@ -28,10 +33,6 @@ class _CollectPageState extends State<CollectPage> {
   @override
   void initState() {
     super.initState();
-    if (!dataFetchedCollect && !dataEndCollect) {
-      // Fetch data only if it hasn't been fetched before
-      _loadData();
-    }
     _scrollController.addListener(_scrollListener);
   }
 
@@ -81,6 +82,7 @@ class _CollectPageState extends State<CollectPage> {
         });
       }
       dataFetchedCollect = true;
+      noInitialRefresh = false;
     }
   }
 
@@ -109,6 +111,7 @@ class _CollectPageState extends State<CollectPage> {
       });
       await _loadData();
     }
+    _refreshRecommendationController.refreshCompleted();
   }
 
   @override
@@ -122,10 +125,17 @@ class _CollectPageState extends State<CollectPage> {
           }
           return true;
         },
-        child: RefreshIndicator(
+        child: CustomRefreshComponent(
             onRefresh: _refresh,
-            color: kMainYellowColor,
-            child: buildListView()),
+            controller: _refreshRecommendationController,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                bottom: 10,
+              ),
+              child: Column(
+                children: [buildListView()],
+              ),
+            )),
       ),
     );
   }
@@ -134,7 +144,7 @@ class _CollectPageState extends State<CollectPage> {
     return ListView.builder(
       padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       // controller: _scrollController,
       itemCount: missionAvailableForCollect!.length + (isLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {

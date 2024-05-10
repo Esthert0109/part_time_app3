@@ -22,6 +22,7 @@ import '../MockData/missionMockData.dart';
 
 bool dataFetchedExplore = false;
 bool dataEndExplore = false;
+bool noInitialRefresh = true;
 List<MissionMockClass>? missionAvailable = [];
 
 class RecommendationPage extends StatefulWidget {
@@ -32,8 +33,8 @@ class RecommendationPage extends StatefulWidget {
 }
 
 class _RecommendationPageState extends State<RecommendationPage> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+  final RefreshController _refreshRecommendationController =
+      RefreshController(initialRefresh: noInitialRefresh);
   int selectIndex = 0;
   List<MissionMockClass>? missionAvailableAsec = [];
   List<MissionMockClass>? missionAvailableDesc = [];
@@ -47,9 +48,6 @@ class _RecommendationPageState extends State<RecommendationPage> {
   @override
   void initState() {
     super.initState();
-    if (!dataFetchedExplore && !dataEndExplore) {
-      _loadData();
-    }
     _scrollController.addListener(_scrollListener);
   }
 
@@ -66,7 +64,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         isLoading = true;
       });
       // Simulate fetching data
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       int start = (currentPage - 1) * itemsPerPage;
       int end = start + itemsPerPage;
       if (MissionAvailableList.length > start) {
@@ -102,6 +100,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         });
       }
       dataFetchedExplore = true;
+      noInitialRefresh = false;
     }
   }
 
@@ -118,13 +117,11 @@ class _RecommendationPageState extends State<RecommendationPage> {
     if (!_scrollController.hasClients || isLoading) return;
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      _loadData();
-    }
+        !_scrollController.position.outOfRange) {}
   }
 
   Future<void> _refresh() async {
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(seconds: 1));
     if (!isLoading) {
       setState(() {
         currentPage = 1;
@@ -136,7 +133,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
       });
       await _loadData();
     }
-    _refreshController.refreshCompleted();
+    _refreshRecommendationController.refreshCompleted();
   }
 
   @override
@@ -153,7 +150,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         },
         child: CustomRefreshComponent(
           onRefresh: _refresh,
-          controller: _refreshController,
+          controller: _refreshRecommendationController,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(
               bottom: 10,
@@ -204,17 +201,6 @@ class _RecommendationPageState extends State<RecommendationPage> {
                     );
                   }).toList(),
                 ),
-                // Container(
-                //   height: 132,
-                //   decoration: BoxDecoration(
-                //       color: kSecondGreyColor,
-                //       borderRadius: BorderRadius.circular(8),
-                //       image: DecorationImage(
-                //           image: AssetImage(
-                //             "assets/main/banner.png",
-                //           ),
-                //           fit: BoxFit.cover)),
-                // ),
                 _buildCategoryComponent(),
                 Padding(
                   padding: EdgeInsets.only(top: 20, right: 110),
@@ -222,10 +208,11 @@ class _RecommendationPageState extends State<RecommendationPage> {
                     tagList: ["全部", "价格降序", "价格升序"],
                     selectedIndex: selectIndex,
                     onTap: (index) {
-                      setState(() {
-                        selectIndex = index;
-                        _loadData();
-                      });
+                      //loading data list accordingly.
+                      // setState(() {
+                      //   selectIndex = index;
+                      //   _loadData();
+                      // });
                     },
                   ),
                 ),

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
+bool noInitialRefresh = true;
 List<MissionMockClass>? missionNewMiss = [];
 
 class NewMissionPage extends StatefulWidget {
@@ -16,8 +21,10 @@ class NewMissionPage extends StatefulWidget {
 }
 
 class _NewMissionPageState extends State<NewMissionPage> {
+  final RefreshController _refreshRecommendationController =
+      RefreshController(initialRefresh: noInitialRefresh);
   int currentPage = 1;
-  int itemsPerPage = 6;
+  int itemsPerPage = 10;
   bool isLoading = false;
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
@@ -26,9 +33,6 @@ class _NewMissionPageState extends State<NewMissionPage> {
   @override
   void initState() {
     super.initState();
-
-    _loadData();
-
     _scrollController.addListener(_scrollListener);
   }
 
@@ -81,6 +85,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
           isLoading = false;
         });
       }
+      noInitialRefresh = false;
     }
   }
 
@@ -107,12 +112,31 @@ class _NewMissionPageState extends State<NewMissionPage> {
       });
       await _loadData();
     }
+    _refreshRecommendationController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      extendBodyBehindAppBar: false,
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0.0,
+          leading: IconButton(
+            iconSize: 15,
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          centerTitle: true,
+          title: Container(
+              color: kTransparent,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: thirdTitleComponent(
+                text: "新悬赏",
+              ))),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -132,32 +156,12 @@ class _NewMissionPageState extends State<NewMissionPage> {
             }
             return true;
           },
-          child: RefreshIndicator(
+          child: CustomRefreshComponent(
               onRefresh: _refresh,
-              color: kMainYellowColor,
+              controller: _refreshRecommendationController,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    AppBar(
-                      backgroundColor: Colors.transparent,
-                      scrolledUnderElevation: 0.0,
-                      surfaceTintColor: Colors.transparent,
-                      title: const Text(
-                        "新悬赏",
-                        textAlign: TextAlign.center,
-                        style: dialogText2,
-                      ),
-                      centerTitle: true,
-                      leading: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios_rounded,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
                     Container(
                         padding: EdgeInsets.all(12),
                         child: Column(
