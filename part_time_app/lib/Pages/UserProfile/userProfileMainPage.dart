@@ -7,6 +7,9 @@ import 'package:part_time_app/Components/Card/userProfileCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Pages/Ticket/ticketRecordDetailsPage.dart';
+import 'package:part_time_app/Pages/Ticket/ticketSubmissionPage.dart';
+import 'package:part_time_app/Pages/UserProfile/aboutUsPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
@@ -58,7 +61,7 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
               child: Column(
                 children: [
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: ListTile(
                         leading: SvgPicture.asset(
                           "assets/profile/profile_page.svg",
@@ -125,14 +128,16 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                     image: "assets/profile/workorder_icon.svg",
                     status: "工单",
                     ontap: () {
-                      print("touch the talala");
+                      Get.to(() => TicketRecordDetailsPage(),
+                          transition: Transition.rightToLeft);
                     },
                   ),
                   UserProfileCardComponent(
                     image: "assets/profile/aboutus_icon.svg",
                     status: "关于我们",
                     ontap: () {
-                      print("touch the talala");
+                      Get.to(() => AboutUsPage(),
+                          transition: Transition.rightToLeft);
                     },
                   ),
                   UserProfileCardComponent(
