@@ -469,3 +469,6 @@ const aboutUsTextStyle6 = TextStyle(
 
 const ticketRecordTextStyle = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const ticketRecordTextStyle1 = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);

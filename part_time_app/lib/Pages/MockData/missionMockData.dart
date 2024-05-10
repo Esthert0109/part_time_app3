@@ -729,6 +729,17 @@ List<TicketMockClass> TicketHistoryList = [
       description: "建议类型工单已提交成功",
       date: "2024-5-14"),
 ];
+
+List<TicketRecordDetailsMockClass> TicketRecordDetailsMockData = [
+  TicketRecordDetailsMockClass(
+    submittedPic: [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+    ],
+  ),
+];
+
 // This is faker data, if wan use for test pagination. 
 // List<MissionMockClass> generateDummyMissions(int count) {
 //   var faker = Faker();

@@ -75,3 +75,11 @@ class TicketMockClass {
     required this.date,
   });
 }
+
+class TicketRecordDetailsMockClass {
+  final List<String>? submittedPic;
+
+  TicketRecordDetailsMockClass({
+    required this.submittedPic,
+  });
+}
