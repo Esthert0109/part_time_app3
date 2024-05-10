@@ -83,16 +83,15 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                   stops: [0.0, 0.15],
                 ),
               ),
-              child: SingleChildScrollView(
-                child: CustomRefreshComponent(
-                    onRefresh: _onRefresh,
-                    controller: _refreshController,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [_buildListView(PaymentHistoryList)],
-                      ),
-                    )),
-              )),
+              child: CustomRefreshComponent(
+                  onRefresh: _onRefresh,
+                  controller: _refreshController,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [_buildListView(PaymentHistoryList)],
+                    ),
+                  )),
+            ),
     ));
   }
 
