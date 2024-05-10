@@ -119,46 +119,42 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                   (widget.isCompleted && isMissionFailed)
                       ? Container(
                           width: double.infinity,
+                          padding: EdgeInsets.only(bottom: 12),
                           child: missionFailedReasonCardComponent(
                               reasonTitle: "拒绝理由",
                               reasonDesc:
                                   "评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价评价"),
                         )
                       : Container(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        RichText(
-                            text: TextSpan(
-                                style: missionIDtextStyle,
-                                children: [
-                              TextSpan(text: "悬赏ID: "),
-                              TextSpan(text: "0292938DHFKAAUBCVAVC")
-                            ])),
-                        GestureDetector(
-                          onTap: () {
-                            print("copied");
-                            Clipboard.setData(
-                                ClipboardData(text: "0292938DHFKAAUBCVAVC"));
-                            Fluttertoast.showToast(
-                                msg: "已复制",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: kMainGreyColor,
-                                textColor: kThirdGreyColor);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2),
-                            child: SvgPicture.asset(
-                              "assets/mission/copy.svg",
-                              width: 24,
-                              height: 24,
-                            ),
+                  Row(
+                    children: [
+                      RichText(
+                          text: TextSpan(style: missionIDtextStyle, children: [
+                        TextSpan(text: "悬赏ID: "),
+                        TextSpan(text: "0292938DHFKAAUBCVAVC")
+                      ])),
+                      GestureDetector(
+                        onTap: () {
+                          print("copied");
+                          Clipboard.setData(
+                              ClipboardData(text: "0292938DHFKAAUBCVAVC"));
+                          Fluttertoast.showToast(
+                              msg: "已复制",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainGreyColor,
+                              textColor: kThirdGreyColor);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 2),
+                          child: SvgPicture.asset(
+                            "assets/mission/copy.svg",
+                            width: 24,
+                            height: 24,
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   )
                 ],
               ),
@@ -182,6 +178,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                   ? SizedBox(
                       width: double.infinity,
                       child: primaryButtonComponent(
+                        isLoading: false,
                         buttonColor: kMainYellowColor,
                         disableButtonColor: kThirdGreyColor,
                         text: '已通过',
@@ -195,6 +192,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       children: [
                         Expanded(
                           child: primaryButtonComponent(
+                            isLoading: false,
                             buttonColor: kRejectMissionButtonColor,
                             text: '拒绝',
                             textStyle: missionRejectButtonTextStyle,
@@ -253,6 +251,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                         ),
                         Expanded(
                           child: primaryButtonComponent(
+                            isLoading: false,
                             buttonColor: kMainYellowColor,
                             text: '通过',
                             textStyle: missionDetailText1,

@@ -15,6 +15,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'missionDetailStatusIssuerPage.dart';
@@ -27,7 +28,8 @@ class StepModel {
 }
 
 class MissionPublishMainPage extends StatefulWidget {
-  const MissionPublishMainPage({super.key});
+  final bool isEdit;
+  const MissionPublishMainPage({super.key, required this.isEdit});
 
   @override
   State<MissionPublishMainPage> createState() => _MissionPublishMainPageState();
@@ -193,15 +195,32 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         scrolledUnderElevation: 0.0,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: SecondaryTitleComponent(
-            titleList: ["发布悬赏"],
-            selectedIndex: 0,
-            onTap: (int) {},
-          ),
-        ),
-        leadingWidth: double.infinity,
+        leading: widget.isEdit
+            ? IconButton(
+                iconSize: 15,
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  Get.back();
+                },
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: SecondaryTitleComponent(
+                  titleList: ["发布悬赏"],
+                  selectedIndex: 0,
+                  onTap: (int) {},
+                ),
+              ),
+        leadingWidth: widget.isEdit ? 55 : double.infinity,
+        centerTitle: widget.isEdit ? true : false,
+        title: widget.isEdit
+            ? Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "编辑悬赏",
+                ))
+            : null,
       ),
       body: Container(
         constraints: const BoxConstraints.expand(),

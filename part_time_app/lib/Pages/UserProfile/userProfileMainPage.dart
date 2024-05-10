@@ -8,9 +8,10 @@ import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/Ticket/ticketRecordDetailsPage.dart';
-import 'package:part_time_app/Pages/Ticket/ticketSubmissionPage.dart';
 import 'package:part_time_app/Pages/UserProfile/aboutUsPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
+import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
+import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
   const UserProfileMainPage({super.key});
@@ -121,14 +122,15 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                     image: "assets/profile/transaction_icon.svg",
                     status: "交易记录",
                     ontap: () {
-                      print("touch the talala");
+                      Get.to(() => PaymentHistoryPage(),
+                          transition: Transition.rightToLeft);
                     },
                   ),
                   UserProfileCardComponent(
                     image: "assets/profile/workorder_icon.svg",
                     status: "工单",
                     ontap: () {
-                      Get.to(() => TicketRecordDetailsPage(),
+                      Get.to(() => TicketMainPage(),
                           transition: Transition.rightToLeft);
                     },
                   ),

@@ -1,0 +1,222 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
+import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
+import 'package:part_time_app/Pages/MockData/missionMockData.dart';
+
+import '../../Components/Loading/missionCardLoading.dart';
+import '../../Constants/colorConstant.dart';
+
+class PaymentHistoryPage extends StatefulWidget {
+  const PaymentHistoryPage({super.key});
+
+  @override
+  State<PaymentHistoryPage> createState() => _PaymentHistoryPageState();
+}
+
+class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Simulate loading delay
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        extendBodyBehindAppBar: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Container(
+            color: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: SvgPicture.asset(
+                      "assets/common/back_button.svg",
+                      width: 24,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                const Expanded(
+                  flex: 12,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text(
+                      "交易记录",
+                      style: dialogText2,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: _isLoading
+            ? PaymentHistoryLoading()
+            : Container(
+                constraints: const BoxConstraints.expand(),
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+                decoration: const BoxDecoration(
+                  color: kThirdGreyColor,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      kBackgroundFirstGradientColor,
+                      kBackgroundSecondGradientColor
+                    ],
+                    stops: [0.0, 0.15],
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [_buildListView(PaymentHistoryList)],
+                  ),
+                )),
+      ),
+    );
+  }
+
+  Widget _buildCard({
+    required bool complete,
+    required String title,
+    required String description,
+    required int amount,
+    required String date,
+  }) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            height: 92,
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 60,
+                      child: Text(
+                        title,
+                        style: messageTitleTextStyle,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 50,
+                      child: Text(
+                        complete
+                            ? (amount < 0 || amount == -0 ? "- " : "+ ") +
+                                amount.abs().toStringAsFixed(2) +
+                                " USDT"
+                            : (amount < 0 || amount == -0 ? "- " : "") +
+                                amount.abs().toStringAsFixed(2) +
+                                " USDT",
+                        style: complete
+                            ? paymentHistoryTextStyle2
+                            : paymentHistoryTextStyle1,
+                        textAlign: TextAlign.right,
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 3),
+                  child: Text(
+                    description,
+                    style: messageDescTextStyle2,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListView(List<PaymentMockClass> list) {
+    // Sort the list based on time
+    list.sort((a, b) => b.date.compareTo(a.date));
+
+    List<Widget> paymentWidgets = [];
+
+    // Determine the number of messages to load
+    int messagesToLoad = list.length < 20 ? list.length : 20;
+
+    for (int index = 0; index < messagesToLoad; index++) {
+      if (index == 0 || list[index].date != list[index - 1].date) {
+        paymentWidgets.add(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 5),
+                  child: Text(
+                    list[index].date,
+                    style: missionIDtextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              _buildCard(
+                complete: list[index].complete,
+                title: list[index].title,
+                description: list[index].description,
+                amount: list[index].amount,
+                date: list[index].date,
+              ),
+            ],
+          ),
+        );
+      } else {
+        paymentWidgets.add(
+          _buildCard(
+            complete: list[index].complete,
+            title: list[index].title,
+            description: list[index].description,
+            amount: list[index].amount,
+            date: list[index].date,
+          ),
+        );
+      }
+    }
+
+    return ListView(
+      padding: EdgeInsets.only(top: 10),
+      shrinkWrap: true,
+      physics: PageScrollPhysics(),
+      children: paymentWidgets,
+    );
+  }
+}

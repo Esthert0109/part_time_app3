@@ -219,7 +219,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                 messageDesc: '您已预付200USDT的赏金至悬赏 [标题] 。',
                 onTap: () {
                   setState(() {
-                    Get.to(() => MissionPublishMainPage());
+                    Get.to(() => MissionPublishMainPage(isEdit: false,));
                     print("click");
                   });
                 },
@@ -282,10 +282,11 @@ class _ComponentExampleState extends State<ComponentExample> {
                   );
                 },
                 buttonColor: kMainYellowColor,
-                textStyle: buttonTextStyle,
+                textStyle: buttonTextStyle, isLoading: false,
               ),
               SizedBox(height: 10),
               primaryButtonComponent(
+                isLoading: false,
                 text: "密码修改成功",
                 onPressed: () {
                   PrimaryStatusBottomSheetComponent.show(
@@ -319,6 +320,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               Text("Reject Reason Dialog Component:"),
               SizedBox(height: 20),
               primaryButtonComponent(
+                isLoading: false,
                 text: "拒绝理由",
                 onPressed: () {
                   showDialog(
@@ -336,6 +338,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               Text("Status Dialog Component:"),
               SizedBox(height: 20),
               primaryButtonComponent(
+                isLoading: false,
                 text: "提交成功",
                 onPressed: () {
                   showDialog(
@@ -353,6 +356,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               ),
               SizedBox(height: 10),
               primaryButtonComponent(
+                isLoading: false,
                 text: "继续编辑",
                 onPressed: () {
                   showDialog(
@@ -383,6 +387,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                         isSubmit: false,
                       ),
                       primaryButtonComponent(
+                        isLoading: false,
                           text: "提交",
                           onPressed: () {
                             setState(() {

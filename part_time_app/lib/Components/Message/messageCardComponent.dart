@@ -6,6 +6,9 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
+import '../../Pages/Message/user/userMessagePage.dart';
+
+
 class MessageCardComponent extends StatefulWidget {
   String? systemDetail;
   String? systemDate;
@@ -119,7 +122,7 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.userDate,
           widget.userTotalMessage,
           () {
-            print("touch the talala");
+            Get.to(() => UserMessagePage(), transition: Transition.rightToLeft);
           },
         ),
       ],

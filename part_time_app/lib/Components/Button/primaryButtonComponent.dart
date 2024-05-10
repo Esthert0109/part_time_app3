@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
@@ -9,6 +10,7 @@ class primaryButtonComponent extends StatefulWidget {
   final Color? disableButtonColor;
   final TextStyle textStyle;
   final int? buttonStatus;
+  final bool isLoading;
 
   const primaryButtonComponent({
     super.key,
@@ -18,6 +20,7 @@ class primaryButtonComponent extends StatefulWidget {
     this.disableButtonColor,
     required this.textStyle,
     this.buttonStatus,
+    required this.isLoading,
   });
 
   @override
@@ -25,24 +28,27 @@ class primaryButtonComponent extends StatefulWidget {
 }
 
 class _primaryButtonComponentState extends State<primaryButtonComponent> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 46,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+            shadowColor: Colors.transparent,
             backgroundColor: widget.buttonColor,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 0,
             disabledBackgroundColor: widget.disableButtonColor,
           ),
-          onPressed: widget.onPressed,
-          child: Text(
-            widget.text,
-            style: widget.textStyle,
-          ),
+          onPressed: widget.isLoading ? null : widget.onPressed,
+          child: widget.isLoading
+              ? LoadingAnimationWidget.stretchedDots(
+                  color: kMainYellowColor, size: 30)
+              : Text(
+                  widget.text,
+                  style: widget.textStyle,
+                ),
         ));
   }
 }

@@ -534,3 +534,60 @@ List<MissionMockClass> MissionAvailableList = [
       missionStatus: 1,
       updatedTime: "2024-05-30"),
 ];
+
+List<PaymentMockClass> PaymentHistoryList = [
+  PaymentMockClass(
+      complete: false,
+      title: "支付悬赏金额 -- 成功",
+      description: "成功完成支付悬赏金额给用户B",
+      amount: -510000,
+      date: "2024-5-10"),
+  PaymentMockClass(
+      complete: false,
+      title: "支付押金 -- 失败",
+      description: "支付押金失败.",
+      amount: -0,
+      date: "2024-5-10"),
+  PaymentMockClass(
+      complete: true,
+      title: "押金退款 -- 失败",
+      description: "押金退款失败",
+      amount: 0,
+      date: "2024-5-11"),
+  PaymentMockClass(
+      complete: false,
+      title: "支付押金 -- 成功",
+      description: "押金已成功支付",
+      amount: -20,
+      date: "2024-5-12"),
+  PaymentMockClass(
+      complete: true,
+      title: "押金退款 -- 成功",
+      description: "押金已成功退款",
+      amount: 20,
+      date: "2024-5-12"),
+  PaymentMockClass(
+      complete: false,
+      title: "押金退款 -- 成功",
+      description: "押金已成功退款",
+      amount: -20,
+      date: "2024-5-13"),
+  PaymentMockClass(
+      complete: false,
+      title: "支付押金 -- 失败",
+      description: "支付押金失败.",
+      amount: -0,
+      date: "2024-5-15"),
+  PaymentMockClass(
+      complete: false,
+      title: "支付押金 -- 失败",
+      description: "支付押金失败.",
+      amount: -0,
+      date: "2024-5-15"),
+  PaymentMockClass(
+      complete: false,
+      title: "支付押金 -- 失败",
+      description: "支付押金失败.",
+      amount: -0,
+      date: "2024-5-15"),
+];

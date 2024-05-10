@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
+import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
 
@@ -96,7 +97,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    verify ? "• 退还押金" : "• 押金认证",
+                    verify ? "• 押金认证" : "• 退还押金",
                     style: primarySystemMessageTitleTextStyle,
                   ),
                   const Padding(
@@ -120,7 +121,10 @@ class _DepositMainPageState extends State<DepositMainPage> {
                             Get.to(() => DepositPaymentPage(),
                                 transition: Transition.rightToLeft);
                           }
-                        : () {},
+                        : () {
+                            Get.to(() => DepositReturnPage(),
+                                transition: Transition.rightToLeft);
+                          },
                     child: Text(verify ? "立刻认证" : " 立刻退还",
                         style: depositTextStyle1),
                   )))
