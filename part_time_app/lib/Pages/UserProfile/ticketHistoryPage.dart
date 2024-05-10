@@ -38,9 +38,11 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
 
   void _onRefresh() async {
     // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(seconds: 1));
     // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
+    if (mounted) {
+      _refreshController.refreshCompleted();
+    }
   }
 
   @override

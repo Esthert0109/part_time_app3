@@ -14,6 +14,8 @@ import '../../Constants/colorConstant.dart';
 import 'depositHistoryDetailPage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+bool dataFetchedPaymentHistory = false;
+
 class PaymentHistoryPage extends StatefulWidget {
   const PaymentHistoryPage({super.key});
 
@@ -29,8 +31,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   @override
   void initState() {
     super.initState();
-    // Simulate loading delay
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
@@ -39,9 +40,11 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
 
   void _onRefresh() async {
     // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(seconds: 1));
     // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
+    if (mounted) {
+      _refreshController.refreshCompleted();
+    }
   }
 
   @override
@@ -66,32 +69,28 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
               child: thirdTitleComponent(
                 text: "交易记录",
               ))),
-      body: _isLoading
-          ? PaymentHistoryLoading()
-          : Container(
-              constraints: const BoxConstraints.expand(),
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-              decoration: const BoxDecoration(
-                color: kThirdGreyColor,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    kBackgroundFirstGradientColor,
-                    kBackgroundSecondGradientColor
-                  ],
-                  stops: [0.0, 0.15],
-                ),
-              ),
-              child: CustomRefreshComponent(
-                  onRefresh: _onRefresh,
-                  controller: _refreshController,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [_buildListView(PaymentHistoryList)],
-                    ),
-                  )),
-            ),
+      body: Container(
+        constraints: const BoxConstraints.expand(),
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+        decoration: const BoxDecoration(
+          color: kThirdGreyColor,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              kBackgroundFirstGradientColor,
+              kBackgroundSecondGradientColor
+            ],
+            stops: [0.0, 0.15],
+          ),
+        ),
+        child: CustomRefreshComponent(
+            onRefresh: _onRefresh,
+            controller: _refreshController,
+            child: _isLoading
+                ? PaymentHistoryLoading()
+                : _buildListView(PaymentHistoryList)),
+      ),
     ));
   }
 

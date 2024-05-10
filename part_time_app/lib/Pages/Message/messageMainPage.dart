@@ -24,7 +24,10 @@ class MessageMainPage extends StatefulWidget {
   _MessageMainPageState createState() => _MessageMainPageState();
 }
 
-class _MessageMainPageState extends State<MessageMainPage> {
+class _MessageMainPageState extends State<MessageMainPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   int titleSelection = 0;

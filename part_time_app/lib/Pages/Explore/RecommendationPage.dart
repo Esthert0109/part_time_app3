@@ -24,6 +24,7 @@ bool dataFetchedExplore = false;
 bool dataEndExplore = false;
 bool noInitialRefresh = true;
 List<MissionMockClass>? missionAvailable = [];
+final PageStorageBucket _bucket2 = PageStorageBucket();
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -32,7 +33,8 @@ class RecommendationPage extends StatefulWidget {
   State<RecommendationPage> createState() => _RecommendationPageState();
 }
 
-class _RecommendationPageState extends State<RecommendationPage> {
+class _RecommendationPageState extends State<RecommendationPage>
+    with AutomaticKeepAliveClientMixin {
   final RefreshController _refreshRecommendationController =
       RefreshController(initialRefresh: noInitialRefresh);
   int selectIndex = 0;
@@ -44,7 +46,8 @@ class _RecommendationPageState extends State<RecommendationPage> {
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
-
+  @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -122,7 +125,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
 
   Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
-    if (!isLoading) {
+    if (!isLoading && mounted) {
       setState(() {
         currentPage = 1;
         missionAvailable = [];
@@ -133,11 +136,14 @@ class _RecommendationPageState extends State<RecommendationPage> {
       });
       await _loadData();
     }
-    _refreshRecommendationController.refreshCompleted();
+    if (mounted) {
+      _refreshRecommendationController.refreshCompleted();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
@@ -155,7 +161,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
             padding: EdgeInsets.only(
               bottom: 10,
             ),
-            controller: _scrollController,
+            // controller: _scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -208,11 +214,11 @@ class _RecommendationPageState extends State<RecommendationPage> {
                     tagList: ["全部", "价格降序", "价格升序"],
                     selectedIndex: selectIndex,
                     onTap: (index) {
-                      //loading data list accordingly.
-                      // setState(() {
-                      //   selectIndex = index;
-                      //   _loadData();
-                      // });
+                      // loading data list accordingly.
+                      setState(() {
+                        selectIndex = index;
+                        _loadData();
+                      });
                     },
                   ),
                 ),

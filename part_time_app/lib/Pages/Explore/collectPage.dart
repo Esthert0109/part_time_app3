@@ -20,7 +20,8 @@ class CollectPage extends StatefulWidget {
   State<CollectPage> createState() => _CollectPageState();
 }
 
-class _CollectPageState extends State<CollectPage> {
+class _CollectPageState extends State<CollectPage>
+    with AutomaticKeepAliveClientMixin {
   final RefreshController _refreshRecommendationController =
       RefreshController(initialRefresh: noInitialRefresh);
   int currentPage = 1;
@@ -29,7 +30,8 @@ class _CollectPageState extends State<CollectPage> {
   bool isFirstLaunch = true;
   bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
-
+  @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();

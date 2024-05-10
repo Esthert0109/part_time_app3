@@ -16,12 +16,14 @@ class ExploreMainPage extends StatefulWidget {
   State<ExploreMainPage> createState() => _ExploreMainPageState();
 }
 
-class _ExploreMainPageState extends State<ExploreMainPage> {
+class _ExploreMainPageState extends State<ExploreMainPage>
+    with AutomaticKeepAliveClientMixin {
   final PageController _controller = PageController();
   int selectIndex = 0;
-
+  List<double> scrollPositions = [0.0, 0.0];
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
@@ -66,7 +68,7 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
                 stops: [0.0, 0.15],
               ),
             ),
-            child: RecommendationPage(),
+            child: const RecommendationPage(),
           ),
           Container(
             constraints: const BoxConstraints.expand(),
@@ -89,4 +91,7 @@ class _ExploreMainPageState extends State<ExploreMainPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

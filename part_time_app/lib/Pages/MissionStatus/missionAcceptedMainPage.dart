@@ -15,6 +15,7 @@ import '../MockData/missionMockClass.dart';
 
 bool dataFetchedAccepted = false;
 bool dataEndAccepted = false;
+bool noInitialRefresh = true;
 List<MissionMockClass>? missionWaitComplete = [];
 List<MissionMockClass>? missionWaitReview = [];
 List<MissionMockClass>? missionFailed = [];
@@ -31,7 +32,7 @@ class MissionAcceptedMainPage extends StatefulWidget {
 
 class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
   RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: noInitialRefresh);
   int statusSelected = 0;
   bool isLoading = false;
   bool isFirstLaunch = true;
@@ -104,6 +105,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
         });
       }
       dataFetchedAccepted = true;
+      noInitialRefresh = false;
     }
   }
 
@@ -117,7 +119,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
   }
 
   Future<void> _refresh() async {
-    if (!isLoading) {
+    if (!isLoading && mounted) {
       setState(() {
         currentPage = 1;
         missionWaitComplete = [];
@@ -126,7 +128,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage> {
       });
       await _loadData();
     }
-    _refreshController.refreshCompleted();
+    if (mounted) {
+      _refreshController.refreshCompleted();
+    }
   }
 
   Widget buildListView() {
