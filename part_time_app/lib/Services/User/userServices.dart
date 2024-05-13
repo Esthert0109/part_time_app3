@@ -100,6 +100,78 @@ class UserServices {
     return null;
   }
 
+  Future<CheckUserModel?> checkNameAndPhone(
+      String phone, String nickname) async {
+    url = port + checkUrl;
+    CheckUserModel? checkModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    final Map<String, dynamic> body = {
+      "nickname": nickname,
+      "firstPhoneNo": phone
+    };
+
+    try {
+      final response = await postRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      String responseData = jsonData['data'];
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          checkModel = CheckUserModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+          return checkModel;
+        }
+        return checkModel;
+      }
+      return checkModel;
+    } catch (e) {
+      print("Error in check: $e");
+    }
+  }
+
+  Future<OTPUserModel?> sendOTP(String phone, int type) async {
+    url = port + sendOTPUrl + type.toString() + '/' + phone;
+    OTPUserModel? otpModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      bool responseData = jsonData['data'];
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          otpModel = OTPUserModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return otpModel;
+        } else {
+          otpModel = OTPUserModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return otpModel;
+        }
+      }
+    } catch (e) {
+      print("Error in send otp: $e");
+    }
+  }
+
   Future<UserModel?> getUserInfo() async {
     url = port + getUserInfoUrl;
     UserModel? userModel;

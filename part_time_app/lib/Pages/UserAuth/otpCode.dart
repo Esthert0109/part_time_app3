@@ -1,12 +1,15 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Services/User/userServices.dart';
 
 class OtpCodePage extends StatefulWidget {
-  const OtpCodePage({super.key});
+  final String phone;
+  OtpCodePage({super.key, required this.phone});
 
   @override
   State<OtpCodePage> createState() => _OtpCodePageState();
@@ -19,6 +22,10 @@ class _OtpCodePageState extends State<OtpCodePage> {
   final formKey = GlobalKey<FormState>();
   List<TextEditingController> _controllers =
       List.generate(4, (index) => TextEditingController());
+
+  // services
+  UserServices services = UserServices();
+
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -66,6 +73,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
               errorTextStyle: otpErrorTextStyle1,
               controller: pinController,
               focusNode: focusNode,
+              autofocus: true,
               androidSmsAutofillMethod:
                   AndroidSmsAutofillMethod.smsUserConsentApi,
               listenForMultipleSmsOnAndroid: true,
@@ -113,6 +121,20 @@ class _OtpCodePageState extends State<OtpCodePage> {
                 textStyle: missionDetailText1,
               ),
             ),
+            SizedBox(
+              height: 332,
+            ),
+            RichText(
+                text: TextSpan(children: [
+              TextSpan(text: '未收到验证码？', style: loginPageTextStyle1),
+              TextSpan(
+                  text: '再次发送',
+                  style: loginPageTextStyle2,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      await services.sendOTP(widget.phone, 1);
+                    })
+            ]))
           ],
         ),
       ),

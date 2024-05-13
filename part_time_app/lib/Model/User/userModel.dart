@@ -9,13 +9,13 @@ class LoginUserModel {
     this.data,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      "code": code,
-      "msg": msg,
-      "data": data?.toJson(),
-    };
-  }
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     "code": code,
+  //     "msg": msg,
+  //     "data": data?.toJson(),
+  //   };
+  // }
 }
 
 class LoginData {
@@ -31,6 +31,38 @@ class LoginData {
 
   factory LoginData.fromJson(Map<String, dynamic> json) {
     return LoginData(token: json['token']);
+  }
+}
+
+class CheckUserModel {
+  final int code;
+  final String msg;
+  final String data;
+
+  CheckUserModel({
+    required this.code,
+    required this.msg,
+    required this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+}
+
+class OTPUserModel {
+  final int code;
+  final String msg;
+  final bool data;
+
+  OTPUserModel({
+    required this.code,
+    required this.msg,
+    required this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
   }
 }
 

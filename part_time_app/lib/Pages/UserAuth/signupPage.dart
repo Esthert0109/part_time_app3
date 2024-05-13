@@ -1,12 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Pages/UserAuth/loginPage.dart';
+import 'package:part_time_app/Pages/UserAuth/otpCode.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -32,6 +36,13 @@ class _SignUpPageState extends State<SignUpPage> {
   String _responseMsgRegister = "";
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+
+  // service
+  UserServices services = UserServices();
+  CheckUserModel? checkRegister;
+  bool isDuplicated = true;
+  String errorDisplay = "??";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 10.0),
                 SizedBox(
                   child: TextFormField(
+                    controller: userNicknameController,
                     decoration: InputDecoration(
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -298,6 +310,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     ],
                   ),
                 ),
+                isDuplicated
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          "${errorDisplay}",
+                          style: errorDisplayeTextStyle,
+                        ),
+                      )
+                    : SizedBox(),
                 const SizedBox(height: 50),
                 SizedBox(
                   width: 372,
@@ -305,11 +326,41 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: primaryButtonComponent(
                     isLoading: false,
                     text: "提交",
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // If the form is valid, perform your actions
                         _formKey.currentState!.save();
                         // Perform actions with _password here
+
+                        // check if phone and nickname duplicated
+                        // checkRegister = await services.checkNameAndPhone(
+                        //     phone, userNicknameController.text);
+
+                        // if (checkRegister!.data != "No Duplicated") {
+                        //   setState(() {
+                        //     errorDisplay = checkRegister!.data;
+                        //     isDuplicated = true;
+                        //   });
+                        // } else {
+                        await services.sendOTP(phone, 1);
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          useSafeArea: true,
+                          builder: (BuildContext context) {
+                            return ClipRRect(
+                                borderRadius: BorderRadius.circular(30.0),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.9,
+                                  child: OtpCodePage(
+                                    phone: phone,
+                                  ),
+                                ));
+                          },
+                        );
+                        // }
                       }
                     },
                     buttonColor: kMainYellowColor,
