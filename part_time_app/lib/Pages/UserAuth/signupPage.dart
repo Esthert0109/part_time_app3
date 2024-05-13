@@ -85,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 7),
                     child: Text(
-                      '用户昵称',
+                      '用户名',
                       textAlign: TextAlign.left,
                       style: missionUsernameTextStyle,
                     ),
@@ -103,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       filled: true,
                       fillColor: const Color(0xFFF5F5F5),
-                      hintText: '请输入用户昵称',
+                      hintText: '请输入用户名',
                       hintStyle: missionDetailText2,
                       contentPadding: const EdgeInsets.all(10),
                       border: OutlineInputBorder(
@@ -134,7 +134,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 7),
                     child: Text(
-                      '手机号码',
+                      '电话号码',
                       textAlign: TextAlign.left,
                       style: missionUsernameTextStyle,
                     ),
@@ -160,7 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Positioned(
                       child: Container(
                         child: InternationalPhoneNumberInput(
-                          errorMessage: "手机号码不正确",
+                          errorMessage: "电话号码不正确",
                           initialValue: phoneNumber,
                           textFieldController: phoneControllerLogin,
                           formatInput: true,

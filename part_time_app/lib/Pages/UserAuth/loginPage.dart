@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Pages/UserAuth/forgotPasswordPage.dart';
 import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 7),
                             child: Text(
-                              '手机号码',
+                              '电话号码',
                               textAlign: TextAlign.left,
                               style: missionCheckoutHintTextStyle,
                             ),
@@ -220,7 +221,22 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.topRight,
                           child: GestureDetector(
                             onTap: () {
-                              print("touch the talala");
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.9,
+                                        child: const ForgotPasswordPage(),
+                                      ));
+                                },
+                              );
                             },
                             child: const Text(
                               "忘记密码",
