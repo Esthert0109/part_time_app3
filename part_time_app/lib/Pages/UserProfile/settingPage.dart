@@ -193,7 +193,6 @@ class _SettingPageState extends State<SettingPage> {
                                         secondButtonOnTap: () {
                                           setState(() {
                                             Navigator.pop(context);
-                                            
 
                                             Fluttertoast.showToast(
                                                 msg: "已登出",
@@ -201,7 +200,7 @@ class _SettingPageState extends State<SettingPage> {
                                                 gravity: ToastGravity.BOTTOM,
                                                 backgroundColor: kMainGreyColor,
                                                 textColor: kThirdGreyColor);
-                                                Get.offAllNamed('/onboarding');
+                                            Get.offAllNamed('/onboarding');
                                           });
                                         },
                                       );

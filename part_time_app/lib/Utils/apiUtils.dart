@@ -26,7 +26,9 @@ Future<ResponseData> postRequest(
 }
 
 Future<ResponseData> getRequest(
-    String url, Map<String, String> headers, Map<String, dynamic> body) async {
+  String url,
+  Map<String, String> headers,
+) async {
   try {
     final response = await http.get(
       Uri.parse(url),

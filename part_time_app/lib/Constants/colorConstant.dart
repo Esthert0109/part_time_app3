@@ -6,6 +6,7 @@ const kMainGreyColor = Color(0xff666666);
 const kSecondGreyColor = Color(0xff999999);
 const kThirdGreyColor = Color(0xffF9F9F9);
 const kMainRedColor = Color(0xffEF4C54);
+const kErrorRedColor = Colors.red;
 const kMainWhiteColor = Color(0xffFFFFFF);
 const kInputBackGreyColor = Color(0xffF9F9F9);
 const kTransparentColor = Colors.transparent;

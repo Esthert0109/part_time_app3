@@ -472,3 +472,6 @@ const ticketRecordTextStyle = TextStyle(
 
 const ticketRecordTextStyle1 = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlackColor);
+
+const errorDisplayeTextStyle =
+    TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kErrorRedColor);
