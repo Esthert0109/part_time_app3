@@ -129,6 +129,7 @@ class ForgotPasswordPage {
                     width: double.infinity,
                     // padding: const EdgeInsets.symmetric(horizontal: 0),
                     child: primaryButtonComponent(
+                      isLoading: false,
                       text: '提交',
                       textStyle: forgotPassSubmitTextStyle,
                       buttonColor: kMainYellowColor,
