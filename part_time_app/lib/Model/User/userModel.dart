@@ -51,14 +51,14 @@ class CheckUserModel {
 }
 
 class OTPUserModel {
-  final int code;
-  final String msg;
-  final bool data;
+  final int? code;
+  final String? msg;
+  final bool? data;
 
   OTPUserModel({
-    required this.code,
-    required this.msg,
-    required this.data,
+    this.code,
+    this.msg,
+    this.data,
   });
 
   Map<String, dynamic> toJson() {

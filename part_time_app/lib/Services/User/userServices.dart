@@ -150,9 +150,9 @@ class UserServices {
       int statusCode = response.statusCode;
 
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
-      int responseCode = jsonData['code'];
-      String responseMsg = jsonData['msg'];
-      bool responseData = jsonData['data'];
+      int? responseCode = jsonData['code'];
+      String? responseMsg = jsonData['msg'];
+      bool? responseData = jsonData['data'];
 
       if (statusCode == 200) {
         if (responseCode == 0) {
@@ -188,10 +188,12 @@ class UserServices {
       int statusCode = response.statusCode;
 
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
-
-      Map<String, dynamic>? data = jsonData;
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      Map<String, dynamic>? data = jsonData['data'];
       UserData responseData = UserData.fromJson(data!);
-      userModel = UserModel(data: responseData);
+      userModel =
+          UserModel(code: responseCode, msg: responseMsg, data: responseData);
 
       return userModel;
     } catch (e) {

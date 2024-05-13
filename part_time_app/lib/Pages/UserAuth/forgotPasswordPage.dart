@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
+import 'otpCode.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -15,11 +18,15 @@ class ForgotPasswordPage extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  TextEditingController phoneController = TextEditingController();
   PhoneNumber phoneNumber = PhoneNumber(isoCode: 'MY');
   String dialCode = '';
   String phone = '';
   String countryCode = '';
+
+  // service
+  UserServices services = UserServices();
+  String errorDisplay = "";
+  bool isError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +98,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           child: InternationalPhoneNumberInput(
                             errorMessage: "请正确的电话号码",
                             initialValue: phoneNumber,
-                            textFieldController: phoneController,
                             formatInput: true,
                             selectorConfig: SelectorConfig(
                                 showFlags: false,
@@ -125,7 +131,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ])),
                   ),
                   SizedBox(
-                    height: 60,
+                    height: 40,
+                  ),
+                  isError
+                      ? Text(
+                          errorDisplay,
+                          style: errorDisplayeTextStyle,
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    height: 20,
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -134,7 +149,38 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       text: '提交',
                       textStyle: forgotPassSubmitTextStyle,
                       buttonColor: kMainYellowColor,
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          OTPUserModel? userModel =
+                              await services.sendOTP(phone, 3);
+
+                          if (userModel!.msg != "success") {
+                            setState(() {
+                              isError = true;
+                              errorDisplay = userModel.msg!;
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              useSafeArea: true,
+                              builder: (BuildContext context) {
+                                return ClipRRect(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.9,
+                                      child: OtpCodePage(
+                                        phone: phone,
+                                      ),
+                                    ));
+                              },
+                            );
+                          }
+                        }
+                      },
                     ),
                   )
                 ],

@@ -11,6 +11,7 @@ import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Pages/UserAuth/forgotPasswordPage.dart';
 import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -285,7 +286,11 @@ class _LoginPageState extends State<LoginPage> {
                                 } else {
                                   UserModel? user =
                                       await services.getUserInfo();
-                                  userInfo = user!.data;
+
+                                  await SharedPreferencesUtils.saveUserInfo(
+                                      user!);
+
+                                  Get.offAllNamed('/');
                                 }
                               });
 
