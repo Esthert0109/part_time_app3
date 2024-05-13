@@ -20,8 +20,9 @@ List<MissionMockClass>? missionCollected = [];
 
 class UserProfilePage extends StatefulWidget {
   final bool isOthers;
+  final String? userID;
 
-  const UserProfilePage({super.key, required this.isOthers});
+  const UserProfilePage({super.key, required this.isOthers, this.userID});
 
   @override
   State<UserProfilePage> createState() => _UserProfilePageState();

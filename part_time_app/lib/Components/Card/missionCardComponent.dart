@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Pages/Message/user/user_profile.dart';
 
 import '../../Constants/textStyleConstant.dart';
+import '../../Pages/UserProfile/userProfilePage.dart';
 
 class MissionCardComponent extends StatefulWidget {
   final String missionTitle;
@@ -205,9 +209,19 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  backgroundColor: kSecondGreyColor,
-                  foregroundImage: NetworkImage(widget.userAvatar),
+                GestureDetector(
+                  onTap: () {
+                    Get.to(
+                        () => UserProfilePage(
+                              isOthers: true,
+                              userID: "",
+                            ),
+                        transition: Transition.rightToLeft);
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: kSecondGreyColor,
+                    foregroundImage: NetworkImage(widget.userAvatar),
+                  ),
                 ),
                 Expanded(
                   flex: 5,
