@@ -14,6 +14,7 @@ import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailDescriptionCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailIssuerCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailStepsCardComponent.dart';
+import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionNoticeCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
@@ -232,6 +233,15 @@ class _MissionDetailStatusIssuerPageState
                         const SizedBox(
                           height: 12,
                         ),
+                        widget.isFailed
+                            ? Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: missionFailedReasonCardComponent(
+                                    reasonTitle: "拒绝理由",
+                                    reasonDesc:
+                                        "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"),
+                              )
+                            : Container(),
                         missionDetailStepsCardComponent(
                           steps: mockData,
                           isConfidential: false,

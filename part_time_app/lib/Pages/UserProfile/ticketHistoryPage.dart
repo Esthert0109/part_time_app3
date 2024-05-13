@@ -51,37 +51,22 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
       child: Scaffold(
           extendBodyBehindAppBar: false,
           appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        "assets/common/back_button.svg",
-                        width: 24,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  const Expanded(
-                    flex: 12,
-                    child: Align(
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 20),
-                        child: thirdTitleComponent(text: "工单通知"),
-                      ),
-                    ),
-                  ),
-                ],
+              automaticallyImplyLeading: false,
+              scrolledUnderElevation: 0.0,
+              leading: IconButton(
+                iconSize: 15,
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  Get.back();
+                },
               ),
-            ),
-          ),
+              centerTitle: true,
+              title: Container(
+                  color: kTransparent,
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: thirdTitleComponent(
+                    text: "工单通知",
+                  ))),
           body:
               // _isLoading
               //     ? PaymentHistoryLoading()

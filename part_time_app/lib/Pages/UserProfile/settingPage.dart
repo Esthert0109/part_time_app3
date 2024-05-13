@@ -200,6 +200,7 @@ class _SettingPageState extends State<SettingPage> {
                                                 gravity: ToastGravity.BOTTOM,
                                                 backgroundColor: kMainGreyColor,
                                                 textColor: kThirdGreyColor);
+                                            Get.offAllNamed('/onboarding');
                                           });
                                         },
                                       );
