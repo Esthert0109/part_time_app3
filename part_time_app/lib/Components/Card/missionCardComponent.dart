@@ -187,7 +187,9 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
                     child: RichText(
                       textAlign: TextAlign.right,
                       text: TextSpan(
-                          text: widget.missionPrice.toString(),
+                          text: (widget.missionPrice > 99999.99)
+                              ? '99999.99'
+                              : widget.missionPrice.toStringAsFixed(2),
                           style: missionPriceTextStyle,
                           children: [
                             TextSpan(

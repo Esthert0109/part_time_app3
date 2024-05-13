@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Components/Card/missionCardComponent.dart';
+import '../../Components/Loading/customRefreshComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
+import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../MockData/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
+bool noInitialRefresh = true;
 List<MissionMockClass>? missionShortTime = [];
 
 class ShortTimePage extends StatefulWidget {
@@ -16,6 +21,8 @@ class ShortTimePage extends StatefulWidget {
 }
 
 class _ShortTimePageState extends State<ShortTimePage> {
+  final RefreshController _refreshRecommendationController =
+      RefreshController(initialRefresh: noInitialRefresh);
   int currentPage = 1;
   int itemsPerPage = 6;
   bool isLoading = false;
@@ -26,9 +33,6 @@ class _ShortTimePageState extends State<ShortTimePage> {
   @override
   void initState() {
     super.initState();
-
-    _loadData();
-
     _scrollController.addListener(_scrollListener);
   }
 
@@ -81,6 +85,7 @@ class _ShortTimePageState extends State<ShortTimePage> {
           isLoading = false;
         });
       }
+      noInitialRefresh = false;
     }
   }
 
@@ -96,6 +101,7 @@ class _ShortTimePageState extends State<ShortTimePage> {
         !_scrollController.position.outOfRange) {
       _loadData();
     }
+    _refreshRecommendationController.refreshCompleted();
   }
 
   Future<void> _refresh() async {
@@ -107,12 +113,31 @@ class _ShortTimePageState extends State<ShortTimePage> {
       });
       await _loadData();
     }
+    _refreshRecommendationController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      extendBodyBehindAppBar: false,
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0.0,
+          leading: IconButton(
+            iconSize: 15,
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          centerTitle: true,
+          title: Container(
+              color: kTransparent,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: const thirdTitleComponent(
+                text: "用时短",
+              ))),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -132,32 +157,12 @@ class _ShortTimePageState extends State<ShortTimePage> {
             }
             return true;
           },
-          child: RefreshIndicator(
+          child: CustomRefreshComponent(
               onRefresh: _refresh,
-              color: kMainYellowColor,
+              controller: _refreshRecommendationController,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    AppBar(
-                      backgroundColor: Colors.transparent,
-                      scrolledUnderElevation: 0.0,
-                      surfaceTintColor: Colors.transparent,
-                      title: const Text(
-                        "用时短",
-                        textAlign: TextAlign.center,
-                        style: dialogText2,
-                      ),
-                      centerTitle: true,
-                      leading: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios_rounded,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
                     Container(
                         padding: EdgeInsets.all(12),
                         child: Column(

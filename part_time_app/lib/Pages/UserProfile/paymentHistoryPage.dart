@@ -7,9 +7,14 @@ import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 
+import '../../Components/Loading/customRefreshComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import 'depositHistoryDetailPage.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+bool dataFetchedPaymentHistory = false;
 
 class PaymentHistoryPage extends StatefulWidget {
   const PaymentHistoryPage({super.key});
@@ -19,65 +24,74 @@ class PaymentHistoryPage extends StatefulWidget {
 }
 
 class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    // Simulate loading delay
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
     });
   }
 
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(seconds: 1));
+    // if failed,use refreshFailed()
+    if (mounted) {
+      _refreshController.refreshCompleted();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        extendBodyBehindAppBar: false,
-        appBar: AppBar(
-            automaticallyImplyLeading: false,
-            scrolledUnderElevation: 0.0,
-            leading: IconButton(
-              iconSize: 15,
-              icon: Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () {
-                Get.back();
-              },
-            ),
-            centerTitle: true,
-            title: Container(
-                color: kTransparent,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: thirdTitleComponent(
-                  text: "交易记录",
-                ))),
-        body: _isLoading
-            ? PaymentHistoryLoading()
-            : Container(
-                constraints: const BoxConstraints.expand(),
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-                decoration: const BoxDecoration(
-                  color: kThirdGreyColor,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      kBackgroundFirstGradientColor,
-                      kBackgroundSecondGradientColor
-                    ],
-                    stops: [0.0, 0.15],
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [_buildListView(PaymentHistoryList)],
-                  ),
-                )),
+        child: Scaffold(
+      extendBodyBehindAppBar: false,
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0.0,
+          leading: IconButton(
+            iconSize: 15,
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          centerTitle: true,
+          title: Container(
+              color: kTransparent,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: thirdTitleComponent(
+                text: "交易记录",
+              ))),
+      body: Container(
+        constraints: const BoxConstraints.expand(),
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+        decoration: const BoxDecoration(
+          color: kThirdGreyColor,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              kBackgroundFirstGradientColor,
+              kBackgroundSecondGradientColor
+            ],
+            stops: [0.0, 0.15],
+          ),
+        ),
+        child: CustomRefreshComponent(
+            onRefresh: _onRefresh,
+            controller: _refreshController,
+            child: _isLoading
+                ? PaymentHistoryLoading()
+                : _buildListView(PaymentHistoryList)),
       ),
-    );
+    ));
   }
 
   Widget _buildCard({
@@ -90,59 +104,65 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     return Container(
       child: Column(
         children: [
-          Container(
-            height: 92,
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-                color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          GestureDetector(
+              onTap: () {
+                Get.to(() => PaymentHistoryDetailPage(),
+                    transition: Transition.rightToLeft);
+              },
+              child: Container(
+                height: 92,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: kMainWhiteColor,
+                    borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 60,
-                      child: Text(
-                        title,
-                        style: messageTitleTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 60,
+                          child: Text(
+                            title,
+                            style: messageTitleTextStyle,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 50,
+                          child: Text(
+                            complete
+                                ? (amount < 0 || amount == -0 ? "- " : "+ ") +
+                                    amount.abs().toStringAsFixed(2) +
+                                    " USDT"
+                                : (amount < 0 || amount == -0 ? "- " : "") +
+                                    amount.abs().toStringAsFixed(2) +
+                                    " USDT",
+                            style: complete
+                                ? paymentHistoryTextStyle2
+                                : paymentHistoryTextStyle1,
+                            textAlign: TextAlign.right,
+                          ),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      flex: 50,
+                    Padding(
+                      padding: EdgeInsets.only(top: 3),
                       child: Text(
-                        complete
-                            ? (amount < 0 || amount == -0 ? "- " : "+ ") +
-                                amount.abs().toStringAsFixed(2) +
-                                " USDT"
-                            : (amount < 0 || amount == -0 ? "- " : "") +
-                                amount.abs().toStringAsFixed(2) +
-                                " USDT",
-                        style: complete
-                            ? paymentHistoryTextStyle2
-                            : paymentHistoryTextStyle1,
-                        textAlign: TextAlign.right,
+                        description,
+                        style: messageDescTextStyle2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     )
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 3),
-                  child: Text(
-                    description,
-                    style: messageDescTextStyle2,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
-              ],
-            ),
-          )
+              ))
         ],
       ),
     );

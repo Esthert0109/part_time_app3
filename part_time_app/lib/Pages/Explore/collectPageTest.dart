@@ -19,7 +19,7 @@ class CollectPageTest extends StatefulWidget {
 class _CollectPageTestState extends State<CollectPageTest> {
   final PagingController<int, MissionMockClass> _pagingController =
       PagingController(firstPageKey: 1);
-  int itemsPerPage = 1;
+  int itemsPerPage = 10;
   bool isLoading = false;
   @override
   void initState() {
@@ -41,21 +41,25 @@ class _CollectPageTestState extends State<CollectPageTest> {
       isLoading = true;
       // Simulate fetching data
       await Future.delayed(Duration(seconds: 2));
-      List<MissionMockClass> filteredList =
-          MissionAvailableList.where((mission) => mission.isFavorite!).toList();
-      final isLastPage = filteredList.length < (pageKey * itemsPerPage);
+      missionAvailableForCollectTest = MissionAvailableList.toList();
+      final isLastPage =
+          missionAvailableForCollectTest!.length < (pageKey * itemsPerPage);
       if (isLastPage) {
-        _pagingController.appendLastPage(filteredList);
+        _pagingController.appendLastPage(missionAvailableForCollectTest!);
       } else {
         final nextPageKey = pageKey + 1;
-        final nextPage = filteredList.sublist(
+        final nextPage = missionAvailableForCollectTest!.sublist(
             (pageKey - 1) * itemsPerPage,
-            (pageKey * itemsPerPage) > filteredList.length
-                ? filteredList.length
+            (pageKey * itemsPerPage) > missionAvailableForCollectTest!.length
+                ? missionAvailableForCollectTest!.length
                 : (pageKey * itemsPerPage));
         _pagingController.appendPage(nextPage, nextPageKey);
       }
-      isLoading = false;
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (error) {
       _pagingController.error = error;
     }
