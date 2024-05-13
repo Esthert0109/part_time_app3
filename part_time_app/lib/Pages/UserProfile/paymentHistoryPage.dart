@@ -87,9 +87,11 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         child: CustomRefreshComponent(
             onRefresh: _onRefresh,
             controller: _refreshController,
-            child: _isLoading
-                ? PaymentHistoryLoading()
-                : _buildListView(PaymentHistoryList)),
+            child:
+                // _isLoading
+                //     ? PaymentHistoryLoading()
+                //     :
+                _buildListView(PaymentHistoryList)),
       ),
     ));
   }

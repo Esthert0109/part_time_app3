@@ -82,32 +82,33 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
               ),
             ),
           ),
-          body: _isLoading
-              ? PaymentHistoryLoading()
-              : Container(
-                  constraints: const BoxConstraints.expand(),
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-                  decoration: const BoxDecoration(
-                    color: kThirdGreyColor,
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        kBackgroundFirstGradientColor,
-                        kBackgroundSecondGradientColor
-                      ],
-                      stops: [0.0, 0.15],
-                    ),
-                  ),
-                  child: CustomRefreshComponent(
-                    onRefresh: _onRefresh,
-                    controller: _refreshController,
-                    child: SingleChildScrollView(
-                      child: _buildListView(TicketHistoryList),
-                    ),
-                  ),
-                )),
+          body:
+              // _isLoading
+              //     ? PaymentHistoryLoading()
+              //     :
+              Container(
+            constraints: const BoxConstraints.expand(),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+            decoration: const BoxDecoration(
+              color: kThirdGreyColor,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
+                ],
+                stops: [0.0, 0.15],
+              ),
+            ),
+            child: CustomRefreshComponent(
+              onRefresh: _onRefresh,
+              controller: _refreshController,
+              child: SingleChildScrollView(
+                child: _buildListView(TicketHistoryList),
+              ),
+            ),
+          )),
     );
   }
 

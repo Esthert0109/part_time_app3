@@ -149,7 +149,7 @@ class _RecommendationPageState extends State<RecommendationPage>
         onNotification: (ScrollNotification scrollInfo) {
           if (!isLoading &&
               scrollInfo.metrics.pixels >=
-                  scrollInfo.metrics.maxScrollExtent - 600.0) {
+                  scrollInfo.metrics.maxScrollExtent - 1000.0) {
             _loadData();
           }
           return true;
