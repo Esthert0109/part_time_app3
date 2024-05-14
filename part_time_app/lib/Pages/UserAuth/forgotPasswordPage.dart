@@ -149,6 +149,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       isLoading: isLoading,
                       text: '提交',
                       textStyle: forgotPassSubmitTextStyle,
+                      disableButtonColor: buttonLoadingColor,
                       buttonColor: kMainYellowColor,
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
@@ -156,36 +157,43 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             isLoading = true;
                           });
 
-                          // OTPUserModel? userModel =
-                          //     await services.sendOTP(phone, 3).then((value) {
-                          //   if (value!.msg != "success") {
-                          //     setState(() {
-                          //       isLoading = false;
-                          //       isError = true;
-                          //       errorDisplay = value.msg!;
-                          //     });
-                          //   } else {
-                          //     setState(() {
-                          //       isLoading = false;
-                          //       print("check:${value!.msg}");
-                          //     });
-                          Navigator.pop(context);
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            useSafeArea: true,
-                            builder: (BuildContext context) {
-                              return ClipRRect(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  child: SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.9,
-                                    child: OtpCodePage(phone: phone, type: 3, countdownTime: 1715664956,),
-                                  ));
-                            },
-                          );
-                          //   }
-                          // });
+                          try {
+                            OTPUserModel? value =
+                                await services.sendOTP(phone, 3);
+
+                            if (value!.code == 0) {
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.9,
+                                      child: OtpCodePage(
+                                        phone: phone,
+                                        type: 3,
+                                        countdownTime: value!.data!.datetime,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              setState(() {
+                                isLoading = false;
+                                errorDisplay = value.msg!;
+                              });
+                            }
+                          } catch (error) {
+                            isLoading = false;
+                            errorDisplay = error.toString();
+                            print('Error: $error');
+                          }
                         }
                       },
                     ),

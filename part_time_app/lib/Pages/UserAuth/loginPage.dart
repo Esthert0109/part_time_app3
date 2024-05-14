@@ -258,6 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: primaryButtonComponent(
                           isLoading: isLoading,
                           text: "提交",
+                          disableButtonColor: buttonLoadingColor,
                           onPressed: () async {
                             // bool isLoginTencent =
                             //     await userTencentLogin('2206');

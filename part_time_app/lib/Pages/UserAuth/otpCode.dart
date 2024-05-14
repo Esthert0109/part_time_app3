@@ -55,6 +55,11 @@ class _OtpCodePageState extends State<OtpCodePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (widget.type == 3) {
+      setState(() {
+        isCountDown = false;
+      });
+    }
     convertCountDownTime(widget.countdownTime);
   }
 
@@ -190,7 +195,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
 
                         try {
                           CheckOTPModel? checkOTP = await services.verifyOTP(
-                              widget.phone, pinController.text, 1);
+                              widget.phone, pinController.text, widget.type);
 
                           if (checkOTP!.code != 0) {
                             setState(() {
