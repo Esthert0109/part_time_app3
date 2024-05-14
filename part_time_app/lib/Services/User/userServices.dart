@@ -152,7 +152,7 @@ class UserServices {
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
       int? responseCode = jsonData['code'];
       String? responseMsg = jsonData['msg'];
-      bool? responseData = jsonData['data'];
+      OtpData? responseData = jsonData['data'];
 
       if (statusCode == 200) {
         if (responseCode == 0) {
@@ -172,31 +172,33 @@ class UserServices {
     }
   }
 
-  Future<OTPUserModel?> verifyOTP(String phone, String code, int type) async {
+  Future<CheckUserModel?> verifyOTP(String phone, String code, int type) async {
     url = port + verifyOTPUrl + type.toString();
-    OTPUserModel? otpModel;
+    CheckUserModel? otpModel;
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
     };
 
+    final Map<String, dynamic> body = {"mobile": phone, "code": code};
+
     try {
-      final response = await getRequest(url, headers);
+      final response = await postRequest(url, headers, body);
       int statusCode = response.statusCode;
 
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
-      int? responseCode = jsonData['code'];
-      String? responseMsg = jsonData['msg'];
-      bool? responseData = jsonData['data'];
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      String responseData = jsonData['data'];
 
       if (statusCode == 200) {
         if (responseCode == 0) {
-          otpModel = OTPUserModel(
+          otpModel = CheckUserModel(
               code: responseCode, msg: responseMsg, data: responseData);
 
           return otpModel;
         } else {
-          otpModel = OTPUserModel(
+          otpModel = CheckUserModel(
               code: responseCode, msg: responseMsg, data: responseData);
 
           return otpModel;

@@ -53,7 +53,7 @@ class CheckUserModel {
 class OTPUserModel {
   final int? code;
   final String? msg;
-  final bool? data;
+  final OtpData? data;
 
   OTPUserModel({
     this.code,
@@ -62,7 +62,25 @@ class OTPUserModel {
   });
 
   Map<String, dynamic> toJson() {
-    return {"code": code, "msg": msg, "data": data};
+    return {"code": code, "msg": msg, "data": data?.toJson()};
+  }
+}
+
+class OtpData {
+  final int datetime;
+  final String message;
+
+  OtpData({
+    required this.datetime,
+    required this.message,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"datetime": datetime, "message": message};
+  }
+
+  factory OtpData.fromJson(Map<String, dynamic> json) {
+    return OtpData(datetime: json['datetime'], message: json['message']);
   }
 }
 

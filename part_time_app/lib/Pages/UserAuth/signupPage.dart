@@ -36,6 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _responseMsgRegister = "";
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool isLoading = false;
 
   // service
   UserServices services = UserServices();
@@ -324,7 +325,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 372,
                   height: 50.0,
                   child: primaryButtonComponent(
-                    isLoading: false,
+                    isLoading: isLoading,
                     text: "提交",
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
@@ -332,34 +333,75 @@ class _SignUpPageState extends State<SignUpPage> {
                         _formKey.currentState!.save();
                         // Perform actions with _password here
 
+                        // setting loading
+                        setState(() {
+                          isLoading = true;
+                        });
+
                         // check if phone and nickname duplicated
                         checkRegister = await services.checkNameAndPhone(
                             phone, userNicknameController.text);
 
                         if (checkRegister!.data != "No Duplicated") {
                           setState(() {
+                            isLoading = false;
                             errorDisplay = checkRegister!.data;
                             isDuplicated = true;
                           });
                         } else {
-                          await services.sendOTP(phone, 1);
-                          Navigator.pop(context);
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            useSafeArea: true,
-                            builder: (BuildContext context) {
-                              return ClipRRect(
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          try {
+                            var value = await services.sendOTP(phone, 1);
+                            Navigator.pop(context);
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              useSafeArea: true,
+                              builder: (BuildContext context) {
+                                return ClipRRect(
                                   borderRadius: BorderRadius.circular(30.0),
                                   child: SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.9,
                                     child: OtpCodePage(
                                       phone: phone,
+                                      type: 1,
+                                      countdownTime: value!.data!.datetime,
                                     ),
-                                  ));
-                            },
-                          );
+                                  ),
+                                );
+                              },
+                            );
+                          } catch (error) {
+                            // Handle error
+                            print('Error: $error');
+                          }
+
+                          // await services.sendOTP(phone, 1).then((value) {
+                          //   Navigator.pop(context);
+                          //   showModalBottomSheet(
+                          //     context: context,
+                          //     isScrollControlled: true,
+                          //     useSafeArea: true,
+                          //     builder: (BuildContext context) {
+                          //       return ClipRRect(
+                          //           borderRadius: BorderRadius.circular(30.0),
+                          //           child: SizedBox(
+                          //             height:
+                          //                 MediaQuery.of(context).size.height *
+                          //                     0.9,
+                          //             child: OtpCodePage(
+                          //               phone: phone,
+                          //               type: 1,
+                          //               countdownTime: value!.data!.datetime,
+                          //             ),
+                          //           ));
+                          //     },
+                          //   );
+                          // });
                         }
                       }
                     },

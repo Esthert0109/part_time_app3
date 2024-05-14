@@ -22,6 +22,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   String dialCode = '';
   String phone = '';
   String countryCode = '';
+  bool isLoading = false;
 
   // service
   UserServices services = UserServices();
@@ -145,40 +146,46 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   SizedBox(
                     width: double.infinity,
                     child: primaryButtonComponent(
-                      isLoading: false,
+                      isLoading: isLoading,
                       text: '提交',
                       textStyle: forgotPassSubmitTextStyle,
                       buttonColor: kMainYellowColor,
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          OTPUserModel? userModel =
-                              await services.sendOTP(phone, 3);
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                          if (userModel!.msg != "success") {
-                            setState(() {
-                              isError = true;
-                              errorDisplay = userModel.msg!;
-                            });
-                          } else {
-                            Navigator.pop(context);
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              useSafeArea: true,
-                              builder: (BuildContext context) {
-                                return ClipRRect(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.9,
-                                      child: OtpCodePage(
-                                        phone: phone,
-                                      ),
-                                    ));
-                              },
-                            );
-                          }
+                          // OTPUserModel? userModel =
+                          //     await services.sendOTP(phone, 3).then((value) {
+                          //   if (value!.msg != "success") {
+                          //     setState(() {
+                          //       isLoading = false;
+                          //       isError = true;
+                          //       errorDisplay = value.msg!;
+                          //     });
+                          //   } else {
+                          //     setState(() {
+                          //       isLoading = false;
+                          //       print("check:${value!.msg}");
+                          //     });
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (BuildContext context) {
+                              return ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.9,
+                                    child: OtpCodePage(phone: phone, type: 3, countdownTime: 1715664956,),
+                                  ));
+                            },
+                          );
+                          //   }
+                          // });
                         }
                       },
                     ),
