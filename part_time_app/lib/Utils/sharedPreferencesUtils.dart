@@ -13,6 +13,12 @@ class SharedPreferencesUtils {
     await prefs.setString(userKey, userData);
   }
 
+  static Future<void> saveUserDataInfo(UserData user) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonString = jsonEncode(user.toJson());
+    await prefs.setString('userModel', jsonString);
+  }
+
   // save user information
   static Future<void> saveUserId(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -53,6 +59,16 @@ class SharedPreferencesUtils {
   static Future<String?> getPassword() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('password');
+  }
+
+  static Future<UserData?> getUserDataInfo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString('userModel');
+    if (jsonString != null) {
+      Map<String, dynamic> json = jsonDecode(jsonString);
+      return UserData.fromJson(json);
+    }
+    return null;
   }
 
   // remove user information

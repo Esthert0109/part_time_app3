@@ -296,6 +296,11 @@ class _LoginPageState extends State<LoginPage> {
                                   await SharedPreferencesUtils.saveUserInfo(
                                       user!);
 
+                                  print("check info: ${user.data}");
+
+                                  await SharedPreferencesUtils.saveUserDataInfo(
+                                      user.data!);
+
                                   Get.offAllNamed('/');
                                   setState(() {
                                     isLoading = false;
