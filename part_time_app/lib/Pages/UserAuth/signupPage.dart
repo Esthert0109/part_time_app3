@@ -41,6 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
   // service
   UserServices services = UserServices();
   CheckUserModel? checkRegister;
+  UserData? userRegister;
   bool isDuplicated = false;
   String errorDisplay = "";
 
@@ -173,8 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             dialCode = number.dialCode.toString();
                             countryCode = number.isoCode.toString();
                           },
-                          // autoValidateMode:
-                          //     AutovalidateMode.onUserInteraction,
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
                           cursorColor: Colors.black,
                           inputDecoration: InputDecoration(
                               errorBorder: OutlineInputBorder(
@@ -327,6 +327,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: primaryButtonComponent(
                     isLoading: isLoading,
                     text: "提交",
+                    disableButtonColor: buttonLoadingColor,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // If the form is valid, perform your actions
@@ -337,6 +338,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         setState(() {
                           isLoading = true;
                         });
+
+                        userRegister = UserData(
+                            nickname: userNicknameController.text,
+                            password: passwordController.text,
+                            firstPhoneNo: phone);
 
                         // check if phone and nickname duplicated
                         checkRegister = await services.checkNameAndPhone(
@@ -354,54 +360,45 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
 
                           try {
-                            var value = await services.sendOTP(phone, 1);
-                            Navigator.pop(context);
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              useSafeArea: true,
-                              builder: (BuildContext context) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  child: SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.9,
-                                    child: OtpCodePage(
-                                      phone: phone,
-                                      type: 1,
-                                      countdownTime: value!.data!.datetime,
+                            OTPUserModel? value =
+                                await services.sendOTP(phone, 1);
+
+                            if (value!.code == 0) {
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.9,
+                                      child: OtpCodePage(
+                                        phone: phone,
+                                        type: 1,
+                                        userRegisterData: userRegister,
+                                        countdownTime: value!.data!.datetime,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
+                                  );
+                                },
+                              );
+                            } else {
+                              setState(() {
+                                isDuplicated = true;
+                                isLoading = false;
+                                errorDisplay = value.msg!;
+                              });
+                            }
                           } catch (error) {
-                            // Handle error
+                            isDuplicated = true;
+                            isLoading = false;
+                            errorDisplay = error.toString();
                             print('Error: $error');
                           }
-
-                          // await services.sendOTP(phone, 1).then((value) {
-                          //   Navigator.pop(context);
-                          //   showModalBottomSheet(
-                          //     context: context,
-                          //     isScrollControlled: true,
-                          //     useSafeArea: true,
-                          //     builder: (BuildContext context) {
-                          //       return ClipRRect(
-                          //           borderRadius: BorderRadius.circular(30.0),
-                          //           child: SizedBox(
-                          //             height:
-                          //                 MediaQuery.of(context).size.height *
-                          //                     0.9,
-                          //             child: OtpCodePage(
-                          //               phone: phone,
-                          //               type: 1,
-                          //               countdownTime: value!.data!.datetime,
-                          //             ),
-                          //           ));
-                          //     },
-                          //   );
-                          // });
                         }
                       }
                     },

@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Pages/UserAuth/changePassword.dart';
+import 'package:part_time_app/Pages/UserAuth/loginPage.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
@@ -13,11 +15,13 @@ class OtpCodePage extends StatefulWidget {
   final String phone;
   final int type;
   final int countdownTime;
+  final UserData? userRegisterData;
   const OtpCodePage(
       {super.key,
       required this.phone,
       required this.type,
-      required this.countdownTime});
+      required this.countdownTime,
+      this.userRegisterData});
 
   @override
   State<OtpCodePage> createState() => _OtpCodePageState();
@@ -31,17 +35,19 @@ class _OtpCodePageState extends State<OtpCodePage> {
   List<TextEditingController> _controllers =
       List.generate(4, (index) => TextEditingController());
   String errorDisplay = "";
+  String incorrectCode = "";
   bool isError = false;
   bool isLoading = false;
   bool isFilled = false;
   bool isCountDown = true;
+  bool isCorrect = true;
 
   // services
   UserServices services = UserServices();
   DateTime? countdown;
 
   void convertCountDownTime(int timestamp) {
-    countdown = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    countdown = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     print("check: $countdown");
   }
 
@@ -105,10 +111,10 @@ class _OtpCodePageState extends State<OtpCodePage> {
               listenForMultipleSmsOnAndroid: true,
               defaultPinTheme: defaultPinTheme,
               separatorBuilder: (index) => const SizedBox(width: 8),
-              validator: (value) {
-                return value == '2222' ? null : '   验证码错误';
-              },
               hapticFeedbackType: HapticFeedbackType.lightImpact,
+              validator: (value) {
+                return isCorrect ? null : incorrectCode;
+              },
               onCompleted: (pin) {
                 debugPrint('onCompleted: $pin');
                 setState(() {
@@ -181,40 +187,76 @@ class _OtpCodePageState extends State<OtpCodePage> {
                         setState(() {
                           isLoading = true;
                         });
-                        await services
-                            .verifyOTP(widget.phone, pinController.text, 1)
-                            .then((value) {
-                          if (value!.code != 0) {
+
+                        try {
+                          CheckOTPModel? checkOTP = await services.verifyOTP(
+                              widget.phone, pinController.text, 1);
+
+                          if (checkOTP!.code != 0) {
                             setState(() {
                               isLoading = false;
                               isError = true;
-                              errorDisplay = value.msg!;
+                              errorDisplay = checkOTP.msg!;
                             });
                           } else {
                             setState(() {
                               isLoading = false;
                             });
                             Navigator.pop(context);
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              useSafeArea: true,
-                              builder: (BuildContext context) {
-                                return ClipRRect(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.9,
-                                      child: ChangePasswordPage(),
-                                    ));
-                              },
-                            );
+                            if (widget.type == 1) {
+                              try {
+                                UserModel? user = await services
+                                    .registration(widget.userRegisterData!);
+                                if (user!.code == 0) {
+                                  Navigator.pop(context);
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    useSafeArea: true,
+                                    builder: (BuildContext context) {
+                                      return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                          child: SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.9,
+                                            child: LoginPage(),
+                                          ));
+                                    },
+                                  );
+                                }
+                              } catch (e) {
+                                print("error occur in create user");
+                              }
+                            } else {
+                              // Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.9,
+                                        child: ChangePasswordPage(),
+                                      ));
+                                },
+                              );
+                            }
                           }
-                        });
+                        } catch (error) {
+                          isLoading = false;
+                          errorDisplay = error.toString();
+                          print('Error: $error');
+                        }
                       }
                     : null,
-                disableButtonColor: Color(0x69FFE457),
+                disableButtonColor: buttonLoadingColor,
                 buttonColor: kMainYellowColor,
                 textStyle: isFilled ? missionDetailText1 : otpDisableTextStyle,
               ),
@@ -222,17 +264,32 @@ class _OtpCodePageState extends State<OtpCodePage> {
             SizedBox(
               height: 332,
             ),
-            RichText(
-                text: TextSpan(children: [
-              TextSpan(text: '未收到验证码？', style: loginPageTextStyle1),
-              TextSpan(
-                  text: '再次发送',
-                  style: loginPageTextStyle2,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () async {
-                      await services.sendOTP(widget.phone, 1);
-                    })
-            ]))
+            isCountDown
+                ? SizedBox()
+                : RichText(
+                    text: TextSpan(children: [
+                    TextSpan(text: '未收到验证码？', style: loginPageTextStyle1),
+                    TextSpan(
+                        text: '再次发送',
+                        style: loginPageTextStyle2,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            OTPUserModel? value =
+                                await services.sendOTP(widget.phone, 1);
+
+                            if (value!.code == 0) {
+                              convertCountDownTime(value.data!.datetime);
+                              setState(() {
+                                isCountDown = true;
+                              });
+                            } else {
+                              setState(() {
+                                isError = true;
+                                errorDisplay = value.msg!;
+                              });
+                            }
+                          })
+                  ]))
           ],
         ),
       ),

@@ -53,3 +53,4 @@ const kOnboradingPageText2Color = Color(0xffE5B63E);
 
 const kbarBackgroundColor = Color(0xffD9D9D9);
 const kDividerColor = Color(0xffEEEEEE);
+const buttonLoadingColor = Color(0x69FFE457);

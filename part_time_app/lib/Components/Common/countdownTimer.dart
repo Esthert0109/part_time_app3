@@ -45,7 +45,11 @@ class _CountdownTimerState extends State<CountdownTimer> {
 
   void calculateRemainingTime() {
     setState(() {
-      remainingTime = widget.expiredDate.difference(DateTime.now());
+      print("expired: ${widget.expiredDate}");
+      print("now date: ${DateTime.now()}");
+      DateTime expired = widget.expiredDate.add(Duration(seconds: 27));
+      remainingTime = expired.difference(DateTime.now());
+
       print("check remaining time: $remainingTime");
 
       if (remainingTime!.isNegative) {

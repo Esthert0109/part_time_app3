@@ -34,6 +34,22 @@ class LoginData {
   }
 }
 
+class CheckOTPModel {
+  final int code;
+  final String msg;
+  final bool? data;
+
+  CheckOTPModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+}
+
 class CheckUserModel {
   final int code;
   final String msg;

@@ -62,9 +62,10 @@ class UserServices {
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
     };
+    print("check data: ${userData.nickname}");
 
     final Map<String, dynamic> body = {
-      "username": userData.username,
+      "nickname": userData.nickname,
       "password": userData.password,
       "firstPhoneNo": userData.firstPhoneNo
     };
@@ -76,8 +77,8 @@ class UserServices {
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
       int responseCode = jsonData['code'];
       String responseMsg = jsonData['msg'];
-      Map<String, dynamic> data = jsonData['data'];
-      UserData responseData = UserData.fromJson(data);
+      Map<String, dynamic>? data = jsonData['data'];
+      UserData responseData = UserData.fromJson(data!);
 
       if (statusCode == 200) {
         if (responseCode == 0) {
@@ -152,7 +153,8 @@ class UserServices {
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
       int? responseCode = jsonData['code'];
       String? responseMsg = jsonData['msg'];
-      OtpData? responseData = jsonData['data'];
+      Map<String, dynamic> data = jsonData['data'];
+      OtpData? responseData = OtpData.fromJson(data);
 
       if (statusCode == 200) {
         if (responseCode == 0) {
@@ -172,9 +174,9 @@ class UserServices {
     }
   }
 
-  Future<CheckUserModel?> verifyOTP(String phone, String code, int type) async {
+  Future<CheckOTPModel?> verifyOTP(String phone, String code, int type) async {
     url = port + verifyOTPUrl + type.toString();
-    CheckUserModel? otpModel;
+    CheckOTPModel? otpModel;
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
@@ -189,23 +191,23 @@ class UserServices {
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
       int responseCode = jsonData['code'];
       String responseMsg = jsonData['msg'];
-      String responseData = jsonData['data'];
+      bool? responseData = jsonData['data'];
 
       if (statusCode == 200) {
         if (responseCode == 0) {
-          otpModel = CheckUserModel(
+          otpModel = CheckOTPModel(
               code: responseCode, msg: responseMsg, data: responseData);
 
           return otpModel;
         } else {
-          otpModel = CheckUserModel(
+          otpModel = CheckOTPModel(
               code: responseCode, msg: responseMsg, data: responseData);
 
           return otpModel;
         }
       }
     } catch (e) {
-      print("Error in send otp: $e");
+      print("Error in check otp: $e");
     }
   }
 
