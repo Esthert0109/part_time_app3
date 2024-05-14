@@ -116,7 +116,10 @@ class _OtpCodePageState extends State<OtpCodePage> {
               child: primaryButtonComponent(
                 isLoading: false,
                 text: "提交",
-                onPressed: () {},
+                onPressed: () {
+
+                  
+                },
                 buttonColor: kMainYellowColor,
                 textStyle: missionDetailText1,
               ),

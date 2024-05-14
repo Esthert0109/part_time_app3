@@ -41,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   String countryCode = '';
   String _responseMsgRegister = "";
   bool _obscureText = true;
+  bool isLoading = false;
 
   // service
   UserModel? userLogin;
@@ -255,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 372,
                         height: 50.0,
                         child: primaryButtonComponent(
-                          isLoading: false,
+                          isLoading: isLoading,
                           text: "提交",
                           onPressed: () async {
                             // bool isLoginTencent =
@@ -273,6 +274,9 @@ class _LoginPageState extends State<LoginPage> {
                               userData = UserData(
                                   password: passwordController.text,
                                   firstPhoneNo: phone);
+                              setState(() {
+                                isLoading = true;
+                              });
 
                               userLogin = await services
                                   .login(userData!)
@@ -280,6 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if (value!.code != 0) {
                                   setState(() {
                                     isError = true;
+                                    isLoading = false;
                                     print("check ${value.msg}");
                                     errorDisplay = value.msg;
                                   });
@@ -291,10 +296,11 @@ class _LoginPageState extends State<LoginPage> {
                                       user!);
 
                                   Get.offAllNamed('/');
+                                  setState(() {
+                                    isLoading = false;
+                                  });
                                 }
                               });
-
-                              print("check: ${userInfo!.customerId}");
                             }
                           },
                           buttonColor: kMainYellowColor,

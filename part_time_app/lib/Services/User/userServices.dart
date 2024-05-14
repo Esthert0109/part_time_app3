@@ -172,6 +172,41 @@ class UserServices {
     }
   }
 
+  Future<OTPUserModel?> verifyOTP(String phone, String code, int type) async {
+    url = port + verifyOTPUrl + type.toString();
+    OTPUserModel? otpModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int? responseCode = jsonData['code'];
+      String? responseMsg = jsonData['msg'];
+      bool? responseData = jsonData['data'];
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          otpModel = OTPUserModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return otpModel;
+        } else {
+          otpModel = OTPUserModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return otpModel;
+        }
+      }
+    } catch (e) {
+      print("Error in send otp: $e");
+    }
+  }
+
   Future<UserModel?> getUserInfo() async {
     url = port + getUserInfoUrl;
     UserModel? userModel;
