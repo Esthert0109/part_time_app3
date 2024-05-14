@@ -25,15 +25,14 @@ Future<ResponseData> postRequest(
   }
 }
 
-Future<ResponseData> getRequest(
-    String url, Map<String, String> headers, Map<String, dynamic> body) async {
+Future<ResponseData> getRequest(String url, Map<String, String> headers) async {
   try {
     final response = await http.get(
       Uri.parse(url),
       headers: headers,
     );
 
-    return ResponseData(response.statusCode, utf8.decode(response.bodyBytes));
+    return ResponseData(response.statusCode, response.body);
   } catch (e) {
     throw Exception('Error in getRequest: $e');
   }

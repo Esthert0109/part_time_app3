@@ -101,11 +101,11 @@ class _ToolMessagePageState extends State<ToolMessagePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (ToolMessageList.isNotEmpty)
-                      MessageList(
-                        messageList: ToolMessageList,
-                        isSystem: false,
-                      ),
+                    // if (ToolMessageList.isNotEmpty)
+                    //   MessageList(
+                    //     messageList: ToolMessageList,
+                    //     isSystem: false,
+                    //   ),
                   ],
                 ),
               ),

@@ -101,11 +101,11 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (PaymentMessageList.isNotEmpty)
-                      MessageList(
-                        messageList: PaymentMessageList,
-                        isSystem: false,
-                      ),
+                    // if (PaymentMessageList.isNotEmpty)
+                    //   MessageList(
+                    //     messageList: PaymentMessageList,
+                    //     isSystem: false,
+                    //   ),
                   ],
                 ),
               ),

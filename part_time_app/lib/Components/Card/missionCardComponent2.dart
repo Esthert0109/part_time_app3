@@ -8,7 +8,7 @@ import 'package:part_time_app/Pages/Message/user/user_profile.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Pages/UserProfile/userProfilePage.dart';
 
-class MissionCardComponent extends StatefulWidget {
+class MissionCardComponent2 extends StatefulWidget {
   final String missionTitle;
   final String missionDesc;
   final List<dynamic> tagList;
@@ -20,7 +20,7 @@ class MissionCardComponent extends StatefulWidget {
   final bool? isFavorite;
   final int? missionStatus;
 
-  const MissionCardComponent({
+  const MissionCardComponent2({
     super.key,
     required this.missionTitle,
     required this.missionDesc,
@@ -35,10 +35,10 @@ class MissionCardComponent extends StatefulWidget {
   });
 
   @override
-  State<MissionCardComponent> createState() => _MissionCardComponentState();
+  State<MissionCardComponent2> createState() => _MissionCardComponent2State();
 }
 
-class _MissionCardComponentState extends State<MissionCardComponent> {
+class _MissionCardComponent2State extends State<MissionCardComponent2> {
   int? status;
   TextStyle? statusTextStyle;
   String? statusText;
@@ -91,13 +91,14 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
     }
 
     return Container(
+      height: 162,
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8), color: kMainWhiteColor),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
