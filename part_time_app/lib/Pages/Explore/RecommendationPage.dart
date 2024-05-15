@@ -257,6 +257,7 @@ class _RecommendationPageState extends State<RecommendationPage>
           return MissionCardLoadingComponent();
         } else {
           return MissionCardComponent(
+            taskId: missionList[index].taskId,
             missionTitle: missionList[index].taskTitle ?? "",
             missionDesc: missionList[index].taskContent ?? "",
             tagList: missionList[index]

@@ -4,11 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Message/user/user_profile.dart';
+import 'package:part_time_app/Services/collection/collectionServices.dart';
 
 import '../../Constants/textStyleConstant.dart';
 import '../../Pages/UserProfile/userProfilePage.dart';
 
 class MissionCardComponent extends StatefulWidget {
+  final int? taskId;
   final String missionTitle;
   final String missionDesc;
   final List<dynamic> tagList;
@@ -22,6 +24,7 @@ class MissionCardComponent extends StatefulWidget {
 
   const MissionCardComponent({
     super.key,
+    this.taskId,
     required this.missionTitle,
     required this.missionDesc,
     required this.tagList,
@@ -42,12 +45,40 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
   int? status;
   TextStyle? statusTextStyle;
   String? statusText;
+  bool? isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.isFavorite ?? false;
+  }
+
+  Future<void> _toggleFavorite() async {
+    final int? taskId = widget.taskId; // Assuming widget has taskId property
+    try {
+      final response =
+          await CollectionService().updateCollection(taskId!, !isFavorite!);
+
+      if (response != null && response.code == 0) {
+        setState(() {
+          isFavorite = !isFavorite!;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(isFavorite! ? 'Task liked' : 'Task unliked')),
+        );
+      } else {
+        throw Exception('Failed to update favorite status');
+      }
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favorite status: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isFavorite = widget.isFavorite ?? false;
-
-    // set status color and text style
     status = widget.missionStatus;
     if (status != null) {
       switch (status) {
@@ -104,39 +135,44 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                  flex: 9,
+                flex: 9,
+                child: SizedBox(
+                  height: 24,
+                  child: Text(
+                    widget.missionTitle,
+                    style: missionCardTitleTextStyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              if (widget.isStatus != null)
+                Flexible(
+                  flex: 2,
                   child: SizedBox(
                     height: 24,
                     child: Text(
-                      widget.missionTitle,
-                      style: missionCardTitleTextStyle,
-                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
+                      statusText!,
+                      style: statusTextStyle,
                     ),
-                  )),
-              if (widget.isStatus != null)
-                Flexible(
-                    flex: 2,
-                    child: SizedBox(
-                      height: 24,
-                      // width: 24,
-                      child: Text(
-                        textAlign: TextAlign.start,
-                        statusText!,
-                        style: statusTextStyle,
-                      ),
-                    ))
+                  ),
+                )
               else
                 Flexible(
-                    flex: 1,
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: _toggleFavorite,
                     child: SizedBox(
                       height: 24,
                       width: 24,
-                      child: isFavorite
+                      child: isFavorite!
                           ? SvgPicture.asset(
                               "assets/mission/favorite_selected.svg")
                           : SvgPicture.asset(
                               "assets/mission/favorite_unselected.svg"),
-                    ))
+                    ),
+                  ),
+                ),
             ],
           ),
           Padding(
@@ -162,44 +198,47 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
                       children: List.generate(
                         widget.tagList.length,
                         (index) => Container(
-                            padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                            child: InkWell(
-                                onTap: () {
-                                  // print(
-                                  //     "navi to the tag search page: ${widget.tag?[index] ?? 'nothing'}");
-                                  // Get.to(() => SearchResultPage(
-                                  //       from: 'tag',
-                                  //       selectedTag: widget.tag?[index],
-                                  //     ));
-                                },
-                                child: RichText(
-                                  text: TextSpan(
-                                      text: "#",
-                                      style: missionHashtagTextStyle,
-                                      children: [
-                                        TextSpan(
-                                            text: widget.tagList[index],
-                                            style: missionTagTextStyle)
-                                      ]),
-                                ))),
+                          padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                          child: InkWell(
+                            onTap: () {
+                              // Handle tag tap
+                            },
+                            child: RichText(
+                              text: TextSpan(
+                                text: "#",
+                                style: missionHashtagTextStyle,
+                                children: [
+                                  TextSpan(
+                                    text: widget.tagList[index],
+                                    style: missionTagTextStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 Flexible(
-                    flex: 5,
-                    child: RichText(
-                      textAlign: TextAlign.right,
-                      text: TextSpan(
-                          text: (widget.missionPrice > 99999.99)
-                              ? '99999.99'
-                              : widget.missionPrice.toStringAsFixed(2),
+                  flex: 5,
+                  child: RichText(
+                    textAlign: TextAlign.right,
+                    text: TextSpan(
+                      text: (widget.missionPrice > 99999.99)
+                          ? '99999.99'
+                          : widget.missionPrice.toStringAsFixed(2),
+                      style: missionPriceTextStyle,
+                      children: [
+                        TextSpan(
+                          text: ' USDT',
                           style: missionPriceTextStyle,
-                          children: [
-                            TextSpan(
-                                text: ' USDT', style: missionPriceTextStyle)
-                          ]),
-                    ))
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -212,11 +251,12 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
                 GestureDetector(
                   onTap: () {
                     Get.to(
-                        () => UserProfilePage(
-                              isOthers: true,
-                              userID: "",
-                            ),
-                        transition: Transition.rightToLeft);
+                      () => UserProfilePage(
+                        isOthers: true,
+                        userID: "",
+                      ),
+                      transition: Transition.rightToLeft,
+                    );
                   },
                   child: CircleAvatar(
                     backgroundColor: kSecondGreyColor,
@@ -237,16 +277,19 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
                     : RichText(
                         textAlign: TextAlign.right,
                         text: TextSpan(
-                            text: "发布日期 ",
-                            style: missionDateTextStyle,
-                            children: [
-                              TextSpan(
-                                  text: widget.missionDate,
-                                  style: missionDateTextStyle)
-                            ]))
+                          text: "发布日期 ",
+                          style: missionDateTextStyle,
+                          children: [
+                            TextSpan(
+                              text: widget.missionDate,
+                              style: missionDateTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

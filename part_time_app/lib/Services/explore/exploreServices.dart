@@ -31,8 +31,9 @@ class ExploreService {
 
   Future<List<TaskClass>> fetchExploreByPrice(String sortType, int page) async {
     final String url = port + explorePriceURL + "?" + sortType + '&page=$page';
-
+    String? _token = await SharedPreferencesUtils.getToken();
     final Map<String, String> headers = {
+      'token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
     };
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:part_time_app/Services/collection/collectionServices.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
@@ -42,7 +43,7 @@ class _CollectPageState extends State<CollectPage>
 
   void _scrollListener() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent) {
+        _scrollController.position.maxScrollExtent - 100) {
       if (!isLoading && continueLoading) {
         _loadData();
       }
@@ -91,18 +92,37 @@ class _CollectPageState extends State<CollectPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-        child: RefreshIndicator(
-      onRefresh: _refresh,
-      color: kMainYellowColor,
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        padding: EdgeInsets.only(
-          bottom: 10,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        color: kMainYellowColor,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              controller: _scrollController,
+              padding: EdgeInsets.only(bottom: 10),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: missionCollection.isNotEmpty
+                    ? buildListView()
+                    : Container(
+                        height: constraints.maxHeight,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            "assets/common/searchEmpty.svg",
+                            width: 150,
+                            height: 150,
+                          ),
+                        ),
+                      ),
+              ),
+            );
+          },
         ),
-        child: buildListView(),
       ),
-    ));
+    );
   }
 
   Widget buildListView() {
@@ -113,9 +133,10 @@ class _CollectPageState extends State<CollectPage>
       itemCount: missionCollection.length + (continueLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
         if (index == missionCollection.length) {
-          return MissionCardLoadingComponent();
+          return isLoading ? MissionCardLoadingComponent() : Container();
         } else {
           return MissionCardComponent(
+            taskId: missionCollection[index].taskId,
             missionTitle: missionCollection[index].taskTitle ?? "",
             missionDesc: missionCollection[index].taskContent ?? "",
             tagList: missionCollection[index]
