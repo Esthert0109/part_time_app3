@@ -6,9 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Services/Mission/categoryServices.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
+import '../../Constants/globalConstant.dart';
+import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
 
 class OpeningPage extends StatefulWidget {
@@ -23,12 +26,13 @@ class _OpeningPageState extends State<OpeningPage> {
   bool isLogin = false;
   UserData? userInfo;
   UserServices services = UserServices();
+  CategoryServices categoryServices = CategoryServices();
 
   @override
   void initState() {
     super.initState();
-    // getDataAndNavigate();
     checkIfLogined();
+    fetchDataExplorePage();
   }
 
   @override
@@ -69,10 +73,11 @@ class _OpeningPageState extends State<OpeningPage> {
     }
   }
 
-  void getDataAndNavigate() {
-    Timer(const Duration(seconds: 2), () {
-      Get.offAllNamed('/onboarding');
-    });
+  fetchDataExplorePage() async {
+    CategoryModel? model = await categoryServices.getCategoryList();
+    if (model!.data != null) {
+      exploreCategoryList = model.data!;
+    }
   }
 
   @override
