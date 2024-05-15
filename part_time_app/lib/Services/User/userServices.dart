@@ -9,7 +9,7 @@ import '../../Model/User/userModel.dart';
 class UserServices {
   String url = "";
 
-  Future<LoginUserModel?> login(UserData userData) async {
+  Future<LoginUserModel?> login(String phone, String password) async {
     url = port + loginUrl;
     LoginUserModel? loginUserModel;
 
@@ -18,8 +18,8 @@ class UserServices {
     };
 
     final Map<String, dynamic> body = {
-      'first_phone_no': userData.firstPhoneNo,
-      'password': userData.password
+      'first_phone_no': phone,
+      'password': password
     };
 
     try {
@@ -41,8 +41,8 @@ class UserServices {
         if (responseCode == 0) {
           if (data!.isNotEmpty && data != null) {
             await SharedPreferencesUtils.saveToken(loginUserModel.data!.token!);
-            await SharedPreferencesUtils.savePhoneNo(userData.firstPhoneNo!);
-            await SharedPreferencesUtils.savePassword(userData.password!);
+            await SharedPreferencesUtils.savePhoneNo(phone);
+            await SharedPreferencesUtils.savePassword(password);
             return loginUserModel;
           }
         } else {
@@ -62,9 +62,10 @@ class UserServices {
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
     };
+    print("check data: ${userData.nickname}");
 
     final Map<String, dynamic> body = {
-      "username": userData.username,
+      "nickname": userData.nickname,
       "password": userData.password,
       "firstPhoneNo": userData.firstPhoneNo
     };
@@ -76,8 +77,8 @@ class UserServices {
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
       int responseCode = jsonData['code'];
       String responseMsg = jsonData['msg'];
-      Map<String, dynamic> data = jsonData['data'];
-      UserData responseData = UserData.fromJson(data);
+      Map<String, dynamic>? data = jsonData['data'];
+      UserData responseData = UserData.fromJson(data!);
 
       if (statusCode == 200) {
         if (responseCode == 0) {
@@ -150,9 +151,10 @@ class UserServices {
       int statusCode = response.statusCode;
 
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
-      int responseCode = jsonData['code'];
-      String responseMsg = jsonData['msg'];
-      bool responseData = jsonData['data'];
+      int? responseCode = jsonData['code'];
+      String? responseMsg = jsonData['msg'];
+      Map<String, dynamic> data = jsonData['data'];
+      OtpData? responseData = OtpData.fromJson(data);
 
       if (statusCode == 200) {
         if (responseCode == 0) {
@@ -172,6 +174,72 @@ class UserServices {
     }
   }
 
+  Future<CheckOTPModel?> verifyOTP(String phone, String code, int type) async {
+    url = port + verifyOTPUrl + type.toString();
+    CheckOTPModel? otpModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    final Map<String, dynamic> body = {"mobile": phone, "code": code};
+
+    try {
+      final response = await postRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      bool? responseData = jsonData['data'];
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          otpModel = CheckOTPModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return otpModel;
+        } else {
+          otpModel = CheckOTPModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return otpModel;
+        }
+      }
+    } catch (e) {
+      print("Error in check otp: $e");
+    }
+  }
+
+  Future<CheckOTPModel?> updatePassword(String phone, String password) async {
+    url = port + updateForgotPasswordUrl + phone;
+
+    CheckOTPModel updatePasswordModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    final Map<String, dynamic> body = {'password': password};
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      bool responseData = jsonData['data'];
+
+      updatePasswordModel = CheckOTPModel(
+          code: responseCode, msg: responseMsg, data: responseData);
+      return updatePasswordModel;
+    } catch (e) {
+      print("Error in change password");
+      return null;
+    }
+  }
+
   Future<UserModel?> getUserInfo() async {
     url = port + getUserInfoUrl;
     UserModel? userModel;
@@ -188,10 +256,12 @@ class UserServices {
       int statusCode = response.statusCode;
 
       Map<String, dynamic> jsonData = json.decode(response.responseBody);
-
-      Map<String, dynamic>? data = jsonData;
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      Map<String, dynamic>? data = jsonData['data'];
       UserData responseData = UserData.fromJson(data!);
-      userModel = UserModel(data: responseData);
+      userModel =
+          UserModel(code: responseCode, msg: responseMsg, data: responseData);
 
       return userModel;
     } catch (e) {

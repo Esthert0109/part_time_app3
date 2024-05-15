@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
+import '../../Components/Status/primaryStatusResponseComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class ChangePasswordPage extends StatefulWidget {
-  const ChangePasswordPage({super.key});
+  final String phone;
+  const ChangePasswordPage({super.key, required this.phone});
 
   @override
   State<ChangePasswordPage> createState() => _ChangePasswordPageState();
@@ -19,6 +25,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       TextEditingController();
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool isLoading = false;
+
+  // services
+  UserServices services = UserServices();
+  CheckOTPModel? changePasswordModel;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,14 +189,48 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         width: 372,
                         height: 50.0,
                         child: primaryButtonComponent(
-                          isLoading: false,
+                          isLoading: isLoading,
                           text: "提交",
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               // If the form is valid, perform your actions
                               _formKey.currentState!.save();
-
+                              setState(() {
+                                isLoading = true;
+                              });
                               // Perform actions with _password here
+                              try {
+                                changePasswordModel =
+                                    await services.updatePassword(
+                                        widget.phone, passwordController.text);
+
+                                if (changePasswordModel == null) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Fluttertoast.showToast(
+                                      msg: "修改失败",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: kErrorRedColor,
+                                      textColor: kMainWhiteColor);
+                                } else {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Navigator.pop(context);
+                                  PrimaryStatusBottomSheetComponent.show(
+                                      context, true);
+                                }
+                              } catch (e) {
+                                Fluttertoast.showToast(
+                                    msg: "修改失败",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: kErrorRedColor,
+                                    textColor: kMainWhiteColor);
+                                print("error change password page: $e");
+                              }
                             }
                           },
                           buttonColor: kMainYellowColor,

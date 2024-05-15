@@ -36,12 +36,14 @@ class _SignUpPageState extends State<SignUpPage> {
   String _responseMsgRegister = "";
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool isLoading = false;
 
   // service
   UserServices services = UserServices();
   CheckUserModel? checkRegister;
-  bool isDuplicated = true;
-  String errorDisplay = "??";
+  UserData? userRegister;
+  bool isDuplicated = false;
+  String errorDisplay = "";
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 7),
                     child: Text(
-                      '用户昵称',
+                      '用户名',
                       textAlign: TextAlign.left,
                       style: missionUsernameTextStyle,
                     ),
@@ -103,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       filled: true,
                       fillColor: const Color(0xFFF5F5F5),
-                      hintText: '请输入用户昵称',
+                      hintText: '请输入用户名',
                       hintStyle: missionDetailText2,
                       contentPadding: const EdgeInsets.all(10),
                       border: OutlineInputBorder(
@@ -134,7 +136,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 7),
                     child: Text(
-                      '手机号码',
+                      '电话号码',
                       textAlign: TextAlign.left,
                       style: missionUsernameTextStyle,
                     ),
@@ -160,7 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Positioned(
                       child: Container(
                         child: InternationalPhoneNumberInput(
-                          errorMessage: "手机号码不正确",
+                          errorMessage: "电话号码不正确",
                           initialValue: phoneNumber,
                           textFieldController: phoneControllerLogin,
                           formatInput: true,
@@ -172,8 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             dialCode = number.dialCode.toString();
                             countryCode = number.isoCode.toString();
                           },
-                          // autoValidateMode:
-                          //     AutovalidateMode.onUserInteraction,
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
                           cursorColor: Colors.black,
                           inputDecoration: InputDecoration(
                               errorBorder: OutlineInputBorder(
@@ -324,43 +325,81 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 372,
                   height: 50.0,
                   child: primaryButtonComponent(
-                    isLoading: false,
+                    isLoading: isLoading,
                     text: "提交",
+                    disableButtonColor: buttonLoadingColor,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // If the form is valid, perform your actions
                         _formKey.currentState!.save();
                         // Perform actions with _password here
 
-                        // check if phone and nickname duplicated
-                        // checkRegister = await services.checkNameAndPhone(
-                        //     phone, userNicknameController.text);
+                        // setting loading
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                        // if (checkRegister!.data != "No Duplicated") {
-                        //   setState(() {
-                        //     errorDisplay = checkRegister!.data;
-                        //     isDuplicated = true;
-                        //   });
-                        // } else {
-                        await services.sendOTP(phone, 1);
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          useSafeArea: true,
-                          builder: (BuildContext context) {
-                            return ClipRRect(
-                                borderRadius: BorderRadius.circular(30.0),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.9,
-                                  child: OtpCodePage(
-                                    phone: phone,
-                                  ),
-                                ));
-                          },
-                        );
-                        // }
+                        userRegister = UserData(
+                            nickname: userNicknameController.text,
+                            password: passwordController.text,
+                            firstPhoneNo: phone);
+
+                        // check if phone and nickname duplicated
+                        checkRegister = await services.checkNameAndPhone(
+                            phone, userNicknameController.text);
+
+                        if (checkRegister!.data != "No Duplicated") {
+                          setState(() {
+                            isLoading = false;
+                            errorDisplay = checkRegister!.data;
+                            isDuplicated = true;
+                          });
+                        } else {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          try {
+                            OTPUserModel? value =
+                                await services.sendOTP(phone, 1);
+
+                            if (value!.code == 0) {
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.9,
+                                      child: OtpCodePage(
+                                        phone: phone,
+                                        type: 1,
+                                        userRegisterData: userRegister,
+                                        countdownTime: value!.data!.datetime,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              setState(() {
+                                isDuplicated = true;
+                                isLoading = false;
+                                errorDisplay = value.msg!;
+                              });
+                            }
+                          } catch (error) {
+                            isDuplicated = true;
+                            isLoading = false;
+                            errorDisplay = error.toString();
+                            print('Error: $error');
+                          }
+                        }
                       }
                     },
                     buttonColor: kMainYellowColor,

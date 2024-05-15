@@ -34,6 +34,22 @@ class LoginData {
   }
 }
 
+class CheckOTPModel {
+  final int code;
+  final String msg;
+  final bool? data;
+
+  CheckOTPModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+}
+
 class CheckUserModel {
   final int code;
   final String msg;
@@ -51,18 +67,36 @@ class CheckUserModel {
 }
 
 class OTPUserModel {
-  final int code;
-  final String msg;
-  final bool data;
+  final int? code;
+  final String? msg;
+  final OtpData? data;
 
   OTPUserModel({
-    required this.code,
-    required this.msg,
-    required this.data,
+    this.code,
+    this.msg,
+    this.data,
   });
 
   Map<String, dynamic> toJson() {
-    return {"code": code, "msg": msg, "data": data};
+    return {"code": code, "msg": msg, "data": data?.toJson()};
+  }
+}
+
+class OtpData {
+  final int datetime;
+  final String message;
+
+  OtpData({
+    required this.datetime,
+    required this.message,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"datetime": datetime, "message": message};
+  }
+
+  factory OtpData.fromJson(Map<String, dynamic> json) {
+    return OtpData(datetime: json['datetime'], message: json['message']);
   }
 }
 
@@ -163,8 +197,8 @@ class UserData {
       country: json['country'],
       gender: json['gender'],
       avatar: json['avatar'],
-      firstPhoneNo: json['first_phone_no'],
-      secondPhoneNo: json['second_phone_no'],
+      firstPhoneNo: json['firstPhoneNo'],
+      secondPhoneNo: json['secondPhoneNo'],
       email: json['email'],
       businessScopeId: json['businessScopeId'],
       businessScopeName: json['businessScopeName'],

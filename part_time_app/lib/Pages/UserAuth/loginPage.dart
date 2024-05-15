@@ -8,8 +8,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Pages/UserAuth/forgotPasswordPage.dart';
 import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -39,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   String countryCode = '';
   String _responseMsgRegister = "";
   bool _obscureText = true;
+  bool isLoading = false;
 
   // service
   UserModel? userLogin;
@@ -89,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 7),
                             child: Text(
-                              '手机号码',
+                              '电话号码',
                               textAlign: TextAlign.left,
                               style: missionCheckoutHintTextStyle,
                             ),
@@ -220,7 +223,22 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.topRight,
                           child: GestureDetector(
                             onTap: () {
-                              print("touch the talala");
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.9,
+                                        child: const ForgotPasswordPage(),
+                                      ));
+                                },
+                              );
                             },
                             child: const Text(
                               "忘记密码",
@@ -238,8 +256,9 @@ class _LoginPageState extends State<LoginPage> {
                         width: 372,
                         height: 50.0,
                         child: primaryButtonComponent(
-                          isLoading: false,
+                          isLoading: isLoading,
                           text: "提交",
+                          disableButtonColor: buttonLoadingColor,
                           onPressed: () async {
                             // bool isLoginTencent =
                             //     await userTencentLogin('2206');
@@ -253,27 +272,38 @@ class _LoginPageState extends State<LoginPage> {
                             // }
 
                             if (_formKey.currentState!.validate()) {
-                              userData = UserData(
-                                  password: passwordController.text,
-                                  firstPhoneNo: phone);
+                              setState(() {
+                                isLoading = true;
+                              });
 
                               userLogin = await services
-                                  .login(userData!)
+                                  .login(phone, passwordController.text)
                                   .then((value) async {
                                 if (value!.code != 0) {
                                   setState(() {
                                     isError = true;
+                                    isLoading = false;
                                     print("check ${value.msg}");
                                     errorDisplay = value.msg;
                                   });
                                 } else {
                                   UserModel? user =
                                       await services.getUserInfo();
-                                  userInfo = user!.data;
+
+                                  await SharedPreferencesUtils.saveUserInfo(
+                                      user!);
+
+                                  print("check info: ${user.data}");
+
+                                  await SharedPreferencesUtils.saveUserDataInfo(
+                                      user.data!);
+
+                                  Get.offAllNamed('/');
+                                  setState(() {
+                                    isLoading = false;
+                                  });
                                 }
                               });
-
-                              print("check: ${userInfo!.customerId}");
                             }
                           },
                           buttonColor: kMainYellowColor,

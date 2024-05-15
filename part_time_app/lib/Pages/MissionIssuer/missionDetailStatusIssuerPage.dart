@@ -20,7 +20,7 @@ import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponen
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
-import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
+import 'package:part_time_app/Model/Task/missionClass.dart';
 
 import '../../Components/Button/secondaryButtonComponent.dart';
 import '../../Components/Common/countdownTimer.dart';
@@ -401,6 +401,7 @@ class _MissionDetailStatusIssuerPageState
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CountdownTimer(
+                        isOTP: false,
                         isReview: false,
                         expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
                       ),

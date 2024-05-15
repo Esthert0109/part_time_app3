@@ -44,6 +44,8 @@ const missionDetailText5 = TextStyle(
     height: 1.1,
     fontWeight: FontWeight.w500,
     color: kMainRedColor);
+const otpDisableTextStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: Color(0x69333333));
 
 const missionDetailText6 = TextStyle(
     fontSize: 16, fontWeight: FontWeight.w400, color: kMainBlackColor);
@@ -385,6 +387,8 @@ const loginPageTextStyle2 = TextStyle(
 
 const otpErrorTextStyle1 =
     TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMainRedColor);
+const otpCountdownTextStyle = TextStyle(
+    fontSize: 12, fontWeight: FontWeight.w600, color: kMainBlackColor);
 
 const depositTextStyle1 = TextStyle(
   fontSize: 16,

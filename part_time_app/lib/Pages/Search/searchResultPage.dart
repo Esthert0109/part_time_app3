@@ -6,7 +6,7 @@ import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../MockData/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 import '../MockData/missionMockData.dart';
 
 class SearchResultPage extends StatefulWidget {

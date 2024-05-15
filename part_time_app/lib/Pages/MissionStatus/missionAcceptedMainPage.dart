@@ -11,7 +11,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
-import '../MockData/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 
 bool dataFetchedAccepted = false;
 bool dataEndAccepted = false;

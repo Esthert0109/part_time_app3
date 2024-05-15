@@ -101,11 +101,11 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (MissionMessageList.isNotEmpty)
-                      MessageList(
-                        messageList: MissionMessageList,
-                        isSystem: false,
-                      ),
+                    // if (MissionMessageList.isNotEmpty)
+                    //   MessageList(
+                    //     messageList: MissionMessageList,
+                    //     isSystem: false,
+                    //   ),
                   ],
                 ),
               ),

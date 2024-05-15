@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,8 +10,12 @@ import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
+import '../../Constants/apiConstant.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/notification/messageModel.dart';
+import '../../Services/notification/systemMessageServices.dart';
+import '../../Utils/apiUtils.dart';
 
 bool noInitialRefresh = true;
 
@@ -24,6 +30,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: noInitialRefresh);
   ScrollController _scrollController = ScrollController();
+  List<NotificationData> _notifications = [];
   @override
   void initState() {
     super.initState();
@@ -40,6 +47,25 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
     super.dispose();
   }
 
+  _loadData() async {
+    String url = port + systemMessage;
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+    final response = await getRequest(url, headers);
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.responseBody)['data'];
+      setState(() {
+        _notifications = data
+            .map((notification) => NotificationData.fromJson(notification))
+            .toList();
+      });
+      print(response.responseBody);
+    } else {
+      throw Exception('Failed to load notifications');
+    }
+  }
+
   void _scrollToBottom() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
@@ -52,7 +78,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
     setState(() {
       noInitialRefresh = false;
     });
-    await Future.delayed(Duration(seconds: 1));
+    _loadData();
     _refreshController.refreshCompleted();
   }
 
@@ -100,13 +126,14 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (systemMessageList.isNotEmpty)
-                      MessageList(
-                        messageList: systemMessageList,
-                        isSystem: true,
-                      ),
-                  ],
+                  children: _notifications.map((notification) {
+                    return MessageList(
+                      title: notification.notificationTitle,
+                      description: notification.notificationContent,
+                      createdTime: notification.createdTime,
+                      isSystem: true,
+                    );
+                  }).toList(),
                 ),
               ),
             ),

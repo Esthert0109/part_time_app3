@@ -101,11 +101,11 @@ class _PostingMessagePageState extends State<PostingMessagePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (PostingMessageList.isNotEmpty)
-                      MessageList(
-                        messageList: PostingMessageList,
-                        isSystem: false,
-                      ),
+                    // if (PostingMessageList.isNotEmpty)
+                    //   MessageList(
+                    //     messageList: PostingMessageList,
+                    //     isSystem: false,
+                    //   ),
                   ],
                 ),
               ),
