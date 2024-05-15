@@ -6,9 +6,7 @@ import '../../Components/Loading/missionCardLoading.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Model/Task/missionMockClass.dart';
 
-bool dataFetchedCollect = false;
-bool dataEndCollect = false;
-bool noInitialRefresh = true;
+List<TaskClass> missionCollection = [];
 
 class CollectPage extends StatefulWidget {
   const CollectPage({super.key});
@@ -20,7 +18,7 @@ class CollectPage extends StatefulWidget {
 class _CollectPageState extends State<CollectPage>
     with AutomaticKeepAliveClientMixin {
   ScrollController _scrollController = ScrollController();
-  List<TaskClass> missionCollection = [];
+
   int page = 1;
   bool isLoading = false;
   bool continueLoading = true;
@@ -133,7 +131,7 @@ class _CollectPageState extends State<CollectPage>
       itemCount: missionCollection.length + (continueLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
         if (index == missionCollection.length) {
-          return isLoading ? MissionCardLoadingComponent() : Container();
+          return isLoading ? const MissionCardLoadingComponent() : Container();
         } else {
           return MissionCardComponent(
             taskId: missionCollection[index].taskId,

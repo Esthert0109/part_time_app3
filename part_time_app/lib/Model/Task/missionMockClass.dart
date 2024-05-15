@@ -1,3 +1,13 @@
+class SearchResult {
+  final int totalAmountOfData;
+  final List<TaskClass> tasks;
+
+  SearchResult({
+    required this.totalAmountOfData,
+    required this.tasks,
+  });
+}
+
 class TaskClass {
   final int? collectionId;
   final int? taskId;
@@ -37,8 +47,9 @@ class TaskClass {
       taskSinglePrice: json['taskSinglePrice'] ?? 0,
       taskTagIds: json['taskTagIds'] ?? "",
       taskTagNames: (json['taskTagNames'] as List<dynamic>?)
-          ?.map((tagJson) => Tag.fromJson(tagJson))
-          .toList(),
+              ?.map((tagJson) => Tag.fromJson(tagJson))
+              .toList() ??
+          [],
       taskUpdatedTime: json['taskUpdatedTime'] ?? "",
       username: json['username'] ?? "",
       avatar: json['avatar'] ?? "",

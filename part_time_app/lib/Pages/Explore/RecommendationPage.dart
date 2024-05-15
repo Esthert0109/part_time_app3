@@ -17,6 +17,10 @@ import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionMockClass.dart';
 
+List<TaskClass> missionAvailable = [];
+List<TaskClass> missionAvailableAsec = [];
+List<TaskClass> missionAvailableDesc = [];
+
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
 
@@ -28,9 +32,7 @@ class _RecommendationPageState extends State<RecommendationPage>
     with AutomaticKeepAliveClientMixin {
   ScrollController _scrollController = ScrollController();
   int selectIndex = 0;
-  List<TaskClass> missionAvailable = [];
-  List<TaskClass> missionAvailableAsec = [];
-  List<TaskClass> missionAvailableDesc = [];
+
   int page = 1;
   bool isLoading = false;
   bool continueLoading = true;
