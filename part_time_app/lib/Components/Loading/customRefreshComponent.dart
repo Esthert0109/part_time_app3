@@ -30,7 +30,7 @@ class _CustomRefreshComponentState extends State<CustomRefreshComponent> {
         refresh: _buildLoadingIndicator(),
         waterDropColor: Colors.transparent,
         complete: Container(),
-        completeDuration: Duration(milliseconds: 100),
+        completeDuration: Duration(milliseconds: 1000),
         idleIcon: Icon(Icons.attach_money, color: Colors.transparent),
       ),
       onRefresh: widget.onRefresh,

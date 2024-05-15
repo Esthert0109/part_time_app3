@@ -35,7 +35,7 @@ Future<ResponseData> getRequest(
       headers: headers,
     );
 
-    return ResponseData(response.statusCode, utf8.decode(response.bodyBytes));
+    return ResponseData(response.statusCode, response.body);
   } catch (e) {
     throw Exception('Error in getRequest: $e');
   }

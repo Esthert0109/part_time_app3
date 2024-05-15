@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
-import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
+import 'package:part_time_app/Model/Task/missionMockClass.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 
 import '../../Components/Loading/customRefreshComponent.dart';
@@ -87,9 +87,11 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         child: CustomRefreshComponent(
             onRefresh: _onRefresh,
             controller: _refreshController,
-            child: _isLoading
-                ? PaymentHistoryLoading()
-                : _buildListView(PaymentHistoryList)),
+            child:
+                // _isLoading
+                //     ? PaymentHistoryLoading()
+                //     :
+                _buildListView(PaymentHistoryList)),
       ),
     ));
   }

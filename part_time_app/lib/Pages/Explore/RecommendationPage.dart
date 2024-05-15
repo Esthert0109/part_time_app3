@@ -4,27 +4,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Pages/Explore/easyPassPage.dart';
 import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Explore/newMissionPage.dart';
 import 'package:part_time_app/Pages/Explore/shortTimePage.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Components/Card/missionCardComponent.dart';
-import '../../Components/Loading/customRefreshComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../MockData/missionMockClass.dart';
-import '../MockData/missionMockData.dart';
-
-bool dataFetchedExplore = false;
-bool dataEndExplore = false;
-bool noInitialRefresh = true;
-List<MissionMockClass>? missionAvailable = [];
-final PageStorageBucket _bucket2 = PageStorageBucket();
+import '../../Services/explore/exploreServices.dart';
+import '../../Model/Task/missionMockClass.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -35,109 +26,118 @@ class RecommendationPage extends StatefulWidget {
 
 class _RecommendationPageState extends State<RecommendationPage>
     with AutomaticKeepAliveClientMixin {
-  final RefreshController _refreshRecommendationController =
-      RefreshController(initialRefresh: noInitialRefresh);
-  int selectIndex = 0;
-  List<MissionMockClass>? missionAvailableAsec = [];
-  List<MissionMockClass>? missionAvailableDesc = [];
-  int currentPage = 1;
-  int itemsPerPage = 10;
-  bool isLoading = false;
-  bool isFirstLaunch = true;
-  bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
+  int selectIndex = 0;
+  List<TaskClass> missionAvailable = [];
+  List<TaskClass> missionAvailableAsec = [];
+  List<TaskClass> missionAvailableDesc = [];
+  int page = 1;
+  bool isLoading = false;
+  bool continueLoading = true;
+  String sortType = "";
+
   @override
   bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+    _loadData();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
 
-  _loadData() async {
-    if (!isLoading && !reachEndOfList && !dataEndExplore) {
-      setState(() {
-        isLoading = true;
-      });
-      // Simulate fetching data
-      await Future.delayed(Duration(seconds: 1));
-      int start = (currentPage - 1) * itemsPerPage;
-      int end = start + itemsPerPage;
-      if (MissionAvailableList.length > start) {
-        if (isFirstLaunch) {
-          missionAvailable = MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end);
-          isFirstLaunch = false;
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 1000) {
+      if (!isLoading && continueLoading) {
+        if (selectIndex == 0) {
+          _loadData();
         } else {
-          missionAvailable!.addAll(MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end));
+          _loadDataBySort();
         }
-
-        // Sort the missionAvailable list
-        _sortMissionAvailable();
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-            currentPage++;
-          });
-        }
-      } else {
-        // No more data to load
-        setState(() {
-          reachEndOfList = true;
-          dataEndExplore = true;
-          isLoading = false;
-        });
       }
-      dataFetchedExplore = true;
-      noInitialRefresh = false;
     }
   }
 
-  void _sortMissionAvailable() {
-    //control time
-    missionAvailable!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
-    missionAvailableAsec = List.from(missionAvailable!)
-      ..sort((a, b) => a.missionPrice.compareTo(b.missionPrice));
-    missionAvailableDesc = List.from(missionAvailable!)
-      ..sort((a, b) => b.missionPrice.compareTo(a.missionPrice));
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final List<TaskClass> data = await ExploreService().fetchExplore(page);
+      setState(() {
+        if (data.isNotEmpty) {
+          missionAvailable.addAll(data);
+          page++;
+        } else {
+          continueLoading = false;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error in exploreData: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
-  _scrollListener() {
-    if (!_scrollController.hasClients || isLoading) return;
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {}
+  Future<void> _loadDataBySort() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final List<TaskClass> data =
+          await ExploreService().fetchExploreByPrice(sortType, page);
+      setState(() {
+        if (data.isNotEmpty) {
+          if (sortType == "sort=asc") {
+            missionAvailableAsec.addAll(data);
+          } else if (sortType == "sort=desc") {
+            missionAvailableDesc.addAll(data);
+          }
+          page++;
+        } else {
+          continueLoading = false;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error in exploreData: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
     if (!isLoading && mounted) {
       setState(() {
-        currentPage = 1;
-        missionAvailable = [];
-        missionAvailableAsec = [];
-        missionAvailableDesc = [];
-        reachEndOfList = false;
-        dataEndExplore = false;
+        page = 1;
+        continueLoading = true;
       });
-      await _loadData();
-    }
-    if (mounted) {
-      _refreshRecommendationController.refreshCompleted();
+
+      if (selectIndex == 0) {
+        missionAvailable.clear();
+        await _loadData();
+      } else {
+        missionAvailableAsec.clear();
+        missionAvailableDesc.clear();
+        await _loadDataBySort();
+      }
     }
   }
 
@@ -145,86 +145,89 @@ class _RecommendationPageState extends State<RecommendationPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollInfo) {
-          if (!isLoading &&
-              scrollInfo.metrics.pixels >=
-                  scrollInfo.metrics.maxScrollExtent - 600.0) {
-            _loadData();
-          }
-          return true;
-        },
-        child: CustomRefreshComponent(
-          onRefresh: _refresh,
-          controller: _refreshRecommendationController,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: 10,
-            ),
-            // controller: _scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SearchBarComponent(),
-                FlutterCarousel(
-                  options: CarouselOptions(
-                    enableInfiniteScroll: true,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 10),
-                    autoPlayAnimationDuration:
-                        const Duration(milliseconds: 1000),
-                    height: 132.0,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 1.0,
-                    showIndicator: false,
-                    indicatorMargin: 2,
-                    slideIndicator: CircularSlideIndicator(
-                      itemSpacing: 20,
-                      currentIndicatorColor: Color.fromARGB(232, 255, 227, 87),
-                    ),
+      child: RefreshIndicator(
+        onRefresh: _refresh,
+        color: kMainYellowColor,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          padding: EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SearchBarComponent(),
+              FlutterCarousel(
+                options: CarouselOptions(
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  autoPlayInterval: Duration(seconds: 10),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 1000),
+                  height: 132.0,
+                  aspectRatio: 16 / 9,
+                  viewportFraction: 1.0,
+                  showIndicator: false,
+                  indicatorMargin: 2,
+                  slideIndicator: CircularSlideIndicator(
+                    itemSpacing: 20,
+                    currentIndicatorColor: Color.fromARGB(232, 255, 227, 87),
                   ),
-                  items: [
-                    "assets/main/banner.png",
-                    "assets/main/banner.png",
-                    "assets/main/banner.png",
-                    "assets/main/banner.png",
-                    "assets/main/banner.png"
-                  ].map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: 132,
-                          decoration: BoxDecoration(
-                              color: kSecondGreyColor,
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                    "$i",
-                                  ),
-                                  fit: BoxFit.cover)),
-                        );
-                      },
-                    );
-                  }).toList(),
                 ),
-                _buildCategoryComponent(),
-                Padding(
-                  padding: EdgeInsets.only(top: 20, right: 110),
-                  child: PrimaryTagSelectionComponent(
-                    tagList: ["全部", "价格降序", "价格升序"],
-                    selectedIndex: selectIndex,
-                    onTap: (index) {
-                      // loading data list accordingly.
-                      setState(() {
-                        selectIndex = index;
-                        _loadData();
-                      });
+                items: [
+                  "assets/main/banner.png",
+                  "assets/main/banner.png",
+                  "assets/main/banner.png",
+                  "assets/main/banner.png",
+                  "assets/main/banner.png"
+                ].map((i) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: 132,
+                        decoration: BoxDecoration(
+                            color: kSecondGreyColor,
+                            borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                                image: AssetImage(
+                                  "$i",
+                                ),
+                                fit: BoxFit.cover)),
+                      );
                     },
-                  ),
+                  );
+                }).toList(),
+              ),
+              _buildCategoryComponent(),
+              Padding(
+                padding: EdgeInsets.only(top: 20, right: 110),
+                child: PrimaryTagSelectionComponent(
+                  tagList: ["全部", "价格降序", "价格升序"],
+                  selectedIndex: selectIndex,
+                  onTap: (index) {
+                    setState(() {
+                      selectIndex = index;
+                      continueLoading = true;
+                      page = 1;
+                      isLoading = true;
+                      if (selectIndex == 0) {
+                        sortType = "";
+                        missionAvailable.clear();
+                        _loadData();
+                      } else if (selectIndex == 1) {
+                        sortType = "sort=asc";
+                        missionAvailableAsec.clear();
+                        _loadDataBySort();
+                      } else if (selectIndex == 2) {
+                        sortType = "sort=desc";
+                        missionAvailableDesc.clear();
+                        _loadDataBySort();
+                      }
+                    });
+                  },
                 ),
-                buildListView()
-              ],
-            ),
+              ),
+              buildListView(),
+            ],
           ),
         ),
       ),
@@ -234,38 +237,38 @@ class _RecommendationPageState extends State<RecommendationPage>
   Widget buildListView() {
     switch (selectIndex) {
       case 0:
-        return _buildMissionListView(missionAvailable!);
+        return _buildMissionListView(missionAvailable);
       case 1:
-        return _buildMissionListView(missionAvailableAsec!);
+        return _buildMissionListView(missionAvailableAsec);
       case 2:
-        return _buildMissionListView(missionAvailableDesc!);
+        return _buildMissionListView(missionAvailableDesc);
       default:
-        return SizedBox(); // return some default widget if selectIndex is not 0
+        return SizedBox(); // return some default widget if selectIndex is not 0, 1, or 2
     }
   }
 
-  Widget _buildMissionListView(List<MissionMockClass> missionList) {
+  Widget _buildMissionListView(List<TaskClass> missionList) {
     return ListView.builder(
-      padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: missionList.length + (isLoading ? 1 : 0),
+      itemCount: missionList.length + (continueLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
-        if (index < missionList.length) {
-          return MissionCardComponent(
-            missionTitle: missionList[index].missionTitle,
-            missionDesc: missionList[index].missionDesc,
-            tagList: missionList[index].tagList ?? [],
-            missionPrice: missionList[index].missionPrice,
-            userAvatar: missionList[index].userAvatar,
-            username: missionList[index].username,
-            missionDate: missionList[index].missionDate,
-            isStatus: missionList[index].isStatus,
-            isFavorite: missionList[index].isFavorite,
-            missionStatus: missionList[index].missionStatus,
-          );
-        } else {
+        if (index == missionList.length) {
           return MissionCardLoadingComponent();
+        } else {
+          return MissionCardComponent(
+            missionTitle: missionList[index].taskTitle ?? "",
+            missionDesc: missionList[index].taskContent ?? "",
+            tagList: missionList[index]
+                    .taskTagNames
+                    ?.map((tag) => tag.tagName)
+                    .toList() ??
+                [],
+            missionPrice: missionList[index].taskSinglePrice ?? 0.0,
+            userAvatar: missionList[index].avatar ?? "",
+            username: missionList[index].username ?? "",
+            missionDate: missionList[index].taskUpdatedTime ?? "",
+          );
         }
       },
     );

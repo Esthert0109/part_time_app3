@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
-import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
+import 'package:part_time_app/Model/Task/missionMockClass.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -67,32 +67,33 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                   child: thirdTitleComponent(
                     text: "工单通知",
                   ))),
-          body: _isLoading
-              ? PaymentHistoryLoading()
-              : Container(
-                  constraints: const BoxConstraints.expand(),
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-                  decoration: const BoxDecoration(
-                    color: kThirdGreyColor,
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        kBackgroundFirstGradientColor,
-                        kBackgroundSecondGradientColor
-                      ],
-                      stops: [0.0, 0.15],
-                    ),
-                  ),
-                  child: CustomRefreshComponent(
-                    onRefresh: _onRefresh,
-                    controller: _refreshController,
-                    child: SingleChildScrollView(
-                      child: _buildListView(TicketHistoryList),
-                    ),
-                  ),
-                )),
+          body:
+              // _isLoading
+              //     ? PaymentHistoryLoading()
+              //     :
+              Container(
+            constraints: const BoxConstraints.expand(),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+            decoration: const BoxDecoration(
+              color: kThirdGreyColor,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
+                ],
+                stops: [0.0, 0.15],
+              ),
+            ),
+            child: CustomRefreshComponent(
+              onRefresh: _onRefresh,
+              controller: _refreshController,
+              child: SingleChildScrollView(
+                child: _buildListView(TicketHistoryList),
+              ),
+            ),
+          )),
     );
   }
 
