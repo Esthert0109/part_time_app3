@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:part_time_app/Utils/apiUtils.dart';
 import '../../Constants/apiConstant.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 
 class CollectionService {
   String _token = "2caf3d88-18d8-4a8b-b855-8568ceb3ca98";

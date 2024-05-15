@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
-import 'package:part_time_app/Model/Task/missionMockClass.dart';
+import 'package:part_time_app/Model/Task/missionClass.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 

@@ -3,7 +3,7 @@ import 'package:part_time_app/Services/collection/collectionServices.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Constants/colorConstant.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 
 bool dataFetchedCollect = false;
 bool dataEndCollect = false;

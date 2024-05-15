@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:part_time_app/Components/Card/missionMessageCardComponent.dart';
 import '../Card/primarySystemMessageCardComponent.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 
 import 'package:flutter/material.dart';
 
