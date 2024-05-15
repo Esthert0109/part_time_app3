@@ -6,6 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
+
+import '../../Model/User/userModel.dart';
 
 class OpeningPage extends StatefulWidget {
   const OpeningPage({super.key});
@@ -15,15 +19,54 @@ class OpeningPage extends StatefulWidget {
 }
 
 class _OpeningPageState extends State<OpeningPage> {
+  bool isFetching = false;
+  bool isLogin = false;
+  UserData? userInfo;
+  UserServices services = UserServices();
+
   @override
   void initState() {
     super.initState();
-    getDataAndNavigate();
+    // getDataAndNavigate();
+    checkIfLogined();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  checkIfLogined() async {
+    String? token = await SharedPreferencesUtils.getToken();
+    String? phone = await SharedPreferencesUtils.getPhoneNo();
+    String? password = await SharedPreferencesUtils.getPassword();
+
+    if (token != null && token != "") {
+      if (phone != null && password != null) {
+        try {
+          LoginUserModel? userModel = await services.login(phone!, password!);
+          if (userModel!.code == 0) {
+            UserModel? user = await services.getUserInfo();
+            await SharedPreferencesUtils.saveUserInfo(user!);
+            await SharedPreferencesUtils.saveUserDataInfo(user.data!);
+            await SharedPreferencesUtils.saveToken(userModel.data!.token!);
+            Get.offAllNamed('/');
+          }
+        } catch (e) {
+          Timer(const Duration(seconds: 1), () {
+            Get.offAllNamed('/onboarding');
+          });
+        }
+      } else {
+        Timer(const Duration(seconds: 1), () {
+          Get.offAllNamed('/onboarding');
+        });
+      }
+    } else {
+      Timer(const Duration(seconds: 1), () {
+        Get.offAllNamed('/onboarding');
+      });
+    }
   }
 
   void getDataAndNavigate() {
@@ -40,35 +83,37 @@ class _OpeningPageState extends State<OpeningPage> {
       backgroundColor: kSlashScreenColor,
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 30 * fem),
-                child: Image.asset(
-                  'assets/opening/splashscreen.png',
-                  width: 295 * fem,
-                  height: 410 * fem,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 30 * fem),
+                  child: Image.asset(
+                    'assets/opening/splashscreen.png',
+                    width: 295 * fem,
+                    height: 410 * fem,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 90 * fem,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/opening/pandalogo.svg',
-                    width: 50 * fem,
-                    height: 50 * fem,
-                  ),
-                  SizedBox(
-                    width: 20 * fem,
-                  ),
-                  const Text("兼职平台app", style: splashScreenTextStyle)
-                ],
-              )
-            ],
+                SizedBox(
+                  height: 90 * fem,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/opening/pandalogo.svg',
+                      width: 50 * fem,
+                      height: 50 * fem,
+                    ),
+                    SizedBox(
+                      width: 20 * fem,
+                    ),
+                    const Text("兼职平台app", style: splashScreenTextStyle)
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

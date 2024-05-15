@@ -272,15 +272,12 @@ class _LoginPageState extends State<LoginPage> {
                             // }
 
                             if (_formKey.currentState!.validate()) {
-                              userData = UserData(
-                                  password: passwordController.text,
-                                  firstPhoneNo: phone);
                               setState(() {
                                 isLoading = true;
                               });
 
                               userLogin = await services
-                                  .login(userData!)
+                                  .login(phone, passwordController.text)
                                   .then((value) async {
                                 if (value!.code != 0) {
                                   setState(() {

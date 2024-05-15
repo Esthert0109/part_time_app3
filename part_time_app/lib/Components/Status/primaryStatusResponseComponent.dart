@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:part_time_app/Pages/UserAuth/loginPage.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../Button/primaryButtonComponent.dart';
@@ -68,8 +69,27 @@ class PrimaryStatusBottomSheetComponent {
                       width: 351,
                       child: needButton
                           ? primaryButtonComponent(
-                            isLoading: false,
-                              onPressed: () {},
+                              isLoading: false,
+                              onPressed: () {
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  builder: (BuildContext context) {
+                                    return ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                        child: SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.9,
+                                          child: const LoginPage(),
+                                        ));
+                                  },
+                                );
+                              },
                               text: "重新登入",
                               buttonColor: kMainYellowColor,
                               textStyle: buttonTextStyle,

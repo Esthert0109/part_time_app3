@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Pages/UserAuth/changePassword.dart';
 import 'package:part_time_app/Pages/UserAuth/loginPage.dart';
@@ -7,6 +8,7 @@ import 'package:pinput/pinput.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Common/countdownTimer.dart';
+import '../../Components/Status/primaryStatusResponseComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Services/User/userServices.dart';
@@ -55,11 +57,11 @@ class _OtpCodePageState extends State<OtpCodePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.type == 3) {
-      setState(() {
-        isCountDown = false;
-      });
-    }
+    // if (widget.type == 3) {
+    //   setState(() {
+    //     isCountDown = false;
+    //   });
+    // }
     convertCountDownTime(widget.countdownTime);
   }
 
@@ -213,26 +215,16 @@ class _OtpCodePageState extends State<OtpCodePage> {
                                 UserModel? user = await services
                                     .registration(widget.userRegisterData!);
                                 if (user!.code == 0) {
-                                  Navigator.pop(context);
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    useSafeArea: true,
-                                    builder: (BuildContext context) {
-                                      return ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(30.0),
-                                          child: SizedBox(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.9,
-                                            child: LoginPage(),
-                                          ));
-                                    },
-                                  );
+                                  PrimaryStatusBottomSheetComponent.show(
+                                      context, false);
                                 }
                               } catch (e) {
+                                Fluttertoast.showToast(
+                                    msg: "申请失败",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: kErrorRedColor,
+                                    textColor: kMainWhiteColor);
                                 print("error occur in create user");
                               }
                             } else {
@@ -248,7 +240,9 @@ class _OtpCodePageState extends State<OtpCodePage> {
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.9,
-                                        child: ChangePasswordPage(),
+                                        child: ChangePasswordPage(
+                                          phone: widget.phone,
+                                        ),
                                       ));
                                 },
                               );

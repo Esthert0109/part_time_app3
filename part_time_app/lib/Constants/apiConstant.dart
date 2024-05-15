@@ -8,3 +8,4 @@ const getUserInfoUrl = "api/v1/customers/info";
 const checkUrl = "api/v1/customers/users/check";
 const sendOTPUrl = "api/v1/sms/send/";
 const verifyOTPUrl = "api/v1/sms/verify/mobile/";
+const updateForgotPasswordUrl = "api/v1/customers/updatePassByForgot/";
