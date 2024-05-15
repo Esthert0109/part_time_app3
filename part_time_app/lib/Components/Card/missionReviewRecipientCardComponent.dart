@@ -60,6 +60,7 @@ class MissionReviewRecipientCardComponent extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: CountdownTimer(
+                  isOTP: false,
                   isReview: true,
                   expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
                 ),

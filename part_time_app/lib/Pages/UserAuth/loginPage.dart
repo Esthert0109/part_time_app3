@@ -3,14 +3,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Pages/UserAuth/forgotPasswordPage.dart';
 import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
 import '../Message/user/chatConfig.dart';
 import '../Message/user/userMessagePage.dart';
 
@@ -25,7 +31,7 @@ final _formKey = GlobalKey<FormState>();
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController userNicknameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  // TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmedPasswordController = TextEditingController();
   TextEditingController phoneControllerLogin = TextEditingController();
@@ -35,6 +41,15 @@ class _LoginPageState extends State<LoginPage> {
   String countryCode = '';
   String _responseMsgRegister = "";
   bool _obscureText = true;
+  bool isLoading = false;
+
+  // service
+  UserModel? userLogin;
+  UserData? userData;
+  UserServices services = UserServices();
+  bool isError = false;
+  String errorDisplay = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 7),
                             child: Text(
-                              '手机号码',
+                              '电话号码',
                               textAlign: TextAlign.left,
                               style: missionCheckoutHintTextStyle,
                             ),
@@ -115,14 +130,14 @@ class _LoginPageState extends State<LoginPage> {
                                   dialCode = number.dialCode.toString();
                                   countryCode = number.isoCode.toString();
                                 },
-                                // autoValidateMode:
-                                //     AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 cursorColor: Colors.black,
                                 inputDecoration: InputDecoration(
                                     errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                          color: Colors.red, width: 1),
+                                          color: kErrorRedColor, width: 1),
                                     ),
                                     filled: true,
                                     fillColor: kDialogInputColor,
@@ -170,8 +185,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide:
-                                  const BorderSide(color: Colors.red, width: 1),
+                              borderSide: const BorderSide(
+                                  color: kErrorRedColor, width: 1),
                             ),
                             filled: true,
                             fillColor: const Color(0xFFF5F5F5),
@@ -183,24 +198,20 @@ class _LoginPageState extends State<LoginPage> {
                                 borderSide: BorderSide.none),
                           ),
                           validator: (value) {
+                            print("check: $value");
                             if (value == null || value.isEmpty) {
                               return '密码不能为空';
-                              // return AppLocalizations.of(context)!.valiPassNoEmpty;
                             } else if (value.length < 8) {
                               return '密码至少需要8个字符';
-                              // return AppLocalizations.of(context)!.valiPassAtLeast8;
                             } else if (!value.contains(RegExp(r'[A-Z]'))) {
                               return '密码必须包含至少一个大写字母';
-                              // return AppLocalizations.of(context)!
-                              // .valiPassAtLeast1U;
                             } else if (!value.contains(RegExp(r'[a-z]'))) {
                               return '密码必须包含至少一个小写字母';
-                              // return AppLocalizations.of(context)!
-                              // .valiPassAtLeast1L;
+                            } else if (!value.contains(RegExp(
+                                r'[!@#\$%^&*()\[\]{}\-_=+\|\\:;\"\<>,./?~]'))) {
+                              return '密码必须包含至少一个符号';
                             } else if (value.contains(RegExp(r'\s'))) {
                               return '密码不能包含空格';
-                              // return AppLocalizations.of(context)!
-                              // .valiPassNoSpaceAllow;
                             }
                             return null;
                           },
@@ -212,30 +223,87 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.topRight,
                           child: GestureDetector(
                             onTap: () {
-                              print("touch the talala");
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.9,
+                                        child: const ForgotPasswordPage(),
+                                      ));
+                                },
+                              );
                             },
                             child: const Text(
                               "忘记密码",
                               style: missionNoticeBlackTextStyle,
                             ),
                           )),
+                      isError
+                          ? Text(
+                              "${errorDisplay}",
+                              style: errorDisplayeTextStyle,
+                            )
+                          : SizedBox(),
                       const SizedBox(height: 70),
                       SizedBox(
                         width: 372,
                         height: 50.0,
                         child: primaryButtonComponent(
-                          isLoading: false,
+                          isLoading: isLoading,
                           text: "提交",
+                          disableButtonColor: buttonLoadingColor,
                           onPressed: () async {
-                            bool isLoginTencent =
-                                await userTencentLogin('2206');
+                            // bool isLoginTencent =
+                            //     await userTencentLogin('2206');
 
-                            if (isLoginTencent) {
-                              Get.to(() => UserMessagePage(),
-                                  transition: Transition.rightToLeft);
-                              // Navigate to another screen or do something else
-                            } else {
-                              print("cannot");
+                            // if (isLoginTencent) {
+                            //   Get.to(() => UserMessagePage(),
+                            //       transition: Transition.rightToLeft);
+                            //   // Navigate to another screen or do something else
+                            // } else {
+                            //   print("cannot");
+                            // }
+
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              userLogin = await services
+                                  .login(phone, passwordController.text)
+                                  .then((value) async {
+                                if (value!.code != 0) {
+                                  setState(() {
+                                    isError = true;
+                                    isLoading = false;
+                                    print("check ${value.msg}");
+                                    errorDisplay = value.msg;
+                                  });
+                                } else {
+                                  UserModel? user =
+                                      await services.getUserInfo();
+
+                                  await SharedPreferencesUtils.saveUserInfo(
+                                      user!);
+
+                                  print("check info: ${user.data}");
+
+                                  await SharedPreferencesUtils.saveUserDataInfo(
+                                      user.data!);
+
+                                  Get.offAllNamed('/');
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                              });
                             }
                           },
                           buttonColor: kMainYellowColor,

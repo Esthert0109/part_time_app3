@@ -15,6 +15,9 @@ import 'package:part_time_app/Pages/UserProfile/settingPage.dart';
 import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/userProfilePage.dart';
 
+import '../../Model/User/userModel.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
+
 class UserProfileMainPage extends StatefulWidget {
   const UserProfileMainPage({super.key});
 
@@ -23,8 +26,25 @@ class UserProfileMainPage extends StatefulWidget {
 }
 
 class _UserProfileMainPageState extends State<UserProfileMainPage> {
+  UserData? userData = UserData();
+
+  getUserInfo() async {
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+    setState(() {
+      userData = data;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // getUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
+    getUserInfo();
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
@@ -75,8 +95,8 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Text(
-                              "金泰亨",
+                            Text(
+                              userData?.nickname ?? "",
                               style: userProfileNameTextStyle,
                             ),
                             const SizedBox(width: 20),

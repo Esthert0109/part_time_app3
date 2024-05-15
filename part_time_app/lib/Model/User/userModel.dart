@@ -1,11 +1,113 @@
-class UserModel {
+class LoginUserModel {
   final int code;
   final String msg;
+  final LoginData? data;
+
+  LoginUserModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     "code": code,
+  //     "msg": msg,
+  //     "data": data?.toJson(),
+  //   };
+  // }
+}
+
+class LoginData {
+  final String? token;
+
+  LoginData({this.token});
+
+  Map<String, dynamic> toJson() {
+    return {
+      "token": token,
+    };
+  }
+
+  factory LoginData.fromJson(Map<String, dynamic> json) {
+    return LoginData(token: json['token']);
+  }
+}
+
+class CheckOTPModel {
+  final int code;
+  final String msg;
+  final bool? data;
+
+  CheckOTPModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+}
+
+class CheckUserModel {
+  final int code;
+  final String msg;
+  final String data;
+
+  CheckUserModel({
+    required this.code,
+    required this.msg,
+    required this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+}
+
+class OTPUserModel {
+  final int? code;
+  final String? msg;
+  final OtpData? data;
+
+  OTPUserModel({
+    this.code,
+    this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data?.toJson()};
+  }
+}
+
+class OtpData {
+  final int datetime;
+  final String message;
+
+  OtpData({
+    required this.datetime,
+    required this.message,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"datetime": datetime, "message": message};
+  }
+
+  factory OtpData.fromJson(Map<String, dynamic> json) {
+    return OtpData(datetime: json['datetime'], message: json['message']);
+  }
+}
+
+class UserModel {
+  final int? code;
+  final String? msg;
   final UserData? data;
 
   UserModel({
-    required this.code,
-    required this.msg,
+    this.code,
+    this.msg,
     this.data,
   });
 
@@ -19,34 +121,36 @@ class UserModel {
 }
 
 class UserData {
-  final String customerId;
+  final String? customerId;
   final String? nickname;
-  final String username;
-  final String password;
+  final String? username;
+  final String? password;
   final String? country;
   final String? gender;
   final String? avatar;
-  final String firstPhoneNo;
+  final String? firstPhoneNo;
   final String? secondPhoneNo;
   final String? email;
   final int? businessScopeId;
+  final String? businessScopeName;
   final String? bilingNetwork;
   final String? bilingAddress;
   final String? bilingCurrency;
   final int? validIdentity;
-  final int? collectionValid;  //system setting, default 1 = public, while 0 = private
+  final int?
+      collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;
 
   UserData({
-    required this.customerId,
+    this.customerId,
     this.nickname,
-    required this.username,
-    required this.password,
+    this.username,
+    this.password,
     this.country,
     this.gender,
     this.avatar,
-    required this.firstPhoneNo,
+    this.firstPhoneNo,
     this.secondPhoneNo,
     this.email,
     this.businessScopeId,
@@ -57,6 +161,7 @@ class UserData {
     this.collectionValid,
     this.createdTime,
     this.updatedTime,
+    this.businessScopeName,
   });
 
   Map<String, dynamic> toJson() {
@@ -72,6 +177,7 @@ class UserData {
       "secondPhoneNo": secondPhoneNo,
       "email": email,
       "businessScopeId": businessScopeId,
+      "businessScopeName": businessScopeName,
       "bilingNetwork": bilingNetwork,
       "bilingAddress": bilingAddress,
       "bilingCurrency": bilingCurrency,
@@ -95,11 +201,12 @@ class UserData {
       secondPhoneNo: json['secondPhoneNo'],
       email: json['email'],
       businessScopeId: json['businessScopeId'],
+      businessScopeName: json['businessScopeName'],
       bilingNetwork: json['bilingNetwork'],
       bilingAddress: json['bilingAddress'],
       bilingCurrency: json['bilingCurrency'],
       validIdentity: json['validIdentity'],
-      collectionValid: json['collectionValid'],
+      collectionValid: json['collection_valid'],
       createdTime: json['createdTime'],
       updatedTime: json['updatedTime'],
     );

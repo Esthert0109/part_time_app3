@@ -7,6 +7,7 @@ import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -190,7 +191,9 @@ class _SettingPageState extends State<SettingPage> {
                                             Navigator.pop(context);
                                           });
                                         },
-                                        secondButtonOnTap: () {
+                                        secondButtonOnTap: () async {
+                                          await SharedPreferencesUtils
+                                              .clearSharedPreferences();
                                           setState(() {
                                             Navigator.pop(context);
 

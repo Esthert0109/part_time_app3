@@ -401,6 +401,7 @@ class _MissionDetailStatusIssuerPageState
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CountdownTimer(
+                        isOTP: false,
                         isReview: false,
                         expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
                       ),
