@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import '../../Components/Common/countdownTimer.dart';
 import '../../Constants/colorConstant.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
@@ -43,6 +44,8 @@ class _MessageMainPageState extends State<MessageMainPage>
   late String? latestPostingMessageDescription;
   late String latestToolMessageDate;
   late String? latestToolMessageDescription;
+
+  // test on global
 
   void _onRefresh() async {
     // monitor network fetch
@@ -156,6 +159,9 @@ class _MessageMainPageState extends State<MessageMainPage>
                       toolDate: latestToolMessageDate,
                       toolDetail: latestToolMessageDescription,
                     ),
+                    Text(notificationTips!
+                            .responseData!['悬赏通知']?.notificationTitle ??
+                        "")
                   ],
                 ),
               )),

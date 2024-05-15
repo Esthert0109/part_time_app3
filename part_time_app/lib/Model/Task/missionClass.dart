@@ -1,3 +1,7 @@
+class TaskModel{
+  
+}
+
 class TaskClass {
   final int? collectionId;
   final int? taskId;

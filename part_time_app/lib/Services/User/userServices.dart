@@ -4,10 +4,17 @@ import 'package:part_time_app/Utils/apiUtils.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Constants/apiConstant.dart';
+import '../../Constants/globalConstant.dart';
+import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
+import '../../Model/notification/messageModel.dart';
+import '../Mission/categoryServices.dart';
+import '../notification/systemMessageServices.dart';
 
 class UserServices {
   String url = "";
+  CategoryServices categoryServices = CategoryServices();
+  SystemMessageServices messageServices = SystemMessageServices();
 
   Future<LoginUserModel?> login(String phone, String password) async {
     url = port + loginUrl;
@@ -43,6 +50,23 @@ class UserServices {
             await SharedPreferencesUtils.saveToken(loginUserModel.data!.token!);
             await SharedPreferencesUtils.savePhoneNo(phone);
             await SharedPreferencesUtils.savePassword(password);
+
+            try {
+              CategoryModel? model = await categoryServices.getCategoryList();
+              if (model!.data != null) {
+                exploreCategoryList = model.data!;
+              }
+
+              NotificationTipsModel? tipsModel =
+                  await messageServices.getNotificationTips();
+              if (tipsModel!.data != null) {
+                notificationTips = tipsModel!.data;
+                print("check noti: ${notificationTips?.responseData['系统通知']?.createdTime??""}");
+              }
+            } catch (e) {
+              print("get info after logined error: $e");
+            }
+
             return loginUserModel;
           }
         } else {
