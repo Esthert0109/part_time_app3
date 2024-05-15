@@ -43,7 +43,9 @@ class _CollectPageState extends State<CollectPage>
   void _scrollListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent) {
-      _loadData();
+      if (!isLoading && continueLoading) {
+        _loadData();
+      }
     }
   }
 
@@ -55,7 +57,6 @@ class _CollectPageState extends State<CollectPage>
     try {
       final List<TaskClass> data =
           await CollectionService().fetchCollection(page);
-      print("done!");
       setState(() {
         if (data.isNotEmpty) {
           missionCollection.addAll(data);

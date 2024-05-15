@@ -5,7 +5,7 @@ const port = "http://103.159.133.27:8085/";
 const loginUrl = "api/v1/login/do-login";
 
 //explore Services
-const exploreURL = "api/v1/tasks/getTaskListByDateDesc";
+const exploreURL = "api/v1/tasks/getTaskListByDateDesc?";
 const explorePriceURL = "api/v1/tasks/getTaskListByPrice";
 const collectionURL = "api/v1/collection/my-collection";
 const searchResultPage =

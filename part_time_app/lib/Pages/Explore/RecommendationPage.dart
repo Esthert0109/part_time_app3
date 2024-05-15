@@ -72,7 +72,6 @@ class _RecommendationPageState extends State<RecommendationPage>
 
     try {
       final List<TaskClass> data = await ExploreService().fetchExplore(page);
-      print("Called the API!");
       setState(() {
         if (data.isNotEmpty) {
           missionAvailable.addAll(data);
@@ -83,7 +82,7 @@ class _RecommendationPageState extends State<RecommendationPage>
         isLoading = false;
       });
     } catch (e) {
-      print('Error in _fetchData: $e');
+      print('Error in exploreData: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -100,7 +99,6 @@ class _RecommendationPageState extends State<RecommendationPage>
     try {
       final List<TaskClass> data =
           await ExploreService().fetchExploreByPrice(sortType, page);
-      print("Called the API!");
       setState(() {
         if (data.isNotEmpty) {
           if (sortType == "sort=asc") {
@@ -115,7 +113,7 @@ class _RecommendationPageState extends State<RecommendationPage>
         isLoading = false;
       });
     } catch (e) {
-      print('Error in _fetchData: $e');
+      print('Error in exploreData: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -269,7 +267,7 @@ class _RecommendationPageState extends State<RecommendationPage>
             missionPrice: missionList[index].taskSinglePrice ?? 0.0,
             userAvatar: missionList[index].avatar ?? "",
             username: missionList[index].username ?? "",
-            missionDate: missionList[index].taskUpdatedTime,
+            missionDate: missionList[index].taskUpdatedTime ?? "",
           );
         }
       },

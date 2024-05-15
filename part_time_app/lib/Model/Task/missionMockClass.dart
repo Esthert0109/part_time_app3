@@ -37,9 +37,8 @@ class TaskClass {
       taskSinglePrice: json['taskSinglePrice'] ?? 0,
       taskTagIds: json['taskTagIds'] ?? "",
       taskTagNames: (json['taskTagNames'] as List<dynamic>?)
-              ?.map((tagJson) => Tag.fromJson(tagJson))
-              .toList() ??
-          [],
+          ?.map((tagJson) => Tag.fromJson(tagJson))
+          .toList(),
       taskUpdatedTime: json['taskUpdatedTime'] ?? "",
       username: json['username'] ?? "",
       avatar: json['avatar'] ?? "",

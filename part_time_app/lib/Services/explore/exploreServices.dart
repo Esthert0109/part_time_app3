@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:part_time_app/Utils/apiUtils.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Model/Task/missionMockClass.dart';
 
 class ExploreService {
   Future<List<TaskClass>> fetchExplore(int page) async {
-    final String url = port + exploreURL + '?page=$page';
+    String? _token = await SharedPreferencesUtils.getToken();
+    final String url = port + exploreURL + 'page=$page';
     final Map<String, String> headers = {
+      'token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
     };
 
@@ -34,7 +37,6 @@ class ExploreService {
     };
 
     try {
-      print(url);
       final response = await getRequest(url, headers);
 
       if (response.statusCode == 200) {
