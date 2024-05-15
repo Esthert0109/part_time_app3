@@ -1,4 +1,5 @@
 class TaskClass {
+  final int? collectionId;
   final int? taskId;
   final String? customerId;
   final String? taskTitle;
@@ -9,8 +10,10 @@ class TaskClass {
   final String? taskUpdatedTime;
   final String? username;
   final String? avatar;
+  final int? valid;
 
   TaskClass({
+    this.collectionId,
     this.taskId,
     this.customerId,
     this.taskTitle,
@@ -21,23 +24,26 @@ class TaskClass {
     this.taskUpdatedTime,
     this.username,
     this.avatar,
+    this.valid,
   });
 
   factory TaskClass.fromJson(Map<String, dynamic> json) {
     return TaskClass(
-      taskId: json['taskId'],
+      collectionId: json['collectionId'] ?? 0,
+      taskId: json['taskId'] ?? 0,
       customerId: json['customerId'] ?? "",
       taskTitle: json['taskTitle'] ?? "",
       taskContent: json['taskContent'] ?? "",
       taskSinglePrice: json['taskSinglePrice'] ?? 0,
       taskTagIds: json['taskTagIds'] ?? "",
-      taskTagNames: (json['taskTagNames'] as List)
-              .map((tagJson) => Tag.fromJson(tagJson))
+      taskTagNames: (json['taskTagNames'] as List<dynamic>?)
+              ?.map((tagJson) => Tag.fromJson(tagJson))
               .toList() ??
           [],
       taskUpdatedTime: json['taskUpdatedTime'] ?? "",
       username: json['username'] ?? "",
       avatar: json['avatar'] ?? "",
+      valid: json['valid'] ?? 1,
     );
   }
 
@@ -68,7 +74,7 @@ class Tag {
 
   factory Tag.fromJson(Map<String, dynamic> json) {
     return Tag(
-      tagId: json['tagId'] ?? "",
+      tagId: json['tagId'] ?? 0,
       tagName: json['tagName'] ?? "",
     );
   }
@@ -81,6 +87,7 @@ class Tag {
   }
 }
 
+//above is using for api only, below this is mock.
 class MessageMockClass {
   final String title;
   bool? isApproved; // check if mission status out

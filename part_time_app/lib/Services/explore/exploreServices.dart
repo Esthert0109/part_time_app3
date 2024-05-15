@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:part_time_app/Utils/apiUtils.dart';
 import '../../Constants/apiConstant.dart';
-import '../../Pages/MockData/missionMockClass.dart';
+import '../../Model/Task/missionMockClass.dart';
 
 class ExploreService {
   Future<List<TaskClass>> fetchExplore(int page) async {

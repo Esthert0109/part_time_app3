@@ -1,4 +1,4 @@
-import 'missionMockClass.dart';
+import '../../Model/Task/missionMockClass.dart';
 
 List<MissionMockClass> MissionAvailableList = [
   MissionMockClass(

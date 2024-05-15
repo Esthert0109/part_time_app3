@@ -7,7 +7,7 @@ import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../MockData/missionMockClass.dart';
+import '../../Model/Task/missionMockClass.dart';
 import '../MockData/missionMockData.dart';
 
 bool noInitialRefresh = true;

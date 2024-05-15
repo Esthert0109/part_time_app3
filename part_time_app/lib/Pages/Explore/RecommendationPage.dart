@@ -1,31 +1,21 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:part_time_app/Services/collection/collectionServices.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' as pull_to_refresh;
-
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Pages/Explore/easyPassPage.dart';
 import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Explore/newMissionPage.dart';
 import 'package:part_time_app/Pages/Explore/shortTimePage.dart';
 import '../../Components/Card/missionCardComponent.dart';
-import '../../Components/Loading/customRefreshComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
-import '../../Constants/apiConstant.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
-import '../../Utils/apiUtils.dart';
-import '../MockData/missionMockClass.dart';
-import '../MockData/missionMockData.dart';
+import '../../Model/Task/missionMockClass.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -81,8 +71,8 @@ class _RecommendationPageState extends State<RecommendationPage>
     });
 
     try {
-      final List<TaskClass> data =
-          await CollectionService().fetchCollection(page);
+      final List<TaskClass> data = await ExploreService().fetchExplore(page);
+      print("Called the API!");
       setState(() {
         if (data.isNotEmpty) {
           missionAvailable.addAll(data);
@@ -110,6 +100,7 @@ class _RecommendationPageState extends State<RecommendationPage>
     try {
       final List<TaskClass> data =
           await ExploreService().fetchExploreByPrice(sortType, page);
+      print("Called the API!");
       setState(() {
         if (data.isNotEmpty) {
           if (sortType == "sort=asc") {
@@ -278,7 +269,7 @@ class _RecommendationPageState extends State<RecommendationPage>
             missionPrice: missionList[index].taskSinglePrice ?? 0.0,
             userAvatar: missionList[index].avatar ?? "",
             username: missionList[index].username ?? "",
-            missionDate: missionList[index].taskUpdatedTime ?? "",
+            missionDate: missionList[index].taskUpdatedTime,
           );
         }
       },

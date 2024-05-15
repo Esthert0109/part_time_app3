@@ -6,7 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Dialog/alertDialogComponent.dart';
 import 'package:part_time_app/Components/Dialog/paymentUploadDialogComponent.dart';
 import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dart';
-import 'package:part_time_app/Pages/MockData/missionMockClass.dart';
+import 'package:part_time_app/Model/Task/missionMockClass.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:intl/intl.dart';

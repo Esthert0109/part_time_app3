@@ -11,7 +11,7 @@ import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../MockData/missionMockClass.dart';
+import '../../Model/Task/missionMockClass.dart';
 
 bool dataFetchedPublish = false;
 bool dataEndPublish = false;
