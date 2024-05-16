@@ -68,7 +68,7 @@ class UserServices {
 
               for (int i = 0; i < 5; i++) {
                 NotificationListModel? notiModel =
-                    await messageServices.getNotificationList(i);
+                    await messageServices.getNotificationList(i, 1);
                 if (notiModel!.data != null) {
                   switch (i) {
                     case 0:

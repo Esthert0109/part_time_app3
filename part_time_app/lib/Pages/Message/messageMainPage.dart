@@ -1,23 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
-import '../../Components/Common/countdownTimer.dart';
 import '../../Constants/colorConstant.dart';
-import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
-import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
-import 'package:part_time_app/Pages/UserAuth/changePassword.dart';
-import 'package:part_time_app/Pages/UserAuth/loginPage.dart';
-import 'package:part_time_app/Pages/UserAuth/otpCode.dart';
-import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
-import '../MockData/missionMockData.dart';
 
 class MessageMainPage extends StatefulWidget {
   const MessageMainPage({Key? key}) : super(key: key);
@@ -37,14 +28,16 @@ class _MessageMainPageState extends State<MessageMainPage>
   double _scrollPosition = 0;
   late String latestSystemMessageDate;
   late String? latestSystemMessageDescription;
-  late String latestMissionMessageDate;
-  late String? latestMissionMessageDescription;
-  late String latestPaymentMessageDate;
-  late String? latestPaymentMessageDescription;
-  late String latestPostingMessageDate;
-  late String? latestPostingMessageDescription;
-  late String latestToolMessageDate;
-  late String? latestToolMessageDescription;
+  // late String latestMissionMessageDate;
+  // late String? latestMissionMessageDescription;
+  // late String latestPaymentMessageDate;
+  // late String? latestPaymentMessageDescription;
+  // late String latestPostingMessageDate;
+  // late String? latestPostingMessageDescription;
+  // late String latestToolMessageDate;
+  // late String? latestToolMessageDescription;
+  int? totalSystemUnread =
+      notificationTips?.responseData?['系统通知']?.notificationTotalUnread;
 
   // test on global
 
@@ -82,34 +75,38 @@ class _MessageMainPageState extends State<MessageMainPage>
   @override
   void initState() {
     super.initState();
-    latestSystemMessageDate = systemMessageLists.isNotEmpty
-        ? systemMessageLists.last.createdTime
+    latestSystemMessageDate = systemMessageList.isNotEmpty &&
+            systemMessageList[0].notifications != null &&
+            systemMessageList[0].notifications!.isNotEmpty
+        ? systemMessageList[0].notifications![0].createdTime ?? ""
         : "";
-    latestSystemMessageDescription = systemMessageLists.isNotEmpty
-        ? systemMessageLists.last.description
+    latestSystemMessageDescription = systemMessageList.isNotEmpty &&
+            systemMessageList[0].notifications != null &&
+            systemMessageList[0].notifications!.isNotEmpty
+        ? systemMessageList[0].notifications![0].notificationTitle ?? ""
         : "";
-    latestMissionMessageDate = MissionMessageList.isNotEmpty
-        ? MissionMessageList.last.createdTime
-        : "";
-    latestMissionMessageDescription = MissionMessageList.isNotEmpty
-        ? MissionMessageList.last.description
-        : "";
-    latestPaymentMessageDate = PaymentMessageList.isNotEmpty
-        ? PaymentMessageList.last.createdTime
-        : "";
-    latestPaymentMessageDescription = PaymentMessageList.isNotEmpty
-        ? PaymentMessageList.last.description
-        : "";
-    latestPostingMessageDate = PostingMessageList.isNotEmpty
-        ? PostingMessageList.last.createdTime
-        : "";
-    latestPostingMessageDescription = PostingMessageList.isNotEmpty
-        ? PostingMessageList.last.description
-        : "";
-    latestToolMessageDate =
-        ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
-    latestToolMessageDescription =
-        ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
+    // latestMissionMessageDate = MissionMessageList.isNotEmpty
+    //     ? MissionMessageList.last.createdTime
+    //     : "";
+    // latestMissionMessageDescription = MissionMessageList.isNotEmpty
+    //     ? MissionMessageList.last.description
+    //     : "";
+    // latestPaymentMessageDate = PaymentMessageList.isNotEmpty
+    //     ? PaymentMessageList.last.createdTime
+    //     : "";
+    // latestPaymentMessageDescription = PaymentMessageList.isNotEmpty
+    //     ? PaymentMessageList.last.description
+    //     : "";
+    // latestPostingMessageDate = PostingMessageList.isNotEmpty
+    //     ? PostingMessageList.last.createdTime
+    //     : "";
+    // latestPostingMessageDescription = PostingMessageList.isNotEmpty
+    //     ? PostingMessageList.last.description
+    //     : "";
+    // latestToolMessageDate =
+    //     ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
+    // latestToolMessageDescription =
+    //     ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
     getMessageFromSharedPreferences();
   }
 
@@ -166,18 +163,19 @@ class _MessageMainPageState extends State<MessageMainPage>
                     MessageCardComponent(
                       systemDate: latestSystemMessageDate,
                       systemDetail: latestSystemMessageDescription,
-                      missionDate: latestMissionMessageDate,
-                      missionDetail: latestMissionMessageDescription,
-                      paymentDate: latestPaymentMessageDate,
-                      paymentDetail: latestPaymentMessageDescription,
-                      postingDate: latestPostingMessageDate,
-                      postingDetail: latestPostingMessageDescription,
-                      toolDate: latestToolMessageDate,
-                      toolDetail: latestToolMessageDescription,
+                      systemTotalMessage: totalSystemUnread,
+                      // missionDate: latestMissionMessageDate,
+                      // missionDetail: latestMissionMessageDescription,
+                      // paymentDate: latestPaymentMessageDate,
+                      // paymentDetail: latestPaymentMessageDescription,
+                      // postingDate: latestPostingMessageDate,
+                      // postingDetail: latestPostingMessageDescription,
+                      // toolDate: latestToolMessageDate,
+                      // toolDetail: latestToolMessageDescription,
                     ),
                     Text(notificationTips!
-                            .responseData!['悬赏通知']?.notificationTitle ??
-                        ""),
+                        .responseData!['系统通知']!.notificationTotalUnread
+                        .toString()),
                     Text(
                       systemMessageList.isNotEmpty &&
                               systemMessageList[0].notifications != null &&

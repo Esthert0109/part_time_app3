@@ -9,14 +9,12 @@ import 'package:flutter/material.dart';
 class MessageList extends StatefulWidget {
   final String title;
   final String description;
-  final String createdTime;
   final bool isSystem;
 
   const MessageList({
     Key? key,
     required this.title,
     required this.description,
-    required this.createdTime,
     required this.isSystem,
   }) : super(key: key);
 
@@ -30,17 +28,6 @@ class _MessageListState extends State<MessageList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15, bottom: 5),
-            child: Text(
-              widget.createdTime,
-              style: missionIDtextStyle,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
         widget.isSystem ? _buildSystemMessage() : _buildUserMessage(),
       ],
     );

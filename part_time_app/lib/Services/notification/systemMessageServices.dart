@@ -7,7 +7,7 @@ import 'dart:convert';
 
 import 'package:part_time_app/Utils/apiUtils.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
-
+import 'package:http/http.dart' as http;
 import '../../Constants/apiConstant.dart';
 import '../../Model/notification/messageModel.dart';
 
@@ -49,11 +49,12 @@ class SystemMessageServices {
     }
   }
 
-  Future<NotificationListModel?> getNotificationList(int type) async {
+  Future<NotificationListModel?> getNotificationList(int type, int page) async {
     url = port +
         getNotificationListByTypeUrl +
-        "notificationType=${type.toString()}";
-
+        "notificationType=${type.toString()}&page=" +
+        page.toString();
+    print(url);
     NotificationListModel? notiModel;
 
     String? token = await SharedPreferencesUtils.getToken();
@@ -89,40 +90,29 @@ class SystemMessageServices {
       print("Error in noti list: $e");
     }
   }
-//   Future<MessageModel?> fetchSystemMessage() async {
-//     String url = port + systemMessage;
-//     final Map<String, String> headers = {
-//       'Content-Type': 'application/json; charset=utf-8',
-//     };
-//     try {
-//       final response = await getRequest(url, headers);
-//       print(response.responseBody); // Add this line to print the response data
-//       if (response.statusCode == 200) {
-//         final jsonData = jsonDecode(response.responseBody);
-//         if (jsonData['data'] != null &&
-//             jsonData['data'] is List<dynamic> &&
-//             jsonData['data'].isNotEmpty) {
-//           // List of messages format
-//           print("300");
-//           final messages = (jsonData['data'])
-//               .map<MessageModel>(
-//                   (messageData) => MessageModel.fromJson(messageData))
-//               .toList();
-//           print("400");
-//           return messages;
-//         } else {
-//           // Handle unexpected data format (print response body for debugging)
-//           print("Response Body: ${response.responseBody}");
-//           throw Exception('No system message data found');
-//         }
-//       } else {
-//         // Handle other status codes (throw exception)
-//         throw Exception(
-//             'Failed to fetch system messages. Status code: ${response.statusCode}');
-//       }
-//     } catch (e) {
-//       // Catch any errors during the HTTP request
-//       throw Exception('Failed to fetch system messages: $e');
-//     }
-//   }
+
+  Future<NotificationReadModel?> patchUpdateRead(int type) async {
+    url = port + patchNotificationReadStatusUrl + type.toString();
+    String? _token = await SharedPreferencesUtils.getToken();
+    print(url);
+    final Map<String, String> headers = {
+      'Token': '$_token',
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        return NotificationReadModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to update collection');
+      }
+    } catch (e) {
+      print('Error in updateCollection: $e');
+      return null;
+    }
+  }
 }

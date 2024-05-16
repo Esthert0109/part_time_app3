@@ -192,3 +192,27 @@ class NotificationData {
     );
   }
 }
+
+class NotificationReadModel {
+  final int code;
+  final String msg;
+  final bool? data;
+
+  NotificationReadModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  factory NotificationReadModel.fromJson(Map<String, dynamic> json) {
+    return NotificationReadModel(
+      code: json['code'],
+      msg: json['msg'],
+      data: json['data'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+}
