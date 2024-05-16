@@ -15,13 +15,10 @@ import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
-
-List<TaskClass> missionAvailable = [];
-List<TaskClass> missionAvailableAsec = [];
-List<TaskClass> missionAvailableDesc = [];
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -35,7 +32,7 @@ class _RecommendationPageState extends State<RecommendationPage>
   ScrollController _scrollController = ScrollController();
   int selectIndex = 0;
 
-  int page = 1;
+  int page = 2;
   bool isLoading = false;
   bool continueLoading = true;
   String sortType = "";
@@ -47,7 +44,6 @@ class _RecommendationPageState extends State<RecommendationPage>
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
-    _loadData();
   }
 
   @override
