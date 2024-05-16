@@ -26,3 +26,6 @@ const getCategoryListUrl = "api/v1/categories/getCategoryList";
 
 //About Us Services
 const aboutUsUrl = "api/v1/aboutUs/";
+
+//Settings Services
+const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";

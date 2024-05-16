@@ -120,6 +120,26 @@ class UserModel {
   }
 }
 
+class UpdateCollectionModel {
+  final int? code;
+  final String? msg;
+  final UserData? data;
+
+  UpdateCollectionModel({
+    this.code,
+    this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "code": code,
+      "msg": msg,
+      "data": data?.toJson(),
+    };
+  }
+}
+
 class UserData {
   final String? customerId;
   final String? nickname;
