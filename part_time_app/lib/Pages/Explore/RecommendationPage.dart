@@ -269,8 +269,9 @@ class _RecommendationPageState extends State<RecommendationPage>
                 [],
             missionPrice: missionList[index].taskSinglePrice ?? 0.0,
             userAvatar: missionList[index].avatar ?? "",
-            username: missionList[index].username ?? "",
+            username: missionList[index].nickname ?? "",
             missionDate: missionList[index].taskUpdatedTime ?? "",
+            isFavorite: missionList[index].collectionValid ?? false,
           );
         }
       },

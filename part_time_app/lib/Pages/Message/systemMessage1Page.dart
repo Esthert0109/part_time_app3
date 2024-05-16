@@ -113,7 +113,7 @@ class _SystemMessage1PageState extends State<SystemMessage1Page> {
                           [],
                       missionPrice: _taskList[index].taskSinglePrice ?? 0.0,
                       userAvatar: _taskList[index].avatar ?? "",
-                      username: _taskList[index].username ?? "",
+                      username: _taskList[index].nickname ?? "",
                       missionDate: _taskList[index].taskUpdatedTime ?? "",
                     );
                   },

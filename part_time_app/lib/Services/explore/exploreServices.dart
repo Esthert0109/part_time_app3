@@ -15,10 +15,9 @@ class ExploreService {
 
     try {
       final response = await getRequest(url, headers);
-      print(response.responseBody);
       if (response.statusCode == 200) {
-        final jsonResponse =
-            json.decode(utf8.decode(response.responseBody.runes.toList()));
+        final jsonResponse = json
+            .decode(response.responseBody); // Directly decode the response body
         final List<dynamic> data = jsonResponse['data'];
         return data.map((item) => TaskClass.fromJson(item)).toList();
       } else {
@@ -41,8 +40,7 @@ class ExploreService {
       final response = await getRequest(url, headers);
 
       if (response.statusCode == 200) {
-        final jsonResponse =
-            json.decode(utf8.decode(response.responseBody.runes.toList()));
+        final jsonResponse = json.decode(response.responseBody);
         final List<dynamic> data = jsonResponse['data'];
         return data.map((item) => TaskClass.fromJson(item)).toList();
       } else {
@@ -63,7 +61,6 @@ class ExploreService {
         "&sortOrder=" +
         sort +
         '&page=$page';
-    print(url);
     final Map<String, String> headers = {
       'token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
@@ -71,10 +68,8 @@ class ExploreService {
 
     try {
       final response = await getRequest(url, headers);
-      print(response.responseBody);
       if (response.statusCode == 200) {
-        final jsonResponse =
-            json.decode(utf8.decode(response.responseBody.runes.toList()));
+        final jsonResponse = json.decode(response.responseBody);
         final data = jsonResponse['data'];
         final totalAmountOfData = data['totalAmountOfData'] ?? 0;
         final List<dynamic> tasksData = data['tasks'];
@@ -101,7 +96,6 @@ class ExploreService {
         sort +
         '&tagIds=$tagId' +
         '&page=$page';
-    print(url);
     final Map<String, String> headers = {
       'token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
@@ -109,10 +103,8 @@ class ExploreService {
 
     try {
       final response = await getRequest(url, headers);
-      print(response.responseBody);
       if (response.statusCode == 200) {
-        final jsonResponse =
-            json.decode(utf8.decode(response.responseBody.runes.toList()));
+        final jsonResponse = json.decode(response.responseBody);
         final data = jsonResponse['data'];
         final totalAmountOfData = data['totalAmountOfData'] ?? 0;
         final List<dynamic> tasksData = data['tasks'];

@@ -156,7 +156,7 @@ class _CollectPageState extends State<CollectPage>
                 [],
             missionPrice: missionCollection[index].taskSinglePrice ?? 0.0,
             userAvatar: missionCollection[index].avatar ?? "",
-            username: missionCollection[index].username ?? "",
+            username: missionCollection[index].nickname ?? "",
             missionDate: missionCollection[index].taskUpdatedTime,
             isFavorite: true,
           );
