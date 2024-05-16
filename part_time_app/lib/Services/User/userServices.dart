@@ -63,7 +63,39 @@ class UserServices {
                 notificationTips = tipsModel!.data;
               }
 
-              
+              for (int i = 0; i < 5; i++) {
+                NotificationListModel? notiModel =
+                    await messageServices.getNotificationList(i);
+                if (notiModel!.data != null) {
+                  switch (i) {
+                    case 0:
+                      systemMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.saveSystemMessageList(
+                          systemMessageList);
+                      break;
+                    case 1:
+                      missionMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.saveMissionMessageList(
+                          missionMessageList);
+                      break;
+                    case 2:
+                      paymentMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.savePaymentMessageList(
+                          paymentMessageList);
+                      break;
+                    case 3:
+                      publishMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.savePublishMessageList(
+                          publishMessageList);
+                      break;
+                    case 4:
+                      ticketingMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.saveTicketMessageList(
+                          ticketingMessageList);
+                      break;
+                  }
+                }
+              }
             } catch (e) {
               print("get info after logined error: $e");
             }

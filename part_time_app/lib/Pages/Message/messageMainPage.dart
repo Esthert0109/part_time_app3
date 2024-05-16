@@ -5,6 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Components/Common/countdownTimer.dart';
 import '../../Constants/colorConstant.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
@@ -81,10 +82,12 @@ class _MessageMainPageState extends State<MessageMainPage>
   @override
   void initState() {
     super.initState();
-    latestSystemMessageDate =
-        systemMessageList.isNotEmpty ? systemMessageList.last.createdTime : "";
-    latestSystemMessageDescription =
-        systemMessageList.isNotEmpty ? systemMessageList.last.description : "";
+    latestSystemMessageDate = systemMessageLists.isNotEmpty
+        ? systemMessageLists.last.createdTime
+        : "";
+    latestSystemMessageDescription = systemMessageLists.isNotEmpty
+        ? systemMessageLists.last.description
+        : "";
     latestMissionMessageDate = MissionMessageList.isNotEmpty
         ? MissionMessageList.last.createdTime
         : "";
@@ -107,6 +110,19 @@ class _MessageMainPageState extends State<MessageMainPage>
         ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
     latestToolMessageDescription =
         ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
+    getMessageFromSharedPreferences();
+  }
+
+  getMessageFromSharedPreferences() async {
+    systemMessageList = (await SharedPreferencesUtils.getSystemMessageList())!;
+    missionMessageList =
+        (await SharedPreferencesUtils.getMissionMessageList())!;
+    paymentMessageList =
+        (await SharedPreferencesUtils.getPaymentMessageList())!;
+    publishMessageList =
+        (await SharedPreferencesUtils.getPublishMessageList())!;
+    ticketingMessageList =
+        (await SharedPreferencesUtils.getTicketMessageList())!;
   }
 
   @override
@@ -161,7 +177,57 @@ class _MessageMainPageState extends State<MessageMainPage>
                     ),
                     Text(notificationTips!
                             .responseData!['悬赏通知']?.notificationTitle ??
-                        "")
+                        ""),
+                    Text(
+                      systemMessageList.isNotEmpty &&
+                              systemMessageList[0].notifications != null &&
+                              systemMessageList[0].notifications!.isNotEmpty
+                          ? systemMessageList[0]
+                                  .notifications![0]
+                                  .notificationTitle ??
+                              ""
+                          : "",
+                    ),
+                    Text(
+                      missionMessageList.isNotEmpty &&
+                              missionMessageList[0].notifications != null &&
+                              missionMessageList[0].notifications!.isNotEmpty
+                          ? missionMessageList[0]
+                                  .notifications![0]
+                                  .notificationTitle ??
+                              ""
+                          : "",
+                    ),
+                    Text(
+                      paymentMessageList.isNotEmpty &&
+                              paymentMessageList[0].notifications != null &&
+                              paymentMessageList[0].notifications!.isNotEmpty
+                          ? paymentMessageList[0]
+                                  .notifications![0]
+                                  .notificationTitle ??
+                              ""
+                          : "",
+                    ),
+                    Text(
+                      publishMessageList.isNotEmpty &&
+                              publishMessageList[0].notifications != null &&
+                              publishMessageList[0].notifications!.isNotEmpty
+                          ? publishMessageList[0]
+                                  .notifications![0]
+                                  .notificationTitle ??
+                              ""
+                          : "",
+                    ),
+                    Text(
+                      ticketingMessageList.isNotEmpty &&
+                              ticketingMessageList[0].notifications != null &&
+                              ticketingMessageList[0].notifications!.isNotEmpty
+                          ? ticketingMessageList[0]
+                                  .notifications![0]
+                                  .notificationTitle ??
+                              ""
+                          : "",
+                    ),
                   ],
                 ),
               )),

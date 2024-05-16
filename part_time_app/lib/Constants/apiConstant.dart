@@ -21,6 +21,7 @@ const advertisementPage = "api/v1/advertisement/all";
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
 const getNotificationTipsUrl = "api/v1/notification/getLatestNotificationTips";
+const getNotificationListByTypeUrl = "api/v1/notification/notificationListByType?";
 
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";

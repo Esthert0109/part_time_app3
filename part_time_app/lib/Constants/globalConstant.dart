@@ -3,6 +3,13 @@ import 'package:part_time_app/Model/User/userModel.dart';
 
 import '../Model/notification/messageModel.dart';
 
-List<CategoryListData> exploreCategoryList = [];
-NotificationTipsData? notificationTips;
 UserData userData = UserData();
+
+List<CategoryListData> exploreCategoryList = [];
+
+NotificationTipsData? notificationTips;
+List<NotificationListDate> systemMessageList = [];
+List<NotificationListDate> missionMessageList = [];
+List<NotificationListDate> paymentMessageList = [];
+List<NotificationListDate> publishMessageList = [];
+List<NotificationListDate> ticketingMessageList = [];

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Model/notification/messageModel.dart';
+
 class SharedPreferencesUtils {
   static const String userKey = 'user';
 
@@ -40,6 +42,46 @@ class SharedPreferencesUtils {
     await prefs.setString('password', password);
   }
 
+  static Future<void> saveSystemMessageList(
+      List<NotificationListDate> message) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> messageListJson =
+        message.map((e) => json.encode(e.toJson())).toList();
+    await prefs.setStringList('systemMessage', messageListJson);
+  }
+
+  static Future<void> saveMissionMessageList(
+      List<NotificationListDate> message) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> messageListJson =
+        message.map((e) => json.encode(e.toJson())).toList();
+    await prefs.setStringList('missionMessage', messageListJson);
+  }
+
+  static Future<void> savePaymentMessageList(
+      List<NotificationListDate> message) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> messageListJson =
+        message.map((e) => json.encode(e.toJson())).toList();
+    await prefs.setStringList('paymentMessage', messageListJson);
+  }
+
+  static Future<void> savePublishMessageList(
+      List<NotificationListDate> message) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> messageListJson =
+        message.map((e) => json.encode(e.toJson())).toList();
+    await prefs.setStringList('publishMessage', messageListJson);
+  }
+
+  static Future<void> saveTicketMessageList(
+      List<NotificationListDate> message) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> messageListJson =
+        message.map((e) => json.encode(e.toJson())).toList();
+    await prefs.setStringList('ticketMessage', messageListJson);
+  }
+
   // get user information
   static Future<String?> getUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,6 +111,61 @@ class SharedPreferencesUtils {
       return UserData.fromJson(json);
     }
     return null;
+  }
+
+  static Future<List<NotificationListDate>?> getSystemMessageList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? messageListJson = prefs.getStringList("systemMessage");
+    if (messageListJson != null) {
+      return messageListJson
+          .map((e) => NotificationListDate.fromJson(json.decode(e)))
+          .toList();
+    }
+    return [];
+  }
+
+  static Future<List<NotificationListDate>?> getMissionMessageList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? messageListJson = prefs.getStringList("missionMessage");
+    if (messageListJson != null) {
+      return messageListJson
+          .map((e) => NotificationListDate.fromJson(json.decode(e)))
+          .toList();
+    }
+    return [];
+  }
+
+  static Future<List<NotificationListDate>?> getPaymentMessageList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? messageListJson = prefs.getStringList("paymentMessage");
+    if (messageListJson != null) {
+      return messageListJson
+          .map((e) => NotificationListDate.fromJson(json.decode(e)))
+          .toList();
+    }
+    return [];
+  }
+
+  static Future<List<NotificationListDate>?> getPublishMessageList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? messageListJson = prefs.getStringList("publishMessage");
+    if (messageListJson != null) {
+      return messageListJson
+          .map((e) => NotificationListDate.fromJson(json.decode(e)))
+          .toList();
+    }
+    return [];
+  }
+
+  static Future<List<NotificationListDate>?> getTicketMessageList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? messageListJson = prefs.getStringList("ticketMessage");
+    if (messageListJson != null) {
+      return messageListJson
+          .map((e) => NotificationListDate.fromJson(json.decode(e)))
+          .toList();
+    }
+    return [];
   }
 
   // remove user information

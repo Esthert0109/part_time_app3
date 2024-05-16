@@ -535,7 +535,7 @@ List<MissionMockClass> MissionAvailableList = [
       updatedTime: "2024-05-30"),
 ];
 
-List<MessageMockClass> systemMessageList = [
+List<MessageMockClass> systemMessageLists = [
   MessageMockClass(
       title: '2.0版本已更行',
       description: "您的版本已更新至 2.0 版本。",
