@@ -13,13 +13,12 @@ import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
 
-List<TaskClass> missionAvailable = [];
-List<TaskClass> missionAvailableAsec = [];
-List<TaskClass> missionAvailableDesc = [];
+
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});

@@ -107,6 +107,16 @@ class UserServices {
 
                 print("check ads: ${advertisementList[0].advertisementImage}");
               }
+
+              missionAvailable = await exploreServices.fetchExplore(1);
+              print("check all mission: ${missionAvailable[0].nickname}");
+              missionAvailableDesc =
+                  await exploreServices.fetchExploreByPrice("Desc", 1);
+              print("check all mission: ${missionAvailableDesc[0].avatar}");
+              missionAvailableAsec =
+                  await exploreServices.fetchExploreByPrice("Asc", 1);
+              print(
+                  "check all mission: ${missionAvailableAsec[0].taskContent}");
             } catch (e) {
               print("get info after logined error: $e");
             }
