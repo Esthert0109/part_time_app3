@@ -178,25 +178,20 @@ class _RecommendationPageState extends State<RecommendationPage>
                     currentIndicatorColor: Color.fromARGB(232, 255, 227, 87),
                   ),
                 ),
-                items: [
-                  "assets/main/banner.png",
-                  "assets/main/banner.png",
-                  "assets/main/banner.png",
-                  "assets/main/banner.png",
-                  "assets/main/banner.png"
-                ].map((i) {
+                items: advertisementList.map((advertisement) {
                   return Builder(
                     builder: (BuildContext context) {
                       return Container(
                         height: 132,
                         decoration: BoxDecoration(
-                            color: kSecondGreyColor,
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                                image: AssetImage(
-                                  "$i",
-                                ),
-                                fit: BoxFit.cover)),
+                          color: kSecondGreyColor,
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                            image:
+                                NetworkImage(advertisement.advertisementImage!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       );
                     },
                   );
@@ -205,10 +200,10 @@ class _RecommendationPageState extends State<RecommendationPage>
               CategoryItem(
                 list: exploreCategoryList,
                 onTapCallbacks: [
-                  () => HighCommisionPage(),
-                  () => ShortTimePage(),
-                  () => EasyPassPage(),
-                  () => NewMissionPage(),
+                  () => const HighCommisionPage(),
+                  () => const ShortTimePage(),
+                  () => const EasyPassPage(),
+                  () => const NewMissionPage(),
                 ],
               ),
               Padding(
