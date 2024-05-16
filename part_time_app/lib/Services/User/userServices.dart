@@ -5,16 +5,19 @@ import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Constants/apiConstant.dart';
 import '../../Constants/globalConstant.dart';
+import '../../Model/Advertisement/advertisementModel.dart';
 import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
 import '../Mission/categoryServices.dart';
+import '../explore/exploreServices.dart';
 import '../notification/systemMessageServices.dart';
 
 class UserServices {
   String url = "";
   CategoryServices categoryServices = CategoryServices();
   SystemMessageServices messageServices = SystemMessageServices();
+  ExploreService exploreServices = ExploreService();
 
   Future<LoginUserModel?> login(String phone, String password) async {
     url = port + loginUrl;
@@ -95,6 +98,14 @@ class UserServices {
                       break;
                   }
                 }
+              }
+
+              AdvertisementModel? advertisementModel =
+                  await exploreServices.getAdvertisement();
+              if (advertisementModel!.data != null) {
+                advertisementList = advertisementModel.data!;
+
+                print("check ads: ${advertisementList[0].advertisementImage}");
               }
             } catch (e) {
               print("get info after logined error: $e");
