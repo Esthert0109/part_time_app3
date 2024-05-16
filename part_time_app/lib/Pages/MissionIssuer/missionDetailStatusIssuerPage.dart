@@ -20,7 +20,7 @@ import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponen
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
-import 'package:part_time_app/Model/Task/missionMockClass.dart';
+import 'package:part_time_app/Model/Task/missionClass.dart';
 
 import '../../Components/Button/secondaryButtonComponent.dart';
 import '../../Components/Common/countdownTimer.dart';

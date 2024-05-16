@@ -8,7 +8,7 @@ import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 import '../MockData/missionMockData.dart';
 
 bool dataFetchedIssued = false;

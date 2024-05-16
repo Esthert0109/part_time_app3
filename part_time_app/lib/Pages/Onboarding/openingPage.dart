@@ -6,10 +6,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Services/Mission/categoryServices.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
+import '../../Constants/globalConstant.dart';
+import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
+import '../../Model/notification/messageModel.dart';
+import '../../Services/notification/systemMessageServices.dart';
 
 class OpeningPage extends StatefulWidget {
   const OpeningPage({super.key});
@@ -23,12 +28,14 @@ class _OpeningPageState extends State<OpeningPage> {
   bool isLogin = false;
   UserData? userInfo;
   UserServices services = UserServices();
+  CategoryServices categoryServices = CategoryServices();
+  SystemMessageServices messageServices = SystemMessageServices();
 
   @override
   void initState() {
     super.initState();
-    // getDataAndNavigate();
     checkIfLogined();
+    // fetchDataExplorePage();
   }
 
   @override
@@ -50,7 +57,10 @@ class _OpeningPageState extends State<OpeningPage> {
             await SharedPreferencesUtils.saveUserInfo(user!);
             await SharedPreferencesUtils.saveUserDataInfo(user.data!);
             await SharedPreferencesUtils.saveToken(userModel.data!.token!);
-            Get.offAllNamed('/');
+
+            if (user.code == 0) {
+              Get.offAllNamed('/');
+            }
           }
         } catch (e) {
           Timer(const Duration(seconds: 1), () {
@@ -67,12 +77,6 @@ class _OpeningPageState extends State<OpeningPage> {
         Get.offAllNamed('/onboarding');
       });
     }
-  }
-
-  void getDataAndNavigate() {
-    Timer(const Duration(seconds: 2), () {
-      Get.offAllNamed('/onboarding');
-    });
   }
 
   @override

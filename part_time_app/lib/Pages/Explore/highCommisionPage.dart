@@ -8,7 +8,7 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 import '../MockData/missionMockData.dart';
 
 bool noInitialRefresh = true;

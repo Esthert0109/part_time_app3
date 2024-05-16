@@ -6,7 +6,7 @@ import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../MockData/missionMockData.dart';
 
@@ -45,7 +45,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   late bool bytag;
 
   String listToCommaSeparatedString(List<int>? list) {
-    return list!.join(',');
+    return list?.join(',') ?? '';
   }
 
   @override
@@ -84,9 +84,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
     });
 
     try {
-      print(tag);
-      print(tagName);
-      print(bytag);
       SearchResult data;
       if (bytag == true) {
         data = await ExploreService().fetchSearchByTag(sortType, tag, page);
@@ -294,8 +291,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
                 [],
             missionPrice: missionList[index].taskSinglePrice ?? 0.0,
             userAvatar: missionList[index].avatar ?? "",
-            username: missionList[index].username ?? "",
+            username: missionList[index].nickname ?? "",
             missionDate: missionList[index].taskUpdatedTime ?? "",
+            isFavorite: missionList[index].collectionValid ?? false,
           );
         }
       },

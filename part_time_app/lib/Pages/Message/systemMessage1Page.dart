@@ -12,7 +12,7 @@ import '../../Components/Loading/missionCardLoading.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Utils/apiUtils.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 
 class SystemMessage1Page extends StatefulWidget {
   const SystemMessage1Page({super.key});

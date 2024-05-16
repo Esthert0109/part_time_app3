@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'package:part_time_app/Utils/apiUtils.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Model/Collection/collectionModel.dart';
-import '../../Model/Task/missionMockClass.dart';
-
+import '../../Model/Task/missionClass.dart';
 import 'package:http/http.dart' as http;
-
 import '../../Utils/sharedPreferencesUtils.dart';
 
 class CollectionService {
@@ -19,10 +17,8 @@ class CollectionService {
     };
     try {
       final response = await getRequest(url, headers);
-      print(response.responseBody);
       if (response.statusCode == 200) {
-        final jsonResponse =
-            json.decode(utf8.decode(response.responseBody.runes.toList()));
+        final jsonResponse = json.decode(response.responseBody);
         final List<dynamic> data = jsonResponse['data'];
         return data.map((item) => TaskClass.fromJson(item)).toList();
       } else {

@@ -15,7 +15,7 @@ import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
-import '../../Model/Task/missionMockClass.dart';
+import '../../Model/Task/missionClass.dart';
 
 List<TaskClass> missionAvailable = [];
 List<TaskClass> missionAvailableAsec = [];
