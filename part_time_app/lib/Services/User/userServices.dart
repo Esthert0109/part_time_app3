@@ -5,16 +5,19 @@ import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Constants/apiConstant.dart';
 import '../../Constants/globalConstant.dart';
+import '../../Model/Advertisement/advertisementModel.dart';
 import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
 import '../Mission/categoryServices.dart';
+import '../explore/exploreServices.dart';
 import '../notification/systemMessageServices.dart';
 
 class UserServices {
   String url = "";
   CategoryServices categoryServices = CategoryServices();
   SystemMessageServices messageServices = SystemMessageServices();
+  ExploreService exploreServices = ExploreService();
 
   Future<LoginUserModel?> login(String phone, String password) async {
     url = port + loginUrl;
@@ -61,7 +64,48 @@ class UserServices {
                   await messageServices.getNotificationTips();
               if (tipsModel!.data != null) {
                 notificationTips = tipsModel!.data;
-                print("check noti: ${notificationTips?.responseData['系统通知']?.createdTime??""}");
+              }
+
+              for (int i = 0; i < 5; i++) {
+                NotificationListModel? notiModel =
+                    await messageServices.getNotificationList(i);
+                if (notiModel!.data != null) {
+                  switch (i) {
+                    case 0:
+                      systemMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.saveSystemMessageList(
+                          systemMessageList);
+                      break;
+                    case 1:
+                      missionMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.saveMissionMessageList(
+                          missionMessageList);
+                      break;
+                    case 2:
+                      paymentMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.savePaymentMessageList(
+                          paymentMessageList);
+                      break;
+                    case 3:
+                      publishMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.savePublishMessageList(
+                          publishMessageList);
+                      break;
+                    case 4:
+                      ticketingMessageList = notiModel.data!;
+                      await SharedPreferencesUtils.saveTicketMessageList(
+                          ticketingMessageList);
+                      break;
+                  }
+                }
+              }
+
+              AdvertisementModel? advertisementModel =
+                  await exploreServices.getAdvertisement();
+              if (advertisementModel!.data != null) {
+                advertisementList = advertisementModel.data!;
+
+                print("check ads: ${advertisementList[0].advertisementImage}");
               }
             } catch (e) {
               print("get info after logined error: $e");

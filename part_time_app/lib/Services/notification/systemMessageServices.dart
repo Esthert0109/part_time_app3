@@ -48,6 +48,47 @@ class SystemMessageServices {
       print("Error in Notification tips:$e");
     }
   }
+
+  Future<NotificationListModel?> getNotificationList(int type) async {
+    url = port +
+        getNotificationListByTypeUrl +
+        "notificationType=${type.toString()}";
+
+    NotificationListModel? notiModel;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+
+      if (responseCode == 0) {
+        List<dynamic>? data = jsonData['data'];
+        List<NotificationListDate>? responseData =
+            data?.map((item) => NotificationListDate.fromJson(item)).toList();
+
+        notiModel = NotificationListModel(
+            code: responseCode, msg: responseMsg, data: responseData);
+        return notiModel;
+      } else {
+        notiModel = NotificationListModel(
+            code: responseCode, msg: responseMsg, data: []);
+        return notiModel;
+      }
+    } catch (e) {
+      print("Error in noti list: $e");
+    }
+  }
 //   Future<MessageModel?> fetchSystemMessage() async {
 //     String url = port + systemMessage;
 //     final Map<String, String> headers = {
