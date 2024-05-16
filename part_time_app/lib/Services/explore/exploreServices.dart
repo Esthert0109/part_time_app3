@@ -15,7 +15,7 @@ class ExploreService {
 
     try {
       final response = await getRequest(url, headers);
-
+      print(response.responseBody);
       if (response.statusCode == 200) {
         final jsonResponse =
             json.decode(utf8.decode(response.responseBody.runes.toList()));
@@ -93,7 +93,7 @@ class ExploreService {
   }
 
   Future<SearchResult> fetchSearchByTag(
-      String sort, int tagId, int page) async {
+      String sort, String tagId, int page) async {
     String? _token = await SharedPreferencesUtils.getToken();
     final String url = port +
         searchbyTag +

@@ -12,13 +12,15 @@ import '../MockData/missionMockData.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String? searchKeyword;
-  final List<String>? selectedTags;
+  final List<int>? selectedTags;
+  final List<String>? selectedTagsName;
   bool byTag;
 
   SearchResultPage({
     super.key,
     this.searchKeyword,
     this.selectedTags,
+    this.selectedTagsName,
     required this.byTag,
   });
 
@@ -32,6 +34,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   List<TaskClass> missionSearch = [];
   List<TaskClass> missionSearchDesc = [];
   dynamic tag = '';
+  dynamic tagName = '';
   int selectIndex = 0;
   int page = 1;
   bool isLoading = false;
@@ -39,12 +42,19 @@ class _SearchResultPageState extends State<SearchResultPage> {
   String sortType = "";
   bool isEmpty = false;
   int totalResult = 0;
+  late bool bytag;
+
+  String listToCommaSeparatedString(List<int>? list) {
+    return list!.join(',');
+  }
 
   @override
   void initState() {
     super.initState();
     keyword = widget.searchKeyword ?? '';
-    tag = widget.selectedTags;
+    tag = listToCommaSeparatedString(widget.selectedTags);
+    tagName = widget.selectedTagsName;
+    bytag = widget.byTag;
     _scrollController.addListener(_scrollListener);
     _loadData();
   }
@@ -74,8 +84,16 @@ class _SearchResultPageState extends State<SearchResultPage> {
     });
 
     try {
-      final SearchResult data =
-          await ExploreService().fetchSearchResult(keyword, sortType, page);
+      print(tag);
+      print(tagName);
+      print(bytag);
+      SearchResult data;
+      if (bytag == true) {
+        data = await ExploreService().fetchSearchByTag(sortType, tag, page);
+      } else {
+        data =
+            await ExploreService().fetchSearchResult(keyword, sortType, page);
+      }
 
       setState(() {
         if (data.tasks.isNotEmpty) {
@@ -166,7 +184,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           widget.byTag
                               ? Wrap(
                                   children: List.generate(
-                                    (tag as List<String>).length,
+                                    (tagName as List<String>).length,
                                     (index) => RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
@@ -176,7 +194,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                                             style: missionTagTextStyle,
                                           ),
                                           TextSpan(
-                                            text: ' ${tag[index]} ',
+                                            text: ' ${tagName[index]} ',
                                             style: dialogText1,
                                           ),
                                         ],
@@ -193,7 +211,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           Row(
                             children: [
                               Expanded(
-                                flex: 10,
+                                flex: 11,
                                 // padding: EdgeInsets.only(top: 20, right: 180),
                                 child: PrimaryTagSelectionComponent(
                                   tagList: ["价格降序", "价格升序"],
@@ -218,7 +236,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                                 ),
                               ),
                               Expanded(
-                                  flex: 3, child: Text("${totalResult}条相关"))
+                                  flex: 2, child: Text("${totalResult}条相关"))
                             ],
                           ),
                           SizedBox(height: 10),

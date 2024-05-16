@@ -22,7 +22,7 @@ class _CollectPageState extends State<CollectPage>
   int page = 1;
   bool isLoading = false;
   bool continueLoading = true;
-
+  bool isEmpty = false;
   @override
   bool get wantKeepAlive => true;
 
@@ -36,6 +36,7 @@ class _CollectPageState extends State<CollectPage>
   @override
   void dispose() {
     _scrollController.dispose();
+    missionCollection.clear();
     super.dispose();
   }
 
@@ -62,6 +63,9 @@ class _CollectPageState extends State<CollectPage>
           page++;
         } else {
           continueLoading = false;
+        }
+        if (missionCollection.isEmpty) {
+          isEmpty = true;
         }
         isLoading = false;
       });
@@ -105,16 +109,24 @@ class _CollectPageState extends State<CollectPage>
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: missionCollection.isNotEmpty
                     ? buildListView()
-                    : Container(
-                        height: constraints.maxHeight,
-                        child: Center(
-                          child: SvgPicture.asset(
-                            "assets/common/searchEmpty.svg",
-                            width: 150,
-                            height: 150,
+                    : isEmpty == false
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: SizedBox(
+                              // Set the desired height for the loading component
+                              child: MissionCardLoadingComponent(),
+                            ),
+                          )
+                        : Container(
+                            height: constraints.maxHeight,
+                            child: Center(
+                              child: SvgPicture.asset(
+                                "assets/common/searchEmpty.svg",
+                                width: 150,
+                                height: 150,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
               ),
             );
           },
