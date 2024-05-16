@@ -14,8 +14,9 @@ const updateForgotPasswordUrl = "api/v1/customers/updatePassByForgot/";
 const exploreURL = "api/v1/tasks/getTaskListByDateDesc?";
 const explorePriceURL = "api/v1/tasks/getTaskListByPrice";
 const collectionURL = "api/v1/collection/my-collection";
-const searchResultPage =
-    "api/v1/taskss/searchByKeywords?keyword=Test&sortOrder=desc";
+const createCollectionURL = "api/v1/collection/create?taskId=";
+const searchResultPage = "api/v1/tasks/searchByKeywords?";
+const searchbyTag = "api/v1/tasks/searchByTag?";
 const advertisementPage = "api/v1/advertisement/all";
 
 //system message Services
