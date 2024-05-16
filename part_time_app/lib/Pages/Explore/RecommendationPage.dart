@@ -5,10 +5,12 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Pages/Explore/easyPassPage.dart';
 import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Explore/newMissionPage.dart';
 import 'package:part_time_app/Pages/Explore/shortTimePage.dart';
+import '../../Components/Card/categoryCardComponent.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
@@ -125,7 +127,8 @@ class _RecommendationPageState extends State<RecommendationPage>
   }
 
   Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
+
     if (!isLoading && mounted) {
       setState(() {
         page = 1;
@@ -152,25 +155,25 @@ class _RecommendationPageState extends State<RecommendationPage>
         color: kMainYellowColor,
         child: SingleChildScrollView(
           controller: _scrollController,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             bottom: 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SearchBarComponent(),
+              const SearchBarComponent(),
               FlutterCarousel(
                 options: CarouselOptions(
                   enableInfiniteScroll: true,
                   autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 10),
+                  autoPlayInterval: const Duration(seconds: 10),
                   autoPlayAnimationDuration: const Duration(milliseconds: 1000),
                   height: 132.0,
                   aspectRatio: 16 / 9,
                   viewportFraction: 1.0,
                   showIndicator: false,
                   indicatorMargin: 2,
-                  slideIndicator: CircularSlideIndicator(
+                  slideIndicator: const CircularSlideIndicator(
                     itemSpacing: 20,
                     currentIndicatorColor: Color.fromARGB(232, 255, 227, 87),
                   ),
@@ -199,9 +202,17 @@ class _RecommendationPageState extends State<RecommendationPage>
                   );
                 }).toList(),
               ),
-              _buildCategoryComponent(),
+              CategoryItem(
+                list: exploreCategoryList,
+                onTapCallbacks: [
+                  () => HighCommisionPage(),
+                  () => ShortTimePage(),
+                  () => EasyPassPage(),
+                  () => NewMissionPage(),
+                ],
+              ),
               Padding(
-                padding: EdgeInsets.only(top: 20, right: 110),
+                padding: const EdgeInsets.only(top: 20, right: 110),
                 child: PrimaryTagSelectionComponent(
                   tagList: ["全部", "价格降序", "价格升序"],
                   selectedIndex: selectIndex,
@@ -245,18 +256,18 @@ class _RecommendationPageState extends State<RecommendationPage>
       case 2:
         return _buildMissionListView(missionAvailableDesc);
       default:
-        return SizedBox(); // return some default widget if selectIndex is not 0, 1, or 2
+        return const SizedBox(); // return some default widget if selectIndex is not 0, 1, or 2
     }
   }
 
   Widget _buildMissionListView(List<TaskClass> missionList) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: missionList.length + (continueLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
         if (index == missionList.length) {
-          return MissionCardLoadingComponent();
+          return const MissionCardLoadingComponent();
         } else {
           return MissionCardComponent(
             taskId: missionList[index].taskId,
@@ -277,76 +288,4 @@ class _RecommendationPageState extends State<RecommendationPage>
       },
     );
   }
-}
-
-Widget _buildCategoryComponent() {
-  return Container(
-    padding: EdgeInsets.only(top: 17),
-    child: Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => HighCommisionPage(),
-                  transition: Transition.rightToLeft);
-            },
-            child: Column(
-              children: [
-                SvgPicture.asset("assets/main/hightCom.svg"),
-                SizedBox(height: 10),
-                Text("高赏金", style: messageText1),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => ShortTimePage(), transition: Transition.rightToLeft);
-            },
-            child: Column(
-              children: [
-                SvgPicture.asset("assets/main/shortTime.svg"),
-                SizedBox(height: 10),
-                Text("用时短", style: messageText1),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => EasyPassPage(), transition: Transition.rightToLeft);
-            },
-            child: Column(
-              children: [
-                SvgPicture.asset("assets/main/easyGo.svg"),
-                SizedBox(height: 10),
-                Text("易审核", style: messageText1),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => NewMissionPage(),
-                  transition: Transition.rightToLeft);
-            },
-            child: Column(
-              children: [
-                SvgPicture.asset("assets/main/newMission.svg"),
-                SizedBox(height: 10),
-                Text("新悬赏", style: messageText1),
-              ],
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }
