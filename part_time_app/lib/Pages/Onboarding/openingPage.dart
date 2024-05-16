@@ -13,6 +13,8 @@ import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
+import '../../Model/notification/messageModel.dart';
+import '../../Services/notification/systemMessageServices.dart';
 
 class OpeningPage extends StatefulWidget {
   const OpeningPage({super.key});
@@ -27,12 +29,13 @@ class _OpeningPageState extends State<OpeningPage> {
   UserData? userInfo;
   UserServices services = UserServices();
   CategoryServices categoryServices = CategoryServices();
+  SystemMessageServices messageServices = SystemMessageServices();
 
   @override
   void initState() {
     super.initState();
     checkIfLogined();
-    fetchDataExplorePage();
+    // fetchDataExplorePage();
   }
 
   @override
@@ -54,7 +57,10 @@ class _OpeningPageState extends State<OpeningPage> {
             await SharedPreferencesUtils.saveUserInfo(user!);
             await SharedPreferencesUtils.saveUserDataInfo(user.data!);
             await SharedPreferencesUtils.saveToken(userModel.data!.token!);
-            Get.offAllNamed('/');
+
+            if (user.code == 0) {
+              Get.offAllNamed('/');
+            }
           }
         } catch (e) {
           Timer(const Duration(seconds: 1), () {
@@ -70,13 +76,6 @@ class _OpeningPageState extends State<OpeningPage> {
       Timer(const Duration(seconds: 1), () {
         Get.offAllNamed('/onboarding');
       });
-    }
-  }
-
-  fetchDataExplorePage() async {
-    CategoryModel? model = await categoryServices.getCategoryList();
-    if (model!.data != null) {
-      exploreCategoryList = model.data!;
     }
   }
 

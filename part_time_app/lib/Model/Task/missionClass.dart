@@ -1,3 +1,13 @@
+class SearchResult {
+  final int totalAmountOfData;
+  final List<TaskClass> tasks;
+
+  SearchResult({
+    required this.totalAmountOfData,
+    required this.tasks,
+  });
+}
+
 class TaskClass {
   final int? collectionId;
   final int? taskId;
@@ -8,9 +18,9 @@ class TaskClass {
   final String? taskTagIds;
   final List<Tag>? taskTagNames;
   final String? taskUpdatedTime;
-  final String? username;
+  final String? nickname;
   final String? avatar;
-  final int? valid;
+  final bool? collectionValid;
 
   TaskClass({
     this.collectionId,
@@ -22,9 +32,9 @@ class TaskClass {
     this.taskTagIds,
     this.taskTagNames,
     this.taskUpdatedTime,
-    this.username,
+    this.nickname,
     this.avatar,
-    this.valid,
+    this.collectionValid,
   });
 
   factory TaskClass.fromJson(Map<String, dynamic> json) {
@@ -37,12 +47,13 @@ class TaskClass {
       taskSinglePrice: json['taskSinglePrice'] ?? 0,
       taskTagIds: json['taskTagIds'] ?? "",
       taskTagNames: (json['taskTagNames'] as List<dynamic>?)
-          ?.map((tagJson) => Tag.fromJson(tagJson))
-          .toList(),
+              ?.map((tagJson) => Tag.fromJson(tagJson))
+              .toList() ??
+          [],
       taskUpdatedTime: json['taskUpdatedTime'] ?? "",
-      username: json['username'] ?? "",
+      nickname: json['nickname'] ?? "",
       avatar: json['avatar'] ?? "",
-      valid: json['valid'] ?? 1,
+      collectionValid: json['collectionValid'] == 1,
     );
   }
 
@@ -56,7 +67,7 @@ class TaskClass {
       'taskTagIds': taskTagIds,
       'taskTagNames': taskTagNames?.map((tag) => tag.toJson()).toList(),
       'taskUpdatedTime': taskUpdatedTime,
-      'username': username,
+      'nickname': nickname,
       'avatar': avatar,
     };
   }

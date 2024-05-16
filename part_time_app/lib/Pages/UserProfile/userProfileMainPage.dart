@@ -15,6 +15,7 @@ import 'package:part_time_app/Pages/UserProfile/settingPage.dart';
 import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/userProfilePage.dart';
 
+import '../../Constants/globalConstant.dart';
 import '../../Model/User/userModel.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
 
@@ -26,12 +27,10 @@ class UserProfileMainPage extends StatefulWidget {
 }
 
 class _UserProfileMainPageState extends State<UserProfileMainPage> {
-  UserData? userData = UserData();
-
   getUserInfo() async {
     UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
     setState(() {
-      userData = data;
+      userData = data!;
     });
   }
 
@@ -39,7 +38,7 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getUserInfo();
+    getUserInfo();
   }
 
   @override
@@ -96,7 +95,7 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              userData?.nickname ?? "",
+                              userData.nickname ?? "",
                               style: userProfileNameTextStyle,
                             ),
                             const SizedBox(width: 20),
@@ -109,8 +108,8 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                                     "assets/profile/edit_profile.svg"))
                           ],
                         ),
-                        subtitle: const Text(
-                          'UID: ' + '34693426720',
+                        subtitle: Text(
+                          'UID: ${userData.customerId ?? ""}',
                           style: userProfileUIDTextStyle,
                         ),
                         trailing: InkWell(

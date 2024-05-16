@@ -14,28 +14,41 @@ class SortPage extends StatefulWidget {
   State<SortPage> createState() => _SortPageState();
 }
 
-Map<String, dynamic> sorts = {
+Map<String, List<Map<String, dynamic>>> sorts = {
   "工作期限": [
-    {1, '短期'},
-    {2, '长期'}
+    {"id": 1, "name": '短期'},
+    {"id": 2, "name": '长期'}
   ],
   "工作内容": [
-    {3, '写作'},
-    {4, '录入'},
-    {5, '游戏'},
-    {6, '发帖'},
-    {7, '网页设计'},
-    {8, '平面设计'}
+    {"id": 3, "name": '写作'},
+    {"id": 4, "name": '录入'},
+    {"id": 5, "name": '游戏'},
+    {"id": 6, "name": '发帖'},
+    {"id": 7, "name": '网页设计'},
+    {"id": 8, "name": '平面设计'}
   ],
   "工作性质": [
-    {9, '新任务'},
-    {10, '易审核'},
-    {11, '高悬赏'}
+    {"id": 9, "name": '新任务'},
+    {"id": 10, "name": '易审核'},
+    {"id": 11, "name": '高悬赏'}
   ],
 };
-List<int> selectedIndex = [];
 
 class _SortPageState extends State<SortPage> {
+  List<int> selectedIndex = [];
+  List<String> selectedIndexName = [];
+  void updateSelectedIndex(List<int> newSelectedIndex) {
+    setState(() {
+      selectedIndex = newSelectedIndex;
+    });
+  }
+
+  void updateSelectedIndexName(List<String> newSelectedIndexName) {
+    setState(() {
+      selectedIndexName = newSelectedIndexName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -81,6 +94,8 @@ class _SortPageState extends State<SortPage> {
                   child: SingleChildScrollView(
                     child: SecondaryCategorySelectionComponent(
                       sorts: sorts,
+                      onSelectedIndicesChanged: updateSelectedIndex,
+                      onSelectedNameChanged: updateSelectedIndexName,
                     ),
                   )),
               Container(
@@ -95,7 +110,8 @@ class _SortPageState extends State<SortPage> {
                       setState(() {
                         Get.to(
                             () => SearchResultPage(
-                                  selectedTags: selectedIndexName,
+                                  selectedTags: selectedIndex,
+                                  selectedTagsName: selectedIndexName,
                                   byTag: true,
                                 ),
                             transition: Transition.rightToLeft);

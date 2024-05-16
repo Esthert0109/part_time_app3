@@ -17,6 +17,10 @@ import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
 
+List<TaskClass> missionAvailable = [];
+List<TaskClass> missionAvailableAsec = [];
+List<TaskClass> missionAvailableDesc = [];
+
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
 
@@ -28,9 +32,7 @@ class _RecommendationPageState extends State<RecommendationPage>
     with AutomaticKeepAliveClientMixin {
   ScrollController _scrollController = ScrollController();
   int selectIndex = 0;
-  List<TaskClass> missionAvailable = [];
-  List<TaskClass> missionAvailableAsec = [];
-  List<TaskClass> missionAvailableDesc = [];
+
   int page = 1;
   bool isLoading = false;
   bool continueLoading = true;
@@ -257,6 +259,7 @@ class _RecommendationPageState extends State<RecommendationPage>
           return MissionCardLoadingComponent();
         } else {
           return MissionCardComponent(
+            taskId: missionList[index].taskId,
             missionTitle: missionList[index].taskTitle ?? "",
             missionDesc: missionList[index].taskContent ?? "",
             tagList: missionList[index]
@@ -266,8 +269,9 @@ class _RecommendationPageState extends State<RecommendationPage>
                 [],
             missionPrice: missionList[index].taskSinglePrice ?? 0.0,
             userAvatar: missionList[index].avatar ?? "",
-            username: missionList[index].username ?? "",
+            username: missionList[index].nickname ?? "",
             missionDate: missionList[index].taskUpdatedTime ?? "",
+            isFavorite: missionList[index].collectionValid ?? false,
           );
         }
       },

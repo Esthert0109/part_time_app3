@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       // home: const HomePage(),
-      initialRoute: '/',
+      initialRoute: '/opening',
       getPages: [
         GetPage(name: '/opening', page: () => const OpeningPage()),
         GetPage(name: '/onboarding', page: () => const OnboradingPage()),
