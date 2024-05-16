@@ -61,8 +61,9 @@ class UserServices {
                   await messageServices.getNotificationTips();
               if (tipsModel!.data != null) {
                 notificationTips = tipsModel!.data;
-                print("check noti: ${notificationTips?.responseData['系统通知']?.createdTime??""}");
               }
+
+              
             } catch (e) {
               print("get info after logined error: $e");
             }

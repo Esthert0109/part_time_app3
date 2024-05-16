@@ -5,3 +5,4 @@ import '../Model/notification/messageModel.dart';
 
 List<CategoryListData> exploreCategoryList = [];
 NotificationTipsData? notificationTips;
+UserData userData = UserData();
