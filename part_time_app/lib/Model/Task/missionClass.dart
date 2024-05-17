@@ -8,6 +8,104 @@ class SearchResult {
   });
 }
 
+class OrderModel {
+  final int code;
+  final String msg;
+  final List<OrderData>? data;
+
+  OrderModel({
+    required this.code,
+    required this.msg,
+    required this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "code": code,
+      "msg": msg,
+      "data": data?.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      code: json['code'],
+      msg: json['msg'],
+      data: json['data'] != null
+          ? List<OrderData>.from(
+              json['data'].map((data) => OrderData.fromJson(data)))
+          : [],
+    );
+  }
+}
+
+class OrderData {
+  final int? orderId;
+  final int? taskId;
+  final String? customerId;
+  final String? taskTitle;
+  final String? taskContent;
+  final String? taskTagIds;
+  final List<Tag>? taskTagNames;
+  final double? orderSinglePrice;
+  final int? orderStatus;
+  final String? taskUpdatedTime;
+  final String? username;
+  final String? avatar;
+
+  OrderData({
+    this.orderId,
+    this.taskId,
+    this.customerId,
+    this.taskTitle,
+    this.taskContent,
+    this.taskTagIds,
+    this.taskTagNames,
+    this.orderSinglePrice,
+    this.orderStatus,
+    this.taskUpdatedTime,
+    this.username,
+    this.avatar,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "orderId": orderId,
+      "taskId": taskId,
+      "customerId": customerId,
+      "taskTitle": taskTitle,
+      "taskContent": taskContent,
+      "taskTagIds": taskTagIds,
+      "taskTagNames": taskTagNames?.map((e) => e.toJson()).toList(),
+      "orderSinglePrice": orderSinglePrice,
+      "orderStatus": orderStatus,
+      "taskUpdatedTime": taskUpdatedTime,
+      "username": username,
+      "avatar": avatar,
+    };
+  }
+
+  factory OrderData.fromJson(Map<String, dynamic> json) {
+    return OrderData(
+      orderId: json['orderId'],
+      taskId: json['taskId'],
+      customerId: json['customerId'],
+      taskTitle: json['taskTitle'],
+      taskContent: json['taskContent'],
+      taskTagIds: json['taskTagIds'],
+      taskTagNames: json['taskTagNames'] != null
+          ? List<Tag>.from(
+              json['taskTagNames'].map((data) => Tag.fromJson(data)))
+          : [],
+      orderSinglePrice: json['orderSinglePrice'],
+      orderStatus: json['orderStatus'],
+      taskUpdatedTime: json['taskUpdatedTime'],
+      username: json['username'],
+      avatar: json['avatar'],
+    );
+  }
+}
+
 class TaskClass {
   final int? collectionId;
   final int? taskId;

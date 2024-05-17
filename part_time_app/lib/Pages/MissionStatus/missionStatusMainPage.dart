@@ -5,6 +5,9 @@ import 'package:part_time_app/Pages/MissionStatus/missionIssuedMainPage.dart';
 
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Constants/globalConstant.dart';
+import '../../Model/Task/missionClass.dart';
+import '../../Services/order/orderServices.dart';
 import '../Explore/RecommendationPage.dart';
 
 class MissionStatusMainPage extends StatefulWidget {
@@ -17,6 +20,16 @@ class MissionStatusMainPage extends StatefulWidget {
 class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
   final PageController _controller = PageController();
   int titleSelection = 0;
+
+  
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {

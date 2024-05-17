@@ -19,6 +19,9 @@ const searchResultPage = "api/v1/tasks/searchByKeywords?";
 const searchbyTag = "api/v1/tasks/searchByTag?";
 const advertisementPage = "api/v1/advertisement/all";
 
+// order Services
+const getOrderByStatusUrl = "api/v1/orders/getOrderListByStatusId/";
+
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
 const getNotificationTipsUrl = "api/v1/notification/getLatestNotificationTips";
