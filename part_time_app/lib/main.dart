@@ -14,16 +14,22 @@ import 'package:part_time_app/Pages/UserProfile/depositHistoryDetailPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
 import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
-
+import 'package:provider/provider.dart';
 import 'Pages/Message/user/chatConfig.dart';
 import 'Pages/homePage.dart';
+import 'Services/webSocketService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initAndLoginIm();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => WebSocketService(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

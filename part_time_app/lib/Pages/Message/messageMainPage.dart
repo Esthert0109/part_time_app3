@@ -10,6 +10,9 @@ import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Services/notification/systemMessageServices.dart';
+import 'package:provider/provider.dart';
+
+import '../../Services/webSocketService.dart';
 
 class MessageMainPage extends StatefulWidget {
   const MessageMainPage({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _MessageMainPageState extends State<MessageMainPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
   int titleSelection = 0;
   bool isLoading = false;
   late String? latestSystemMessageDate;
@@ -72,8 +76,6 @@ class _MessageMainPageState extends State<MessageMainPage>
   @override
   void initState() {
     super.initState();
-    print("Call the messaging API");
-    _loadData();
     getMessageFromSharedPreferences();
   }
 
@@ -91,6 +93,8 @@ class _MessageMainPageState extends State<MessageMainPage>
 
   @override
   Widget build(BuildContext context) {
+    final webSocketService = Provider.of<WebSocketService>(context);
+
     return Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
@@ -128,12 +132,12 @@ class _MessageMainPageState extends State<MessageMainPage>
                   children: [
                     MessageCardComponent(
                       //system
-                      systemDate:
-                          notificationTips?.responseData['系统通知']?.createdTime,
-                      systemDetail: notificationTips
-                          ?.responseData['系统通知']?.notificationContent,
-                      systemTotalMessage: notificationTips
-                          ?.responseData['系统通知']?.notificationTotalUnread,
+                      systemDate: webSocketService.notificationTips['系统通知']
+                          ?['createdTime'],
+                      systemDetail: webSocketService.notificationTips['系统通知']
+                          ?['notificationContent'],
+                      systemTotalMessage: webSocketService
+                          .notificationTips['系统通知']?['notificationTotalUnread'],
                       //mission
                       missionDate:
                           notificationTips?.responseData['悬赏通知']?.createdTime,
