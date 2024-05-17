@@ -15,10 +15,6 @@ import '../../Services/order/orderServices.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
 import '../../Model/Task/missionClass.dart';
 
-bool dataFetchedAccepted = false;
-bool dataEndAccepted = false;
-bool noInitialRefresh = true;
-
 class MissionAcceptedMainPage extends StatefulWidget {
   const MissionAcceptedMainPage({super.key});
 
@@ -32,15 +28,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
   @override
   bool get wantKeepAlive => true;
 
-  // RefreshController _refreshController =
-  //     RefreshController(initialRefresh: noInitialRefresh);
   int statusSelected = 0;
   bool isLoading = false;
   bool isContinueLoading = true;
-  // bool isFirstLaunch = true;
-  // bool reachEndOfList = false;
-  // int currentPage = 1;
-  // int itemsPerPage = 5;
   ScrollController _scrollController = ScrollController();
 
   //set status on mission detail recipient page
@@ -172,9 +162,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         isPaid = false;
         isFailed = false;
         if (orderIncompleted.length > 0) {
-          return SizedBox(
-              height: screenHeight - 200,
-              child: buildMissionAcceptedListView(orderIncompleted));
+          return buildMissionAcceptedListView(orderIncompleted);
         } else {
           return SizedBox(
             height: screenHeight - 200,
@@ -193,9 +181,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         isPaid = false;
         isFailed = false;
         if (orderWaitReviewed.length > 0) {
-          return SizedBox(
-              height: screenHeight - 200,
-              child: buildMissionAcceptedListView(orderWaitReviewed));
+          return buildMissionAcceptedListView(orderWaitReviewed);
         } else {
           return SizedBox(
             height: screenHeight - 200,
@@ -213,9 +199,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         isPaid = false;
         isFailed = true;
         if (orderFailed.length > 0) {
-          return SizedBox(
-              height: screenHeight - 200,
-              child: buildMissionAcceptedListView(orderFailed));
+          return buildMissionAcceptedListView(orderFailed);
         } else {
           return SizedBox(
             height: screenHeight - 200,
@@ -233,9 +217,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         isPaid = false;
         isFailed = false;
         if (orderWaitPayment.length > 0) {
-          return SizedBox(
-              height: screenHeight - 200,
-              child: buildMissionAcceptedListView(orderWaitPayment));
+          return buildMissionAcceptedListView(orderWaitPayment);
         } else {
           return SizedBox(
             height: screenHeight - 200,
@@ -253,9 +235,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         isPaid = true;
         isFailed = false;
         if (orderPaid.length > 0) {
-          return SizedBox(
-              height: screenHeight - 200,
-              child: buildMissionAcceptedListView(orderPaid));
+          return buildMissionAcceptedListView(orderPaid);
         } else {
           return SizedBox(
             height: screenHeight - 200,
@@ -274,7 +254,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: missionList.length + (isContinueLoading ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == missionList.length) {

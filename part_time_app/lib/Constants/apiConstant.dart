@@ -21,6 +21,7 @@ const advertisementPage = "api/v1/advertisement/all";
 
 // order Services
 const getOrderByStatusUrl = "api/v1/orders/getOrderListByStatusId/";
+const getTaskByStatusUrl = "api/v1/tasks/getTaskListByStatusId/";
 
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
