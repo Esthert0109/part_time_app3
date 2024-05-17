@@ -25,6 +25,8 @@ const getNotificationTipsUrl = "api/v1/notification/getLatestNotificationTips";
 const getNotificationListByTypeUrl =
     "api/v1/notification/notificationListByType?";
 const patchNotificationReadStatusUrl = "api/v1/notification/updateIsRead/";
+const postSystemNotificationReadStatusUrl =
+    "api/v1/notification/updateSystemIsRead";
 
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";

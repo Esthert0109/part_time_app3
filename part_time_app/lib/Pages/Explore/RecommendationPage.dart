@@ -15,8 +15,6 @@ import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
-import '../../Constants/globalConstant.dart';
-import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
 

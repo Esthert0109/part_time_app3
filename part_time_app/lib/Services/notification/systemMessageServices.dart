@@ -115,4 +115,29 @@ class SystemMessageServices {
       return null;
     }
   }
+
+  Future<NotificationReadModel?> postUpdateRead() async {
+    url = port + postSystemNotificationReadStatusUrl;
+    String? _token = await SharedPreferencesUtils.getToken();
+    print(url);
+    final Map<String, String> headers = {
+      'Token': '$_token',
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        return NotificationReadModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to update collection');
+      }
+    } catch (e) {
+      print('Error in updateCollection: $e');
+      return null;
+    }
+  }
 }

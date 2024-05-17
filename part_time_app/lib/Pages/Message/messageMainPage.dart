@@ -54,9 +54,12 @@ class _MessageMainPageState extends State<MessageMainPage>
     } catch (e) {
       print("Error: $e");
       // Handle error
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      ;
     }
   }
 
