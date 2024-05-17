@@ -228,7 +228,7 @@ class _MissionDetailStatusIssuerPageState
                           day: "3",
                           duration: "4",
                           date: "2024.04.30",
-                          price: "50",
+                          price: "50", taskId: 0,
                         ),
                         const SizedBox(
                           height: 12,
@@ -242,12 +242,12 @@ class _MissionDetailStatusIssuerPageState
                                         "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"),
                               )
                             : Container(),
-                        missionDetailStepsCardComponent(
-                          steps: mockData,
-                          isConfidential: false,
-                          isCollapsed: true,
-                          isCollapseAble: false,
-                        ),
+                        // missionDetailStepsCardComponent(
+                        //   steps: mockData,
+                        //   isConfidential: false,
+                        //   isCollapsed: true,
+                        //   isCollapseAble: false,
+                        // ),
                         (widget.isPassed || widget.isRemoved)
                             ? Container()
                             : Padding(

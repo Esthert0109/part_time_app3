@@ -39,6 +39,23 @@ class OrderModel {
   }
 }
 
+class OrderDetailModel {
+  final int code;
+  final String msg;
+  final OrderData? data;
+
+  OrderDetailModel({required this.code, required this.msg, this.data});
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
+  }
+
+  factory OrderDetailModel.fromJson(Map<String, dynamic> json) {
+    return OrderDetailModel(
+        code: json['code'], msg: json['msg'], data: json['data']);
+  }
+}
+
 class OrderData {
   final int? orderId;
   final int? taskId;
@@ -61,30 +78,43 @@ class OrderData {
   final int? taskEstimateTime;
   final String? taskEstimateTimeUnit;
   final String? taskStatus;
+  final TaskProcedureModel? taskProcedures;
+  final String? orderRejectReason;
+  final String? taskCreatedTime;
+  final int? taskImagesPreview;
+  final int? taskReceivedNum;
+  final int? taskIsDelete;
+  final int? collectionValid;
 
-  OrderData({
-    this.orderId,
-    this.taskId,
-    this.customerId,
-    this.taskTitle,
-    this.taskContent,
-    this.taskTagIds,
-    this.taskTagNames,
-    this.orderSinglePrice,
-    this.orderStatus,
-    this.taskUpdatedTime,
-    this.username,
-    this.nickname,
-    this.avatar,
-    this.categoryId,
-    this.taskSinglePrice,
-    this.taskQuota,
-    this.taskTimeLimit,
-    this.taskTimeLimitUnit,
-    this.taskEstimateTime,
-    this.taskEstimateTimeUnit,
-    this.taskStatus,
-  });
+  OrderData(
+      {this.orderId,
+      this.taskId,
+      this.customerId,
+      this.taskTitle,
+      this.taskContent,
+      this.taskTagIds,
+      this.taskTagNames,
+      this.orderSinglePrice,
+      this.orderStatus,
+      this.taskUpdatedTime,
+      this.username,
+      this.nickname,
+      this.avatar,
+      this.categoryId,
+      this.taskSinglePrice,
+      this.taskQuota,
+      this.taskTimeLimit,
+      this.taskTimeLimitUnit,
+      this.taskEstimateTime,
+      this.taskEstimateTimeUnit,
+      this.taskStatus,
+      this.taskProcedures,
+      this.orderRejectReason,
+      this.taskCreatedTime,
+      this.taskImagesPreview,
+      this.taskReceivedNum,
+      this.taskIsDelete,
+      this.collectionValid});
 
   Map<String, dynamic> toJson() {
     return {
@@ -108,7 +138,14 @@ class OrderData {
       "taskTimeLimitUnit": taskTimeLimitUnit,
       "taskEstimateTime": taskEstimateTime,
       "taskEstimateTimeUnit": taskEstimateTimeUnit,
-      "taskStatus": taskStatus
+      "taskStatus": taskStatus,
+      "taskProcedures": taskProcedures?.toJson(),
+      "orderRejectReason": orderRejectReason,
+      "taskCreatedTime": taskCreatedTime,
+      "taskImagesPreview": taskImagesPreview,
+      "taskReceivedNum": taskReceivedNum,
+      "taskIsDelete": taskIsDelete,
+      "collectionValid": collectionValid
     };
   }
 
@@ -137,7 +174,50 @@ class OrderData {
         taskTimeLimitUnit: json['taskTimeLimitUnit'],
         taskEstimateTime: json['taskEstimateTime'],
         taskEstimateTimeUnit: json['taskEstimateTimeUnit'],
-        taskStatus: json['taskStatus']);
+        taskStatus: json['taskStatus'],
+        taskProcedures: json['taskProcedures'] != null
+            ? TaskProcedureModel.fromJson(json['taskProcedures'])
+            : null,
+        orderRejectReason: json['orderRejectReason'],
+        taskCreatedTime: json['taskCreatedTime'],
+        taskImagesPreview: json['taskImagesPreview'],
+        taskReceivedNum: json['taskReceivedNum'],
+        taskIsDelete: json['taskIsDelete'],
+        collectionValid: json['collectionValid']);
+  }
+}
+
+class TaskProcedureModel {
+  final List<TaskProcedureData> step;
+
+  TaskProcedureModel({required this.step});
+
+  Map<String, dynamic> toJson() {
+    return {"step": step?.map((e) => e.toJson()).toList()};
+  }
+
+  factory TaskProcedureModel.fromJson(Map<String, dynamic> json) {
+    return TaskProcedureModel(
+        step: json['step'] != null
+            ? List<TaskProcedureData>.from(
+                json['step'].map((data) => TaskProcedureData.fromJson(data)))
+            : []);
+  }
+}
+
+class TaskProcedureData {
+  final dynamic? image;
+  final String instruction;
+
+  TaskProcedureData({this.image, required this.instruction});
+
+  Map<String, dynamic> toJson() {
+    return {"image": image, "instruction": instruction};
+  }
+
+  factory TaskProcedureData.fromJson(Map<String, dynamic> json) {
+    return TaskProcedureData(
+        image: json['image'], instruction: json['instruction']);
   }
 }
 

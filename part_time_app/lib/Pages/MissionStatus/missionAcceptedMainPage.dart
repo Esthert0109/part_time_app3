@@ -66,7 +66,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
     });
 
     for (int i = 0; i < 9; i++) {
-      orderModel = await services.GetOrderByStatus(i);
+      orderModel = await services.getOrderByStatus(i);
       if (orderModel != null &&
           orderModel!.data != null &&
           orderModel!.data!.isNotEmpty) {
@@ -279,12 +279,14 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
               onTap: () {
                 Get.to(
                     () => MissionDetailRecipientPage(
-                        isStarted: isStarted,
-                        isSubmitted: isSubmitted,
-                        isExpired: isExpired,
-                        isWaitingPaid: isWaitingPaid,
-                        isFailed: isFailed,
-                        isPaid: isPaid),
+                          isStarted: isStarted,
+                          isSubmitted: isSubmitted,
+                          isExpired: isExpired,
+                          isWaitingPaid: isWaitingPaid,
+                          isFailed: isFailed,
+                          isPaid: isPaid,
+                          orderId: missionList[index].orderId,
+                        ),
                     transition: Transition.rightToLeft);
               },
             );

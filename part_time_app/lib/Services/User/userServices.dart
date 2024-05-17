@@ -347,4 +347,44 @@ class UserServices {
       return userModel;
     }
   }
+
+  Future<CheckOTPModel?> updateUSDT(UserData userInfo) async {
+    url = port + updateUserInfoUrl;
+    CheckOTPModel? updateModel;
+    String? token = await SharedPreferencesUtils.getToken();
+    String? phone = await SharedPreferencesUtils.getPhoneNo();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      'billingNetwork': userInfo.bilingNetwork,
+      'billingAddress': userInfo.bilingAddress,
+      'billingCurrency': 'USDT',
+      'firstPhoneNo': phone
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+        if (responseCode == 0) {
+          bool responseData = jsonData['data'];
+          updateModel = CheckOTPModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+          return updateModel;
+        }
+
+        updateModel =
+            CheckOTPModel(code: responseCode, msg: responseMsg, data: false);
+        return updateModel;
+      }
+    } catch (e) {
+      print("Error in update USDT: $e");
+    }
+  }
 }

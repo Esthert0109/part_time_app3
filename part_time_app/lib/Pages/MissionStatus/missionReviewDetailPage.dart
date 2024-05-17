@@ -95,14 +95,15 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       date: "2024.04.30",
                       price: "50",
                       isFavourite: isFavourite,
+                      taskId: 0,
                     ),
                   ),
-                  missionDetailStepsCardComponent(
-                    steps: mockData,
-                    isConfidential: false,
-                    isCollapsed: false,
-                    isCollapseAble: true,
-                  ),
+                  // missionDetailStepsCardComponent(
+                  //   steps: mockData,
+                  //   isConfidential: false,
+                  //   isCollapsed: false,
+                  //   isCollapseAble: true,
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: MissionSubmissionCardComponent(

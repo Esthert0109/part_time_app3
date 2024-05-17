@@ -9,6 +9,7 @@ const checkUrl = "api/v1/customers/users/check";
 const sendOTPUrl = "api/v1/sms/send/";
 const verifyOTPUrl = "api/v1/sms/verify/mobile/";
 const updateForgotPasswordUrl = "api/v1/customers/updatePassByForgot/";
+const updateUserInfoUrl = "api/v1/customers/updateInfo";
 
 //explore Services
 const exploreURL = "api/v1/tasks/getTaskListByDateDesc?";
@@ -22,11 +23,14 @@ const advertisementPage = "api/v1/advertisement/all";
 // order Services
 const getOrderByStatusUrl = "api/v1/orders/getOrderListByStatusId/";
 const getTaskByStatusUrl = "api/v1/tasks/getTaskListByStatusId/";
+const getOrderDetailByOrderIdUrl = "api/v1/orders/getOrderDetailsByOrderId/";
+const getTaskDetailByTaskIdUrl = "api/v1/tasks/getTaskDetails/";
 
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
 const getNotificationTipsUrl = "api/v1/notification/getLatestNotificationTips";
-const getNotificationListByTypeUrl = "api/v1/notification/notificationListByType?";
+const getNotificationListByTypeUrl =
+    "api/v1/notification/notificationListByType?";
 
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";

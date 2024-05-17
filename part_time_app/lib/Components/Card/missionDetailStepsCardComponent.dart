@@ -8,12 +8,13 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../Model/MockModel/missionStepMockModel.dart';
+import '../../Model/Task/missionClass.dart';
 
 class missionDetailStepsCardComponent extends StatefulWidget {
   final bool isConfidential;
   final bool isCollapsed;
   final bool isCollapseAble;
-  final List<MissionStepMockModel> steps;
+  final List<TaskProcedureData> steps;
 
   missionDetailStepsCardComponent({
     Key? key,
@@ -59,8 +60,7 @@ class _missionDetailStepsCardComponentState
                                 backgroundDecoration:
                                     const BoxDecoration(color: kTransparent),
                                 itemCount:
-                                    widget.steps[index].stepPicList?.length ??
-                                        0,
+                                    widget.steps[index].image?.length ?? 0,
                                 loadingBuilder: (context, event) {
                                   if (event == null) {}
                                   return Center(
@@ -72,14 +72,12 @@ class _missionDetailStepsCardComponentState
                                 builder: (context, i) {
                                   return PhotoViewGalleryPageOptions(
                                       imageProvider: NetworkImage(
-                                          widget.steps[index].stepPicList?[i] ??
-                                              ""),
+                                          widget.steps[index].image?[i] ?? ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
                                       heroAttributes: PhotoViewHeroAttributes(
-                                          tag: widget.steps[index]
-                                                  .stepPicList?[i] ??
+                                          tag: widget.steps[index].image?[i] ??
                                               ""));
                                 }))
                       ],
@@ -159,7 +157,7 @@ class _missionDetailStepsCardComponentState
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
-                                        widget.steps[index].stepDesc,
+                                        widget.steps[index].instruction,
                                         style: missionDetailStepsDescTextStyle,
                                       ),
                                     ),
@@ -171,8 +169,7 @@ class _missionDetailStepsCardComponentState
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
                                       children: List.generate(
-                                          widget.steps[index].stepPicList
-                                                  ?.length ??
+                                          widget.steps[index].image?.length ??
                                               0,
                                           (i) => GestureDetector(
                                                 onTap: () {
@@ -200,8 +197,7 @@ class _missionDetailStepsCardComponentState
                                                                 .circular(4),
                                                         child: Image.network(
                                                           widget.steps[index]
-                                                                      .stepPicList?[
-                                                                  i] ??
+                                                                  .image?[i] ??
                                                               "",
                                                           fit: BoxFit.cover,
                                                           loadingBuilder: (context,
@@ -263,7 +259,7 @@ class _missionDetailStepsCardComponentState
                                   ),
                                 ),
                                 Text(
-                                  "图片数量 (${widget.steps[index].stepPicList?.length ?? 0})",
+                                  "图片数量 (${widget.steps[index].image?.length ?? 0})",
                                   style: missionNoticeGreyTextStyle,
                                 )
                               ],

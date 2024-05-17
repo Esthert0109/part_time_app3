@@ -61,7 +61,7 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
     });
 
     for (int i = 0; i < 6; i++) {
-      taskModel = await services.GetTaskByStatus(i);
+      taskModel = await services.getTaskByStatus(i);
       if (taskModel != null &&
           taskModel!.data != null &&
           taskModel!.data!.isNotEmpty) {

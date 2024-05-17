@@ -253,7 +253,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                 day: "10",
                 duration: "24",
                 date: "2023.12.01",
-                price: "500000",
+                price: "500000", taskId: 0,
               ),
               SizedBox(height: 10),
               Divider(),

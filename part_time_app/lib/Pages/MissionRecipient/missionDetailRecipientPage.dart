@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
+import 'package:part_time_app/Pages/UserProfile/ticketSubmissionPage.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
@@ -18,7 +19,8 @@ import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
+import '../../Model/Task/missionClass.dart';
+import '../../Services/order/orderServices.dart';
 import 'recipientInfoPage.dart';
 
 class MissionDetailRecipientPage extends StatefulWidget {
@@ -28,6 +30,8 @@ class MissionDetailRecipientPage extends StatefulWidget {
   final bool isWaitingPaid;
   final bool isPaid;
   final bool isFailed;
+  final int? orderId;
+  final int? taskId;
   const MissionDetailRecipientPage(
       {super.key,
       required this.isStarted,
@@ -35,7 +39,9 @@ class MissionDetailRecipientPage extends StatefulWidget {
       required this.isExpired,
       required this.isWaitingPaid,
       required this.isFailed,
-      required this.isPaid});
+      required this.isPaid,
+      this.orderId,
+      this.taskId});
 
   @override
   State<MissionDetailRecipientPage> createState() =>
@@ -76,6 +82,47 @@ class _MissionDetailRecipientPageState
     extends State<MissionDetailRecipientPage> {
   bool isLoading = false;
 
+  // service
+  OrderServices services = OrderServices();
+
+  OrderDetailModel? orderModel;
+  OrderData orderDetail = OrderData();
+  bool isFavourite = false;
+  bool isConfidential = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
+  }
+
+  fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    if (widget.taskId != null) {
+      orderModel = await services.getTaskDetailsByOrderId(widget.taskId!);
+    } else {
+      orderModel = await services.getOrderDetailsByOrderId(widget.orderId!);
+    }
+
+    if (orderModel!.data != null) {
+      setState(() {
+        orderDetail = orderModel!.data!;
+        if (orderDetail.collectionValid != null &&
+            orderDetail.collectionValid == 1) {
+          isFavourite = true;
+        }
+        if (orderDetail.taskImagesPreview != 0) {
+          isConfidential = true;
+        }
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,6 +142,8 @@ class _MissionDetailRecipientPageState
               GestureDetector(
                 onTap: () {
                   print("complainnnnn");
+                  Get.to(() => TicketSubmissionPage(),
+                      transition: Transition.rightToLeft);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -138,32 +187,40 @@ class _MissionDetailRecipientPageState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MissionDetailIssuerCardComponent(
-                          image:
+                          image: orderDetail.avatar ??
                               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
-                          title: "墩墩鸡",
+                          title: orderDetail.nickname ?? "墩墩鸡",
                           action: "留言咨询 >",
                           onTap: () {}),
                       const SizedBox(
                         height: 12,
                       ),
                       MissionDetailDescriptionCardComponent(
-                        title: "文案写作文案写作文",
-                        detail:
-                            "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
-                        tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-                        totalSlot: "50",
-                        leaveSlot: "45",
-                        day: "3",
-                        duration: "4",
-                        date: "2024.04.30",
-                        price: "50",
+                        taskId: orderDetail.taskId ?? 0,
+                        title: orderDetail.taskTitle ?? "",
+                        detail: orderDetail.taskContent ?? "",
+                        tag: orderDetail.taskTagNames!
+                                .map((tag) => tag.tagName)
+                                .toList() ??
+                            [],
+                        totalSlot: orderDetail.taskQuota.toString() ?? "0",
+                        leaveSlot: (orderDetail.taskQuota! -
+                                    orderDetail.taskReceivedNum!)
+                                .toString() ??
+                            "0",
+                        day: orderDetail.taskTimeLimit.toString() ?? "0",
+                        duration:
+                            orderDetail.taskEstimateTime.toString() ?? "0",
+                        date: orderDetail.taskUpdatedTime.toString() ?? "",
+                        price: orderDetail.taskSinglePrice.toString() ?? "",
+                        isFavourite: isFavourite,
                       ),
                       const SizedBox(
                         height: 12,
                       ),
                       missionDetailStepsCardComponent(
-                        steps: mockData,
-                        isConfidential: true,
+                        steps: orderDetail.taskProcedures?.step ?? [],
+                        isConfidential: isConfidential,
                         isCollapsed: (widget.isSubmitted ||
                                 widget.isExpired ||
                                 widget.isFailed ||
@@ -221,13 +278,13 @@ class _MissionDetailRecipientPageState
                                   style: missionIDtextStyle,
                                   children: [
                                 TextSpan(text: "悬赏ID: "),
-                                TextSpan(text: "0292938DHFKAAUBCVAVC")
+                                TextSpan(text: orderDetail.taskId.toString())
                               ])),
                           GestureDetector(
                             onTap: () {
                               print("copied");
-                              Clipboard.setData(const ClipboardData(
-                                  text: "0292938DHFKAAUBCVAVC"));
+                              Clipboard.setData(ClipboardData(
+                                  text: orderDetail.taskId.toString()));
                               Fluttertoast.showToast(
                                   msg: "已复制",
                                   toastLength: Toast.LENGTH_LONG,
