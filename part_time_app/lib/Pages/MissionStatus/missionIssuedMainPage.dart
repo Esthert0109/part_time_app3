@@ -153,6 +153,7 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
                 userAvatar: missionList[index].avatar!,
                 username: missionList[index].nickname!,
                 isStatus: true,
+                isPublished: true,
                 missionStatus: int.tryParse(missionList[index].taskStatus!),
               ),
               onTap: () {
@@ -302,15 +303,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
                       });
                     }),
                 buildListView(),
-                // Expanded(
-                //   child: SingleChildScrollView(
-                //       controller: _scrollController,
-                //       child: RefreshIndicator(
-                //         onRefresh: _refresh,
-                //         color: kMainYellowColor,
-                //         child:
-                //       )),
-                // )
               ],
             ),
           ),

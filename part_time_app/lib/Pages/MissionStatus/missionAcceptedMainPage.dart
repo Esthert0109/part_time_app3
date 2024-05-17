@@ -274,6 +274,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
                 missionDate: missionList[index].taskUpdatedTime,
                 username: missionList[index].username!,
                 isStatus: true,
+                isPublished: false,
                 missionStatus: missionList[index].orderStatus,
               ),
               onTap: () {
