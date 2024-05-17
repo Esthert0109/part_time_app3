@@ -907,7 +907,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                   isWaiting: false,
                                   isFailed: false,
                                   isPassed: false,
-                                  isRemoved: false,
+                                  isRemoved: false, taskId: 0,
                                 ),
                             transition: Transition.rightToLeft);
                       },

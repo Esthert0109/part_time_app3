@@ -157,11 +157,15 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
                 missionStatus: int.tryParse(missionList[index].taskStatus!),
               ),
               onTap: () {
-                Get.to(() => MissionDetailStatusIssuerPage(
-                    isWaiting: isWaiting,
-                    isFailed: isFailed,
-                    isPassed: isPassed,
-                    isRemoved: isRemoved));
+                Get.to(
+                    () => MissionDetailStatusIssuerPage(
+                          isWaiting: isWaiting,
+                          isFailed: isFailed,
+                          isPassed: isPassed,
+                          isRemoved: isRemoved,
+                          taskId: missionList[index].taskId!,
+                        ),
+                    transition: Transition.rightToLeft);
               },
             );
           }
