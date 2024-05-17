@@ -30,3 +30,6 @@ const postSystemNotificationReadStatusUrl =
 
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";
+
+//Payment
+const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";

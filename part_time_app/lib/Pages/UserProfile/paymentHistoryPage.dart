@@ -4,15 +4,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Model/Payment/paymentModel.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
+import 'package:part_time_app/Services/payment/paymentServices.dart';
 
-import '../../Components/Loading/customRefreshComponent.dart';
-import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import 'depositHistoryDetailPage.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 bool dataFetchedPaymentHistory = false;
 
@@ -24,26 +23,64 @@ class PaymentHistoryPage extends StatefulWidget {
 }
 
 class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-  bool _isLoading = true;
-
+  ScrollController _scrollController = ScrollController();
+  List<PaymentData> paymentList = [];
+  bool isLoading = false;
+  int page = 1;
+  bool continueLoading = true;
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _scrollController.addListener(_scrollListener);
+    _loadData();
   }
 
-  void _onRefresh() async {
-    // monitor network fetch
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      if (!isLoading && continueLoading) {
+        _loadData();
+      }
+    }
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      List<PaymentData>? data = await PaymentServices().getPaymentHistory(page);
+      print("call the API");
+      print(data);
+      setState(() {
+        if (data != null && data != null) {
+          paymentList.addAll(data);
+          page++;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
-    // if failed,use refreshFailed()
-    if (mounted) {
-      _refreshController.refreshCompleted();
+    if (!isLoading && mounted) {
+      setState(() {
+        paymentList.clear();
+        page = 1;
+        // continueLoading = true;
+        _loadData();
+      });
     }
   }
 
@@ -51,57 +88,84 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          scrolledUnderElevation: 0.0,
-          leading: IconButton(
-            iconSize: 15,
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          centerTitle: true,
-          title: Container(
-              color: kTransparent,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: thirdTitleComponent(
-                text: "交易记录",
-              ))),
-      body: Container(
-        constraints: const BoxConstraints.expand(),
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-        decoration: const BoxDecoration(
-          color: kThirdGreyColor,
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              kBackgroundFirstGradientColor,
-              kBackgroundSecondGradientColor
-            ],
-            stops: [0.0, 0.15],
-          ),
-        ),
-        child: CustomRefreshComponent(
-            onRefresh: _onRefresh,
-            controller: _refreshController,
-            child:
-                // _isLoading
-                //     ? PaymentHistoryLoading()
-                //     :
-                _buildListView(PaymentHistoryList)),
-      ),
-    ));
+            extendBodyBehindAppBar: false,
+            appBar: AppBar(
+                automaticallyImplyLeading: false,
+                scrolledUnderElevation: 0.0,
+                leading: IconButton(
+                  iconSize: 15,
+                  icon: Icon(Icons.arrow_back_ios_new_rounded),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+                centerTitle: true,
+                title: Container(
+                    color: kTransparent,
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: thirdTitleComponent(
+                      text: "交易记录",
+                    ))),
+            body: Container(
+              constraints: const BoxConstraints.expand(),
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+              decoration: const BoxDecoration(
+                color: kThirdGreyColor,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    kBackgroundFirstGradientColor,
+                    kBackgroundSecondGradientColor
+                  ],
+                  stops: [0.0, 0.15],
+                ),
+              ),
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                color: kMainYellowColor,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: paymentList.expand((payment) {
+                      List<Widget> widgets = [];
+                      // Add the date if it's different from the previous one
+                      widgets.add(
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15, bottom: 5),
+                            child: Text(
+                              payment.date,
+                              style: missionIDtextStyle,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      );
+
+                      // Add the payment details
+                      widgets.addAll(payment.payments.map((payment) {
+                        return _buildCard(
+                          title: payment.paymentHistoryTitle,
+                          description: payment.paymentHistoryDescription,
+                          amount: payment.paymentTotalAmount,
+                        );
+                      }));
+                      return widgets;
+                    }).toList(),
+                  ),
+                ),
+              ),
+            )));
   }
 
   Widget _buildCard({
-    required bool complete,
     required String title,
     required String description,
-    required int amount,
-    required String date,
+    required String amount,
+    String? date,
   }) {
     return Container(
       child: Column(
@@ -138,16 +202,8 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                         Expanded(
                           flex: 50,
                           child: Text(
-                            complete
-                                ? (amount < 0 || amount == -0 ? "- " : "+ ") +
-                                    amount.abs().toStringAsFixed(2) +
-                                    " USDT"
-                                : (amount < 0 || amount == -0 ? "- " : "") +
-                                    amount.abs().toStringAsFixed(2) +
-                                    " USDT",
-                            style: complete
-                                ? paymentHistoryTextStyle2
-                                : paymentHistoryTextStyle1,
+                            amount,
+                            style: paymentHistoryTextStyle1,
                             textAlign: TextAlign.right,
                           ),
                         )
@@ -167,63 +223,6 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
               ))
         ],
       ),
-    );
-  }
-
-  Widget _buildListView(List<PaymentMockClass> list) {
-    // Sort the list based on time
-    list.sort((a, b) => b.date.compareTo(a.date));
-
-    List<Widget> paymentWidgets = [];
-
-    // Determine the number of messages to load
-    int messagesToLoad = list.length < 20 ? list.length : 20;
-
-    for (int index = 0; index < messagesToLoad; index++) {
-      if (index == 0 || list[index].date != list[index - 1].date) {
-        paymentWidgets.add(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 5),
-                  child: Text(
-                    list[index].date,
-                    style: missionIDtextStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              _buildCard(
-                complete: list[index].complete,
-                title: list[index].title,
-                description: list[index].description,
-                amount: list[index].amount,
-                date: list[index].date,
-              ),
-            ],
-          ),
-        );
-      } else {
-        paymentWidgets.add(
-          _buildCard(
-            complete: list[index].complete,
-            title: list[index].title,
-            description: list[index].description,
-            amount: list[index].amount,
-            date: list[index].date,
-          ),
-        );
-      }
-    }
-
-    return ListView(
-      padding: EdgeInsets.only(top: 10),
-      shrinkWrap: true,
-      physics: PageScrollPhysics(),
-      children: paymentWidgets,
     );
   }
 }
