@@ -7,6 +7,7 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
+import '../../Pages/Explore/testWebsocket.dart';
 import '../../Pages/Search/searchResultPage.dart';
 
 class SearchBarComponent extends StatefulWidget {
@@ -161,7 +162,7 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
                       padding: EdgeInsets.only(left: 10),
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(() => SortPage(),
+                          Get.to(() => TestWebsocketPage(),
                               transition: Transition.rightToLeft);
                         },
                         child: SvgPicture.asset(

@@ -61,6 +61,25 @@ class MessageCardComponent extends StatefulWidget {
 }
 
 class _MessageCardComponentState extends State<MessageCardComponent> {
+  void _resetCountAndNavigate(String type, VoidCallback onTap) {
+    setState(() {
+      if (type == '系统通知') {
+        widget.systemTotalMessage = 0;
+      } else if (type == '悬赏通知') {
+        widget.missionTotalMessage = 0;
+      } else if (type == '款项通知') {
+        widget.paymentTotalMessage = 0;
+      } else if (type == '发布通知') {
+        widget.postingTotalMessage = 0;
+      } else if (type == '工单通知') {
+        widget.toolTotalMessage = 0;
+      } else if (type == '用户消息') {
+        widget.userTotalMessage = 0;
+      }
+    });
+    onTap();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,8 +91,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.systemDate,
           widget.systemTotalMessage,
           () {
-            Get.to(() => const SystemMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('系统通知', () {
+              Get.to(() => const SystemMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -84,8 +105,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.missionDate,
           widget.missionTotalMessage,
           () {
-            Get.to(() => const MissionMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('悬赏通知', () {
+              Get.to(() => const MissionMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -96,8 +119,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.paymentDate,
           widget.paymentTotalMessage,
           () {
-            Get.to(() => const PaymentMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('款项通知', () {
+              Get.to(() => const PaymentMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -108,8 +133,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.postingDate,
           widget.postingTotalMessage,
           () {
-            Get.to(() => const PostingMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('发布通知', () {
+              Get.to(() => const PostingMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -120,8 +147,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.toolDate,
           widget.toolTotalMessage,
           () {
-            Get.to(() => const ToolMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('工单通知', () {
+              Get.to(() => const ToolMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -132,8 +161,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.userDate,
           widget.userTotalMessage,
           () {
-            Get.to(() => const UserMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('用户消息', () {
+              Get.to(() => const UserMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
       ],

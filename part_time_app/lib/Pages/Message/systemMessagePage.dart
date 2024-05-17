@@ -29,16 +29,33 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
   ScrollController _scrollController = ScrollController();
   bool isLoading = false;
   int page = 2;
+  void _resetUnreadCounts() {
+    if (mounted) {
+      // Check if the widget is still mounted before calling setState
+      setState(() {
+        // Update the notificationTotalUnread counts to 0
+        // notificationTips?.responseData['系统通知']?.notificationTotalUnread = 0;
+        // Repeat this for other notification types if needed
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _resetUnreadCounts();
+    });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+
     super.dispose();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _resetUnreadCounts();
+    });
   }
 
   Future<void> _loadData() async {

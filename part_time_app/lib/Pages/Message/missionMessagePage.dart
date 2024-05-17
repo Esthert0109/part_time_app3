@@ -130,7 +130,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: systemMessageList.reversed.expand((date) {
+                  children: missionMessageList.reversed.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {

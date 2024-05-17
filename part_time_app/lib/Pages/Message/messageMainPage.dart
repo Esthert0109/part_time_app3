@@ -6,9 +6,10 @@ import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Constants/colorConstant.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../../Model/notification/messageModel.dart';
+import '../../Services/notification/systemMessageServices.dart';
 
 class MessageMainPage extends StatefulWidget {
   const MessageMainPage({Key? key}) : super(key: key);
@@ -21,92 +22,58 @@ class _MessageMainPageState extends State<MessageMainPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   int titleSelection = 0;
-  bool _isLoading = true;
-  double _scrollPosition = 0;
-  late String latestSystemMessageDate;
+  bool isLoading = false;
+  late String? latestSystemMessageDate;
   late String? latestSystemMessageDescription;
-  // late String latestMissionMessageDate;
-  // late String? latestMissionMessageDescription;
-  // late String latestPaymentMessageDate;
-  // late String? latestPaymentMessageDescription;
-  // late String latestPostingMessageDate;
-  // late String? latestPostingMessageDescription;
-  // late String latestToolMessageDate;
-  // late String? latestToolMessageDescription;
-  int? totalSystemUnread =
-      notificationTips?.responseData?['系统通知']?.notificationTotalUnread;
+  late String? latestMissionMessageDate;
+  late String? latestMissionMessageDescription;
+  late String? latestPaymentMessageDate;
+  late String? latestPaymentMessageDescription;
+  late String? latestPublishMessageDate;
+  late String? latestPublishMessageDescription;
+  late String? latestTicketingMessageDate;
+  late String? latestTicketingMessageDescription;
 
-  // test on global
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      NotificationTipsModel? data =
+          await SystemMessageServices().getNotificationTips();
 
-  void _onRefresh() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 2000));
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
-  }
-
-  void _onLoading() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 100));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    if (mounted) setState(() {});
-    _refreshController.loadComplete();
+      setState(() {
+        if (data != null && data.data != null) {
+          notificationTips = data.data!;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _refresh() async {
-    // Add your refresh logic here
-    setState(() {
-      // Set _isLoading to true to show loading animation
-      _isLoading = true;
-    });
-
-    // Simulate a delay for demonstration purposes
-    await Future.delayed(Duration(seconds: 10));
-
-    setState(() {
-      // Set _isLoading to false to hide loading animation
-      _isLoading = false;
-    });
+    await Future.delayed(Duration(seconds: 1));
+    if (!isLoading && mounted) {
+      setState(() {
+        _loadData();
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    latestSystemMessageDate = systemMessageList.isNotEmpty &&
-            systemMessageList[0].notifications != null &&
-            systemMessageList[0].notifications!.isNotEmpty
-        ? systemMessageList[0].notifications![0].createdTime ?? ""
-        : "";
-    latestSystemMessageDescription = systemMessageList.isNotEmpty &&
-            systemMessageList[0].notifications != null &&
-            systemMessageList[0].notifications!.isNotEmpty
-        ? systemMessageList[0].notifications![0].notificationTitle ?? ""
-        : "";
-    // latestMissionMessageDate = MissionMessageList.isNotEmpty
-    //     ? MissionMessageList.last.createdTime
-    //     : "";
-    // latestMissionMessageDescription = MissionMessageList.isNotEmpty
-    //     ? MissionMessageList.last.description
-    //     : "";
-    // latestPaymentMessageDate = PaymentMessageList.isNotEmpty
-    //     ? PaymentMessageList.last.createdTime
-    //     : "";
-    // latestPaymentMessageDescription = PaymentMessageList.isNotEmpty
-    //     ? PaymentMessageList.last.description
-    //     : "";
-    // latestPostingMessageDate = PostingMessageList.isNotEmpty
-    //     ? PostingMessageList.last.createdTime
-    //     : "";
-    // latestPostingMessageDescription = PostingMessageList.isNotEmpty
-    //     ? PostingMessageList.last.description
-    //     : "";
-    // latestToolMessageDate =
-    //     ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
-    // latestToolMessageDescription =
-    //     ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
+    print("Call the messaging API");
+    _loadData();
     getMessageFromSharedPreferences();
   }
 
@@ -132,7 +99,7 @@ class _MessageMainPageState extends State<MessageMainPage>
               color: kTransparent,
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: SecondaryTitleComponent(
-                titleList: ["我接收的"],
+                titleList: const ["我接收的"],
                 selectedIndex: titleSelection,
                 onTap: (index) {},
               ),
@@ -152,79 +119,49 @@ class _MessageMainPageState extends State<MessageMainPage>
               stops: [0.0, 0.15],
             ),
           ),
-          child: CustomRefreshComponent(
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              controller: _refreshController,
+          child: RefreshIndicator(
+              onRefresh: _refresh,
+              color: kMainYellowColor,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
                     MessageCardComponent(
-                      systemDate: latestSystemMessageDate,
-                      systemDetail: latestSystemMessageDescription,
-                      systemTotalMessage: totalSystemUnread,
-                      // missionDate: latestMissionMessageDate,
-                      // missionDetail: latestMissionMessageDescription,
-                      // paymentDate: latestPaymentMessageDate,
-                      // paymentDetail: latestPaymentMessageDescription,
-                      // postingDate: latestPostingMessageDate,
-                      // postingDetail: latestPostingMessageDescription,
-                      // toolDate: latestToolMessageDate,
-                      // toolDetail: latestToolMessageDescription,
-                    ),
-                    Text(notificationTips!
-                        .responseData!['系统通知']!.notificationTotalUnread
-                        .toString()),
-                    Text(
-                      systemMessageList.isNotEmpty &&
-                              systemMessageList[0].notifications != null &&
-                              systemMessageList[0].notifications!.isNotEmpty
-                          ? systemMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      missionMessageList.isNotEmpty &&
-                              missionMessageList[0].notifications != null &&
-                              missionMessageList[0].notifications!.isNotEmpty
-                          ? missionMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      paymentMessageList.isNotEmpty &&
-                              paymentMessageList[0].notifications != null &&
-                              paymentMessageList[0].notifications!.isNotEmpty
-                          ? paymentMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      publishMessageList.isNotEmpty &&
-                              publishMessageList[0].notifications != null &&
-                              publishMessageList[0].notifications!.isNotEmpty
-                          ? publishMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      ticketingMessageList.isNotEmpty &&
-                              ticketingMessageList[0].notifications != null &&
-                              ticketingMessageList[0].notifications!.isNotEmpty
-                          ? ticketingMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
+                      //system
+                      systemDate:
+                          notificationTips?.responseData['系统通知']?.createdTime,
+                      systemDetail: notificationTips
+                          ?.responseData['系统通知']?.notificationContent,
+                      systemTotalMessage: notificationTips
+                          ?.responseData['系统通知']?.notificationTotalUnread,
+                      //mission
+                      missionDate:
+                          notificationTips?.responseData['悬赏通知']?.createdTime,
+                      missionDetail: notificationTips
+                          ?.responseData['悬赏通知']?.notificationContent,
+                      missionTotalMessage: notificationTips
+                          ?.responseData['悬赏通知']?.notificationTotalUnread,
+                      //payment
+                      paymentDate:
+                          notificationTips?.responseData['款项通知']?.createdTime,
+                      paymentDetail: notificationTips
+                          ?.responseData['款项通知']?.notificationContent,
+                      paymentTotalMessage: notificationTips
+                          ?.responseData['款项通知']?.notificationTotalUnread,
+                      //publish
+                      postingDate:
+                          notificationTips?.responseData['发布通知']?.createdTime,
+                      postingDetail: notificationTips
+                          ?.responseData['发布通知']?.notificationContent,
+                      postingTotalMessage: notificationTips
+                          ?.responseData['发布通知']?.notificationTotalUnread,
+                      //ticketing
+                      toolDate:
+                          notificationTips?.responseData['工单通知']?.createdTime,
+                      toolDetail: notificationTips
+                          ?.responseData['工单通知']?.notificationContent,
+                      toolTotalMessage: notificationTips
+                          ?.responseData['工单通知']?.notificationTotalUnread,
                     ),
                   ],
                 ),

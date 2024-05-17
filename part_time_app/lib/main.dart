@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
+import 'package:part_time_app/Pages/Explore/testWebsocket.dart';
 import 'package:part_time_app/Pages/Message/systemMessage1Page.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => SystemMessage1Page()),
+        GetPage(name: '/depo', page: () => TestWebsocketPage()),
       ],
     );
   }

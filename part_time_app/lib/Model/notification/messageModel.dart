@@ -61,7 +61,7 @@ class TipsData {
       paymentId: json['paymentId'],
       ticketId: json['ticketId'],
       createdTime: json['createdTime'],
-      notificationTotalUnread: json['notificationTotalUnread'],
+      notificationTotalUnread: json['notificationTotalUnread'] ?? 0,
     );
   }
 }
