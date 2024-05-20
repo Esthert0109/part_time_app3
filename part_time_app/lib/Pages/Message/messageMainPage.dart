@@ -23,6 +23,8 @@ class MessageMainPage extends StatefulWidget {
 
 class _MessageMainPageState extends State<MessageMainPage>
     with AutomaticKeepAliveClientMixin {
+  final WebSocketService webSocketService = WebSocketService();
+
   @override
   bool get wantKeepAlive => true;
 
@@ -76,7 +78,20 @@ class _MessageMainPageState extends State<MessageMainPage>
   @override
   void initState() {
     super.initState();
+    webSocketService.addListener(_updateState);
     getMessageFromSharedPreferences();
+  }
+
+  @override
+  void dispose() {
+    webSocketService.removeListener(_updateState);
+    webSocketService.dispose();
+    super.dispose();
+  }
+
+  void _updateState() {
+    setState(
+        () {}); // This will refresh the UI when notificationTips are updated
   }
 
   getMessageFromSharedPreferences() async {
@@ -93,8 +108,7 @@ class _MessageMainPageState extends State<MessageMainPage>
 
   @override
   Widget build(BuildContext context) {
-    final webSocketService = Provider.of<WebSocketService>(context);
-
+    super.build(context);
     return Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
@@ -146,12 +160,12 @@ class _MessageMainPageState extends State<MessageMainPage>
                       missionTotalMessage: notificationTips
                           ?.responseData['悬赏通知']?.notificationTotalUnread,
                       //payment
-                      paymentDate:
-                          notificationTips?.responseData['款项通知']?.createdTime,
-                      paymentDetail: notificationTips
-                          ?.responseData['款项通知']?.notificationContent,
-                      paymentTotalMessage: notificationTips
-                          ?.responseData['款项通知']?.notificationTotalUnread,
+                      paymentDate: webSocketService.notificationTips['款项通知']
+                          ?['createdTime'],
+                      paymentDetail: webSocketService.notificationTips['款项通知']
+                          ?['notificationContent'],
+                      paymentTotalMessage: webSocketService
+                          .notificationTips['款项通知']?['notificationTotalUnread'],
                       //publish
                       postingDate:
                           notificationTips?.responseData['发布通知']?.createdTime,
