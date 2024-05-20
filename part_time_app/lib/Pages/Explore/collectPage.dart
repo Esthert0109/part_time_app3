@@ -164,22 +164,16 @@ class _CollectPageState extends State<CollectPage>
               if (userId == missionCollection[index].customerId) {
                 Get.to(
                     () => MissionDetailStatusIssuerPage(
-                          isWaiting: false,
-                          isFailed: false,
-                          isPassed: true,
-                          isRemoved: false,
+                          // isWaiting: false,
+                          // isFailed: false,
+                          // isPassed: true,
+                          // isRemoved: false,
                           taskId: missionCollection[index].taskId!,
                         ),
                     transition: Transition.rightToLeft);
               } else {
                 Get.to(
                     () => MissionDetailRecipientPage(
-                          isStarted: false,
-                          isSubmitted: false,
-                          isExpired: false,
-                          isWaitingPaid: false,
-                          isFailed: false,
-                          isPaid: false,
                           taskId: missionCollection[index].taskId,
                         ),
                     transition: Transition.rightToLeft);

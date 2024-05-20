@@ -40,11 +40,17 @@ class MissionDetailDescriptionCardComponent extends StatefulWidget {
 
 class _MissionDetailDescriptionCardComponentState
     extends State<MissionDetailDescriptionCardComponent> {
-  bool _favoriteClick = false;
-
   // services
   CollectionService collectService = CollectionService();
   Collection? collection;
+  bool _favoriteClick = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _favoriteClick = widget.isFavourite ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {

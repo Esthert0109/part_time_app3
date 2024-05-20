@@ -65,7 +65,7 @@ class OrderData {
   final String? taskTagIds;
   final List<Tag>? taskTagNames;
   final double? orderSinglePrice;
-  final int? orderStatus;
+  final String? orderStatus;
   final String? taskUpdatedTime;
   final String? username;
   final String? nickname;

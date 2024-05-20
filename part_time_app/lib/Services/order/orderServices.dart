@@ -123,7 +123,7 @@ class OrderServices {
     }
   }
 
-  Future<OrderDetailModel?> getTaskDetailsByOrderId(int taskId) async {
+  Future<OrderDetailModel?> getTaskDetailsByTaskId(int taskId) async {
     url = port + getTaskDetailByTaskIdUrl + taskId.toString();
 
     OrderDetailModel? orderModel;

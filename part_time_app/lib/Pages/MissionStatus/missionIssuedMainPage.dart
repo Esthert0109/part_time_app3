@@ -10,7 +10,6 @@ import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Services/order/orderServices.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
-import '../MissionRecipient/missionDetailRecipientPage.dart';
 import '../../Model/Task/missionClass.dart';
 import '../MockData/missionMockData.dart';
 
@@ -32,10 +31,10 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
   ScrollController _scrollController = ScrollController();
 
   // set status on mission detail status issuer page
-  bool isWaiting = false;
-  bool isFailed = false;
-  bool isPassed = false;
-  bool isRemoved = false;
+  // bool isWaiting = false;
+  // bool isFailed = false;
+  // bool isPassed = false;
+  // bool isRemoved = false;
 
   OrderServices services = OrderServices();
   OrderModel? taskModel;
@@ -159,10 +158,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
               onTap: () {
                 Get.to(
                     () => MissionDetailStatusIssuerPage(
-                          isWaiting: isWaiting,
-                          isFailed: isFailed,
-                          isPassed: isPassed,
-                          isRemoved: isRemoved,
                           taskId: missionList[index].taskId!,
                         ),
                     transition: Transition.rightToLeft);
@@ -176,11 +171,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
     double screenHeight = MediaQuery.of(context).size.height;
     switch (statusSelected) {
       case 0:
-        isWaiting = true;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = false;
-
         if (taskWaitReviewed.length > 0) {
           return buildMissionAcceptedListView(taskWaitReviewed);
         } else {
@@ -193,10 +183,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 1:
-        isWaiting = false;
-        isFailed = true;
-        isPassed = false;
-        isRemoved = false;
         if (taskFailed.length > 0) {
           return buildMissionAcceptedListView(taskFailed);
         } else {
@@ -209,10 +195,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 2:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = true;
-        isRemoved = false;
         if (taskPassed.length > 0) {
           return buildMissionAcceptedListView(taskPassed);
         } else {
@@ -225,10 +207,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 3:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = true;
         if (taskCompleted.length > 0) {
           return buildMissionAcceptedListView(taskCompleted);
         } else {
@@ -241,10 +219,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 4:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = true;
         if (taskWaitReturned.length > 0) {
           return buildMissionAcceptedListView(taskWaitReturned);
         } else {
@@ -257,10 +231,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 5:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = true;
         if (taskReturned.length > 0) {
           return buildMissionAcceptedListView(taskReturned);
         } else {

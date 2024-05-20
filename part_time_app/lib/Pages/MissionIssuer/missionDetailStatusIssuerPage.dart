@@ -29,18 +29,8 @@ import '../../Services/order/orderServices.dart';
 import '../MissionStatus/missionReviewPage.dart';
 
 class MissionDetailStatusIssuerPage extends StatefulWidget {
-  final bool isWaiting;
-  final bool isFailed;
-  final bool isPassed;
-  final bool isRemoved;
   final int taskId;
-  const MissionDetailStatusIssuerPage(
-      {super.key,
-      required this.isWaiting,
-      required this.isFailed,
-      required this.isPassed,
-      required this.isRemoved,
-      required this.taskId});
+  const MissionDetailStatusIssuerPage({super.key, required this.taskId});
 
   @override
   State<MissionDetailStatusIssuerPage> createState() =>
@@ -88,6 +78,13 @@ class _MissionDetailStatusIssuerPageState
   OrderDetailModel? orderModel;
   OrderData orderDetail = OrderData();
   bool isFavourite = false;
+  int? status;
+
+  // status
+  bool isWaiting = false;
+  bool isFailed = false;
+  bool isPassed = false;
+  bool isRemoved = false;
 
   @override
   void initState() {
@@ -101,7 +98,7 @@ class _MissionDetailStatusIssuerPageState
       isLoading = true;
     });
 
-    orderModel = await services.getTaskDetailsByOrderId(widget.taskId!);
+    orderModel = await services.getTaskDetailsByTaskId(widget.taskId!);
 
     if (orderModel!.data != null) {
       setState(() {
@@ -114,18 +111,37 @@ class _MissionDetailStatusIssuerPageState
           picPreview = true;
         }
         isLoading = false;
+
+        status = int.tryParse(orderDetail.taskStatus!);
       });
+
+      if (status == 0) {
+        setState(() {
+          isWaiting = true;
+        });
+      } else if (status == 1) {
+        setState(() {
+          isFailed = true;
+        });
+      } else if (status == 2) {
+        setState(() {
+          isPassed = true;
+        });
+      } else if (status == 3 || status == 4 || status == 5) {
+        setState(() {
+          isRemoved = true;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     // passed param
-    bool isWaiting = widget.isWaiting;
-    bool isFailed = widget.isFailed;
-    bool isPassed = widget.isPassed;
-    bool isRemoved = widget.isRemoved;
+    // bool isWaiting = widget.isWaiting;
+    // bool isFailed = widget.isFailed;
+    // bool isPassed = widget.isPassed;
+    // bool isRemoved = widget.isRemoved;
 
     return SafeArea(
       child: Scaffold(
@@ -390,10 +406,7 @@ class _MissionDetailStatusIssuerPageState
                         const SizedBox(
                           height: 12,
                         ),
-                        (isWaiting ||
-                                isFailed ||
-                                isPassed ||
-                                isRemoved)
+                        (isWaiting || isFailed || isPassed || isRemoved)
                             ? Row(
                                 children: [
                                   RichText(

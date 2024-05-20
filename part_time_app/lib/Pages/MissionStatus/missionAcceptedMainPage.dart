@@ -34,12 +34,12 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
   ScrollController _scrollController = ScrollController();
 
   //set status on mission detail recipient page
-  bool isStarted = false;
-  bool isSubmitted = false;
-  bool isExpired = false;
-  bool isWaitingPaid = false;
-  bool isPaid = false;
-  bool isFailed = false;
+  // bool isStarted = false;
+  // bool isSubmitted = false;
+  // bool isExpired = false;
+  // bool isWaitingPaid = false;
+  // bool isPaid = false;
+  // bool isFailed = false;
 
   // services
   OrderServices services = OrderServices();
@@ -155,12 +155,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
 
     switch (statusSelected) {
       case 0:
-        isStarted = true;
-        isSubmitted = false;
-        isExpired = false;
-        isWaitingPaid = false;
-        isPaid = false;
-        isFailed = false;
         if (orderIncompleted.length > 0) {
           return buildMissionAcceptedListView(orderIncompleted);
         } else {
@@ -174,12 +168,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         }
 
       case 1:
-        isStarted = false;
-        isSubmitted = true;
-        isExpired = false;
-        isWaitingPaid = false;
-        isPaid = false;
-        isFailed = false;
         if (orderWaitReviewed.length > 0) {
           return buildMissionAcceptedListView(orderWaitReviewed);
         } else {
@@ -192,12 +180,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
           );
         }
       case 2:
-        isStarted = false;
-        isSubmitted = false;
-        isExpired = false;
-        isWaitingPaid = false;
-        isPaid = false;
-        isFailed = true;
         if (orderFailed.length > 0) {
           return buildMissionAcceptedListView(orderFailed);
         } else {
@@ -210,12 +192,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
           );
         }
       case 3:
-        isStarted = false;
-        isSubmitted = false;
-        isExpired = false;
-        isWaitingPaid = true;
-        isPaid = false;
-        isFailed = false;
         if (orderWaitPayment.length > 0) {
           return buildMissionAcceptedListView(orderWaitPayment);
         } else {
@@ -228,12 +204,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
           );
         }
       case 4:
-        isStarted = false;
-        isSubmitted = false;
-        isExpired = false;
-        isWaitingPaid = false;
-        isPaid = true;
-        isFailed = false;
         if (orderPaid.length > 0) {
           return buildMissionAcceptedListView(orderPaid);
         } else {
@@ -275,17 +245,11 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
                 username: missionList[index].username!,
                 isStatus: true,
                 isPublished: false,
-                missionStatus: missionList[index].orderStatus,
+                missionStatus: int.tryParse(missionList[index].orderStatus!),
               ),
               onTap: () {
                 Get.to(
                     () => MissionDetailRecipientPage(
-                          isStarted: isStarted,
-                          isSubmitted: isSubmitted,
-                          isExpired: isExpired,
-                          isWaitingPaid: isWaitingPaid,
-                          isFailed: isFailed,
-                          isPaid: isPaid,
                           orderId: missionList[index].orderId,
                         ),
                     transition: Transition.rightToLeft);

@@ -260,12 +260,6 @@ class _RecommendationPageState extends State<RecommendationPage>
             onTap: () {
               Get.to(
                   () => MissionDetailRecipientPage(
-                        isStarted: false,
-                        isSubmitted: false,
-                        isExpired: false,
-                        isWaitingPaid: false,
-                        isFailed: false,
-                        isPaid: false,
                         taskId: missionList[index].taskId,
                       ),
                   transition: Transition.rightToLeft);

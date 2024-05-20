@@ -904,10 +904,11 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                       onPressed: () {
                         Get.to(
                             () => MissionDetailStatusIssuerPage(
-                                  isWaiting: false,
-                                  isFailed: false,
-                                  isPassed: false,
-                                  isRemoved: false, taskId: 0,
+                                  // isWaiting: false,
+                                  // isFailed: false,
+                                  // isPassed: false,
+                                  // isRemoved: false, 
+                                  taskId: 0,
                                 ),
                             transition: Transition.rightToLeft);
                       },

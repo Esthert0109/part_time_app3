@@ -24,24 +24,9 @@ import '../../Services/order/orderServices.dart';
 import 'recipientInfoPage.dart';
 
 class MissionDetailRecipientPage extends StatefulWidget {
-  final bool isStarted;
-  final bool isSubmitted;
-  final bool isExpired;
-  final bool isWaitingPaid;
-  final bool isPaid;
-  final bool isFailed;
   final int? orderId;
   final int? taskId;
-  const MissionDetailRecipientPage(
-      {super.key,
-      required this.isStarted,
-      required this.isSubmitted,
-      required this.isExpired,
-      required this.isWaitingPaid,
-      required this.isFailed,
-      required this.isPaid,
-      this.orderId,
-      this.taskId});
+  const MissionDetailRecipientPage({super.key, this.orderId, this.taskId});
 
   @override
   State<MissionDetailRecipientPage> createState() =>
@@ -89,6 +74,15 @@ class _MissionDetailRecipientPageState
   OrderData orderDetail = OrderData();
   bool isFavourite = false;
   bool isConfidential = false;
+  String? status;
+
+  // status
+  bool isStarted = false;
+  bool isSubmitted = false;
+  bool isExpired = false;
+  bool isWaitingPaid = false;
+  bool isPaid = false;
+  bool isFailed = false;
 
   @override
   void initState() {
@@ -103,7 +97,7 @@ class _MissionDetailRecipientPageState
     });
 
     if (widget.taskId != null) {
-      orderModel = await services.getTaskDetailsByOrderId(widget.taskId!);
+      orderModel = await services.getTaskDetailsByTaskId(widget.taskId!);
     } else {
       orderModel = await services.getOrderDetailsByOrderId(widget.orderId!);
     }
@@ -111,26 +105,53 @@ class _MissionDetailRecipientPageState
     if (orderModel!.data != null) {
       setState(() {
         orderDetail = orderModel!.data!;
-        if (orderDetail.collectionValid != null &&
-            orderDetail.collectionValid == 1) {
-          isFavourite = true;
-        }
-        if (orderDetail.taskImagesPreview != 0) {
-          isConfidential = true;
-        }
-        isLoading = false;
       });
+      if (orderDetail.collectionValid != null &&
+          orderDetail.collectionValid == 1) {
+        setState(() {
+          isFavourite = true;
+        });
+      }
+      if (orderDetail.taskImagesPreview != 0) {
+        setState(() {
+          isConfidential = true;
+        });
+      }
+      setState(() {
+        isLoading = false;
+        status = orderDetail.orderStatus ?? "9";
+      });
+
+      if (status == "0") {
+        setState(() {
+          isSubmitted = true;
+        });
+      } else if (status == "1") {
+        setState(() {
+          isStarted = true;
+        });
+      } else if (status == "2") {
+        setState(() {
+          isFailed = true;
+        });
+      } else if (status == "7") {
+        setState(() {
+          isWaitingPaid = true;
+        });
+      } else if (status == "8") {
+        isPaid = true;
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isStarted = widget.isStarted;
-    bool isSubmitted = widget.isSubmitted;
-    bool isExpired = widget.isExpired;
-    bool isWaitingPaid = widget.isWaitingPaid;
-    bool isPaid = widget.isPaid;
-    bool isFailed = widget.isFailed;
+    // bool isStarted = widget.isStarted;
+    // bool isSubmitted = widget.isSubmitted;
+    // bool isExpired = widget.isExpired;
+    // bool isWaitingPaid = widget.isWaitingPaid;
+    // bool isPaid = widget.isPaid;
+    // bool isFailed = widget.isFailed;
 
     return SafeArea(
       child: Scaffold(
