@@ -30,7 +30,13 @@ import '../MissionStatus/missionReviewPage.dart';
 
 class MissionDetailStatusIssuerPage extends StatefulWidget {
   final int taskId;
-  const MissionDetailStatusIssuerPage({super.key, required this.taskId});
+  final bool isPreview;
+  final OrderData? orderData;
+  const MissionDetailStatusIssuerPage(
+      {super.key,
+      required this.taskId,
+      required this.isPreview,
+      this.orderData});
 
   @override
   State<MissionDetailStatusIssuerPage> createState() =>
@@ -90,7 +96,11 @@ class _MissionDetailStatusIssuerPageState
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchData();
+    if (widget.isPreview) {
+      orderDetail = widget.orderData!;
+    } else {
+      fetchData();
+    }
   }
 
   fetchData() async {
@@ -112,7 +122,7 @@ class _MissionDetailStatusIssuerPageState
         }
         isLoading = false;
 
-        status = int.tryParse(orderDetail.taskStatus!);
+        status = orderDetail.taskStatus!;
       });
 
       if (status == 0) {
@@ -137,7 +147,6 @@ class _MissionDetailStatusIssuerPageState
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
           extendBodyBehindAppBar: false,
@@ -197,20 +206,32 @@ class _MissionDetailStatusIssuerPageState
                                           Navigator.pop(context);
                                         });
                                       },
-                                      secondButtonOnTap: () {
+                                      secondButtonOnTap: () async {
+                                        bool? unshelf = false;
+                                        unshelf =
+                                            await services.unshelfTaskByTaskId(
+                                                orderDetail.taskId!);
 
-                                        
-
-                                        setState(() {
+                                        if (unshelf!) {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                            Get.offAllNamed('/home');
+                                            Fluttertoast.showToast(
+                                                msg: "已下架",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: kMainGreyColor,
+                                                textColor: kThirdGreyColor);
+                                          });
+                                        } else {
                                           Navigator.pop(context);
-                                          Get.back();
                                           Fluttertoast.showToast(
-                                              msg: "已下架",
+                                              msg: "下架失败",
                                               toastLength: Toast.LENGTH_LONG,
                                               gravity: ToastGravity.BOTTOM,
                                               backgroundColor: kMainGreyColor,
                                               textColor: kThirdGreyColor);
-                                        });
+                                        }
                                       },
                                     );
                                   })

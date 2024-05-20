@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/TextField/secondaryTextFieldComponent.dart';
+import 'package:part_time_app/Pages/MissionStatus/missionReviewDetailPage.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
@@ -161,7 +162,8 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
                   CheckOTPModel? model = await services.updateUSDT(userInfo!);
 
                   if (model!.data!) {
-                    Get.back();
+                    Get.off(() => MissionReviewDetailPage(isCompleted: false),
+                        transition: Transition.rightToLeft);
                     Fluttertoast.showToast(
                         msg: "已提交",
                         toastLength: Toast.LENGTH_LONG,

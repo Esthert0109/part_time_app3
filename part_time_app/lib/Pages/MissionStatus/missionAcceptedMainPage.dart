@@ -33,14 +33,6 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
   bool isContinueLoading = true;
   ScrollController _scrollController = ScrollController();
 
-  //set status on mission detail recipient page
-  // bool isStarted = false;
-  // bool isSubmitted = false;
-  // bool isExpired = false;
-  // bool isWaitingPaid = false;
-  // bool isPaid = false;
-  // bool isFailed = false;
-
   // services
   OrderServices services = OrderServices();
   OrderModel? orderModel;
@@ -242,10 +234,10 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
                 missionPrice: missionList[index].orderSinglePrice!,
                 userAvatar: missionList[index].avatar!,
                 missionDate: missionList[index].taskUpdatedTime,
-                username: missionList[index].username!,
+                username: missionList[index].nickname!,
                 isStatus: true,
                 isPublished: false,
-                missionStatus: int.tryParse(missionList[index].orderStatus!),
+                missionStatus: missionList[index].orderStatus!,
               ),
               onTap: () {
                 Get.to(

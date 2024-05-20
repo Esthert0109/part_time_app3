@@ -160,4 +160,34 @@ class OrderServices {
       print("Error in task detail by order id: $e");
     }
   }
+
+  Future<bool?> unshelfTaskByTaskId(int taskId) async {
+    url = port + unshelveTaskUrl + "taskId=${taskId.toString()}";
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {};
+
+    try {
+      final response = await postRequest(url, headers, body);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+
+        if (responseCode == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch (e) {
+      print("Error in unshelf: $e");
+    }
+  }
 }

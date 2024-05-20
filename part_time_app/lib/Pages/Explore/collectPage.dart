@@ -164,11 +164,7 @@ class _CollectPageState extends State<CollectPage>
               if (userId == missionCollection[index].customerId) {
                 Get.to(
                     () => MissionDetailStatusIssuerPage(
-                          // isWaiting: false,
-                          // isFailed: false,
-                          // isPassed: true,
-                          // isRemoved: false,
-                          taskId: missionCollection[index].taskId!,
+                          taskId: missionCollection[index].taskId!, isPreview: false,
                         ),
                     transition: Transition.rightToLeft);
               } else {
@@ -191,7 +187,7 @@ class _CollectPageState extends State<CollectPage>
               missionPrice: missionCollection[index].taskSinglePrice ?? 0.0,
               userAvatar: missionCollection[index].avatar ?? "",
               username: missionCollection[index].nickname ?? "",
-              missionDate: missionCollection[index].taskUpdatedTime,
+              missionDate: missionCollection[index].updatedTime,
               isFavorite: true,
             ),
           );

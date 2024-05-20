@@ -153,12 +153,14 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
                 username: missionList[index].nickname!,
                 isStatus: true,
                 isPublished: true,
-                missionStatus: int.tryParse(missionList[index].taskStatus!),
+                missionStatus: missionList[index].taskStatus!,
+                missionDate: missionList[index].taskUpdatedTime!,
               ),
               onTap: () {
                 Get.to(
                     () => MissionDetailStatusIssuerPage(
                           taskId: missionList[index].taskId!,
+                          isPreview: false,
                         ),
                     transition: Transition.rightToLeft);
               },

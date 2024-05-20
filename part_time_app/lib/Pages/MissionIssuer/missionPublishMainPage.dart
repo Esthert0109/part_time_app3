@@ -11,11 +11,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
+import 'package:part_time_app/Model/Task/missionClass.dart';
 import 'package:part_time_app/Services/order/tagServices.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -61,6 +63,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   TagServices services = TagServices();
   List<TagData> tagList = [];
   bool isTagLoading = false;
+  OrderData orderData = OrderData();
 
   fetchTagList() async {
     setState(() {
@@ -932,15 +935,44 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(26))),
                       onPressed: () {
-                        Get.to(
-                            () => MissionDetailStatusIssuerPage(
-                                  // isWaiting: false,
-                                  // isFailed: false,
-                                  // isPassed: false,
-                                  // isRemoved: false,
-                                  taskId: 0,
-                                ),
-                            transition: Transition.rightToLeft);
+                        if (titleController.text == "" ||
+                            descController.text == "" ||
+                            stepdescriptionController.text == "" ||
+                            priceController.text == "" ||
+                            peopleController.text == "" ||
+                            dayController.text == "" ||
+                            durationController.text == "" ||
+                            totalPrice == 0) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatusDialogComponent(
+                                complete: false,
+                                unsuccessText: "请完整悬赏详情",
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          orderData = OrderData(
+                              taskTitle: titleController.text,
+                              taskContent: descController.text,
+                              taskSinglePrice:
+                                  double.tryParse(priceController.text),
+                              taskQuota: int.tryParse(peopleController.text),
+                              taskTimeLimit: int.tryParse(dayController.text),
+                              taskEstimateTime:
+                                  int.tryParse(durationController.text));
+                          Get.to(
+                              () => MissionDetailStatusIssuerPage(
+                                    taskId: 0,
+                                    isPreview: true,
+                                    orderData: orderData,
+                                  ),
+                              transition: Transition.rightToLeft);
+                        }
                       },
                       child: Text(
                         "预览发布",

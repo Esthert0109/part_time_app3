@@ -74,7 +74,7 @@ class _MissionDetailRecipientPageState
   OrderData orderDetail = OrderData();
   bool isFavourite = false;
   bool isConfidential = false;
-  String? status;
+  int? status;
 
   // status
   bool isStarted = false;
@@ -119,26 +119,26 @@ class _MissionDetailRecipientPageState
       }
       setState(() {
         isLoading = false;
-        status = orderDetail.orderStatus ?? "9";
+        status = orderDetail.orderStatus ?? 9;
       });
 
-      if (status == "0") {
+      if (status == 0) {
         setState(() {
           isSubmitted = true;
         });
-      } else if (status == "1") {
+      } else if (status == 1) {
         setState(() {
           isStarted = true;
         });
-      } else if (status == "2") {
+      } else if (status == 2) {
         setState(() {
           isFailed = true;
         });
-      } else if (status == "7") {
+      } else if (status == 7) {
         setState(() {
           isWaitingPaid = true;
         });
-      } else if (status == "8") {
+      } else if (status == 8) {
         isPaid = true;
       }
     }
@@ -146,13 +146,6 @@ class _MissionDetailRecipientPageState
 
   @override
   Widget build(BuildContext context) {
-    // bool isStarted = widget.isStarted;
-    // bool isSubmitted = widget.isSubmitted;
-    // bool isExpired = widget.isExpired;
-    // bool isWaitingPaid = widget.isWaitingPaid;
-    // bool isPaid = widget.isPaid;
-    // bool isFailed = widget.isFailed;
-
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: false,

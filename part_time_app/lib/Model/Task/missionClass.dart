@@ -65,7 +65,7 @@ class OrderData {
   final String? taskTagIds;
   final List<Tag>? taskTagNames;
   final double? orderSinglePrice;
-  final String? orderStatus;
+  final int? orderStatus;
   final String? taskUpdatedTime;
   final String? username;
   final String? nickname;
@@ -77,7 +77,7 @@ class OrderData {
   final String? taskTimeLimitUnit;
   final int? taskEstimateTime;
   final String? taskEstimateTimeUnit;
-  final String? taskStatus;
+  final int? taskStatus;
   final TaskProcedureModel? taskProcedures;
   final String? orderRejectReason;
   final String? taskCreatedTime;
@@ -85,36 +85,39 @@ class OrderData {
   final int? taskReceivedNum;
   final int? taskIsDelete;
   final int? collectionValid;
+  final String? updatedTime;
 
-  OrderData(
-      {this.orderId,
-      this.taskId,
-      this.customerId,
-      this.taskTitle,
-      this.taskContent,
-      this.taskTagIds,
-      this.taskTagNames,
-      this.orderSinglePrice,
-      this.orderStatus,
-      this.taskUpdatedTime,
-      this.username,
-      this.nickname,
-      this.avatar,
-      this.categoryId,
-      this.taskSinglePrice,
-      this.taskQuota,
-      this.taskTimeLimit,
-      this.taskTimeLimitUnit,
-      this.taskEstimateTime,
-      this.taskEstimateTimeUnit,
-      this.taskStatus,
-      this.taskProcedures,
-      this.orderRejectReason,
-      this.taskCreatedTime,
-      this.taskImagesPreview,
-      this.taskReceivedNum,
-      this.taskIsDelete,
-      this.collectionValid});
+  OrderData({
+    this.orderId,
+    this.taskId,
+    this.customerId,
+    this.taskTitle,
+    this.taskContent,
+    this.taskTagIds,
+    this.taskTagNames,
+    this.orderSinglePrice,
+    this.orderStatus,
+    this.taskUpdatedTime,
+    this.username,
+    this.nickname,
+    this.avatar,
+    this.categoryId,
+    this.taskSinglePrice,
+    this.taskQuota,
+    this.taskTimeLimit,
+    this.taskTimeLimitUnit,
+    this.taskEstimateTime,
+    this.taskEstimateTimeUnit,
+    this.taskStatus,
+    this.taskProcedures,
+    this.orderRejectReason,
+    this.taskCreatedTime,
+    this.taskImagesPreview,
+    this.taskReceivedNum,
+    this.taskIsDelete,
+    this.collectionValid,
+    this.updatedTime,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -145,7 +148,8 @@ class OrderData {
       "taskImagesPreview": taskImagesPreview,
       "taskReceivedNum": taskReceivedNum,
       "taskIsDelete": taskIsDelete,
-      "collectionValid": collectionValid
+      "collectionValid": collectionValid,
+      "updatedTime": updatedTime,
     };
   }
 
@@ -183,7 +187,8 @@ class OrderData {
         taskImagesPreview: json['taskImagesPreview'],
         taskReceivedNum: json['taskReceivedNum'],
         taskIsDelete: json['taskIsDelete'],
-        collectionValid: json['collectionValid']);
+        collectionValid: json['collectionValid'],
+        updatedTime: json['updatedTime']);
   }
 }
 
@@ -234,40 +239,41 @@ class TaskClass {
   final String? nickname;
   final String? avatar;
   final bool? collectionValid;
+  final String? updatedTime;
 
-  TaskClass({
-    this.collectionId,
-    this.taskId,
-    this.customerId,
-    this.taskTitle,
-    this.taskContent,
-    this.taskSinglePrice,
-    this.taskTagIds,
-    this.taskTagNames,
-    this.taskUpdatedTime,
-    this.nickname,
-    this.avatar,
-    this.collectionValid,
-  });
+  TaskClass(
+      {this.collectionId,
+      this.taskId,
+      this.customerId,
+      this.taskTitle,
+      this.taskContent,
+      this.taskSinglePrice,
+      this.taskTagIds,
+      this.taskTagNames,
+      this.taskUpdatedTime,
+      this.nickname,
+      this.avatar,
+      this.collectionValid,
+      this.updatedTime});
 
   factory TaskClass.fromJson(Map<String, dynamic> json) {
     return TaskClass(
-      collectionId: json['collectionId'] ?? 0,
-      taskId: json['taskId'] ?? 0,
-      customerId: json['customerId'] ?? "",
-      taskTitle: json['taskTitle'] ?? "",
-      taskContent: json['taskContent'] ?? "",
-      taskSinglePrice: json['taskSinglePrice'] ?? 0,
-      taskTagIds: json['taskTagIds'] ?? "",
-      taskTagNames: (json['taskTagNames'] as List<dynamic>?)
-              ?.map((tagJson) => Tag.fromJson(tagJson))
-              .toList() ??
-          [],
-      taskUpdatedTime: json['taskUpdatedTime'] ?? "",
-      nickname: json['nickname'] ?? "",
-      avatar: json['avatar'] ?? "",
-      collectionValid: json['collectionValid'] == 1,
-    );
+        collectionId: json['collectionId'] ?? 0,
+        taskId: json['taskId'] ?? 0,
+        customerId: json['customerId'] ?? "",
+        taskTitle: json['taskTitle'] ?? "",
+        taskContent: json['taskContent'] ?? "",
+        taskSinglePrice: json['taskSinglePrice'] ?? 0,
+        taskTagIds: json['taskTagIds'] ?? "",
+        taskTagNames: (json['taskTagNames'] as List<dynamic>?)
+                ?.map((tagJson) => Tag.fromJson(tagJson))
+                .toList() ??
+            [],
+        taskUpdatedTime: json['taskUpdatedTime'] ?? "",
+        nickname: json['nickname'] ?? "",
+        avatar: json['avatar'] ?? "",
+        collectionValid: json['collectionValid'] == 1,
+        updatedTime: json['updatedTime']);
   }
 
   Map<String, dynamic> toJson() {
@@ -282,6 +288,7 @@ class TaskClass {
       'taskUpdatedTime': taskUpdatedTime,
       'nickname': nickname,
       'avatar': avatar,
+      'updatedTime': updatedTime
     };
   }
 }

@@ -107,7 +107,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: MissionSubmissionCardComponent(
-                      isEdit: false,
+                      isEdit: widget.isCompleted ? false : true,
                       submissionPics: [
                         "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
                         "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
