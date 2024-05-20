@@ -16,33 +16,8 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelKey: "basic_channel",
-        channelName: "Basic notifications",
-        channelDescription: "Notification channel for basic tests",
-        importance: NotificationImportance.Max,
-      ),
-    ],
-    debug: true,
-  );
-  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    if (!isAllowed) {
-      AwesomeNotifications().requestPermissionToSendNotifications();
-    }
-  });
-  AwesomeNotifications().setListeners(
-      onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-      onNotificationCreatedMethod:
-          NotificationController.onNotificationCreatedMethod,
-      onNotificationDisplayedMethod:
-          NotificationController.onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod:
-          NotificationController.onDismissActionReceivedMethod);
+  NotificationController.initializeNotification();
   initAndLoginIm();
-
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(
     ChangeNotifierProvider(
