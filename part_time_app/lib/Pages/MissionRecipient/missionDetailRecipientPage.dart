@@ -125,6 +125,13 @@ class _MissionDetailRecipientPageState
 
   @override
   Widget build(BuildContext context) {
+    bool isStarted = widget.isStarted;
+    bool isSubmitted = widget.isSubmitted;
+    bool isExpired = widget.isExpired;
+    bool isWaitingPaid = widget.isWaitingPaid;
+    bool isPaid = widget.isPaid;
+    bool isFailed = widget.isFailed;
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: false,
@@ -221,45 +228,45 @@ class _MissionDetailRecipientPageState
                       missionDetailStepsCardComponent(
                         steps: orderDetail.taskProcedures?.step ?? [],
                         isConfidential: isConfidential,
-                        isCollapsed: (widget.isSubmitted ||
-                                widget.isExpired ||
-                                widget.isFailed ||
-                                widget.isWaitingPaid ||
-                                widget.isPaid)
+                        isCollapsed: (isSubmitted ||
+                                isExpired ||
+                                isFailed ||
+                                isWaitingPaid ||
+                                isPaid)
                             ? false
                             : true,
-                        isCollapseAble: (widget.isSubmitted ||
-                                widget.isExpired ||
-                                widget.isFailed ||
-                                widget.isWaitingPaid ||
-                                widget.isPaid)
+                        isCollapseAble: (isSubmitted ||
+                                isExpired ||
+                                isFailed ||
+                                isWaitingPaid ||
+                                isPaid)
                             ? true
                             : false,
                       ),
                       const SizedBox(
                         height: 6,
                       ),
-                      (widget.isStarted ||
-                              widget.isSubmitted ||
-                              widget.isExpired ||
-                              widget.isFailed ||
-                              widget.isWaitingPaid ||
-                              widget.isPaid)
+                      (isStarted ||
+                              isSubmitted ||
+                              isExpired ||
+                              isFailed ||
+                              isWaitingPaid ||
+                              isPaid)
                           ? MissionSubmissionCardComponent(
-                              isEdit: widget.isStarted ? true : false,
+                              isEdit: isStarted ? true : false,
                               submissionPics: [
                                 "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
                                 "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
                                 "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
                               ],
-                              isCollapsed: widget.isStarted ? true : false,
-                              isCollapseAble: widget.isStarted ? false : true,
+                              isCollapsed: isStarted ? true : false,
+                              isCollapseAble: isStarted ? false : true,
                             )
                           : Container(
                               width: double.infinity,
                               child: missionNoticeCardComponent(),
                             ),
-                      widget.isFailed
+                      isFailed
                           ? Padding(
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               child: missionFailedReasonCardComponent(
@@ -323,7 +330,7 @@ class _MissionDetailRecipientPageState
               spreadRadius: 0,
             ),
           ]),
-          child: widget.isStarted
+          child: isStarted
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -430,29 +437,29 @@ class _MissionDetailRecipientPageState
                       isLoading: isLoading,
                       buttonColor: kMainYellowColor,
                       disableButtonColor: kThirdGreyColor,
-                      text: widget.isSubmitted
+                      text: isSubmitted
                           ? "待审核"
-                          : widget.isExpired
+                          : isExpired
                               ? "已失效"
-                              : widget.isFailed
+                              : isFailed
                                   ? "未通过"
-                                  : widget.isWaitingPaid
+                                  : isWaitingPaid
                                       ? "待到账"
-                                      : widget.isPaid
+                                      : isPaid
                                           ? "已到账"
                                           : "开始悬赏",
-                      textStyle: (widget.isSubmitted ||
-                              widget.isExpired ||
-                              widget.isFailed ||
-                              widget.isWaitingPaid ||
-                              widget.isPaid)
+                      textStyle: (isSubmitted ||
+                              isExpired ||
+                              isFailed ||
+                              isWaitingPaid ||
+                              isPaid)
                           ? disableButtonTextStyle
                           : buttonTextStyle,
-                      onPressed: (widget.isSubmitted ||
-                              widget.isExpired ||
-                              widget.isFailed ||
-                              widget.isWaitingPaid ||
-                              widget.isPaid)
+                      onPressed: (isSubmitted ||
+                              isExpired ||
+                              isFailed ||
+                              isWaitingPaid ||
+                              isPaid)
                           ? null
                           : () {
                               showDialog(

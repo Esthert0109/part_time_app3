@@ -4,12 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailDescriptionCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionDetailIssuerCardComponent.dart';
@@ -18,16 +15,13 @@ import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.d
 import 'package:part_time_app/Components/Card/missionNoticeCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
-import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
 
-import '../../Components/Button/secondaryButtonComponent.dart';
 import '../../Components/Common/countdownTimer.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Dialog/paymentUploadDialogComponent.dart';
 import '../../Components/Loading/missionDetailLoading.dart';
-import '../../Components/Status/statusDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/MockModel/missionStepMockModel.dart';
@@ -126,6 +120,13 @@ class _MissionDetailStatusIssuerPageState
 
   @override
   Widget build(BuildContext context) {
+
+    // passed param
+    bool isWaiting = widget.isWaiting;
+    bool isFailed = widget.isFailed;
+    bool isPassed = widget.isPassed;
+    bool isRemoved = widget.isRemoved;
+
     return SafeArea(
       child: Scaffold(
           extendBodyBehindAppBar: false,
@@ -139,11 +140,11 @@ class _MissionDetailStatusIssuerPageState
                   Get.back();
                 },
               ),
-              actions: (widget.isFailed || widget.isPassed || widget.isRemoved)
+              actions: (isFailed || isPassed || isRemoved)
                   ? [
                       GestureDetector(
                         onTap: () {
-                          (widget.isFailed || widget.isPassed)
+                          (isFailed || isPassed)
                               ? showDialog(
                                   context: context,
                                   builder: (context) {
@@ -205,7 +206,7 @@ class _MissionDetailStatusIssuerPageState
                             horizontal: 24,
                           ),
                           child: SvgPicture.asset(
-                            (widget.isFailed || widget.isPassed)
+                            (isFailed || isPassed)
                                 ? "assets/mission/delete.svg"
                                 : "assets/mission/review.svg",
                             width: 24,
@@ -244,7 +245,7 @@ class _MissionDetailStatusIssuerPageState
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (widget.isPassed || widget.isRemoved)
+                        (isPassed || isRemoved)
                             ? Container()
                             : MissionDetailIssuerCardComponent(
                                 image: orderDetail.avatar ??
@@ -277,7 +278,7 @@ class _MissionDetailStatusIssuerPageState
                         const SizedBox(
                           height: 12,
                         ),
-                        widget.isFailed
+                        isFailed
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 12.0),
                                 child: missionFailedReasonCardComponent(
@@ -292,7 +293,7 @@ class _MissionDetailStatusIssuerPageState
                           isCollapsed: true,
                           isCollapseAble: false,
                         ),
-                        (widget.isPassed || widget.isRemoved)
+                        (isPassed || isRemoved)
                             ? Container()
                             : Padding(
                                 padding:
@@ -312,7 +313,7 @@ class _MissionDetailStatusIssuerPageState
                                           "0",
                                 ),
                               ),
-                        (widget.isPassed || widget.isRemoved)
+                        (isPassed || isRemoved)
                             ? Container()
                             : Row(
                                 mainAxisAlignment:
@@ -379,7 +380,7 @@ class _MissionDetailStatusIssuerPageState
                                   )
                                 ],
                               ),
-                        (widget.isPassed || widget.isRemoved)
+                        (isPassed || isRemoved)
                             ? Container()
                             : Container(
                                 width: double.infinity,
@@ -389,10 +390,10 @@ class _MissionDetailStatusIssuerPageState
                         const SizedBox(
                           height: 12,
                         ),
-                        (widget.isWaiting ||
-                                widget.isFailed ||
-                                widget.isPassed ||
-                                widget.isRemoved)
+                        (isWaiting ||
+                                isFailed ||
+                                isPassed ||
+                                isRemoved)
                             ? Row(
                                 children: [
                                   RichText(
@@ -447,7 +448,7 @@ class _MissionDetailStatusIssuerPageState
                 spreadRadius: 0,
               ),
             ]),
-            child: widget.isFailed
+            child: isFailed
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -482,19 +483,19 @@ class _MissionDetailStatusIssuerPageState
                       isLoading: isLoading,
                       buttonColor: kMainYellowColor,
                       disableButtonColor: kThirdGreyColor,
-                      text: widget.isWaiting
+                      text: isWaiting
                           ? '待审核'
-                          : widget.isPassed
+                          : isPassed
                               ? '查看悬赏进度'
-                              : widget.isRemoved
+                              : isRemoved
                                   ? "已下架"
                                   : '提交',
-                      textStyle: (widget.isWaiting || widget.isRemoved)
+                      textStyle: (isWaiting || isRemoved)
                           ? disableButtonTextStyle
                           : buttonTextStyle,
-                      onPressed: (widget.isWaiting || widget.isRemoved)
+                      onPressed: (isWaiting || isRemoved)
                           ? null
-                          : widget.isPassed
+                          : isPassed
                               ? () {
                                   Get.to(() => MissionReviewPage(),
                                       transition: Transition.rightToLeft);

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Services/collection/collectionServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Model/Task/missionClass.dart';
+import '../../Model/User/userModel.dart';
+import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
+import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 List<TaskClass> missionCollection = [];
 
@@ -26,6 +31,8 @@ class _CollectPageState extends State<CollectPage>
   @override
   bool get wantKeepAlive => true;
 
+  String userId = "";
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +45,13 @@ class _CollectPageState extends State<CollectPage>
     _scrollController.dispose();
     missionCollection.clear();
     super.dispose();
+  }
+
+  getUserDetails() async {
+    UserData? userData = await SharedPreferencesUtils.getUserDataInfo();
+    setState(() {
+      userId = userData?.customerId ?? "";
+    });
   }
 
   void _scrollListener() {
@@ -145,20 +159,47 @@ class _CollectPageState extends State<CollectPage>
         if (index == missionCollection.length) {
           return isLoading ? const MissionCardLoadingComponent() : Container();
         } else {
-          return MissionCardComponent(
-            taskId: missionCollection[index].taskId,
-            missionTitle: missionCollection[index].taskTitle ?? "",
-            missionDesc: missionCollection[index].taskContent ?? "",
-            tagList: missionCollection[index]
-                    .taskTagNames
-                    ?.map((tag) => tag.tagName)
-                    .toList() ??
-                [],
-            missionPrice: missionCollection[index].taskSinglePrice ?? 0.0,
-            userAvatar: missionCollection[index].avatar ?? "",
-            username: missionCollection[index].nickname ?? "",
-            missionDate: missionCollection[index].taskUpdatedTime,
-            isFavorite: true,
+          return GestureDetector(
+            onTap: () {
+              if (userId == missionCollection[index].customerId) {
+                Get.to(
+                    () => MissionDetailStatusIssuerPage(
+                          isWaiting: false,
+                          isFailed: false,
+                          isPassed: true,
+                          isRemoved: false,
+                          taskId: missionCollection[index].taskId!,
+                        ),
+                    transition: Transition.rightToLeft);
+              } else {
+                Get.to(
+                    () => MissionDetailRecipientPage(
+                          isStarted: false,
+                          isSubmitted: false,
+                          isExpired: false,
+                          isWaitingPaid: false,
+                          isFailed: false,
+                          isPaid: false,
+                          taskId: missionCollection[index].taskId,
+                        ),
+                    transition: Transition.rightToLeft);
+              }
+            },
+            child: MissionCardComponent(
+              taskId: missionCollection[index].taskId,
+              missionTitle: missionCollection[index].taskTitle ?? "",
+              missionDesc: missionCollection[index].taskContent ?? "",
+              tagList: missionCollection[index]
+                      .taskTagNames
+                      ?.map((tag) => tag.tagName)
+                      .toList() ??
+                  [],
+              missionPrice: missionCollection[index].taskSinglePrice ?? 0.0,
+              userAvatar: missionCollection[index].avatar ?? "",
+              username: missionCollection[index].nickname ?? "",
+              missionDate: missionCollection[index].taskUpdatedTime,
+              isFavorite: true,
+            ),
           );
         }
       },
