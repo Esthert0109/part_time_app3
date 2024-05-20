@@ -13,14 +13,14 @@ import '../../Constants/textStyleConstant.dart';
 
 bool noInitialRefresh = true;
 
-class PostingMessagePage extends StatefulWidget {
-  const PostingMessagePage({Key? key}) : super(key: key);
+class TicketingMessagePage extends StatefulWidget {
+  const TicketingMessagePage({Key? key}) : super(key: key);
 
   @override
-  State<PostingMessagePage> createState() => _PostingMessagePageState();
+  State<TicketingMessagePage> createState() => _TicketingMessagePageState();
 }
 
-class _PostingMessagePageState extends State<PostingMessagePage> {
+class _TicketingMessagePageState extends State<TicketingMessagePage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: noInitialRefresh);
   ScrollController _scrollController = ScrollController();
@@ -76,7 +76,7 @@ class _PostingMessagePageState extends State<PostingMessagePage> {
                   color: kTransparent,
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: thirdTitleComponent(
-                    text: "发布通知",
+                    text: "工单通知",
                   ))),
           body: Container(
             constraints: const BoxConstraints.expand(),
@@ -101,9 +101,9 @@ class _PostingMessagePageState extends State<PostingMessagePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // if (PostingMessageList.isNotEmpty)
+                    // if (ToolMessageList.isNotEmpty)
                     //   MessageList(
-                    //     messageList: PostingMessageList,
+                    //     messageList: ToolMessageList,
                     //     isSystem: false,
                     //   ),
                   ],
@@ -115,7 +115,7 @@ class _PostingMessagePageState extends State<PostingMessagePage> {
   }
 
   @override
-  void didUpdateWidget(covariant PostingMessagePage oldWidget) {
+  void didUpdateWidget(covariant TicketingMessagePage oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Scroll to bottom whenever the widget updates
     _scrollController.animateTo(

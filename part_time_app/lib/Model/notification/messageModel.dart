@@ -10,6 +10,9 @@ class NotificationTipsModel {
 
 class NotificationTipsData {
   final Map<String, TipsData> responseData;
+  void updateNotification(String type, TipsData newData) {
+    responseData[type] = newData;
+  }
 
   NotificationTipsData({required this.responseData});
 
@@ -37,7 +40,7 @@ class TipsData {
   final int? paymentId;
   final int? ticketId;
   final String? createdTime;
-  final int? notificationTotalUnread;
+  int? notificationTotalUnread;
 
   TipsData({
     this.notificationTitle,

@@ -19,6 +19,7 @@ import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
+import '../../Services/webSocketService.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -43,7 +44,14 @@ class _RecommendationPageState extends State<RecommendationPage>
   @override
   void initState() {
     super.initState();
+    webSocketService.addListener(_updateState);
     _scrollController.addListener(_scrollListener);
+  }
+
+  void _updateState() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

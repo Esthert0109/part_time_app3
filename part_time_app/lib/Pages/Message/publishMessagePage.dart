@@ -13,14 +13,14 @@ import '../../Constants/textStyleConstant.dart';
 
 bool noInitialRefresh = true;
 
-class ToolMessagePage extends StatefulWidget {
-  const ToolMessagePage({Key? key}) : super(key: key);
+class PublishMessagePage extends StatefulWidget {
+  const PublishMessagePage({Key? key}) : super(key: key);
 
   @override
-  State<ToolMessagePage> createState() => _ToolMessagePageState();
+  State<PublishMessagePage> createState() => _PublishMessagePageState();
 }
 
-class _ToolMessagePageState extends State<ToolMessagePage> {
+class _PublishMessagePageState extends State<PublishMessagePage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: noInitialRefresh);
   ScrollController _scrollController = ScrollController();
@@ -76,7 +76,7 @@ class _ToolMessagePageState extends State<ToolMessagePage> {
                   color: kTransparent,
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: thirdTitleComponent(
-                    text: "工单通知",
+                    text: "发布通知",
                   ))),
           body: Container(
             constraints: const BoxConstraints.expand(),
@@ -101,9 +101,9 @@ class _ToolMessagePageState extends State<ToolMessagePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // if (ToolMessageList.isNotEmpty)
+                    // if (PostingMessageList.isNotEmpty)
                     //   MessageList(
-                    //     messageList: ToolMessageList,
+                    //     messageList: PostingMessageList,
                     //     isSystem: false,
                     //   ),
                   ],
@@ -115,7 +115,7 @@ class _ToolMessagePageState extends State<ToolMessagePage> {
   }
 
   @override
-  void didUpdateWidget(covariant ToolMessagePage oldWidget) {
+  void didUpdateWidget(covariant PublishMessagePage oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Scroll to bottom whenever the widget updates
     _scrollController.animateTo(

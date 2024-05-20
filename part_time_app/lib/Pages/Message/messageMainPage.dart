@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,8 +24,6 @@ class MessageMainPage extends StatefulWidget {
 
 class _MessageMainPageState extends State<MessageMainPage>
     with AutomaticKeepAliveClientMixin {
-  final WebSocketService webSocketService = WebSocketService();
-
   @override
   bool get wantKeepAlive => true;
 
@@ -48,10 +47,11 @@ class _MessageMainPageState extends State<MessageMainPage>
     try {
       NotificationTipsModel? data =
           await SystemMessageServices().getNotificationTips();
-
+      // print();
       setState(() {
         if (data != null && data.data != null) {
           notificationTips = data.data!;
+          print("Received data: $notificationTips"); // Print received data
         } else {
           // Handle the case when data is null or data.data is null
         }
@@ -67,9 +67,9 @@ class _MessageMainPageState extends State<MessageMainPage>
   }
 
   Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
     if (!isLoading && mounted) {
       setState(() {
+        notificationTips?.responseData.clear();
         _loadData();
       });
     }
@@ -84,14 +84,13 @@ class _MessageMainPageState extends State<MessageMainPage>
 
   @override
   void dispose() {
-    webSocketService.removeListener(_updateState);
-    webSocketService.dispose();
     super.dispose();
   }
 
   void _updateState() {
-    setState(
-        () {}); // This will refresh the UI when notificationTips are updated
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   getMessageFromSharedPreferences() async {
@@ -146,13 +145,13 @@ class _MessageMainPageState extends State<MessageMainPage>
                   children: [
                     MessageCardComponent(
                       //system
-                      systemDate: webSocketService.notificationTips['系统通知']
-                          ?['createdTime'],
-                      systemDetail: webSocketService.notificationTips['系统通知']
-                          ?['notificationContent'],
-                      systemTotalMessage: webSocketService
-                          .notificationTips['系统通知']?['notificationTotalUnread'],
-                      //mission
+                      systemDate:
+                          notificationTips?.responseData['系统通知']?.createdTime,
+                      systemDetail: notificationTips
+                          ?.responseData['系统通知']?.notificationContent,
+                      systemTotalMessage: notificationTips
+                          ?.responseData['系统通知']?.notificationTotalUnread,
+                      // mission
                       missionDate:
                           notificationTips?.responseData['悬赏通知']?.createdTime,
                       missionDetail: notificationTips
@@ -160,12 +159,12 @@ class _MessageMainPageState extends State<MessageMainPage>
                       missionTotalMessage: notificationTips
                           ?.responseData['悬赏通知']?.notificationTotalUnread,
                       //payment
-                      paymentDate: webSocketService.notificationTips['款项通知']
-                          ?['createdTime'],
-                      paymentDetail: webSocketService.notificationTips['款项通知']
-                          ?['notificationContent'],
-                      paymentTotalMessage: webSocketService
-                          .notificationTips['款项通知']?['notificationTotalUnread'],
+                      paymentDate:
+                          notificationTips?.responseData['款项通知']?.createdTime,
+                      paymentDetail: notificationTips
+                          ?.responseData['款项通知']?.notificationContent,
+                      paymentTotalMessage: notificationTips
+                          ?.responseData['款项通知']?.notificationTotalUnread,
                       //publish
                       postingDate:
                           notificationTips?.responseData['发布通知']?.createdTime,

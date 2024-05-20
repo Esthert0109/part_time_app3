@@ -43,7 +43,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
   Future<void> _readStatus() async {
     try {
       final response = await SystemMessageServices().patchUpdateRead(1);
-      print("called");
+      notificationTips?.responseData['悬赏通知']?.notificationTotalUnread = 0;
     } catch (e) {
       print("Error: $e");
     }
@@ -56,7 +56,6 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
     try {
       NotificationListModel? data =
           await SystemMessageServices().getNotificationList(1, page);
-      print("call the API");
       setState(() {
         if (data != null && data.data != null) {
           missionMessageList.addAll(data.data!);

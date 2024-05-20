@@ -43,7 +43,7 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
   Future<void> _readStatus() async {
     try {
       final response = await SystemMessageServices().patchUpdateRead(2);
-      print("called");
+      notificationTips?.responseData['款项通知']?.notificationTotalUnread = 0;
     } catch (e) {
       print("Error: $e");
     }
@@ -56,7 +56,6 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
     try {
       NotificationListModel? data =
           await SystemMessageServices().getNotificationList(2, page);
-      print("call the API");
       setState(() {
         if (data != null && data.data != null) {
           paymentMessageList.addAll(data.data!);

@@ -1,28 +1,48 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
-import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
-import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/Explore/testWebsocket.dart';
-import 'package:part_time_app/Pages/Message/systemMessage1Page.dart';
-import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
-import 'package:part_time_app/Pages/UserProfile/depositHistoryDetailPage.dart';
-import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
-import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
-import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
 import 'package:provider/provider.dart';
 import 'Pages/Message/user/chatConfig.dart';
 import 'Pages/homePage.dart';
+import 'Services/notification/notifacationServices.dart';
 import 'Services/webSocketService.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: "basic_channel",
+        channelName: "Basic notifications",
+        channelDescription: "Notification channel for basic tests",
+        importance: NotificationImportance.Max,
+      ),
+    ],
+    debug: true,
+  );
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
+  AwesomeNotifications().setListeners(
+      onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+      onNotificationCreatedMethod:
+          NotificationController.onNotificationCreatedMethod,
+      onNotificationDisplayedMethod:
+          NotificationController.onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod:
+          NotificationController.onDismissActionReceivedMethod);
   initAndLoginIm();
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(
     ChangeNotifierProvider(
