@@ -341,6 +341,8 @@ class UserServices {
       userModel =
           UserModel(code: responseCode, msg: responseMsg, data: responseData);
 
+      await SharedPreferencesUtils.saveUserDataInfo(responseData);
+
       return userModel;
     } catch (e) {
       print("Error in get user info: $e");
@@ -376,6 +378,9 @@ class UserServices {
           bool responseData = jsonData['data'];
           updateModel = CheckOTPModel(
               code: responseCode, msg: responseMsg, data: responseData);
+
+          getUserInfo();
+
           return updateModel;
         }
 

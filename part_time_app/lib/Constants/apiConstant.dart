@@ -25,6 +25,7 @@ const getOrderByStatusUrl = "api/v1/orders/getOrderListByStatusId/";
 const getTaskByStatusUrl = "api/v1/tasks/getTaskListByStatusId/";
 const getOrderDetailByOrderIdUrl = "api/v1/orders/getOrderDetailsByOrderId/";
 const getTaskDetailByTaskIdUrl = "api/v1/tasks/getTaskDetails/";
+const unshelveTaskUrl = "api/v1/tasks/unshelves?";
 
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
@@ -34,3 +35,6 @@ const getNotificationListByTypeUrl =
 
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";
+
+// tag
+const getTagListUrl = "api/v1/tags/getTagList?";

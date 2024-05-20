@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
+import 'package:part_time_app/Services/order/tagServices.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -18,6 +19,7 @@ import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/Task/tagModel.dart';
 import 'missionDetailStatusIssuerPage.dart';
 
 class StepModel {
@@ -54,6 +56,24 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
 
   List<String> selectedTag = [];
   List<String> tagDisplayMock = ["急招", "用时短", "易审核", "长期兼职", "写作", "长期"];
+
+  // services
+  TagServices services = TagServices();
+  List<TagData> tagList = [];
+  bool isTagLoading = false;
+
+  fetchTagList() async {
+    setState(() {
+      isTagLoading = true;
+    });
+    TagModel? model = await services.getTagList(1);
+    if (model!.data != [] || model.data != null) {
+      setState(() {
+        tagList = model.data!;
+        isTagLoading = false;
+      });
+    }
+  }
 
   showZoomImage(BuildContext context, int index) {
     pageController = PageController(initialPage: index);
@@ -185,6 +205,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
     focusNode.addListener(() {
       setState(() {});
     });
+
+    fetchTagList();
   }
 
   @override
@@ -392,54 +414,62 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 Container(
                                     height: 130,
                                     padding: EdgeInsets.symmetric(vertical: 2),
-                                    child: ListView.builder(
-                                        itemCount: tagDisplayMock.length,
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isGetTag = false;
-                                                selectedTag
-                                                    .add(tagDisplayMock[index]);
-                                              });
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 8,
-                                                  child: Container(
-                                                      height: 30,
-                                                      child: RichText(
-                                                        text: TextSpan(
-                                                            style:
-                                                                missionDetailText3,
-                                                            children: [
-                                                              TextSpan(
-                                                                  text: "# "),
-                                                              TextSpan(
-                                                                  text:
-                                                                      tagDisplayMock[
-                                                                          index])
-                                                            ]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Container(
-                                                    height: 30,
-                                                    child: Text(
-                                                      "60 篇" ?? '',
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style:
-                                                          inputCounterTextStyle,
+                                    child: isTagLoading
+                                        ? Center(
+                                            child: LoadingAnimationWidget
+                                                .stretchedDots(
+                                                    color: kMainYellowColor,
+                                                    size: 30))
+                                        : ListView.builder(
+                                            itemCount: tagList.length,
+                                            itemBuilder: (context, index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isGetTag = false;
+                                                    selectedTag.add(
+                                                        tagList[index].tagName);
+                                                  });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: Container(
+                                                          height: 30,
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                                style:
+                                                                    missionDetailText3,
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                          "# "),
+                                                                  TextSpan(
+                                                                      text: tagList[
+                                                                              index]
+                                                                          .tagName)
+                                                                ]),
+                                                          )),
                                                     ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        }))
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Container(
+                                                        height: 30,
+                                                        child: Text(
+                                                          "${tagList[index].totalOccurrence.toString()} 篇" ??
+                                                              '',
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style:
+                                                              inputCounterTextStyle,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            }))
                               ],
                             ),
                           )
@@ -907,7 +937,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                   // isWaiting: false,
                                   // isFailed: false,
                                   // isPassed: false,
-                                  // isRemoved: false, 
+                                  // isRemoved: false,
                                   taskId: 0,
                                 ),
                             transition: Transition.rightToLeft);

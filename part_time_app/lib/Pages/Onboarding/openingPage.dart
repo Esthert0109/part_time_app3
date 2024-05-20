@@ -55,7 +55,6 @@ class _OpeningPageState extends State<OpeningPage> {
           if (userModel!.code == 0) {
             UserModel? user = await services.getUserInfo();
             await SharedPreferencesUtils.saveUserInfo(user!);
-            await SharedPreferencesUtils.saveUserDataInfo(user.data!);
             await SharedPreferencesUtils.saveToken(userModel.data!.token!);
 
             if (user.code == 0) {

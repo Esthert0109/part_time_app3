@@ -137,6 +137,7 @@ class UserData {
   final String? bilingAddress;
   final String? bilingCurrency;
   final int? validIdentity;
+  final int? valid;
   final int?
       collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
@@ -158,6 +159,7 @@ class UserData {
     this.bilingAddress,
     this.bilingCurrency,
     this.validIdentity,
+    this.valid,
     this.collectionValid,
     this.createdTime,
     this.updatedTime,
@@ -183,6 +185,7 @@ class UserData {
       "bilingCurrency": bilingCurrency,
       "validIdentity": validIdentity,
       "collectionValid": collectionValid,
+      "valid": valid,
       "createdTime": createdTime,
       "updatedTime": updatedTime,
     };
@@ -206,6 +209,7 @@ class UserData {
       bilingAddress: json['bilingAddress'],
       bilingCurrency: json['bilingCurrency'],
       validIdentity: json['validIdentity'],
+      valid: json['valid'],
       collectionValid: json['collection_valid'],
       createdTime: json['createdTime'],
       updatedTime: json['updatedTime'],

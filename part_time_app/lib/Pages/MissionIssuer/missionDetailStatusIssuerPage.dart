@@ -137,11 +137,6 @@ class _MissionDetailStatusIssuerPageState
 
   @override
   Widget build(BuildContext context) {
-    // passed param
-    // bool isWaiting = widget.isWaiting;
-    // bool isFailed = widget.isFailed;
-    // bool isPassed = widget.isPassed;
-    // bool isRemoved = widget.isRemoved;
 
     return SafeArea(
       child: Scaffold(
@@ -165,21 +160,23 @@ class _MissionDetailStatusIssuerPageState
                                   context: context,
                                   builder: (context) {
                                     return AlertDialogComponent(
-                                      alertTitle: '您即将删除该悬赏',
+                                      alertTitle: '下架悬赏',
                                       alertDesc: RichText(
                                         text: TextSpan(
                                           style: alertDialogContentTextStyle,
                                           children: [
-                                            TextSpan(text: '点击确认后，所有内容将被删除。\n'),
                                             TextSpan(
-                                              text: '已预付的赏金将',
+                                                text: '该悬赏将被下架，下架后不会在发现里展示。\n'),
+                                            TextSpan(
+                                              text: '已开始悬赏的用户将受到推送通知。\n\n',
                                             ),
                                             TextSpan(
-                                                text: '全额退款',
-                                                style: alertDialogTextStyle),
+                                              text:
+                                                  '系统将在3-5天内把所剩余的赏金退款(不包括手续费)\n',
+                                            ),
                                             TextSpan(
-                                              text: '。是否继续？',
-                                            )
+                                              text: '是否继续？\n',
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -189,7 +186,7 @@ class _MissionDetailStatusIssuerPageState
                                       firstButtonTextStyle:
                                           alertDialogFirstButtonTextStyle,
                                       firstButtonColor: kThirdGreyColor,
-                                      secondButtonText: '确认',
+                                      secondButtonText: '下架悬赏',
                                       secondButtonTextStyle:
                                           alertDialogRejectButtonTextStyle,
                                       secondButtonColor:
@@ -201,11 +198,14 @@ class _MissionDetailStatusIssuerPageState
                                         });
                                       },
                                       secondButtonOnTap: () {
+
+                                        
+
                                         setState(() {
                                           Navigator.pop(context);
                                           Get.back();
                                           Fluttertoast.showToast(
-                                              msg: "已删除",
+                                              msg: "已下架",
                                               toastLength: Toast.LENGTH_LONG,
                                               gravity: ToastGravity.BOTTOM,
                                               backgroundColor: kMainGreyColor,
