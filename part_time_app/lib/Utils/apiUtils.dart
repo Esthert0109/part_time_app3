@@ -64,30 +64,34 @@ Future<ResponseData> deleteRequest(
   }
 }
 
-Future<Map<String, dynamic>> postFileRequest(File file, String url) async {
-  print("check token return profile: $file");
+Future<Map<String, dynamic>> postFileRequest(
+    List<File> fileList, String url) async {
+  print("check token return profile: $fileList");
   try {
     // 创建一个MultipartRequest
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
-    var stream = http.ByteStream(file.openRead());
-    var length = await file.length();
-    var multipartFile = http.MultipartFile(
-      'file',
-      stream,
-      length,
-      filename: path.basename(file.path), // Use path.basename
-      contentType: MediaType.parse(lookupMimeType(file.path) ?? 'image/jpeg'),
-    );
+    for (int i = 0; i < fileList.length; i++) {
+      var file = fileList[i];
+      var stream = http.ByteStream(file.openRead());
+      var length = await file.length();
+      var multipartFile = http.MultipartFile(
+        'files',
+        stream,
+        length,
+        filename: path.basename(file.path), // Use path.basename
+        contentType: MediaType.parse(lookupMimeType(file.path) ?? 'image/jpeg'),
+      );
 
-    request.files.add(multipartFile);
+      request.files.add(multipartFile);
+    }
 
     var response = await request.send();
 
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       Map<String, dynamic> jsonData = json.decode(responseBody);
-      print(file.path);
+
       print(jsonData);
       print("check token return outside: $responseBody");
       return jsonData;

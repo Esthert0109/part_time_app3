@@ -156,8 +156,8 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
                 if (_formKey.currentState!.validate()) {
                   setState(() {
                     userInfo = UserData(
-                        bilingAddress: addressController.text,
-                        bilingNetwork: networkController.text);
+                        billingAddress: addressController.text,
+                        billingNetwork: networkController.text);
                   });
                   CheckOTPModel? model = await services.updateUSDT(userInfo!);
 

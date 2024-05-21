@@ -55,6 +55,8 @@ class UserServices {
             await SharedPreferencesUtils.savePassword(password);
 
             try {
+              UserModel? userModel = await getUserInfo();
+
               CategoryModel? model = await categoryServices.getCategoryList();
               if (model!.data != null) {
                 exploreCategoryList = model.data!;
@@ -362,8 +364,8 @@ class UserServices {
     };
 
     final Map<String, dynamic> body = {
-      'billingNetwork': userInfo.bilingNetwork,
-      'billingAddress': userInfo.bilingAddress,
+      'billingNetwork': userInfo.billingNetwork,
+      'billingAddress': userInfo.billingAddress,
       'billingCurrency': 'USDT',
       'firstPhoneNo': phone
     };

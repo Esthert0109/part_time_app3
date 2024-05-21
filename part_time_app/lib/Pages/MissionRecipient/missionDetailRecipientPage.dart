@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 import 'package:part_time_app/Pages/UserProfile/ticketSubmissionPage.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
@@ -20,6 +22,7 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
+import '../../Model/User/userModel.dart';
 import '../../Services/order/orderServices.dart';
 import 'recipientInfoPage.dart';
 
@@ -69,7 +72,7 @@ class _MissionDetailRecipientPageState
 
   // service
   OrderServices services = OrderServices();
-
+  UserData? userData;
   OrderDetailModel? orderModel;
   OrderData orderDetail = OrderData();
   bool isFavourite = false;
@@ -89,6 +92,11 @@ class _MissionDetailRecipientPageState
     // TODO: implement initState
     super.initState();
     fetchData();
+    fetchUserData();
+  }
+
+  fetchUserData() async {
+    userData = await SharedPreferencesUtils.getUserDataInfo();
   }
 
   fetchData() async {
@@ -268,11 +276,11 @@ class _MissionDetailRecipientPageState
                               isPaid)
                           ? MissionSubmissionCardComponent(
                               isEdit: isStarted ? true : false,
-                              submissionPics: [
-                                "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                                "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
-                                "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
-                              ],
+                              // submissionPics: [
+                              //   "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
+                              //   "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
+                              //   "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
+                              // ],
                               isCollapsed: isStarted ? true : false,
                               isCollapseAble: isStarted ? false : true,
                             )
@@ -285,8 +293,7 @@ class _MissionDetailRecipientPageState
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               child: missionFailedReasonCardComponent(
                                   reasonTitle: "拒绝理由",
-                                  reasonDesc:
-                                      "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"),
+                                  reasonDesc: orderDetail.orderRejectReason!),
                             )
                           : Container(),
                       const SizedBox(
@@ -515,20 +522,53 @@ class _MissionDetailRecipientPageState
                                           Navigator.pop(context);
                                         });
                                       },
-                                      secondButtonOnTap: () {
-                                        setState(() {
-                                          Navigator.pop(context);
-                                          Get.to(() => RecipientInfoPage(),
-                                              transition:
-                                                  Transition.rightToLeft);
+                                      secondButtonOnTap: () async {
+                                        print(
+                                            "what is the user Data: ${userData!.billingAddress}, and ${userData!.billingNetwork}");
+                                        if (userData!.billingAddress != null &&
+                                            userData!.billingAddress != "" &&
+                                            userData!.billingNetwork != null &&
+                                            userData!.billingNetwork != "") {
+                                          try {
+                                            bool? create =
+                                                await services.createOrder(
+                                                    orderDetail.taskId!);
 
-                                          Fluttertoast.showToast(
-                                              msg: "悬赏开始",
-                                              toastLength: Toast.LENGTH_LONG,
-                                              gravity: ToastGravity.BOTTOM,
-                                              backgroundColor: kMainGreyColor,
-                                              textColor: kThirdGreyColor);
-                                        });
+                                            if (create!) {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Get.off(() =>
+                                                  MissionDetailRecipientPage());
+                                              Fluttertoast.showToast(
+                                                  msg: "悬赏开始",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            } else {
+                                              Navigator.pop(context);
+                                              Fluttertoast.showToast(
+                                                  msg: "悬赏失败，请重试",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            }
+                                          } catch (e) {
+                                            print("error in start mission");
+                                          }
+                                        } else {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                            Get.to(() => RecipientInfoPage(),
+                                                transition:
+                                                    Transition.rightToLeft);
+                                          });
+                                        }
                                       },
                                     );
                                   });
