@@ -44,6 +44,16 @@ class _MissionSubmissionCardComponentState
   List<String>? uploadedList = [];
   bool isUploadLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.submissionPics != []) {
+      setState(() {
+        uploadedList = widget.submissionPics;
+      });
+    }
+  }
+
   showZoomImage(BuildContext context, int index) {
     pageController = PageController(initialPage: index);
     showDialog(

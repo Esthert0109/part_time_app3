@@ -191,7 +191,7 @@ class OrderServices {
     }
   }
 
-  Future<bool?> createOrder(int taskId) async {
+  Future<int?> createOrder(int taskId) async {
     url = port + createOrderUrl + taskId.toString();
     String? token = await SharedPreferencesUtils.getToken();
 
@@ -209,9 +209,8 @@ class OrderServices {
         int responseCode = jsonData['code'];
 
         if (responseCode == 0) {
-          return true;
-        } else {
-          return false;
+          int responseData = jsonData['data'];
+          return responseData;
         }
       }
     } catch (e) {

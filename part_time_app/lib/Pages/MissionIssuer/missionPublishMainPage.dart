@@ -76,6 +76,10 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   List<String>? uploadedList = [];
   bool isUploadLoading = false;
 
+  // Steps
+  TaskProcedureModel? taskSteps;
+  List<TaskProcedureData>? stepsList;
+
   fetchTagList() async {
     setState(() {
       isTagLoading = true;
@@ -89,7 +93,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
     }
   }
 
-  showZoomImage(BuildContext context, int index, List<String>imageUrlList) {
+  showZoomImage(BuildContext context, int index, List<String> imageUrlList) {
     pageController = PageController(initialPage: index);
     showDialog(
         context: context,
@@ -123,8 +127,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 },
                                 builder: (context, index) {
                                   return PhotoViewGalleryPageOptions(
-                                      imageProvider:
-                                          NetworkImage(imageUrlList?[index] ?? ""),
+                                      imageProvider: NetworkImage(
+                                          imageUrlList?[index] ?? ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
@@ -702,9 +706,13 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 maxLines: null,
                                 cursorColor: kMainYellowColor,
                                 controller: TextEditingController(
-                                    text: "${steps[index].description}"),
+                                    text:
+                                        "${stepsList?[index].instruction ?? ""}"),
                                 onChanged: (value) {
-                                  steps[index].description = value;
+                                  print("value:$value");
+                                  setState(() {
+                                    stepsList?[index].instruction = value;
+                                  });
                                 },
                                 decoration: InputDecoration(
                                     hintText: '请输入文案......',
@@ -789,7 +797,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                         itemBuilder: (context, imageIndex) {
                                           return GestureDetector(
                                             onTap: () {
-                                              showZoomImage(context, index, steps[index].imageUrls!);
+                                              showZoomImage(context, index,
+                                                  steps[index].imageUrls!);
                                             },
                                             child: Container(
                                               height: 100,
@@ -989,6 +998,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                             },
                           );
                         } else {
+                          taskSteps = TaskProcedureModel(step: stepsList ?? []);
+
                           orderData = OrderData(
                               nickname: userData?.nickname ?? "用户名",
                               avatar: userData?.avatar ??
@@ -1003,7 +1014,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                               taskEstimateTime:
                                   int.tryParse(durationController.text),
                               taskUpdatedTime: DateFormat('yyyy-MM-dd HH:mm:ss')
-                                  .format(DateTime.now()));
+                                  .format(DateTime.now()),
+                              taskProcedures: taskSteps);
                           Get.to(
                               () => MissionDetailStatusIssuerPage(
                                     taskId: 0,

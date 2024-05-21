@@ -76,7 +76,7 @@ class _MissionDetailRecipientPageState
   OrderDetailModel? orderModel;
   OrderData orderDetail = OrderData();
   bool isFavourite = false;
-  bool isConfidential = false;
+  bool isConfidential = true;
   int? status;
   DateTime? expiredDate;
 
@@ -124,9 +124,9 @@ class _MissionDetailRecipientPageState
           isFavourite = true;
         });
       }
-      if (orderDetail.taskImagesPreview != 0) {
+      if (orderDetail.taskImagesPreview == 0) {
         setState(() {
-          isConfidential = true;
+          isConfidential = false;
         });
       }
       if (orderDetail.orderBExpiredTime != "" &&
@@ -286,11 +286,7 @@ class _MissionDetailRecipientPageState
                               isPaid)
                           ? MissionSubmissionCardComponent(
                               isEdit: isStarted ? true : false,
-                              // submissionPics: [
-                              //   "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                              //   "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
-                              //   "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
-                              // ],
+                              submissionPics: orderDetail.orderScreenshots?.image??[],
                               isCollapsed: isStarted ? true : false,
                               isCollapseAble: isStarted ? false : true,
                             )
@@ -570,15 +566,17 @@ class _MissionDetailRecipientPageState
                                             userData!.billingNetwork != null &&
                                             userData!.billingNetwork != "") {
                                           try {
-                                            bool? create =
+                                            int? create =
                                                 await services.createOrder(
                                                     orderDetail.taskId!);
 
-                                            if (create!) {
+                                            if (create! != 0) {
                                               Navigator.pop(context);
                                               Navigator.pop(context);
-                                              Get.off(() =>
-                                                  MissionDetailRecipientPage());
+                                              Get.to(() =>
+                                                  MissionDetailRecipientPage(
+                                                    orderId: create,
+                                                  ));
                                               Fluttertoast.showToast(
                                                   msg: "悬赏开始",
                                                   toastLength:
