@@ -27,6 +27,8 @@ const getOrderDetailByOrderIdUrl = "api/v1/orders/getOrderDetailsByOrderId/";
 const getTaskDetailByTaskIdUrl = "api/v1/tasks/getTaskDetails/";
 const unshelveTaskUrl = "api/v1/tasks/unshelves?";
 const createOrderUrl = "api/v1/orders/create/";
+const submitOrderUrl = "api/v1/orders/submit";
+const getCustomerListByOrderStatusIdUrl = "api/v1/tasks/getCustomerListByOrderStatusId/";
 
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";

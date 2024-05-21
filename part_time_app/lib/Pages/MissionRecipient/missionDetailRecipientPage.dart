@@ -78,6 +78,7 @@ class _MissionDetailRecipientPageState
   bool isFavourite = false;
   bool isConfidential = false;
   int? status;
+  DateTime? expiredDate;
 
   // status
   bool isStarted = false;
@@ -89,10 +90,13 @@ class _MissionDetailRecipientPageState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchData();
     fetchUserData();
+
+    setState(() {
+      updateUploadList.clear();
+    });
   }
 
   fetchUserData() async {
@@ -123,6 +127,12 @@ class _MissionDetailRecipientPageState
       if (orderDetail.taskImagesPreview != 0) {
         setState(() {
           isConfidential = true;
+        });
+      }
+      if (orderDetail.orderBExpiredTime != "" &&
+          orderDetail.orderBExpiredTime != null) {
+        setState(() {
+          expiredDate = DateTime.parse(orderDetail.orderBExpiredTime!);
         });
       }
       setState(() {
@@ -359,7 +369,7 @@ class _MissionDetailRecipientPageState
                     CountdownTimer(
                       isOTP: false,
                       isReview: false,
-                      expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
+                      expiredDate: expiredDate!,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 24),
@@ -371,81 +381,111 @@ class _MissionDetailRecipientPageState
                           textStyle: missionCardTitleTextStyle,
                           buttonColor: kMainYellowColor,
                           onPressed: () {
-                            setState(() {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatusDialogComponent(
-                                    complete: false,
-                                    unsuccessText: "请上传任务截图",
-                                    onTap: () {
-                                      setState(() {
-                                        Navigator.pop(context);
-                                      });
-                                    },
-                                  );
-                                },
-                              );
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (context) {
-                              //       return AlertDialogComponent(
-                              //         alertTitle: '您即将提交该任务',
-                              //         alertDesc: RichText(
-                              //           text: TextSpan(
-                              //             style: alertDialogContentTextStyle,
-                              //             children: [
-                              //               TextSpan(text: '点击确认后，该任务将被提交，\n'),
-                              //               TextSpan(
-                              //                 text: '若审核未通过需自行承担后果(雇主不付款)。\n',
-                              //               ),
-                              //               TextSpan(text: '确定提交后不可重新编辑。\n'),
-                              //               TextSpan(
-                              //                 text: '是否继续？\n',
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //         descTextStyle:
-                              //             alertDialogContentTextStyle,
-                              //         firstButtonText: '继续编辑',
-                              //         firstButtonTextStyle:
-                              //             alertDialogFirstButtonTextStyle,
-                              //         firstButtonColor: kThirdGreyColor,
-                              //         secondButtonText: '确认提交任务',
-                              //         secondButtonTextStyle:
-                              //             alertDialogSecondButtonTextStyle,
-                              //         secondButtonColor: kMainYellowColor,
-                              //         isButtonExpanded: false,
-                              //         firstButtonOnTap: () {
-                              //           setState(() {
-                              //             Navigator.pop(context);
-                              //           });
-                              //         },
-                              //         secondButtonOnTap: () {
-                              //           setState(() {
-                              //             Navigator.pop(context);
-                              //             showDialog(
-                              //               context: context,
-                              //               builder: (BuildContext context) {
-                              //                 return StatusDialogComponent(
-                              //                   complete: true,
-                              //                   successText:
-                              //                       "雇主将在48小时内审核您的悬赏成果。",
-                              //                   onTap: () {
-                              //                     setState(() {
-                              //                       Navigator.pop(context);
-                              //                       Get.offAllNamed('/home');
-                              //                     });
-                              //                   },
-                              //                 );
-                              //               },
-                              //             );
-                              //           });
-                              //         },
-                              //       );
-                              //     });
-                            });
+                            if (updateUploadList == [] ||
+                                updateUploadList == null) {
+                              setState(() {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return StatusDialogComponent(
+                                      complete: false,
+                                      unsuccessText: "请上传任务截图",
+                                      onTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                    );
+                                  },
+                                );
+                              });
+                            } else {
+                              setState(() {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialogComponent(
+                                        alertTitle: '您即将提交该任务',
+                                        alertDesc: RichText(
+                                          text: TextSpan(
+                                            style: alertDialogContentTextStyle,
+                                            children: [
+                                              TextSpan(
+                                                  text: '点击确认后，该任务将被提交，\n'),
+                                              TextSpan(
+                                                text: '若审核未通过需自行承担后果(雇主不付款)。\n',
+                                              ),
+                                              TextSpan(text: '确定提交后不可重新编辑。\n'),
+                                              TextSpan(
+                                                text: '是否继续？\n',
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        descTextStyle:
+                                            alertDialogContentTextStyle,
+                                        firstButtonText: '继续编辑',
+                                        firstButtonTextStyle:
+                                            alertDialogFirstButtonTextStyle,
+                                        firstButtonColor: kThirdGreyColor,
+                                        secondButtonText: '确认提交任务',
+                                        secondButtonTextStyle:
+                                            alertDialogSecondButtonTextStyle,
+                                        secondButtonColor: kMainYellowColor,
+                                        isButtonExpanded: false,
+                                        firstButtonOnTap: () {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        secondButtonOnTap: () async {
+                                          try {
+                                            bool? submit =
+                                                await services.submitOrder(
+                                                    widget.orderId!,
+                                                    updateUploadList);
+
+                                            if (submit!) {
+                                              setState(() {
+                                                Navigator.pop(context);
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return StatusDialogComponent(
+                                                      complete: true,
+                                                      successText:
+                                                          "雇主将在48小时内审核您的悬赏成果。",
+                                                      onTap: () {
+                                                        setState(() {
+                                                          Navigator.pop(
+                                                              context);
+                                                          Get.offAllNamed(
+                                                              '/home');
+                                                        });
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              });
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                  msg: "提交失败，请重试",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            }
+                                          } on Exception catch (e) {
+                                            print("error in submission: $e");
+                                          }
+                                        },
+                                      );
+                                    });
+                              });
+                            }
                           },
                         ),
                       ),

@@ -8,11 +8,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/order/tagServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -22,6 +26,7 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/tagModel.dart';
+import '../../Services/Upload/uploadServices.dart';
 import 'missionDetailStatusIssuerPage.dart';
 
 class StepModel {
@@ -49,7 +54,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   PageController pageController = PageController();
 
   List<StepModel> steps = [];
-  List<String> imageUrls = [];
+  List<File> imageUrls = [];
   String titleInput = "";
   String contentInput = "";
   bool isGetTag = false;
@@ -64,6 +69,12 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   List<TagData> tagList = [];
   bool isTagLoading = false;
   OrderData orderData = OrderData();
+  UserData? userData;
+
+  // upload picture service
+  UploadServices uploadServices = UploadServices();
+  List<String>? uploadedList = [];
+  bool isUploadLoading = false;
 
   fetchTagList() async {
     setState(() {
@@ -78,7 +89,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
     }
   }
 
-  showZoomImage(BuildContext context, int index) {
+  showZoomImage(BuildContext context, int index, List<String>imageUrlList) {
     pageController = PageController(initialPage: index);
     showDialog(
         context: context,
@@ -101,7 +112,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 pageController: pageController,
                                 backgroundDecoration:
                                     const BoxDecoration(color: kTransparent),
-                                itemCount: imageUrls.length,
+                                itemCount: imageUrlList.length,
                                 loadingBuilder: (context, event) {
                                   if (event == null) {}
                                   return Center(
@@ -113,12 +124,12 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 builder: (context, index) {
                                   return PhotoViewGalleryPageOptions(
                                       imageProvider:
-                                          NetworkImage(imageUrls?[index] ?? ""),
+                                          NetworkImage(imageUrlList?[index] ?? ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
                                       heroAttributes: PhotoViewHeroAttributes(
-                                          tag: imageUrls?[index] ?? ""));
+                                          tag: imageUrlList?[index] ?? ""));
                                 }))
                       ],
                     ),
@@ -210,6 +221,11 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
     });
 
     fetchTagList();
+    fetchUserData();
+  }
+
+  fetchUserData() async {
+    userData = await SharedPreferencesUtils.getUserDataInfo();
   }
 
   @override
@@ -678,7 +694,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                         Expanded(
                             flex: 5,
                             child: Container(
-// color: Colors.amber,
                               margin: EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 5),
                               padding: EdgeInsets.all(0),
@@ -702,7 +717,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                             flex: 4,
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 10),
-// color: Colors.amber,
                               child: Row(
                                 children: [
                                   InkWell(
@@ -711,18 +725,36 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                           await picker.pickMultiImage();
                                       if (selectedImageList != null &&
                                           selectedImageList.isNotEmpty) {
-                                        imageUrls = selectedImageList
-                                            .map((image) => image.path)
-                                            .toList();
-                                        steps[index].imageUrls ??= [];
-                                        steps[index]
-                                            .imageUrls!
-                                            .addAll(imageUrls);
+                                        for (int i = 0;
+                                            i < selectedImageList!.length;
+                                            i++) {
+                                          imageUrls.add(
+                                              File(selectedImageList![i].path));
+                                        }
+                                        try {
+                                          List<String>? uploadList =
+                                              await uploadServices
+                                                  .uploadTaskImages(imageUrls);
 
-                                        setState(() {
-                                          print(
-                                              "check pic: ${steps[index].imageUrls}");
-                                        }); // Update the UI after adding new images
+                                          if (uploadList != []) {
+                                            Fluttertoast.showToast(
+                                                msg: "已上传",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: kMainGreyColor,
+                                                textColor: kThirdGreyColor);
+                                            setState(() {
+                                              steps[index].imageUrls ??= [];
+                                              steps[index]
+                                                  .imageUrls!
+                                                  .addAll(uploadList ?? []);
+                                            });
+                                          }
+                                        } catch (e) {
+                                          print("Error when upload pic:$e");
+                                        }
+
+                                        // Update the UI after adding new images
                                       }
                                     },
                                     child: Container(
@@ -757,7 +789,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                         itemBuilder: (context, imageIndex) {
                                           return GestureDetector(
                                             onTap: () {
-                                              showZoomImage(context, index);
+                                              showZoomImage(context, index, steps[index].imageUrls!);
                                             },
                                             child: Container(
                                               height: 100,
@@ -937,7 +969,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                       onPressed: () {
                         if (titleController.text == "" ||
                             descController.text == "" ||
-                            stepdescriptionController.text == "" ||
+                            steps == [] ||
+                            steps.isEmpty ||
                             priceController.text == "" ||
                             peopleController.text == "" ||
                             dayController.text == "" ||
@@ -957,14 +990,20 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           );
                         } else {
                           orderData = OrderData(
+                              nickname: userData?.nickname ?? "用户名",
+                              avatar: userData?.avatar ??
+                                  "https://pic4.zhimg.com/v2-4370b028739d332dbb525cafb26f77fb_b.jpg",
                               taskTitle: titleController.text,
                               taskContent: descController.text,
                               taskSinglePrice:
                                   double.tryParse(priceController.text),
                               taskQuota: int.tryParse(peopleController.text),
                               taskTimeLimit: int.tryParse(dayController.text),
+                              taskImagesPreview: picPreview ? 1 : 0,
                               taskEstimateTime:
-                                  int.tryParse(durationController.text));
+                                  int.tryParse(durationController.text),
+                              taskUpdatedTime: DateFormat('yyyy-MM-dd HH:mm:ss')
+                                  .format(DateTime.now()));
                           Get.to(
                               () => MissionDetailStatusIssuerPage(
                                     taskId: 0,

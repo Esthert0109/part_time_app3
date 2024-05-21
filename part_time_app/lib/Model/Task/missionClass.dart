@@ -86,6 +86,8 @@ class OrderData {
   final int? taskIsDelete;
   final int? collectionValid;
   final String? updatedTime;
+  final String? orderBExpiredTime;
+  final OrderScreenShotList? orderScreenshots;
 
   OrderData({
     this.orderId,
@@ -117,6 +119,8 @@ class OrderData {
     this.taskIsDelete,
     this.collectionValid,
     this.updatedTime,
+    this.orderBExpiredTime,
+    this.orderScreenshots,
   });
 
   Map<String, dynamic> toJson() {
@@ -150,6 +154,8 @@ class OrderData {
       "taskIsDelete": taskIsDelete,
       "collectionValid": collectionValid,
       "updatedTime": updatedTime,
+      "orderBExpiredTime": orderBExpiredTime,
+      "orderScreenshots": orderScreenshots
     };
   }
 
@@ -188,7 +194,9 @@ class OrderData {
         taskReceivedNum: json['taskReceivedNum'],
         taskIsDelete: json['taskIsDelete'],
         collectionValid: json['collectionValid'],
-        updatedTime: json['updatedTime']);
+        updatedTime: json['updatedTime'],
+        orderBExpiredTime: json['orderBExpiredTime'],
+        orderScreenshots: json['orderScreenshots']);
   }
 }
 
@@ -402,4 +410,134 @@ class MissionMockClass {
       this.isFavorite,
       this.missionStatus,
       this.updatedTime});
+}
+
+class CustomerListModel {
+  final int code;
+  final String msg;
+  final CustomerListData? data;
+
+  CustomerListModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'code': code,
+      'msg': msg,
+      'data': data?.toJson(),
+    };
+  }
+
+  factory CustomerListModel.fromJson(Map<String, dynamic> json) {
+    return CustomerListModel(
+      code: json['code'],
+      msg: json['msg'],
+      data:
+          json['data'] != null ? CustomerListData.fromJson(json['data']) : null,
+    );
+  }
+}
+
+class CustomerListData {
+  final int totalCount;
+  final List<CustomerList>? customerList;
+
+  CustomerListData({required this.totalCount, required this.customerList});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'totalCount': totalCount,
+      'customerList':
+          customerList?.map((customer) => customer.toJson()).toList(),
+    };
+  }
+
+  factory CustomerListData.fromJson(Map<String, dynamic> json) {
+    return CustomerListData(
+      totalCount: json['totalCount'],
+      customerList: (json['customerList'] as List)
+          .map((data) => CustomerList.fromJson(data))
+          .toList(),
+    );
+  }
+}
+
+class CustomerList {
+  final String customerId;
+  final int? taskId;
+  final int? orderId;
+  final String nickname;
+  final String avatar;
+  final String? orderAExpiredTime;
+  final String? orderBExpiredTime;
+
+  CustomerList({
+    required this.customerId,
+    this.taskId,
+    this.orderId,
+    required this.nickname,
+    required this.avatar,
+    this.orderAExpiredTime,
+    this.orderBExpiredTime,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'customerId': customerId,
+      'taskId': taskId,
+      'orderId': orderId,
+      'nickname': nickname,
+      'avatar': avatar,
+      'orderAExpiredTime': orderAExpiredTime,
+      'orderBExpiredTime': orderBExpiredTime,
+    };
+  }
+
+  factory CustomerList.fromJson(Map<String, dynamic> json) {
+    return CustomerList(
+      customerId: json['customerId'],
+      taskId: json['taskId'],
+      orderId: json['orderId'],
+      nickname: json['nickname'],
+      avatar: json['avatar'],
+      orderAExpiredTime: json['orderAExpiredTime'],
+      orderBExpiredTime: json['orderBExpiredTime'],
+    );
+  }
+}
+
+// class OrderSubmission {
+//   final int orderId;
+//   final OrderScreenShotList orderScreenshots;
+
+//   OrderSubmission({
+//     required this.orderId,
+//     required this.orderScreenshots
+//   });
+
+//   Map<String, dynamic> toJson(){
+//     return {
+//       "orderId":orderId,
+//       "orderScreenshots":orderScreenshots,
+//     };
+//   }
+// }
+
+class OrderScreenShotList {
+  final List<String> image;
+
+  OrderScreenShotList({required this.image});
+
+  Map<String, dynamic> toJson() {
+    return {"image": image};
+  }
+
+  factory OrderScreenShotList.fromJson(Map<String, dynamic> json) {
+    return OrderScreenShotList(
+      image: List<String>.from(json['image']),
+    );
+  }
 }

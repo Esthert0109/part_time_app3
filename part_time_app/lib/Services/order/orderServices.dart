@@ -124,7 +124,7 @@ class OrderServices {
   }
 
   Future<OrderDetailModel?> getTaskDetailsByTaskId(int taskId) async {
-    url = port + getTaskDetailByTaskIdUrl + taskId.toString();
+    String urls = port + getTaskDetailByTaskIdUrl + taskId.toString();
 
     OrderDetailModel? orderModel;
     String? token = await SharedPreferencesUtils.getToken();
@@ -135,7 +135,7 @@ class OrderServices {
     };
 
     try {
-      final response = await getRequest(url, headers);
+      final response = await getRequest(urls, headers);
       int statusCode = response.statusCode;
 
       if (statusCode == 200) {
@@ -216,6 +216,81 @@ class OrderServices {
       }
     } catch (e) {
       print("Error in create order: $e");
+    }
+  }
+
+  Future<bool?> submitOrder(int orderId, List<String> image) async {
+    url = port + submitOrderUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      "orderId": orderId,
+      "orderScreenshots": {"image": image}
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+
+        if (responseCode == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error in submit order: $e");
+    }
+  }
+
+  Future<CustomerListModel?> getCustomerListByOrderStatusId(
+      int status, int taskId, int page) async {
+    String urlss = port +
+        getCustomerListByOrderStatusIdUrl +
+        status.toString() +
+        "?taskId=${taskId.toString()}&page=${page.toString()}";
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    try {
+      final response = await getRequest(urlss, headers);
+      if (response.responseBody == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          Map<String, dynamic> data = jsonData['data'];
+          CustomerListData? responseData = CustomerListData.fromJson(data);
+          if (responseData != null) {
+            CustomerListModel? customerModel = CustomerListModel(
+                code: responseCode, msg: responseMsg, data: responseData);
+            return customerModel;
+          } else {
+            CustomerListModel? customerModel =
+                CustomerListModel(code: responseCode, msg: responseMsg);
+            return customerModel;
+          }
+        }
+      }
+    } catch (e) {
+      print("Error in get customer list from order: $e");
     }
   }
 }

@@ -12,11 +12,14 @@ import 'package:photo_view/photo_view_gallery.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../Dialog/alertDialogComponent.dart';
 
+List<String> updateUploadList = [];
+
 class MissionSubmissionCardComponent extends StatefulWidget {
   List<String>? submissionPics;
   final bool isEdit;
   final bool isCollapsed;
   final bool isCollapseAble;
+
   MissionSubmissionCardComponent(
       {super.key,
       this.submissionPics,
@@ -148,6 +151,7 @@ class _MissionSubmissionCardComponentState
                                           Navigator.pop(context);
                                           uploadedList!.removeAt(index);
                                           imageSelected = uploadedList!.length;
+                                          updateUploadList = uploadedList!;
                                           Navigator.pop(context);
 
                                           Fluttertoast.showToast(
@@ -200,6 +204,7 @@ class _MissionSubmissionCardComponentState
               isUploadLoading = false;
               uploadedList?.addAll(uploadList!);
               imageSelected = uploadedList!.length;
+              updateUploadList = uploadedList!;
             });
           } else {
             Fluttertoast.showToast(
@@ -263,9 +268,11 @@ class _MissionSubmissionCardComponentState
                     children: [
                       widget.isEdit
                           ? GestureDetector(
-                              onTap: () {
-                                imageSelect();
-                              },
+                              onTap: isUploadLoading
+                                  ? null
+                                  : () {
+                                      imageSelect();
+                                    },
                               child: Container(
                                   height: 100,
                                   width: 100,
