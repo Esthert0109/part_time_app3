@@ -123,7 +123,7 @@ class UserModel {
 class UpdateCollectionModel {
   final int? code;
   final String? msg;
-  final UserData? data;
+  final bool? data;
 
   UpdateCollectionModel({
     this.code,
@@ -135,7 +135,7 @@ class UpdateCollectionModel {
     return {
       "code": code,
       "msg": msg,
-      "data": data?.toJson(),
+      "data": data,
     };
   }
 }
@@ -157,7 +157,7 @@ class UserData {
   final String? bilingAddress;
   final String? bilingCurrency;
   final int? validIdentity;
-  final int?
+  int?
       collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;
@@ -226,7 +226,7 @@ class UserData {
       bilingAddress: json['bilingAddress'],
       bilingCurrency: json['bilingCurrency'],
       validIdentity: json['validIdentity'],
-      collectionValid: json['collection_valid'],
+      collectionValid: json['collectionValid'],
       createdTime: json['createdTime'],
       updatedTime: json['updatedTime'],
     );

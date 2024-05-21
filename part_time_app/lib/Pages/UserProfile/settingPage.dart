@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
@@ -21,7 +22,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   bool isPrivate = false;
   final UserServices _userServices = UserServices();
-  UserData? userData = UserData();
 
   @override
   void initState() {
@@ -30,46 +30,31 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _loadPrivacySetting() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+    // Fetch user data from SharedPreferencesUtils
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
     setState(() {
-      // userData = data;
-      isPrivate = (prefs.getBool('isPrivate') ?? false);
+      userData = data!;
+      isPrivate =
+          data.collectionValid == 0; // Assuming 0 is private and 1 is public
     });
   }
 
-  void _togglePrivacy(bool value) async {
+  void _togglePrivacy(bool privateStatus) async {
     setState(() {
-      isPrivate = value;
+      isPrivate = privateStatus;
     });
 
-    // Save the switch state
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
-    // userData = data;
-    prefs.setBool('isPrivate', isPrivate);
+    // Fetch user data from SharedPreferencesUtils
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
+    userData = data!;
 
-    // Retrieve the token
-    String? token = await SharedPreferencesUtils.getToken();
-    // if (token == null) {
-    //   Fluttertoast.showToast(
-    //       msg: "Error: Unable to get token",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       backgroundColor: Colors.red,
-    //       textColor: Colors.white);
-    //   return;
-    // } else {
-    //   Fluttertoast.showToast(
-    //       msg: token,
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       backgroundColor: Colors.green,
-    //       textColor: Colors.white);
-    // }
+    // Save the switch state
+    data.collectionValid = isPrivate ? 0 : 1; // Update the userData object
+    await SharedPreferencesUtils.saveUserDataInfo(
+        data); // Assuming there's a method to save updated userData
 
     // Call the updateCollectionViewable method
-    final response = await _userServices.updateCollectionViewable();
+    await _userServices.updateCollectionViewable();
   }
 
   @override
@@ -78,22 +63,24 @@ class _SettingPageState extends State<SettingPage> {
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-            automaticallyImplyLeading: false,
-            scrolledUnderElevation: 0.0,
-            leading: IconButton(
-              iconSize: 15,
-              icon: Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () {
-                Get.back();
-              },
+          automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0.0,
+          leading: IconButton(
+            iconSize: 15,
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          centerTitle: true,
+          title: Container(
+            color: kTransparent,
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: thirdTitleComponent(
+              text: "设置",
             ),
-            centerTitle: true,
-            title: Container(
-                color: kTransparent,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: thirdTitleComponent(
-                  text: "设置",
-                ))),
+          ),
+        ),
         body: Container(
           constraints: const BoxConstraints.expand(),
           padding: const EdgeInsets.all(12),
@@ -118,8 +105,9 @@ class _SettingPageState extends State<SettingPage> {
                   height: 92,
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                      color: kMainWhiteColor,
-                      borderRadius: BorderRadius.circular(8)),
+                    color: kMainWhiteColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,27 +145,27 @@ class _SettingPageState extends State<SettingPage> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                        value: isPrivate,
-                                        activeColor: kMainBlackColor,
-                                        activeTrackColor: kMainYellowColor,
-                                        inactiveTrackColor: kTransparent,
-                                        inactiveThumbColor: kMainBlackColor,
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.padded,
-                                        trackOutlineColor: MaterialStateProperty
-                                            .resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                            if (isPrivate) {
-                                              return kMainBlackColor;
-                                            }
-                                            return kMainBlackColor; // Use the default color.
-                                          },
-                                        ),
-                                        trackOutlineWidth:
-                                            MaterialStateProperty.all(1),
-                                        onChanged:
-                                            _togglePrivacy // Call the method
-                                        ),
+                                      value: isPrivate,
+                                      activeColor: kMainBlackColor,
+                                      activeTrackColor: kMainYellowColor,
+                                      inactiveTrackColor: kTransparent,
+                                      inactiveThumbColor: kMainBlackColor,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.padded,
+                                      trackOutlineColor: MaterialStateProperty
+                                          .resolveWith<Color?>(
+                                        (Set<MaterialState> states) {
+                                          if (isPrivate) {
+                                            return kMainBlackColor;
+                                          }
+                                          return kMainBlackColor; // Use the default color.
+                                        },
+                                      ),
+                                      trackOutlineWidth:
+                                          MaterialStateProperty.all(1),
+                                      onChanged:
+                                          _togglePrivacy, // Call the method
+                                    ),
                                   ),
                                 ),
                               ],
@@ -188,15 +176,14 @@ class _SettingPageState extends State<SettingPage> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 Container(
                   height: 92,
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                      color: kMainWhiteColor,
-                      borderRadius: BorderRadius.circular(8)),
+                    color: kMainWhiteColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,44 +208,45 @@ class _SettingPageState extends State<SettingPage> {
                             GestureDetector(
                               onTap: () {
                                 showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialogComponent(
-                                        alertTitle: '您即将登出账号',
-                                        alertDesc: Text(""),
-                                        descTextStyle:
-                                            alertDialogContentTextStyle,
-                                        firstButtonText: '返回',
-                                        firstButtonTextStyle:
-                                            alertDialogFirstButtonTextStyle,
-                                        firstButtonColor: kThirdGreyColor,
-                                        secondButtonText: '登出',
-                                        secondButtonTextStyle:
-                                            tStatusFieldText1,
-                                        secondButtonColor: kMainYellowColor,
-                                        isButtonExpanded: true,
-                                        firstButtonOnTap: () {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        secondButtonOnTap: () async {
-                                          await SharedPreferencesUtils
-                                              .clearSharedPreferences();
-                                          setState(() {
-                                            Navigator.pop(context);
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialogComponent(
+                                      alertTitle: '您即将登出账号',
+                                      alertDesc: Text(""),
+                                      descTextStyle:
+                                          alertDialogContentTextStyle,
+                                      firstButtonText: '返回',
+                                      firstButtonTextStyle:
+                                          alertDialogFirstButtonTextStyle,
+                                      firstButtonColor: kThirdGreyColor,
+                                      secondButtonText: '登出',
+                                      secondButtonTextStyle: tStatusFieldText1,
+                                      secondButtonColor: kMainYellowColor,
+                                      isButtonExpanded: true,
+                                      firstButtonOnTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      secondButtonOnTap: () async {
+                                        await SharedPreferencesUtils
+                                            .clearSharedPreferences();
+                                        setState(() {
+                                          Navigator.pop(context);
 
-                                            Fluttertoast.showToast(
-                                                msg: "已登出",
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                backgroundColor: kMainGreyColor,
-                                                textColor: kThirdGreyColor);
-                                            Get.offAllNamed('/onboarding');
-                                          });
-                                        },
-                                      );
-                                    });
+                                          Fluttertoast.showToast(
+                                            msg: "已登出",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: kMainGreyColor,
+                                            textColor: kThirdGreyColor,
+                                          );
+                                          Get.offAllNamed('/onboarding');
+                                        });
+                                      },
+                                    );
+                                  },
+                                );
                               },
                               child: Text(
                                 "登出账号",
@@ -270,7 +258,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
