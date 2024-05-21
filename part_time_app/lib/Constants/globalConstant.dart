@@ -24,5 +24,3 @@ List<NotificationListDate> missionMessageList = [];
 List<NotificationListDate> paymentMessageList = [];
 List<NotificationListDate> publishMessageList = [];
 List<NotificationListDate> ticketingMessageList = [];
-// int? totalSystemUnread =
-//     notificationTips!.responseData['系统通知']?.notificationTotalUnread;

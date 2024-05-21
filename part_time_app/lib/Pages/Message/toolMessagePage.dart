@@ -161,6 +161,7 @@ class _ToolMessagePageState extends State<ToolMessagePage> {
                           title: notification.notificationTitle ?? "",
                           description: notification.notificationContent ?? "",
                           isSystem: false,
+                          isPayment: false,
                         );
                       }).toList());
                     }

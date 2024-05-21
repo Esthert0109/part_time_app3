@@ -9,8 +9,46 @@ import '../../Utils/apiUtils.dart';
 class PaymentServices {
   String url = "";
 
-  Future<List<PaymentData>?> getPaymentHistory(int page) async {
+  Future<List<Payment>?> getPaymentHistory(int page) async {
     String url = port + getPaymentHistoryUrl + page.toString();
+    // print(url);
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      int statusCode = response.statusCode;
+      // print(response.responseBody);
+      if (response.statusCode == 200) {
+        final responseBody = response.responseBody;
+        final parsedData = json.decode(responseBody);
+
+        List<Payment> paymentHistory = [];
+        parsedData['data'].forEach((date, payments) {
+          List<PaymentData> paymentList = List<PaymentData>.from(
+              payments.map((payment) => PaymentData.fromJson(payment)));
+          Payment paymentData = Payment(date: date, payments: paymentList);
+          paymentHistory.add(paymentData);
+        });
+        return paymentHistory;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      // Handle exceptions if needed
+      print('Exception: $e');
+    }
+
+    // Return null if there's an erro
+  }
+
+  Future<PaymentDetail?> getPaymentDetail(int paymentId) async {
+    String url = port + getPaymentDetailUrl + paymentId.toString();
     print(url);
 
     String? token = await SharedPreferencesUtils.getToken();
@@ -25,20 +63,10 @@ class PaymentServices {
       int statusCode = response.statusCode;
       print(response.responseBody);
       if (response.statusCode == 200) {
-        final responseBody = response.responseBody;
-        final parsedData = json.decode(responseBody);
-
-        List<PaymentData> paymentHistory = [];
-        parsedData['data'].forEach((date, payments) {
-          List<Payment> paymentList = List<Payment>.from(
-              payments.map((payment) => Payment.fromJson(payment)));
-          PaymentData paymentData =
-              PaymentData(date: date, payments: paymentList);
-          paymentHistory.add(paymentData);
-        });
-        return paymentHistory;
+        final jsonResponse = jsonDecode(response.responseBody);
+        return PaymentDetail.fromJson(jsonResponse['data']);
       } else {
-        throw Exception('Failed to load data');
+        throw Exception('Failed to load payment detail');
       }
     } catch (e) {
       // Handle exceptions if needed

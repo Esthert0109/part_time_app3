@@ -162,7 +162,7 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
                       padding: EdgeInsets.only(left: 10),
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(() => TestWebsocketPage(),
+                          Get.to(() => SortPage(),
                               transition: Transition.rightToLeft);
                         },
                         child: SvgPicture.asset(

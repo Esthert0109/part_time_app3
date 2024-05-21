@@ -222,12 +222,14 @@ Widget _buildMessageCard(
                 ),
                 Row(
                   children: [
-                    Container(
-                      width: 236,
-                      child: Text(
-                        detail ?? '',
-                        style: messageText1,
-                        overflow: TextOverflow.ellipsis,
+                    Expanded(
+                      child: Container(
+                        width: 236,
+                        child: Text(
+                          detail ?? '',
+                          style: messageText1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     if (totalMessage != null && totalMessage >= 1)

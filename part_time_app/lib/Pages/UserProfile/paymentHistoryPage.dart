@@ -24,7 +24,7 @@ class PaymentHistoryPage extends StatefulWidget {
 
 class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   ScrollController _scrollController = ScrollController();
-  List<PaymentData> paymentList = [];
+  List<Payment> paymentList = [];
   bool isLoading = false;
   int page = 1;
   bool continueLoading = true;
@@ -49,9 +49,9 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
       isLoading = true;
     });
     try {
-      List<PaymentData>? data = await PaymentServices().getPaymentHistory(page);
-      print("call the API");
-      print(data);
+      List<Payment>? data = await PaymentServices().getPaymentHistory(page);
+      // print("call the API");
+      // print(data);
       setState(() {
         if (data != null && data != null) {
           paymentList.addAll(data);
@@ -123,39 +123,56 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
               ),
               child: RefreshIndicator(
                 onRefresh: _refresh,
-                color: kMainYellowColor,
-                child: SingleChildScrollView(
+                color:
+                    kMainYellowColor, // Replace kMainYellowColor with actual color
+                child: ListView.builder(
                   controller: _scrollController,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: paymentList.expand((payment) {
-                      List<Widget> widgets = [];
-                      // Add the date if it's different from the previous one
-                      widgets.add(
+                  itemCount: paymentList.length + (isLoading ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == paymentList.length) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: PaymentHistoryLoading(),
+                        ),
+                      );
+                    }
+                    final payment = paymentList[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 15, bottom: 5),
+                            padding: const EdgeInsets.only(top: 20, bottom: 15),
                             child: Text(
                               payment.date,
-                              style: missionIDtextStyle,
+                              style:
+                                  missionIDtextStyle, // Replace missionIDtextStyle with actual style
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                      );
-
-                      // Add the payment details
-                      widgets.addAll(payment.payments.map((payment) {
-                        return _buildCard(
-                          title: payment.paymentHistoryTitle,
-                          description: payment.paymentHistoryDescription,
-                          amount: payment.paymentTotalAmount,
-                        );
-                      }));
-                      return widgets;
-                    }).toList(),
-                  ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, subIndex) =>
+                              SizedBox(height: 10),
+                          itemCount: payment.payments.length,
+                          itemBuilder: (context, subIndex) {
+                            final paymentDetail = payment.payments[subIndex];
+                            return _buildCard(
+                              title: paymentDetail.paymentHistoryTitle,
+                              description:
+                                  paymentDetail.paymentHistoryDescription,
+                              amount: paymentDetail.paymentTotalAmount,
+                              paymentId: paymentDetail.paymentId,
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             )));
@@ -166,29 +183,33 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     required String description,
     required String amount,
     String? date,
+    int? paymentId,
   }) {
     return Container(
       child: Column(
         children: [
           GestureDetector(
               onTap: () {
-                Get.to(() => PaymentHistoryDetailPage(),
+                Get.to(
+                    () => PaymentHistoryDetailPage(
+                          paymentID: paymentId,
+                        ),
                     transition: Transition.rightToLeft);
               },
               child: Container(
                 height: 92,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                padding: const EdgeInsets.all(20),
+                // margin: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                     color: kMainWhiteColor,
                     borderRadius: BorderRadius.circular(8)),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           flex: 60,

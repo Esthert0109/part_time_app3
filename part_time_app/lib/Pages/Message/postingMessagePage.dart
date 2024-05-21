@@ -157,6 +157,7 @@ class _PostingMessagePageState extends State<PostingMessagePage> {
                           title: notification.notificationTitle ?? "",
                           description: notification.notificationContent ?? "",
                           isSystem: false,
+                          isPayment: false,
                         );
                       }).toList());
                     }

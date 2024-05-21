@@ -17,6 +17,7 @@ const collectionURL = "api/v1/collection/my-collection";
 const createCollectionURL = "api/v1/collection/create?taskId=";
 const searchResultPage = "api/v1/tasks/searchByKeywords?";
 const searchbyTag = "api/v1/tasks/searchByTag?";
+const getTagUrl = "api/v1/tags/getTagList?page=";
 const advertisementPage = "api/v1/advertisement/all";
 
 //system message Services
@@ -33,3 +34,7 @@ const getCategoryListUrl = "api/v1/categories/getCategoryList";
 
 //Payment
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";
+const getPaymentDetailUrl = "api/v1/payments/detail/";
+
+//Ticketing
+const getTicketingHistoryUrl = "api/v1/ticket/getAllByCustomerId?page=";

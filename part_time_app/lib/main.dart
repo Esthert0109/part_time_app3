@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => TestWebsocketPage()),
+        GetPage(name: '/depo', page: () => SortPage()),
       ],
     );
   }

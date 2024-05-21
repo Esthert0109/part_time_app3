@@ -3,6 +3,7 @@ import 'package:part_time_app/Utils/apiUtils.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Model/Advertisement/advertisementModel.dart';
+import '../../Model/Tag/tagModel.dart';
 import '../../Model/Task/missionClass.dart';
 
 class ExploreService {
@@ -155,5 +156,40 @@ class ExploreService {
     } catch (e) {
       throw Exception('Failed to load data: $e');
     }
+  }
+
+  Future<TagModel?> getTag(int page) async {
+    String url = port + getTagUrl + page.toString();
+    String? token = await SharedPreferencesUtils.getToken();
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+        List<dynamic> data = jsonData['data'];
+
+        if (responseCode == 0) {
+          List<TagData>? responseData =
+              data.map((e) => TagData.fromJson(e)).toList();
+          TagModel model = TagModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+          return model;
+        } else {
+          TagModel model =
+              TagModel(code: responseCode, msg: responseMsg, data: []);
+
+          return model;
+        }
+      }
+    } catch (e) {
+      print("Error in Ticketing: $e");
+    }
+    return null;
   }
 }
