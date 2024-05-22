@@ -219,7 +219,9 @@ class _ComponentExampleState extends State<ComponentExample> {
                 messageDesc: '您已预付200USDT的赏金至悬赏 [标题] 。',
                 onTap: () {
                   setState(() {
-                    Get.to(() => MissionPublishMainPage(isEdit: false,));
+                    Get.to(() => MissionPublishMainPage(
+                          isEdit: false,
+                        ));
                     print("click");
                   });
                 },
@@ -253,7 +255,10 @@ class _ComponentExampleState extends State<ComponentExample> {
                 day: "10",
                 duration: "24",
                 date: "2023.12.01",
-                price: "500000", taskId: 0,
+                price: "500000",
+                taskId: 0,
+                limitUnit: '',
+                estimatedUnit: '',
               ),
               SizedBox(height: 10),
               Divider(),
@@ -282,7 +287,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                   );
                 },
                 buttonColor: kMainYellowColor,
-                textStyle: buttonTextStyle, isLoading: false,
+                textStyle: buttonTextStyle,
+                isLoading: false,
               ),
               SizedBox(height: 10),
               primaryButtonComponent(
@@ -387,7 +393,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                         isSubmit: false,
                       ),
                       primaryButtonComponent(
-                        isLoading: false,
+                          isLoading: false,
                           text: "提交",
                           onPressed: () {
                             setState(() {

@@ -29,4 +29,20 @@ class UploadServices {
       print("Error in upload task images: $e");
     }
   }
+
+  Future<String?> uploadDeposit(File screenShot) async {
+    url = port + uploadDepositUrl;
+    try {
+      final response = await postSingleFileRequest(screenShot, url);
+
+      int responseCode = response['code'];
+      String responseMsg = response['msg'];
+      if (responseCode == 0) {
+        String responseData = response['data'];
+        return responseData;
+      }
+    } catch (e) {
+      print("Error in upload single deposit: $e");
+    }
+  }
 }

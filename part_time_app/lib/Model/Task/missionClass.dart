@@ -1,3 +1,5 @@
+import 'tagModel.dart';
+
 class SearchResult {
   final int totalAmountOfData;
   final List<TaskClass> tasks;
@@ -58,12 +60,12 @@ class OrderDetailModel {
 
 class OrderData {
   final int? orderId;
-  final int? taskId;
+  int? taskId;
   final String? customerId;
   final String? taskTitle;
   final String? taskContent;
   final String? taskTagIds;
-  final List<Tag>? taskTagNames;
+  final List<TagData>? taskTagNames;
   final double? orderSinglePrice;
   final int? orderStatus;
   final String? taskUpdatedTime;
@@ -87,41 +89,46 @@ class OrderData {
   final int? collectionValid;
   final String? updatedTime;
   final String? orderBExpiredTime;
+  final double? taskAmount;
+  final double? taskFee;
+  final double? taskPrepay;
   final OrderScreenShotList? orderScreenshots;
 
-  OrderData({
-    this.orderId,
-    this.taskId,
-    this.customerId,
-    this.taskTitle,
-    this.taskContent,
-    this.taskTagIds,
-    this.taskTagNames,
-    this.orderSinglePrice,
-    this.orderStatus,
-    this.taskUpdatedTime,
-    this.username,
-    this.nickname,
-    this.avatar,
-    this.categoryId,
-    this.taskSinglePrice,
-    this.taskQuota,
-    this.taskTimeLimit,
-    this.taskTimeLimitUnit,
-    this.taskEstimateTime,
-    this.taskEstimateTimeUnit,
-    this.taskStatus,
-    this.taskProcedures,
-    this.orderRejectReason,
-    this.taskCreatedTime,
-    this.taskImagesPreview,
-    this.taskReceivedNum,
-    this.taskIsDelete,
-    this.collectionValid,
-    this.updatedTime,
-    this.orderBExpiredTime,
-    this.orderScreenshots,
-  });
+  OrderData(
+      {this.orderId,
+      this.taskId,
+      this.customerId,
+      this.taskTitle,
+      this.taskContent,
+      this.taskTagIds,
+      this.taskTagNames,
+      this.orderSinglePrice,
+      this.orderStatus,
+      this.taskUpdatedTime,
+      this.username,
+      this.nickname,
+      this.avatar,
+      this.categoryId,
+      this.taskSinglePrice,
+      this.taskQuota,
+      this.taskTimeLimit,
+      this.taskTimeLimitUnit,
+      this.taskEstimateTime,
+      this.taskEstimateTimeUnit,
+      this.taskStatus,
+      this.taskProcedures,
+      this.orderRejectReason,
+      this.taskCreatedTime,
+      this.taskImagesPreview,
+      this.taskReceivedNum,
+      this.taskIsDelete,
+      this.collectionValid,
+      this.updatedTime,
+      this.orderBExpiredTime,
+      this.taskAmount,
+      this.orderScreenshots,
+      this.taskFee,
+      this.taskPrepay});
 
   Map<String, dynamic> toJson() {
     return {
@@ -155,52 +162,56 @@ class OrderData {
       "collectionValid": collectionValid,
       "updatedTime": updatedTime,
       "orderBExpiredTime": orderBExpiredTime,
-      "orderScreenshots": orderScreenshots
+      "orderScreenshots": orderScreenshots,
+      "taskAmount": taskAmount,
+      "taskFee": taskFee,
+      "taskPrepay": taskPrepay
     };
   }
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
     return OrderData(
-      orderId: json['orderId'],
-      taskId: json['taskId'],
-      customerId: json['customerId'],
-      taskTitle: json['taskTitle'],
-      taskContent: json['taskContent'],
-      taskTagIds: json['taskTagIds'],
-      taskTagNames: json['taskTagNames'] != null
-          ? List<Tag>.from(
-              json['taskTagNames'].map((data) => Tag.fromJson(data)))
-          : [],
-      orderSinglePrice: json['orderSinglePrice'],
-      orderStatus: json['orderStatus'],
-      taskUpdatedTime: json['taskUpdatedTime'],
-      username: json['username'],
-      avatar: json['avatar'],
-      nickname: json['nickname'],
-      categoryId: json['categoryId'],
-      taskSinglePrice: json['taskSinglePrice'],
-      taskQuota: json['taskQuota'],
-      taskTimeLimit: json['taskTimeLimit'],
-      taskTimeLimitUnit: json['taskTimeLimitUnit'],
-      taskEstimateTime: json['taskEstimateTime'],
-      taskEstimateTimeUnit: json['taskEstimateTimeUnit'],
-      taskStatus: json['taskStatus'],
-      taskProcedures: json['taskProcedures'] != null
-          ? TaskProcedureModel.fromJson(json['taskProcedures'])
-          : null,
-      orderRejectReason: json['orderRejectReason'],
-      taskCreatedTime: json['taskCreatedTime'],
-      taskImagesPreview: json['taskImagesPreview'],
-      taskReceivedNum: json['taskReceivedNum'],
-      taskIsDelete: json['taskIsDelete'],
-      collectionValid: json['collectionValid'],
-      updatedTime: json['updatedTime'],
-      orderBExpiredTime: json['orderBExpiredTime'],
-      orderScreenshots: json['orderScreenshots'] != null
-          ? OrderScreenShotList.fromJson(json['orderScreenshots'])
-          : null,
-    
-    );
+        orderId: json['orderId'],
+        taskId: json['taskId'],
+        customerId: json['customerId'],
+        taskTitle: json['taskTitle'],
+        taskContent: json['taskContent'],
+        taskTagIds: json['taskTagIds'],
+        taskTagNames: json['taskTagNames'] != null
+            ? List<TagData>.from(
+                json['taskTagNames'].map((data) => TagData.fromJson(data)))
+            : [],
+        orderSinglePrice: json['orderSinglePrice'],
+        orderStatus: json['orderStatus'],
+        taskUpdatedTime: json['taskUpdatedTime'],
+        username: json['username'],
+        avatar: json['avatar'],
+        nickname: json['nickname'],
+        categoryId: json['categoryId'],
+        taskSinglePrice: json['taskSinglePrice'],
+        taskQuota: json['taskQuota'],
+        taskTimeLimit: json['taskTimeLimit'],
+        taskTimeLimitUnit: json['taskTimeLimitUnit'],
+        taskEstimateTime: json['taskEstimateTime'],
+        taskEstimateTimeUnit: json['taskEstimateTimeUnit'],
+        taskStatus: json['taskStatus'],
+        taskProcedures: json['taskProcedures'] != null
+            ? TaskProcedureModel.fromJson(json['taskProcedures'])
+            : null,
+        orderRejectReason: json['orderRejectReason'],
+        taskCreatedTime: json['taskCreatedTime'],
+        taskImagesPreview: json['taskImagesPreview'],
+        taskReceivedNum: json['taskReceivedNum'],
+        taskIsDelete: json['taskIsDelete'],
+        collectionValid: json['collectionValid'],
+        updatedTime: json['updatedTime'],
+        orderBExpiredTime: json['orderBExpiredTime'],
+        orderScreenshots: json['orderScreenshots'] != null
+            ? OrderScreenShotList.fromJson(json['orderScreenshots'])
+            : null,
+        taskAmount: json['taskAmount'],
+        taskFee: json['taskFee'],
+        taskPrepay: json['taskPrepay']);
   }
 }
 
@@ -223,7 +234,7 @@ class TaskProcedureModel {
 }
 
 class TaskProcedureData {
-  dynamic? image;
+  List<String>? image;
   String instruction;
 
   TaskProcedureData({this.image, required this.instruction});
@@ -234,7 +245,10 @@ class TaskProcedureData {
 
   factory TaskProcedureData.fromJson(Map<String, dynamic> json) {
     return TaskProcedureData(
-        image: json['image'], instruction: json['instruction']);
+        image: (json['image'] as List<dynamic>?)
+            ?.map((item) => item as String)
+            .toList(),
+        instruction: json['instruction']);
   }
 }
 
@@ -246,7 +260,7 @@ class TaskClass {
   final String? taskContent;
   final double? taskSinglePrice;
   final String? taskTagIds;
-  final List<Tag>? taskTagNames;
+  final List<TagData>? taskTagNames;
   final String? taskUpdatedTime;
   final String? nickname;
   final String? avatar;
@@ -278,7 +292,7 @@ class TaskClass {
         taskSinglePrice: json['taskSinglePrice'] ?? 0,
         taskTagIds: json['taskTagIds'] ?? "",
         taskTagNames: (json['taskTagNames'] as List<dynamic>?)
-                ?.map((tagJson) => Tag.fromJson(tagJson))
+                ?.map((tagJson) => TagData.fromJson(tagJson))
                 .toList() ??
             [],
         taskUpdatedTime: json['taskUpdatedTime'] ?? "",

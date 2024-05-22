@@ -173,7 +173,7 @@ class _missionDetailStepsCardComponentState
                                               0,
                                           (i) => GestureDetector(
                                                 onTap: () {
-                                                  widget.isConfidential
+                                                  !widget.isConfidential
                                                       ? null
                                                       : showZoomImage(
                                                           context, index, i);
@@ -229,7 +229,7 @@ class _missionDetailStepsCardComponentState
                                                         ),
                                                       ),
                                                     ),
-                                                    widget.isConfidential
+                                                    !widget.isConfidential
                                                         ? Positioned(
                                                             bottom: 0,
                                                             child: Container(

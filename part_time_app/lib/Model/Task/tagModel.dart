@@ -27,12 +27,12 @@ class TagModel {
 class TagData {
   final int tagId;
   final String tagName;
-  final int totalOccurrence;
+  final int? totalOccurrence;
 
   TagData({
     required this.tagId,
     required this.tagName,
-    required this.totalOccurrence,
+    this.totalOccurrence,
   });
 
   Map<String, dynamic> toJson() {

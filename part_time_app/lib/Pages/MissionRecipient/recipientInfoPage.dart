@@ -10,9 +10,11 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/User/userModel.dart';
+import '../../Services/order/orderServices.dart';
 
 class RecipientInfoPage extends StatefulWidget {
-  const RecipientInfoPage({super.key});
+  final int taskId;
+  const RecipientInfoPage({super.key, required this.taskId});
 
   @override
   State<RecipientInfoPage> createState() => _RecipientInfoPageState();
@@ -25,6 +27,7 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
 
   // service
   UserServices services = UserServices();
+  OrderServices orderServices = OrderServices();
   UserData? userInfo;
 
   @override
@@ -159,24 +162,30 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
                         billingAddress: addressController.text,
                         billingNetwork: networkController.text);
                   });
-                  CheckOTPModel? model = await services.updateUSDT(userInfo!);
+                  try {
+                    CheckOTPModel? model = await services.updateUSDT(userInfo!);
+                    if (model!.data!) {
+                      int? create =
+                          await orderServices.createOrder(widget.taskId!);
+                      Get.off(() => MissionReviewDetailPage(isCompleted: false),
+                          transition: Transition.rightToLeft);
 
-                  if (model!.data!) {
-                    Get.off(() => MissionReviewDetailPage(isCompleted: false),
-                        transition: Transition.rightToLeft);
-                    Fluttertoast.showToast(
-                        msg: "已提交",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: kMainGreyColor,
-                        textColor: kThirdGreyColor);
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "提交失败",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: kErrorRedColor,
-                        textColor: kMainWhiteColor);
+                      Fluttertoast.showToast(
+                          msg: "已提交",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: kMainGreyColor,
+                          textColor: kThirdGreyColor);
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: "提交失败",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: kErrorRedColor,
+                          textColor: kMainWhiteColor);
+                    }
+                  } on Exception catch (e) {
+                    // TODO
                   }
                 }
               },

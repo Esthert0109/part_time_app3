@@ -29,12 +29,12 @@ import '../../Model/Task/tagModel.dart';
 import '../../Services/Upload/uploadServices.dart';
 import 'missionDetailStatusIssuerPage.dart';
 
-class StepModel {
-  String? description;
-  List<String>? imageUrls;
+// class StepModel {
+//   String? description;
+//   List<String>? imageUrls;
 
-  StepModel({required this.description, this.imageUrls});
-}
+//   StepModel({required this.description, this.imageUrls});
+// }
 
 class MissionPublishMainPage extends StatefulWidget {
   final bool isEdit;
@@ -46,14 +46,12 @@ class MissionPublishMainPage extends StatefulWidget {
 
 class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   FocusNode focusNode = FocusNode();
-  final ImagePicker picker = ImagePicker();
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   TextEditingController stepdescriptionController = TextEditingController();
   PageController pageController = PageController();
 
-  List<StepModel> steps = [];
   List<File> imageUrls = [];
   String titleInput = "";
   String contentInput = "";
@@ -62,7 +60,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   int tagsLength = 0;
 
   List<String> selectedTag = [];
-  List<String> tagDisplayMock = ["急招", "用时短", "易审核", "长期兼职", "写作", "长期"];
+  String selectedTagIds = "";
+  List<TagData> selectedTagList = [];
 
   // services
   TagServices services = TagServices();
@@ -72,13 +71,73 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   UserData? userData;
 
   // upload picture service
+  final ImagePicker imagePicker = ImagePicker();
   UploadServices uploadServices = UploadServices();
   List<String>? uploadedList = [];
   bool isUploadLoading = false;
 
   // Steps
   TaskProcedureModel? taskSteps;
-  List<TaskProcedureData>? stepsList;
+  List<TaskProcedureData> stepsList = [];
+
+  void imageSelect(int index) async {
+    List<XFile> uploadedImages = await imagePicker.pickMultiImage();
+    List<File> imagePath = [];
+
+    if (uploadedImages.isNotEmpty) {
+      for (int i = 0; i < uploadedImages.length; i++) {
+        imagePath.add(File(uploadedImages[i].path));
+      }
+      print("check image uploaded: $imagePath");
+
+      try {
+        setState(() {
+          isUploadLoading = true;
+        });
+
+        List<String>? uploadedImagesList =
+            await uploadServices.uploadTaskImages(imagePath);
+        if (uploadedImagesList != []) {
+          Fluttertoast.showToast(
+              msg: "已上传",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+
+          setState(() {
+            isUploadLoading = false;
+            if (stepsList[index].image == null) {
+              stepsList[index].image = [];
+            }
+            stepsList[index].image!.addAll(uploadedImagesList ?? []);
+
+            print("check uploaded: ${stepsList[index].image}");
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "上传失败",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+          setState(() {
+            isUploadLoading = false;
+          });
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: "$e",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: kMainGreyColor,
+            textColor: kThirdGreyColor);
+        setState(() {
+          isUploadLoading = false;
+        });
+      }
+    }
+  }
 
   fetchTagList() async {
     setState(() {
@@ -93,7 +152,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
     }
   }
 
-  showZoomImage(BuildContext context, int index, List<String> imageUrlList) {
+  showZoomImage(BuildContext context, int index, List<String> imageUrlList,
+      int listIndex) {
     pageController = PageController(initialPage: index);
     showDialog(
         context: context,
@@ -195,6 +255,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 secondButtonOnTap: () {
                                   setState(() {
                                     Navigator.pop(context);
+                                    stepsList[listIndex].image!.removeAt(index);
+
                                     Navigator.pop(context);
 
                                     Fluttertoast.showToast(
@@ -452,6 +514,10 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                     isGetTag = false;
                                                     selectedTag.add(
                                                         tagList[index].tagName);
+                                                    selectedTagList
+                                                        .add(tagList[index]);
+                                                    selectedTagIds =
+                                                        "${tagList[index].tagId.toString()},";
                                                   });
                                                 },
                                                 child: Row(
@@ -610,7 +676,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                 ),
               ),
               ListView.builder(
-                itemCount: steps.length,
+                itemCount: stepsList!.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
@@ -682,7 +748,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                           print(
                                               "delete this steps: ${index + 1}");
                                           setState(() {
-                                            steps.removeAt(index);
+                                            stepsList!.removeAt(index);
                                           });
                                           Fluttertoast.showToast(
                                               msg: "已删除",
@@ -728,43 +794,11 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                               child: Row(
                                 children: [
                                   InkWell(
-                                    onTap: () async {
-                                      final List<XFile>? selectedImageList =
-                                          await picker.pickMultiImage();
-                                      if (selectedImageList != null &&
-                                          selectedImageList.isNotEmpty) {
-                                        for (int i = 0;
-                                            i < selectedImageList!.length;
-                                            i++) {
-                                          imageUrls.add(
-                                              File(selectedImageList![i].path));
-                                        }
-                                        try {
-                                          List<String>? uploadList =
-                                              await uploadServices
-                                                  .uploadTaskImages(imageUrls);
-
-                                          if (uploadList != []) {
-                                            Fluttertoast.showToast(
-                                                msg: "已上传",
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                backgroundColor: kMainGreyColor,
-                                                textColor: kThirdGreyColor);
-                                            setState(() {
-                                              steps[index].imageUrls ??= [];
-                                              steps[index]
-                                                  .imageUrls!
-                                                  .addAll(uploadList ?? []);
-                                            });
-                                          }
-                                        } catch (e) {
-                                          print("Error when upload pic:$e");
-                                        }
-
-                                        // Update the UI after adding new images
-                                      }
-                                    },
+                                    onTap: isUploadLoading
+                                        ? null
+                                        : () {
+                                            imageSelect(index);
+                                          },
                                     child: Container(
                                       width: 100,
                                       height: 100,
@@ -774,14 +808,20 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                         ),
                                         color: Color(0XFFF9F9F9),
                                       ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 24,
-                                          color:
-                                              Color.fromRGBO(153, 153, 153, 1),
-                                        ),
-                                      ),
+                                      child: isUploadLoading
+                                          ? Center(
+                                              child: LoadingAnimationWidget
+                                                  .stretchedDots(
+                                                      color: kMainYellowColor,
+                                                      size: 50))
+                                          : Center(
+                                              child: Icon(
+                                                Icons.add,
+                                                size: 24,
+                                                color: Color.fromRGBO(
+                                                    153, 153, 153, 1),
+                                              ),
+                                            ),
                                     ),
                                   ),
                                   SizedBox(
@@ -792,13 +832,17 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                       height: 100,
                                       child: ListView.builder(
                                         itemCount:
-                                            steps[index].imageUrls?.length ?? 0,
+                                            stepsList![index].image?.length ??
+                                                0,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, imageIndex) {
                                           return GestureDetector(
                                             onTap: () {
-                                              showZoomImage(context, index,
-                                                  steps[index].imageUrls!);
+                                              showZoomImage(
+                                                  context,
+                                                  imageIndex,
+                                                  stepsList![index].image!,
+                                                  index);
                                             },
                                             child: Container(
                                               height: 100,
@@ -813,8 +857,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(4),
                                                 child: Image.network(
-                                                  steps[index]
-                                                          .imageUrls?[index] ??
+                                                  stepsList![index]
+                                                          .image?[imageIndex] ??
                                                       "",
                                                   fit: BoxFit.cover,
                                                   loadingBuilder: (context,
@@ -843,21 +887,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                 ),
                                               ),
                                             ),
-                                            // Container(
-                                            //   width: 157,
-                                            //   margin:
-                                            //       EdgeInsets.only(right: 10),
-                                            //   decoration: BoxDecoration(
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(4),
-                                            //     image: DecorationImage(
-                                            //       image: FileImage(File(
-                                            //           steps[index].imageUrls![
-                                            //               imageIndex])),
-                                            //       fit: BoxFit.cover,
-                                            //     ),
-                                            //   ),
-                                            // ),
                                           );
                                         },
                                       ),
@@ -875,8 +904,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                 onTap: () {
                   print("add steps");
                   setState(() {
-                    steps.add(StepModel(
-                      description: stepdescriptionController.text,
+                    stepsList!.add(TaskProcedureData(
+                      instruction: stepdescriptionController.text,
                     ));
                   });
                 },
@@ -978,8 +1007,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                       onPressed: () {
                         if (titleController.text == "" ||
                             descController.text == "" ||
-                            steps == [] ||
-                            steps.isEmpty ||
+                            stepsList == [] ||
+                            stepsList!.isEmpty ||
                             priceController.text == "" ||
                             peopleController.text == "" ||
                             dayController.text == "" ||
@@ -1001,13 +1030,20 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           taskSteps = TaskProcedureModel(step: stepsList ?? []);
 
                           orderData = OrderData(
-                              nickname: userData?.nickname ?? "用户名",
-                              avatar: userData?.avatar ??
-                                  "https://pic4.zhimg.com/v2-4370b028739d332dbb525cafb26f77fb_b.jpg",
+                              // nickname: userData?.nickname ?? "用户名",
+                              // avatar: userData?.avatar ??
+                              //     "https://pic4.zhimg.com/v2-4370b028739d332dbb525cafb26f77fb_b.jpg",
                               taskTitle: titleController.text,
                               taskContent: descController.text,
                               taskSinglePrice:
                                   double.tryParse(priceController.text),
+                              taskAmount: totalPrice,
+                              taskFee: handingFee,
+                              taskPrepay: totalPrepaidPrice,
+                              taskTimeLimitUnit: selectedDuration,
+                              taskEstimateTimeUnit: selectedEndTime,
+                              taskTagIds: selectedTagIds,
+                              taskTagNames: selectedTagList,
                               taskQuota: int.tryParse(peopleController.text),
                               taskTimeLimit: int.tryParse(dayController.text),
                               taskImagesPreview: picPreview ? 1 : 0,

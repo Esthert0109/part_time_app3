@@ -21,15 +21,22 @@ class _MissionStatusMainPageState extends State<MissionStatusMainPage> {
   final PageController _controller = PageController();
   int titleSelection = 0;
 
-  
-
   @override
   void initState() {
     super.initState();
-    
-  }
+    orderIncompleted.clear();
+    orderWaitReviewed.clear();
+    orderFailed.clear();
+    orderWaitPayment.clear();
+    orderPaid.clear();
 
-  
+    taskWaitReviewed.clear();
+    taskFailed.clear();
+    taskPassed.clear();
+    taskCompleted.clear();
+    taskWaitReturned.clear();
+    taskReturned.clear();
+  }
 
   @override
   Widget build(BuildContext context) {

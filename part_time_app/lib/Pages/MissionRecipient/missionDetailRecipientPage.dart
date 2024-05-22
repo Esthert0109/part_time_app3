@@ -253,6 +253,8 @@ class _MissionDetailRecipientPageState
                         date: orderDetail.taskUpdatedTime.toString() ?? "",
                         price: orderDetail.taskSinglePrice.toString() ?? "",
                         isFavourite: isFavourite,
+                        estimatedUnit: orderDetail.taskTimeLimitUnit ?? "天",
+                        limitUnit: orderDetail.taskEstimateTimeUnit ?? "天",
                       ),
                       const SizedBox(
                         height: 12,
@@ -286,7 +288,8 @@ class _MissionDetailRecipientPageState
                               isPaid)
                           ? MissionSubmissionCardComponent(
                               isEdit: isStarted ? true : false,
-                              submissionPics: orderDetail.orderScreenshots?.image??[],
+                              submissionPics:
+                                  orderDetail.orderScreenshots?.image ?? [],
                               isCollapsed: isStarted ? true : false,
                               isCollapseAble: isStarted ? false : true,
                             )
@@ -602,7 +605,10 @@ class _MissionDetailRecipientPageState
                                         } else {
                                           setState(() {
                                             Navigator.pop(context);
-                                            Get.to(() => RecipientInfoPage(),
+                                            Get.to(
+                                                () => RecipientInfoPage(
+                                                    taskId:
+                                                        orderDetail.taskId!),
                                                 transition:
                                                     Transition.rightToLeft);
                                           });

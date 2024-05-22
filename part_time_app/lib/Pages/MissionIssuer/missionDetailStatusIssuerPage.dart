@@ -15,8 +15,10 @@ import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.d
 import 'package:part_time_app/Components/Card/missionNoticeCardComponent.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Components/Common/countdownTimer.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
@@ -79,6 +81,8 @@ class _MissionDetailStatusIssuerPageState
   bool picPreview = false;
   bool isLoading = false;
 
+  UserData userDetails = UserData();
+
   // service
   OrderServices services = OrderServices();
   OrderDetailModel? orderModel;
@@ -86,7 +90,6 @@ class _MissionDetailStatusIssuerPageState
   bool isFavourite = false;
   int? status;
   int noRecipient = 0;
-
 
   // status
   bool isWaiting = false;
@@ -97,6 +100,8 @@ class _MissionDetailStatusIssuerPageState
   @override
   void initState() {
     super.initState();
+    fetchUserDetails();
+
     if (widget.isPreview) {
       orderDetail = widget.orderData!;
       if (orderDetail.taskImagesPreview == 1) {
@@ -112,6 +117,13 @@ class _MissionDetailStatusIssuerPageState
   @override
   void dispose() {
     super.dispose();
+  }
+
+  fetchUserDetails() async {
+    UserData? userData = await SharedPreferencesUtils.getUserDataInfo();
+    setState(() {
+      userDetails = userData!;
+    });
   }
 
   checkNoRecipient() async {
@@ -455,8 +467,11 @@ class _MissionDetailStatusIssuerPageState
                             ? Container()
                             : MissionDetailIssuerCardComponent(
                                 image: orderDetail.avatar ??
-                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
-                                title: orderDetail.nickname ?? "墩墩鸡",
+                                    userDetails.avatar ??
+                                    "",
+                                title: orderDetail.nickname ??
+                                    userDetails.nickname ??
+                                    "",
                                 action: "留言咨询 >",
                                 onTap: () {}),
                         const SizedBox(
@@ -480,6 +495,8 @@ class _MissionDetailStatusIssuerPageState
                           date: orderDetail.taskUpdatedTime.toString() ?? "",
                           price: orderDetail.taskSinglePrice.toString() ?? "",
                           taskId: orderDetail.taskId ?? 0,
+                          limitUnit: orderDetail.taskTimeLimitUnit ?? "",
+                          estimatedUnit: orderDetail.taskEstimateTimeUnit ?? '',
                         ),
                         const SizedBox(
                           height: 12,
@@ -495,7 +512,8 @@ class _MissionDetailStatusIssuerPageState
                             : Container(),
                         missionDetailStepsCardComponent(
                           steps: orderDetail.taskProcedures?.step ?? [],
-                          isConfidential: false,
+                          isConfidential:
+                              orderDetail.taskImagesPreview == 0 ? false : true,
                           isCollapsed: true,
                           isCollapseAble: false,
                         ),
@@ -572,13 +590,7 @@ class _MissionDetailStatusIssuerPageState
                                                 trackOutlineWidth:
                                                     MaterialStateProperty.all(
                                                         1),
-                                                onChanged: null
-                                                //  (preview) {
-                                                //   setState(() {
-                                                //     picPreview = preview;
-                                                //   });
-                                                // }
-                                                ),
+                                                onChanged: null),
                                           ),
                                         ),
                                       ],
@@ -742,16 +754,50 @@ class _MissionDetailStatusIssuerPageState
                                               Navigator.pop(context);
                                             });
                                           },
-                                          secondButtonOnTap: () {
-                                            setState(() {
-                                              Navigator.pop(context);
+                                          secondButtonOnTap: () async {
+                                            try {
+                                              OrderData? orderSubmitted =
+                                                  await services
+                                                      .createTask(orderDetail);
 
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return PaymentUploadDialogComponent();
-                                                  });
-                                            });
+                                              print(
+                                                  "check return: $orderSubmitted");
+
+                                              if (orderSubmitted != null) {
+                                                setState(() {
+                                                  Navigator.pop(context);
+                                                  orderDetail.taskId = orderSubmitted.taskId;
+
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return PaymentUploadDialogComponent(
+                                                          orderDetails:
+                                                              orderDetail,
+                                                        );
+                                                      });
+                                                });
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg: "提交失败，请重试",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    backgroundColor:
+                                                        kMainGreyColor,
+                                                    textColor: kThirdGreyColor);
+                                              }
+                                            } catch (e) {
+                                              Fluttertoast.showToast(
+                                                  msg: "提交失败，请重试",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            }
                                           },
                                         );
                                       });
@@ -763,32 +809,32 @@ class _MissionDetailStatusIssuerPageState
   }
 }
 
-List<MissionStepMockModel> mockData = [
-  MissionStepMockModel(
-    stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
-    stepPicList: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
-    ],
-  ),
-  MissionStepMockModel(
-    stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
-    stepPicList: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
-    ],
-  ),
-  MissionStepMockModel(
-    stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
-    stepPicList: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
-    ],
-  )
-];
+// List<MissionStepMockModel> mockData = [
+//   MissionStepMockModel(
+//     stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
+//     stepPicList: [
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+//     ],
+//   ),
+//   MissionStepMockModel(
+//     stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
+//     stepPicList: [
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+//     ],
+//   ),
+//   MissionStepMockModel(
+//     stepDesc: "打开飞常准APP，如果没有复制口令，去应用商城搜索后下载安装即可，无需注册",
+//     stepPicList: [
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRJVwTTcr_HwmVjCna8OuS2C_6WbqasMLSoqsXGBQbIA&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA_FELx_NE42Is0hKZcgutgCQjhNBtjXgdsc7FsMaBLg&s",
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj8WIyofD3WvhzI1GuT3i-wu1ndIQi_4166eeFpMpnhw&s"
+//     ],
+//   )
+// ];

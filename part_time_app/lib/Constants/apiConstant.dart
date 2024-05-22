@@ -27,7 +27,9 @@ const getOrderDetailByOrderIdUrl = "api/v1/orders/getOrderDetailsByOrderId/";
 const getTaskDetailByTaskIdUrl = "api/v1/tasks/getTaskDetails/";
 const unshelveTaskUrl = "api/v1/tasks/unshelves?";
 const createOrderUrl = "api/v1/orders/create/";
+const createTaskUrl = "api/v1/tasks/create";
 const submitOrderUrl = "api/v1/orders/submit";
+const submitTaskUrl = "api/v1/tasks/submit/";
 const getCustomerListByOrderStatusIdUrl = "api/v1/tasks/getCustomerListByOrderStatusId/";
 
 //system message Services
@@ -44,3 +46,7 @@ const getTagListUrl = "api/v1/tags/getTagList?";
 
 // upload file
 const uploadTaskImagesUrl = "api/v1/files/upload/post";
+const uploadDepositUrl = "api/v1/files/upload/deposit-screenshot";
+
+// Payment
+const createPaymentUrl = "api/v1/payments/create";

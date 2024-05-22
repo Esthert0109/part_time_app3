@@ -218,6 +218,51 @@ class OrderServices {
     }
   }
 
+  Future<OrderData?> createTask(OrderData taskDetails) async {
+    url = port + createTaskUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      "taskTitle": taskDetails.taskTitle,
+      "taskContent": taskDetails.taskContent,
+      "taskSinglePrice": taskDetails.taskSinglePrice,
+      "taskQuota": taskDetails.taskQuota,
+      "taskAmount": taskDetails.taskAmount,
+      "taskFee": taskDetails.taskFee,
+      "taskPrepay": taskDetails.taskPrepay,
+      "taskTimeLimit": taskDetails.taskTimeLimit,
+      "taskTimeLimitUnit": taskDetails.taskTimeLimitUnit,
+      "taskEstimateTime": taskDetails.taskEstimateTime,
+      "taskEstimateTimeUnit": taskDetails.taskEstimateTimeUnit,
+      "taskTagIds": taskDetails.taskTagIds,
+      "taskProcedures": taskDetails.taskProcedures,
+      "taskImagesPreview": taskDetails.taskImagesPreview
+    };
+
+    try {
+      final response = await postRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+        if (responseCode == 0) {
+          Map<String, dynamic> data = jsonData['data'];
+          OrderData responseData = OrderData.fromJson(data);
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in create task: $e");
+      return null;
+    }
+  }
+
   Future<bool?> submitOrder(int orderId, List<String> image) async {
     url = port + submitOrderUrl;
 
@@ -250,6 +295,36 @@ class OrderServices {
       }
     } catch (e) {
       print("Error in submit order: $e");
+    }
+  }
+
+  Future<bool?> submitTask(int taskId) async {
+    url = port + submitTaskUrl + taskId.toString();
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {};
+
+    try {
+      final response = await patchRequest(url, headers, body);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        if (responseCode == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error in submit task:$e");
     }
   }
 

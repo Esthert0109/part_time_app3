@@ -17,6 +17,8 @@ class MissionDetailDescriptionCardComponent extends StatefulWidget {
   final String duration;
   final String date;
   final String price;
+  final String limitUnit;
+  final String estimatedUnit;
   bool? isFavourite;
 
   MissionDetailDescriptionCardComponent(
@@ -31,7 +33,9 @@ class MissionDetailDescriptionCardComponent extends StatefulWidget {
       required this.duration,
       required this.date,
       required this.price,
-      this.isFavourite});
+      this.isFavourite,
+      required this.limitUnit,
+      required this.estimatedUnit});
 
   @override
   State<MissionDetailDescriptionCardComponent> createState() =>
@@ -151,11 +155,13 @@ class _MissionDetailDescriptionCardComponentState
               children: [
                 Text("悬赏时限", style: missionDetailText4),
                 SizedBox(width: 5),
-                Text(widget.day + "天", style: bottomNaviBarTextStyle),
+                Text(widget.day + widget.limitUnit,
+                    style: bottomNaviBarTextStyle),
                 SizedBox(width: 20),
                 Text("预计耗时", style: missionDetailText4),
                 SizedBox(width: 5),
-                Text(widget.duration + "小时", style: bottomNaviBarTextStyle),
+                Text(widget.duration + widget.estimatedUnit,
+                    style: bottomNaviBarTextStyle),
               ],
             ),
           ),

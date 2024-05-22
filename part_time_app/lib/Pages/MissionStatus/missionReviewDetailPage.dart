@@ -95,7 +95,7 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
                       date: "2024.04.30",
                       price: "50",
                       isFavourite: isFavourite,
-                      taskId: 0,
+                      taskId: 0, limitUnit: '', estimatedUnit: '',
                     ),
                   ),
                   // missionDetailStepsCardComponent(
