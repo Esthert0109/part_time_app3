@@ -35,22 +35,6 @@ class _UserMessagePageState extends State<UserMessagePage> {
       TIMUIKitChatController();
   String pageName = "";
   bool isNeedMoveToConversation = false;
-
-  getLoginUserInfo() async {
-    if (PlatformUtils().isWeb) {
-      return;
-    }
-    final res = await _sdkInstance.getLoginUser();
-    if (res.code == 0) {
-      final result = await _sdkInstance.getUsersInfo(userIDList: [res.data!]);
-
-      // if (result.code == 0) {
-      //   Provider.of<LoginUserInfo>(context, listen: false)
-      //       .setLoginUserInfo(result.data![0]);
-      // }
-    }
-  }
-
   _initTrtc() async {
     // final TUICallKit _callKit = TUICallKit.instance;
     final _tuiLogin = TUILogin.instance;
@@ -68,6 +52,21 @@ class _UserMessagePageState extends State<UserMessagePage> {
         }, onError: (int code, String message) {
           print("callkit--- onError $message");
         }));
+  }
+
+  getLoginUserInfo() async {
+    if (PlatformUtils().isWeb) {
+      return;
+    }
+    final res = await _sdkInstance.getLoginUser();
+    if (res.code == 0) {
+      final result = await _sdkInstance.getUsersInfo(userIDList: [res.data!]);
+
+      // if (result.code == 0) {
+      //   Provider.of<LoginUserInfo>(context, listen: false)
+      //       .setLoginUserInfo(result.data![0]);
+      // }
+    }
   }
 
   uploadOfflinePushInfoToken() async {

@@ -1,19 +1,26 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Pages/Message/user/chatConfig.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_value_callback.dart';
+import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Services/notification/systemMessageServices.dart';
 import 'package:provider/provider.dart';
-
 import '../../Services/webSocketService.dart';
+
+List<V2TimConversation> _conversationList = [];
 
 class MessageMainPage extends StatefulWidget {
   const MessageMainPage({Key? key}) : super(key: key);
@@ -39,6 +46,20 @@ class _MessageMainPageState extends State<MessageMainPage>
   late String? latestPublishMessageDescription;
   late String? latestTicketingMessageDate;
   late String? latestTicketingMessageDescription;
+
+  @override
+  void initState() {
+    super.initState();
+    webSocketService.addListener(_updateState);
+
+    // _tencent();
+    getMessageFromSharedPreferences();
+  }
+
+  // Future<void> _tencent() async {
+  //   bool isLoginTencent = await userTencentLogin('2206');
+  //   print("tencent:${isLoginTencent}");
+  // }
 
   Future<void> _loadData() async {
     setState(() {
@@ -73,13 +94,6 @@ class _MessageMainPageState extends State<MessageMainPage>
         _loadData();
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    webSocketService.addListener(_updateState);
-    getMessageFromSharedPreferences();
   }
 
   @override
@@ -179,6 +193,7 @@ class _MessageMainPageState extends State<MessageMainPage>
                           ?.responseData['工单通知']?.notificationContent,
                       toolTotalMessage: notificationTips
                           ?.responseData['工单通知']?.notificationTotalUnread,
+                      //user
                     ),
                   ],
                 ),

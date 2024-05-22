@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Explore/testWebsocket.dart';
+import 'package:part_time_app/Pages/Message/messageMainPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
@@ -55,14 +56,14 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       // home: const HomePage(),
-      initialRoute: '/opening',
+      initialRoute: '/depo',
       getPages: [
         GetPage(name: '/opening', page: () => const OpeningPage()),
         GetPage(name: '/onboarding', page: () => const OnboradingPage()),
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => TestWebsocketPage()),
+        GetPage(name: '/depo', page: () => MessageMainPage()),
       ],
     );
   }

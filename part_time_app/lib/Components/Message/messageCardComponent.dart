@@ -7,12 +7,14 @@ import 'package:part_time_app/Pages/Message/paymentMessagePage.dart';
 import 'package:part_time_app/Pages/Message/systemMessagePage.dart';
 import 'package:part_time_app/Pages/Message/ticketingMessagePage.dart';
 import 'package:part_time_app/Pages/Message/user/userMessagePage.dart';
+import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../Pages/Message/publishMessagePage.dart';
 import '../../Pages/Message/systemMessage1Page.dart';
+import '../../Pages/Message/user/chatConfig.dart';
 
 class MessageCardComponent extends StatefulWidget {
   String? systemDetail;
@@ -154,13 +156,12 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           },
         ),
         const SizedBox(height: 10),
-        _buildMessageCard(
+        _buildUserMessageCard(
           "用户消息",
           widget.userDetail,
           "assets/message/messageUser.svg",
           widget.userDate,
-          widget.userTotalMessage,
-          () {
+          () async {
             _resetCountAndNavigate('用户消息', () {
               Get.to(() => const UserMessagePage(),
                   transition: Transition.rightToLeft);
@@ -249,6 +250,80 @@ Widget _buildMessageCard(
                           ),
                         ),
                       ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _buildUserMessageCard(
+  String title,
+  String? detail,
+  String icon,
+  String? date,
+  void Function()? onTap,
+) {
+  return Container(
+    height: 75,
+    decoration: BoxDecoration(
+      color: kMainWhiteColor,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: EdgeInsets.all(10),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            child: SvgPicture.asset(
+              icon,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: missionDetailText6,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Text(
+                      date ?? '',
+                      style: messageText1,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      child: Expanded(
+                        child: Text(
+                          detail ?? '',
+                          style: messageText1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    // Container(
+                    //   padding: EdgeInsets.only(left: 35),
+                    //   child: TIMUIKitConversationTotalUnread(
+                    //       width: 16, height: 16),
+                    // ),
                   ],
                 ),
               ],
