@@ -13,8 +13,6 @@ import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../Pages/Message/publishMessagePage.dart';
-import '../../Pages/Message/systemMessage1Page.dart';
-import '../../Pages/Message/user/chatConfig.dart';
 
 class MessageCardComponent extends StatefulWidget {
   String? systemDetail;

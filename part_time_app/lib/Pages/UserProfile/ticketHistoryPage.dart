@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
+import 'package:part_time_app/Model/Ticketing/ticketingModel.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Services/ticketing/ticketingServices.dart';
 
 class TicketHistoryPage extends StatefulWidget {
   const TicketHistoryPage({super.key});
@@ -21,27 +21,64 @@ class TicketHistoryPage extends StatefulWidget {
 }
 
 class _TicketHistoryPageState extends State<TicketHistoryPage> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-  bool _isLoading = true;
+  ScrollController _scrollController = ScrollController();
+  List<TicketingData> ticketingList = [];
+  bool isLoading = false;
+  bool continueLoading = true;
+  int page = 1;
 
   @override
   void initState() {
     super.initState();
-    // Simulate loading delay
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _scrollController.addListener(_scrollListener);
+    _loadData();
   }
 
-  void _onRefresh() async {
-    // monitor network fetch
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      if (!isLoading && continueLoading) {
+        _loadData();
+      }
+    }
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await TicketingData.fetchComplaintTypes();
+      TicketingModel? data = await TicketingService().getTicketingHistory(page);
+      setState(() {
+        if (data!.data != null) {
+          ticketingList.addAll(data.data!);
+          page++;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
-    // if failed,use refreshFailed()
-    if (mounted) {
-      _refreshController.refreshCompleted();
+    if (!isLoading && mounted) {
+      setState(() {
+        ticketingList.clear();
+        page = 1;
+        // continueLoading = true;
+        _loadData();
+      });
     }
   }
 
@@ -86,11 +123,10 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                 stops: [0.0, 0.15],
               ),
             ),
-            child: CustomRefreshComponent(
-              onRefresh: _onRefresh,
-              controller: _refreshController,
+            child: RefreshIndicator(
+              onRefresh: _refresh,
               child: SingleChildScrollView(
-                child: _buildListView(TicketHistoryList),
+                child: _buildListView(ticketingList),
               ),
             ),
           )),
@@ -98,10 +134,10 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
   }
 
   Widget _buildCard({
-    required bool complete,
-    required String title,
-    required String description,
-    required String date,
+    int? complete,
+    String? title,
+    String? description,
+    String? date,
   }) {
     return GestureDetector(
       onTap: () {
@@ -126,7 +162,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                 Expanded(
                   flex: 60,
                   child: Text(
-                    title,
+                    title!,
                     style: messageTitleTextStyle,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -135,8 +171,8 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                 Expanded(
                   flex: 50,
                   child: Text(
-                    complete ? "已审核" : "待审核",
-                    style: complete
+                    complete == 1 ? "已审核" : "待审核",
+                    style: complete == 1
                         ? ticketCompleteTextStyle
                         : ticketUncompleteTextStyle,
                     textAlign: TextAlign.right,
@@ -147,7 +183,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
             Padding(
               padding: EdgeInsets.only(top: 3),
               child: Text(
-                description,
+                description!,
                 style: messageDescTextStyle2,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -159,9 +195,9 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
     );
   }
 
-  Widget _buildListView(List<TicketMockClass> list) {
+  Widget _buildListView(List<TicketingData> list) {
     // Sort the list based on time
-    list.sort((a, b) => b.date.compareTo(a.date));
+    list.sort((a, b) => b.ticketDate!.compareTo(a.ticketDate!));
 
     List<Widget> ticketWidgets = [];
 
@@ -169,7 +205,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
     int messagesToLoad = list.length < 20 ? list.length : 20;
 
     for (int index = 0; index < messagesToLoad; index++) {
-      if (index == 0 || list[index].date != list[index - 1].date) {
+      if (index == 0 || list[index].ticketDate != list[index - 1].ticketDate) {
         ticketWidgets.add(
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,17 +215,17 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 5),
                   child: Text(
-                    list[index].date,
+                    list[index].ticketDate!,
                     style: missionIDtextStyle,
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
               _buildCard(
-                complete: list[index].complete,
-                title: list[index].title,
-                description: list[index].description,
-                date: list[index].date,
+                complete: list[index].ticketStatus,
+                title: list[index].complaintTypeName,
+                description: list[index].ticketComplaintDescription,
+                date: list[index].ticketDate,
               ),
             ],
           ),
@@ -197,10 +233,10 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
       } else {
         ticketWidgets.add(
           _buildCard(
-            complete: list[index].complete,
-            title: list[index].title,
-            description: list[index].description,
-            date: list[index].date,
+            complete: list[index].ticketStatus,
+            title: list[index].complaintTypeName,
+            description: list[index].ticketComplaintDescription,
+            date: list[index].ticketDate,
           ),
         );
       }

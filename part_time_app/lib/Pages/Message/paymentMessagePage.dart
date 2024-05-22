@@ -153,6 +153,8 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
                           title: notification.notificationTitle ?? "",
                           description: notification.notificationContent ?? "",
                           isSystem: false,
+                          isPayment: true,
+                          paymentID: notification.paymentId,
                         );
                       }).toList());
                     }

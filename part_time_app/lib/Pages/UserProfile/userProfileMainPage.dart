@@ -94,9 +94,13 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              userData.nickname ?? "",
-                              style: userProfileNameTextStyle,
+                            //name too long will effect.
+                            Container(
+                              width: 100,
+                              child: Text(
+                                userData.nickname ?? "",
+                                style: userProfileNameTextStyle,
+                              ),
                             ),
                             const SizedBox(width: 20),
                             InkWell(

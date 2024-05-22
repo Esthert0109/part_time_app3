@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Pages/Search/searchResultPage.dart';
+import 'package:part_time_app/Services/explore/exploreServices.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/Tag/tagModel.dart';
 
 class SortPage extends StatefulWidget {
   const SortPage({super.key});
@@ -25,7 +27,7 @@ Map<String, List<Map<String, dynamic>>> sorts = {
     {"id": 5, "name": '游戏'},
     {"id": 6, "name": '发帖'},
     {"id": 7, "name": '网页设计'},
-    {"id": 8, "name": '平面设计'}
+    {"id": 8, "name": '平面设计'},
   ],
   "工作性质": [
     {"id": 9, "name": '新任务'},
@@ -35,8 +37,58 @@ Map<String, List<Map<String, dynamic>>> sorts = {
 };
 
 class _SortPageState extends State<SortPage> {
+  ScrollController _scrollController = ScrollController();
+  List<TagData> tagList = [];
+  bool isLoading = false;
+  int page = 1;
+
   List<int> selectedIndex = [];
   List<String> selectedIndexName = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // _scrollController.addListener(_scrollListener);
+    _loadData();
+    print(sorts);
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      TagModel? data = await ExploreService().getTag(page);
+      setState(() {
+        if (data!.data != null) {
+          tagList.addAll(data.data!);
+          // updateWorkDuration(tagList);
+          page++;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  void updateWorkDuration(List<TagData> tagList) {
+    // Convert List<TagData> to List<Map<String, dynamic>>
+    List<Map<String, dynamic>> tagMaps =
+        tagList.map((tag) => tag.toMap()).toList();
+
+    // Update the '工作期限' field in the sorts map
+    sorts['工作期限'] = tagMaps;
+  }
+
   void updateSelectedIndex(List<int> newSelectedIndex) {
     setState(() {
       selectedIndex = newSelectedIndex;

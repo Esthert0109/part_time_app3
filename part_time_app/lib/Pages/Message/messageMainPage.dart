@@ -1,11 +1,8 @@
 import 'dart:convert';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
-import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Pages/Message/user/chatConfig.dart';
@@ -81,9 +78,12 @@ class _MessageMainPageState extends State<MessageMainPage>
     } catch (e) {
       print("Error: $e");
       // Handle error
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      ;
     }
   }
 

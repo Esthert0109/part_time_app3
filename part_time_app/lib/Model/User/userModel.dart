@@ -133,9 +133,9 @@ class UserData {
   final String? email;
   final int? businessScopeId;
   final String? businessScopeName;
-  final String? bilingNetwork;
-  final String? bilingAddress;
-  final String? bilingCurrency;
+  final String? billingNetwork;
+  final String? billingAddress;
+  final String? billingCurrency;
   final int? validIdentity;
   final int?
       collectionValid; //system setting, default 1 = public, while 0 = private
@@ -154,9 +154,9 @@ class UserData {
     this.secondPhoneNo,
     this.email,
     this.businessScopeId,
-    this.bilingNetwork,
-    this.bilingAddress,
-    this.bilingCurrency,
+    this.billingNetwork,
+    this.billingAddress,
+    this.billingCurrency,
     this.validIdentity,
     this.collectionValid,
     this.createdTime,
@@ -178,9 +178,9 @@ class UserData {
       "email": email,
       "businessScopeId": businessScopeId,
       "businessScopeName": businessScopeName,
-      "bilingNetwork": bilingNetwork,
-      "bilingAddress": bilingAddress,
-      "bilingCurrency": bilingCurrency,
+      "billingNetwork": billingNetwork,
+      "billingAddress": billingAddress,
+      "billingCurrency": billingCurrency,
       "validIdentity": validIdentity,
       "collectionValid": collectionValid,
       "createdTime": createdTime,
@@ -202,9 +202,9 @@ class UserData {
       email: json['email'],
       businessScopeId: json['businessScopeId'],
       businessScopeName: json['businessScopeName'],
-      bilingNetwork: json['bilingNetwork'],
-      bilingAddress: json['bilingAddress'],
-      bilingCurrency: json['bilingCurrency'],
+      billingNetwork: json['billingNetwork'],
+      billingAddress: json['billingAddress'],
+      billingCurrency: json['billingCurrency'],
       validIdentity: json['validIdentity'],
       collectionValid: json['collection_valid'],
       createdTime: json['createdTime'],

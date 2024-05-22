@@ -11,9 +11,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dart';
 import 'package:part_time_app/Components/Card/userDetailCardComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Model/Payment/paymentModel.dart';
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
+import '../../Services/payment/paymentServices.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
 
 class DepositPaymentPage extends StatefulWidget {
   const DepositPaymentPage({super.key});
@@ -27,6 +32,20 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
+  String? username;
+  DepositDetail? depositList;
+  void initState() {
+    super.initState();
+    _loadDataFromShared();
+    _loadData();
+  }
+
+  Future<void> _loadDataFromShared() async {
+    setState(() {
+      username = userData.username;
+      print("username:${username}");
+    });
+  }
 
   Future<void> imageSelect() async {
     XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -43,7 +62,35 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   }
 
   void _copyToClipboard() {
-    Clipboard.setData(ClipboardData(text: textToCopy));
+    Clipboard.setData(ClipboardData(text: depositList?.depositNetwork ?? ""));
+  }
+
+  Future<void> _loadData() async {
+    // setState(() {
+    //   isLoading = true;
+    // });
+    try {
+      DepositDetail? data = await PaymentServices().getDepositDetail();
+      // print("call the API");
+      // print(data);
+      setState(() {
+        if (data != null && data != null) {
+          print(data);
+          depositList = data;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -96,6 +143,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                 ),
                 UserDetailCardComponent(
                   isEditProfile: false,
+                  nameInitial: userData.username,
+                  countryInitial: userData.country,
+                  fieldInitial: userData.businessScopeName,
+                  sexInitial: userData.gender,
+                  walletNetworkInitial: userData.billingNetwork,
+                  walletAddressInitial: userData.billingAddress,
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -129,7 +182,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                               style: inputCounterTextStyle,
                             ),
                             SizedBox(height: 5),
-                            Text("支付信息 (平台)"),
+                            Text(depositList?.depositNetwork ?? ""),
                             SizedBox(height: 5),
                             Text(
                               "USDT 链地址：",
@@ -139,7 +192,8 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                               children: [
                                 Container(
                                   child: Expanded(
-                                    child: Text(textToCopy),
+                                    child:
+                                        Text(depositList?.depositNetwork ?? ""),
                                   ),
                                 ),
                                 SizedBox(width: 50),
@@ -288,10 +342,28 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                         ],
                       ),
                       SizedBox(height: 10),
+                      SizedBox(height: 10),
+                      Container(
+                        margin: EdgeInsets.only(top: 5),
+                        height: 47,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: kInputBackGreyColor,
+                            hintText: "请输入URL",
+                            hintStyle: paymentHistoryTextStyle3,
+                            contentPadding: const EdgeInsets.all(10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            labelStyle: depositTextStyle2,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
               ],
             ),
           ),
@@ -317,6 +389,8 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
               textStyle: buttonTextStyle,
               onPressed: () {
                 setState(() {
+                  print("here:" + nameController.text);
+                  print("here:" + sexController.text);
                   isLoading =
                       true; // Set isLoading to true when the button is pressed
                 });

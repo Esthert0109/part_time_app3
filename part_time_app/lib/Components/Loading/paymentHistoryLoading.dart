@@ -15,7 +15,6 @@ class _PaymentHistoryLoadingState extends State<PaymentHistoryLoading> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 92,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

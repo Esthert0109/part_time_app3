@@ -29,33 +29,38 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
   ScrollController _scrollController = ScrollController();
   bool isLoading = false;
   int page = 2;
-  void _resetUnreadCounts() {
-    if (mounted) {
-      // Check if the widget is still mounted before calling setState
-      setState(() {
-        // Update the notificationTotalUnread counts to 0
-        // notificationTips?.responseData['系统通知']?.notificationTotalUnread = 0;
-        // Repeat this for other notification types if needed
-      });
-    }
-  }
+  bool continueLoading = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _resetUnreadCounts();
-    });
+    _scrollController.addListener(_scrollListener);
+    _readStatus();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      if (!isLoading && continueLoading) {
+        _loadData();
+      }
+    }
+  }
+
+  Future<void> _readStatus() async {
+    try {
+      final response = await SystemMessageServices().patchUpdateRead(0);
+      final response1 = await SystemMessageServices().postUpdateRead();
+      print("called");
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-
     super.dispose();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      _resetUnreadCounts();
-    });
   }
 
   Future<void> _loadData() async {
@@ -83,20 +88,16 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
     }
   }
 
-  void _scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
-  }
-
   Future<void> _refresh() async {
-    setState(() {
-      page = 1;
-    });
-    systemMessageList = [];
-    _loadData();
+    await Future.delayed(Duration(seconds: 1));
+    if (!isLoading && mounted) {
+      setState(() {
+        systemMessageList.clear();
+        page = 1;
+        continueLoading = true;
+        _loadData();
+      });
+    }
   }
 
   @override

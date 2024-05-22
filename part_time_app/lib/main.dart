@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
-import 'package:part_time_app/Pages/Explore/testWebsocket.dart';
-import 'package:part_time_app/Pages/Message/messageMainPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
 import 'package:provider/provider.dart';
 import 'Pages/Message/user/chatConfig.dart';
+import 'Pages/UserProfile/ticketDetailsRecordPage.dart';
 import 'Pages/homePage.dart';
 import 'Services/notification/notifacationServices.dart';
 import 'Services/webSocketService.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => MessageMainPage()),
+        GetPage(name: '/depo', page: () => TicketDetailsRecordPage()),
       ],
     );
   }
