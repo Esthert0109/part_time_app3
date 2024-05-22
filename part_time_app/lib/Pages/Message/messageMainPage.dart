@@ -75,7 +75,6 @@ class _MessageMainPageState extends State<MessageMainPage>
   @override
   void initState() {
     super.initState();
-    print("Call the messaging API");
     _loadData();
     getMessageFromSharedPreferences();
   }

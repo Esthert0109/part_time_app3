@@ -418,6 +418,11 @@ const paymentHistoryTextStyle2 = TextStyle(
   fontWeight: FontWeight.w500,
   color: kMainBlackColor,
 );
+const paymentHistoryTextStyle3 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
+);
 const depositURLTextStyle =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlueColor);
 const ticketUncompleteTextStyle = TextStyle(

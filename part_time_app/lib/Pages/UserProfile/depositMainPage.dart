@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
-import 'package:part_time_app/Pages/UserProfile/depositHistoryDetailPage.dart';
+import 'package:part_time_app/Pages/UserProfile/paymentHistoryDetailPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 
@@ -64,8 +64,8 @@ class _DepositMainPageState extends State<DepositMainPage> {
               //card 1 false is NOT verify, then CANT return deposit.
               //condition(card1,2 is false)
               if (userData.validIdentity == 1) ...[
-                cardComponent1("• 押金认证", true),
-                cardComponent2("• 退还押金", true),
+                cardComponent1("• 押金认证", false),
+                cardComponent2("• 退还押金", false),
               ] else ...[
                 cardComponent1("• 押金认证", false),
                 cardComponent2("• 退还押金", false),

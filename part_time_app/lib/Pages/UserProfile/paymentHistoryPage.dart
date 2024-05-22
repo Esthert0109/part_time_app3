@@ -11,7 +11,7 @@ import 'package:part_time_app/Services/payment/paymentServices.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
-import 'depositHistoryDetailPage.dart';
+import 'paymentHistoryDetailPage.dart';
 
 bool dataFetchedPaymentHistory = false;
 

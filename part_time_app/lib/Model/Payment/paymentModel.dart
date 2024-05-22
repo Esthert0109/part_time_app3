@@ -85,6 +85,29 @@ class PaymentDetail {
     this.paymentTotalAmount,
     this.paymentCreatedTime,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'paymentId': paymentId,
+      'taskId': taskId,
+      'taskTitle': taskTitle,
+      'paymentFromCustomerId': paymentFromCustomerId,
+      'paymentToCustomerId': paymentToCustomerId,
+      'paymentToCustomerName': paymentToCustomerName,
+      'paymentType': paymentType,
+      'paymentStatus': paymentStatus,
+      'paymentSide': paymentSide,
+      'paymentUsername': paymentUsername,
+      'paymentBillingAddress': paymentBillingAddress,
+      'paymentBillingNetwork': paymentBillingNetwork,
+      'paymentBillingCurrency': paymentBillingCurrency,
+      'paymentBillingImage': paymentBillingImage,
+      'paymentBillingUrl': paymentBillingUrl,
+      'paymentAmount': paymentAmount,
+      'paymentFee': paymentFee,
+      'paymentTotalAmount': paymentTotalAmount,
+      'paymentCreatedTime': paymentCreatedTime,
+    };
+  }
 
   factory PaymentDetail.fromJson(Map<String, dynamic> json) {
     return PaymentDetail(
@@ -113,5 +136,29 @@ class PaymentDetail {
       return 'Invalid data';
     }
     return '${paymentType}${paymentStatus}${paymentSide}';
+  }
+}
+
+class DepositDetail {
+  final String? depositNetwork;
+  final String? depositAddress;
+
+  DepositDetail({
+    this.depositNetwork,
+    this.depositAddress,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "depositNetwork": depositNetwork,
+      "depositAddress": depositAddress,
+    };
+  }
+
+  factory DepositDetail.fromJson(Map<String, dynamic> json) {
+    return DepositDetail(
+      depositNetwork: json['depositNetwork'] ?? "",
+      depositAddress: json['depositAddress'] ?? "",
+    );
   }
 }

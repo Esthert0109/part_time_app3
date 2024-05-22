@@ -121,7 +121,7 @@ class _PaymentHistoryDetailPageState extends State<PaymentHistoryDetailPage> {
                         condition: paymentDetail?.paymentTypeStatus(),
                         missionTitle: paymentDetail?.taskTitle,
                         missionID: paymentDetail?.taskId.toString(),
-                        receiverName: paymentDetail?.paymentToCustomerName,
+                        receiverName: paymentDetail?.paymentUsername,
                         date: paymentDetail?.paymentCreatedTime,
                         walletNetwork: paymentDetail?.paymentBillingNetwork,
                         walletAddress: paymentDetail?.paymentBillingAddress,

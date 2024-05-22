@@ -35,6 +35,8 @@ const getCategoryListUrl = "api/v1/categories/getCategoryList";
 //Payment
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";
 const getPaymentDetailUrl = "api/v1/payments/detail/";
+const getDepositUrl = "api/v1/deposit/info";
 
 //Ticketing
 const getTicketingHistoryUrl = "api/v1/ticket/getAllByCustomerId?page=";
+const getTicketingDetailUrl = "api/v1/ticket/getTicketByTicketId/";

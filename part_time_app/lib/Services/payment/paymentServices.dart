@@ -75,4 +75,33 @@ class PaymentServices {
 
     // Return null if there's an erro
   }
+
+  Future<DepositDetail?> getDepositDetail() async {
+    String url = port + getDepositUrl;
+    print(url);
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      int statusCode = response.statusCode;
+      print(response.responseBody);
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.responseBody);
+        return DepositDetail.fromJson(jsonResponse['data']);
+      } else {
+        throw Exception('Failed to load payment detail');
+      }
+    } catch (e) {
+      // Handle exceptions if needed
+      print('Exception: $e');
+    }
+
+    // Return null if there's an erro
+  }
 }

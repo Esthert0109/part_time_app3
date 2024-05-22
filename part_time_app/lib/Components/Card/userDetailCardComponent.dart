@@ -4,6 +4,8 @@ import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dar
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
 
 late TextEditingController usernameController;
 late TextEditingController countryController;
@@ -28,6 +30,7 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? usernameInitial;
   final String? countryInitial;
   final String? fieldInitial;
+  final String? sexInitial;
   final String? emailInitial;
   final String? nameInitial;
   final String? countryCode;
@@ -50,6 +53,7 @@ class UserDetailCardComponent extends StatefulWidget {
     this.usernameInitial,
     this.countryInitial,
     this.fieldInitial,
+    this.sexInitial,
     this.emailInitial,
     this.nameInitial,
     this.countryCode,
@@ -70,13 +74,17 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String dialCode = '';
   String phone = '';
   String countryCode = '';
-
+  String? firstContact;
+  String? code;
+  String? username;
   @override
   void initState() {
     super.initState();
+    _loadDataFromShared();
     usernameController = TextEditingController(text: widget.usernameInitial);
     countryController = TextEditingController(text: widget.countryInitial);
     fieldController = TextEditingController(text: widget.fieldInitial);
+    sexController = TextEditingController(text: widget.sexInitial);
     emailController = TextEditingController(text: widget.emailInitial);
     nameController = TextEditingController(text: widget.nameInitial);
     walletNetworkController =
@@ -84,6 +92,30 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     walletAddressController =
         TextEditingController(text: widget.walletAddressInitial);
     usdtLinkController = TextEditingController(text: widget.usdtLinkInitial);
+  }
+
+  Future<void> _loadDataFromShared() async {
+    String? phoneNo = await SharedPreferencesUtils.getPhoneNo();
+    UserData? user = await SharedPreferencesUtils.getUserDataInfo();
+    if (phoneNo != null) {
+      Map<String, String> separated = separatePhoneNumber(phoneNo);
+      setState(() {
+        code = separated["countryCode"];
+        firstContact = separated["phoneNumber"];
+        username = user?.username;
+      });
+    }
+  }
+
+  Map<String, String> separatePhoneNumber(String phoneNumber) {
+    String countryCode = phoneNumber.substring(0, 3); // Extracts "+60"
+    String remainingNumber =
+        phoneNumber.substring(3); // Extracts the rest of the number
+
+    return {
+      "countryCode": countryCode,
+      "phoneNumber": remainingNumber,
+    };
   }
 
   String? dropdownValue;
@@ -153,7 +185,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                   flex: 4,
                   child: _buildTextInput(
                       hintText: "请输入范围",
-                      controller: countryController,
+                      controller: fieldController,
                       onChanged: (value) {
                         if (widget.onCountryChange != null) {
                           widget.onCountryChange!(value);
@@ -172,7 +204,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         borderRadius: BorderRadius.circular(8)),
                     child: DropdownButton<String>(
                       underline: Container(),
-                      value: dropdownValue,
+                      value: widget.sexInitial,
                       icon: Icon(Icons.arrow_drop_down),
                       iconSize: 24,
                       elevation: 16,
@@ -235,7 +267,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                             color: kInputBackGreyColor,
                             borderRadius: BorderRadius.circular(8)),
                         child: Text(
-                          "+60",
+                          code ?? "",
                           style: missionUsernameTextStyle,
                           textAlign: TextAlign.center,
                         ))),
@@ -249,7 +281,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                             color: kInputBackGreyColor,
                             borderRadius: BorderRadius.circular(8)),
                         child: Text(
-                          "123546789",
+                          firstContact ?? "",
                           style: missionUsernameTextStyle,
                           textAlign: TextAlign.left,
                         ))),
@@ -371,18 +403,18 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 hintText: "USDT 链名称",
                 controller: walletNetworkController,
                 onChanged: (value) {
-                  if (widget.onUsernameChange != null) {
-                    widget.onUsernameChange!(value);
+                  if (widget.onWalletNetworkChange != null) {
+                    widget.onWalletNetworkChange!(value);
                   }
                 },
                 readOnly: false),
             SizedBox(height: 10),
             _buildTextInput(
                 hintText: "USDT 链地址",
-                controller: usdtLinkController,
+                controller: walletAddressController,
                 onChanged: (value) {
-                  if (widget.onUsdtLinkChange != null) {
-                    widget.onUsdtLinkChange!(value);
+                  if (widget.onWalletAddressChange != null) {
+                    widget.onWalletAddressChange!(value);
                   }
                 },
                 readOnly: false),
