@@ -30,12 +30,6 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
   bool isContinueLoading = true;
   ScrollController _scrollController = ScrollController();
 
-  // set status on mission detail status issuer page
-  // bool isWaiting = false;
-  // bool isFailed = false;
-  // bool isPassed = false;
-  // bool isRemoved = false;
-
   OrderServices services = OrderServices();
   OrderModel? taskModel;
 
@@ -173,7 +167,9 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
     double screenHeight = MediaQuery.of(context).size.height;
     switch (statusSelected) {
       case 0:
-        if (taskWaitReviewed.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskWaitReviewed.length > 0) {
           return buildMissionAcceptedListView(taskWaitReviewed);
         } else {
           return SizedBox(
@@ -185,7 +181,9 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 1:
-        if (taskFailed.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskFailed.length > 0) {
           return buildMissionAcceptedListView(taskFailed);
         } else {
           return SizedBox(
@@ -197,7 +195,9 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 2:
-        if (taskPassed.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskPassed.length > 0) {
           return buildMissionAcceptedListView(taskPassed);
         } else {
           return SizedBox(
@@ -209,7 +209,9 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 3:
-        if (taskCompleted.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskCompleted.length > 0) {
           return buildMissionAcceptedListView(taskCompleted);
         } else {
           return SizedBox(
@@ -221,7 +223,9 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 4:
-        if (taskWaitReturned.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskWaitReturned.length > 0) {
           return buildMissionAcceptedListView(taskWaitReturned);
         } else {
           return SizedBox(
@@ -233,7 +237,9 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
           );
         }
       case 5:
-        if (taskReturned.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskReturned.length > 0) {
           return buildMissionAcceptedListView(taskReturned);
         } else {
           return SizedBox(

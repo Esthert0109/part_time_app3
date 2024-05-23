@@ -147,7 +147,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
 
     switch (statusSelected) {
       case 0:
-        if (orderIncompleted.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (orderIncompleted.length > 0) {
           return buildMissionAcceptedListView(orderIncompleted);
         } else {
           return SizedBox(
@@ -160,7 +162,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
         }
 
       case 1:
-        if (orderWaitReviewed.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (orderWaitReviewed.length > 0) {
           return buildMissionAcceptedListView(orderWaitReviewed);
         } else {
           return SizedBox(
@@ -172,7 +176,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
           );
         }
       case 2:
-        if (orderFailed.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (orderFailed.length > 0) {
           return buildMissionAcceptedListView(orderFailed);
         } else {
           return SizedBox(
@@ -184,7 +190,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
           );
         }
       case 3:
-        if (orderWaitPayment.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (orderWaitPayment.length > 0) {
           return buildMissionAcceptedListView(orderWaitPayment);
         } else {
           return SizedBox(
@@ -196,7 +204,9 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
           );
         }
       case 4:
-        if (orderPaid.length > 0) {
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (orderPaid.length > 0) {
           return buildMissionAcceptedListView(orderPaid);
         } else {
           return SizedBox(
