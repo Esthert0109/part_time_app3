@@ -51,6 +51,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
     try {
       await TicketingData.fetchComplaintTypes();
       TicketingModel? data = await TicketingService().getTicketingHistory(page);
+      print("call the api");
       setState(() {
         if (data!.data != null) {
           ticketingList.addAll(data.data!);
@@ -85,6 +86,26 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Sort ticketingList by date
+    ticketingList
+        .sort((a, b) => (b.ticketDate ?? "").compareTo(a.ticketDate ?? ""));
+
+// Group tickets by date
+    Map<String, List<TicketingData>> groupedTickets = {};
+    for (var ticket in ticketingList) {
+      final date = ticket.ticketDate!.split(' ')[0];
+      if (!groupedTickets.containsKey(date)) {
+        groupedTickets[date] = [];
+      }
+      groupedTickets[date]!.add(ticket);
+    }
+
+// Flatten the grouped data
+    List<dynamic> flattenedList = [];
+    groupedTickets.forEach((date, tickets) {
+      flattenedList.add(date);
+      flattenedList.addAll(tickets);
+    });
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: false,
@@ -125,50 +146,47 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
             color: kMainYellowColor,
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: ticketingList.length + (isLoading ? 1 : 0),
+              itemCount: flattenedList.length + (isLoading ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index == ticketingList.length) {
+                if (isLoading && index == flattenedList.length) {
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: PaymentHistoryLoading(),
+                      child: PaymentHistoryLoading(), // Your loading indicator
                     ),
                   );
                 }
-                final ticket = ticketingList[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 15),
-                        child: Text(
-                          ticket.ticketDate ?? "",
-                          style:
-                              missionIDtextStyle, // Replace missionIDtextStyle with actual style
-                          textAlign: TextAlign.center,
-                        ),
+
+                final item = flattenedList[index];
+
+                if (item is String) {
+                  // Render date header
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 15),
+                      child: Text(
+                        item,
+                        style:
+                            missionIDtextStyle, // Replace with missionIDtextStyle
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      separatorBuilder: (context, subIndex) =>
-                          SizedBox(height: 10),
-                      itemCount: ticketingList.length,
-                      itemBuilder: (context, subIndex) {
-                        final ticketDetail = ticketingList[subIndex];
-                        return _buildCard(
-                          title: ticketDetail.complaintTypeName,
-                          description: ticketDetail.ticketComplaintDescription,
-                          complete: ticketDetail.ticketStatus,
-                          ticketId: ticketDetail.ticketId,
-                        );
-                      },
-                    ),
-                  ],
-                );
+                  );
+                } else if (item is TicketingData) {
+                  // Render ticket card
+                  final ticket = item;
+                  return _buildCard(
+                    title: TicketingData
+                            .complaintTypeMap[ticket.complaintTypeId] ??
+                        "Unknown",
+                    description: ticket.ticketComplaintDescription ?? "",
+                    complete: ticket.ticketStatus,
+                    ticketId: ticket.ticketId,
+                  );
+                }
+
+                return SizedBox.shrink();
               },
             ),
           ),

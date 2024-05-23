@@ -29,6 +29,7 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
     super.initState();
     _scrollController.addListener(_scrollListener);
     _readStatus();
+    _refresh();
   }
 
   void _scrollListener() {

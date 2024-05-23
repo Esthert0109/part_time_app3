@@ -136,4 +136,30 @@ class PaymentServices {
       "paymentStatus": 1
     };
   }
+
+  Future<bool?> createDeposit(PaymentDetail paymentDetail) async {
+    String url = port + createPaymentUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+    UserData? userDetails = await SharedPreferencesUtils.getUserDataInfo();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = paymentDetail.toJson();
+    try {
+      final response = await postRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        // Check the response status code or any other condition based on your API
+        return true;
+      } else {
+        // Handle other status codes if needed
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

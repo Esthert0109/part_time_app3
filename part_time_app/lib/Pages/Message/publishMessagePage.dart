@@ -158,6 +158,8 @@ class _PublishMessagePageState extends State<PublishMessagePage> {
                           description: notification.notificationContent ?? "",
                           isSystem: false,
                           isPayment: false,
+                          isMission: true,
+                          taskID: notification.taskId,
                         );
                       }).toList());
                     }

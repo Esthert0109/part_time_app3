@@ -8,17 +8,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dart';
 import 'package:part_time_app/Components/Card/userDetailCardComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Model/Payment/paymentModel.dart';
 import '../../Components/Button/primaryButtonComponent.dart';
+import '../../Components/Dialog/paymentUploadDialogComponent.dart';
+import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../../Model/User/userModel.dart';
+import '../../Services/Upload/uploadServices.dart';
 import '../../Services/payment/paymentServices.dart';
-import '../../Utils/sharedPreferencesUtils.dart';
 
 class DepositPaymentPage extends StatefulWidget {
   const DepositPaymentPage({super.key});
@@ -32,7 +34,10 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
+  bool isUploadLoading = false;
   String? username;
+  String? customerId;
+
   DepositDetail? depositList;
   void initState() {
     super.initState();
@@ -43,6 +48,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   Future<void> _loadDataFromShared() async {
     setState(() {
       username = userData.username;
+      customerId = userData.customerId;
       print("username:${username}");
     });
   }
@@ -57,7 +63,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
 
   void deleteImage() {
     setState(() {
-      selectedImage = null;
+      payment = null;
     });
   }
 
@@ -105,6 +111,8 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
               iconSize: 15,
               icon: Icon(Icons.arrow_back_ios_new_rounded),
               onPressed: () {
+                uploadedPaymentSS = "";
+                payment = null;
                 Get.back();
               },
             ),
@@ -300,26 +308,71 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       Stack(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              imageSelect();
-                            },
-                            child: Container(
+                              onTap: () async {
+                                uploadedPayment = await imagePicker.pickImage(
+                                    source: ImageSource.gallery);
+                                setState(() {
+                                  payment = File(uploadedPayment?.path ?? "");
+                                  isUploadLoading = true;
+                                });
+                                try {
+                                  if (payment != null) {
+                                    String? uploaded = await UploadServices()
+                                        .uploadDeposit(payment!);
+
+                                    if (uploaded != null) {
+                                      Fluttertoast.showToast(
+                                          msg: "已上传",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: kMainGreyColor,
+                                          textColor: kThirdGreyColor);
+
+                                      setState(() {
+                                        isUploadLoading = false;
+                                        uploadedPaymentSS = uploaded;
+                                      });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "上传失败",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: kMainGreyColor,
+                                          textColor: kThirdGreyColor);
+
+                                      setState(() {
+                                        isUploadLoading = false;
+                                      });
+                                    }
+                                  }
+                                } catch (e) {
+                                  Fluttertoast.showToast(
+                                      msg: "$e",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: kMainGreyColor,
+                                      textColor: kThirdGreyColor);
+
+                                  setState(() {
+                                    isUploadLoading = false;
+                                  });
+                                }
+                              },
+                              child: Container(
                                 height: 300,
                                 width: 300,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  color: selectedImage != null
-                                      ? null
-                                      : Colors.transparent,
-                                  image: selectedImage != null
+                                  color: Colors.transparent,
+                                  image: payment != null
                                       ? DecorationImage(
-                                          image: FileImage(
-                                              File(selectedImage!.path)),
+                                          image:
+                                              NetworkImage(uploadedPaymentSS),
                                           fit: BoxFit.cover,
                                         )
                                       : null,
                                 ),
-                                child: selectedImage == null
+                                child: payment == null
                                     ? Center(
                                         child: SvgPicture.asset(
                                           "assets/common/addDeposit.svg",
@@ -327,9 +380,17 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                                           width: 300,
                                         ),
                                       )
-                                    : null),
-                          ),
-                          if (selectedImage != null)
+                                    : isUploadLoading
+                                        ? Center(
+                                            child: LoadingAnimationWidget
+                                                .stretchedDots(
+                                              color: kMainYellowColor,
+                                              size: 50,
+                                            ),
+                                          )
+                                        : null,
+                              )),
+                          if (payment != null)
                             Positioned(
                               top: 10,
                               right: 10,
@@ -347,6 +408,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                         margin: EdgeInsets.only(top: 5),
                         height: 47,
                         child: TextFormField(
+                          controller: usdtLinkControllerPayment,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: kInputBackGreyColor,
@@ -383,33 +445,70 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
           child: SizedBox(
             width: double.infinity,
             child: primaryButtonComponent(
-              isLoading: isLoading,
+              isLoading:
+                  isLoading, // isLoading is a boolean variable indicating whether the request is in progress
               text: "确认提交",
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,
-              onPressed: () {
-                setState(() {
-                  print("here:" + nameControllerPayment.text);
-                  print("here:" + sexControllerPayment.text);
-                  isLoading =
-                      true; // Set isLoading to true when the button is pressed
-                });
-
-                // Simulate some asynchronous task
-                Future.delayed(Duration(seconds: 2), () {
+              onPressed: () async {
+                // Check if not already loading
+                if (!isLoading) {
                   setState(() {
-                    isLoading =
-                        false; // Set isLoading to false after the task is complete
-                    Get.back();
-                    Fluttertoast.showToast(
-                      msg: "已提交",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: kMainGreyColor,
-                      textColor: kThirdGreyColor,
+                    isLoading = true;
+                    // Create the paymentDetail object inside the setState callback
+                    PaymentDetail paymentDetail = PaymentDetail(
+                      paymentFromCustomerId: customerId,
+                      paymentType: 0,
+                      paymentStatus: 0,
+                      paymentUsername: "hendrik",
+                      paymentBillingAddress:
+                          walletAddressControllerPayment.text,
+                      paymentBillingNetwork:
+                          walletNetworkControllerPayment.text,
+                      paymentBillingCurrency: "USDT",
+                      paymentBillingImage: uploadedPaymentSS,
+                      paymentBillingUrl: usdtLinkControllerPayment.text,
+                      paymentAmount: 20,
+                      paymentFee: 0,
+                      paymentTotalAmount: 20,
                     );
+
+                    // Call createDeposit function here
+                    PaymentServices paymentServices = PaymentServices();
+                    paymentServices
+                        .createDeposit(paymentDetail)
+                        .then((success) {
+                      // Handle success or failure accordingly
+                      if (success != null && success) {
+                        print("Submitted success");
+                        setState(() {
+                          uploadedPaymentSS = "";
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatusDialogComponent(
+                                complete: true,
+                                successText: "系统将审核你的内容，审核通过后将发布该悬赏。",
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Get.offAllNamed('/home');
+                                },
+                              );
+                            },
+                          );
+                        });
+                      } else {
+                        print("Submitted FAILED");
+                      }
+
+                      setState(() {
+                        isLoading =
+                            false; // Set loading state back to false after request is completed
+                      });
+                    });
                   });
-                });
+                }
               },
             ),
           ),

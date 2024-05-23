@@ -126,7 +126,8 @@ class _TicketDetailsRecordPageState extends State<TicketDetailsRecordPage> {
                   ticketCustomerEmail: ticketDetail?.ticketCustomerEmail,
                   ticketDate: ticketDetail?.ticketDate,
                   taskId: ticketDetail?.taskId,
-                  complaintTypeId: ticketDetail?.complaintTypeId,
+                  complaintType: TicketingData
+                      .complaintTypeMap[ticketDetail?.complaintTypeId],
                   complaintUserId: ticketDetail?.complaintUserId,
                   ticketComplaintDescription:
                       ticketDetail?.ticketComplaintDescription,

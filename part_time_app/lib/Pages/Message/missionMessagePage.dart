@@ -154,6 +154,8 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
                           description: notification.notificationContent ?? "",
                           isSystem: false,
                           isPayment: false,
+                          isMission: true,
+                          taskID: notification.taskId,
                         );
                       }).toList());
                     }

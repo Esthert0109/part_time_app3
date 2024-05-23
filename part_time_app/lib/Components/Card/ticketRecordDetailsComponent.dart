@@ -20,7 +20,7 @@ class TicketRecordDetailsComponent extends StatefulWidget {
   final String? ticketCustomerEmail;
   final String? ticketDate;
   final int? taskId;
-  final int? complaintTypeId;
+  final String? complaintType;
   final int? complaintUserId;
   final String? ticketComplaintDescription;
   final List<String>? ticketComplaintAttachment;
@@ -34,7 +34,7 @@ class TicketRecordDetailsComponent extends StatefulWidget {
     this.ticketCustomerEmail,
     this.ticketDate,
     this.taskId,
-    this.complaintTypeId,
+    this.complaintType,
     this.complaintUserId,
     this.ticketComplaintDescription,
     this.ticketComplaintAttachment,
@@ -164,7 +164,7 @@ class _TicketRecordDetailsComponentState
           _buildText(text: (widget.complaintUserId ?? "").toString()),
           const SizedBox(height: 15),
           const Text("申述种类", style: depositTextStyle2),
-          _buildText(text: (widget.complaintTypeId ?? "").toString()),
+          _buildText(text: widget.complaintType ?? ""),
           const SizedBox(height: 15),
           const Text("申述详情", style: depositTextStyle2),
           _buildTextFieldInput(text: widget.ticketComplaintDescription ?? ""),

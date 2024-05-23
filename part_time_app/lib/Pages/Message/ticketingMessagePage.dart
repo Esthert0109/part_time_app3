@@ -161,7 +161,8 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
                           title: notification.notificationTitle ?? "",
                           description: notification.notificationContent ?? "",
                           isSystem: false,
-                          isPayment: false,
+                          isTicket: true,
+                          ticketID: notification.ticketId,
                         );
                       }).toList());
                     }
