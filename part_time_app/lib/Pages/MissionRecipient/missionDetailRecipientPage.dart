@@ -600,7 +600,12 @@ class _MissionDetailRecipientPageState
                                                   textColor: kThirdGreyColor);
                                             }
                                           } catch (e) {
-                                            print("error in start mission");
+                                            Fluttertoast.showToast(
+                                                msg: "不可重复悬赏",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: kMainGreyColor,
+                                                textColor: kThirdGreyColor);
                                           }
                                         } else {
                                           setState(() {

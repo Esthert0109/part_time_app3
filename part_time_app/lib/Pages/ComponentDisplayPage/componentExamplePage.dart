@@ -332,7 +332,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return RejectReasonDialogComponent();
+                      return RejectReasonDialogComponent(orderId: 02,);
                     },
                   );
                 },

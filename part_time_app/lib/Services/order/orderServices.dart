@@ -85,6 +85,45 @@ class OrderServices {
     }
   }
 
+  Future<bool?> acceptRejectOrder(
+      bool isAccept, int orderId, String? rejectReason) async {
+    url = port + acceptRejectOrderUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    Map<String, dynamic> body = {};
+
+    if (isAccept) {
+      body = {
+        "orderId": orderId,
+      };
+    } else {
+      body = {"orderId": orderId, "orderRejectReason": rejectReason};
+    }
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        if (responseCode == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error in update: $e");
+    }
+  }
+
   Future<OrderDetailModel?> getOrderDetailsByOrderId(int orderId) async {
     url = port + getOrderDetailByOrderIdUrl + orderId.toString();
 

@@ -124,11 +124,11 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
       case 0:
         isReviewing = false;
         isCompleted = false;
-        return buildMissionAcceptedListView(waitCompleteList, false);
+        return buildMissionAcceptedListView(waitReviewList, false);
       case 1:
         isReviewing = true;
         isCompleted = false;
-        return buildMissionAcceptedListView(waitReviewList, true);
+        return buildMissionAcceptedListView(waitCompleteList, true);
       case 2:
         isReviewing = false;
         isCompleted = true;
@@ -159,6 +159,7 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                   Get.to(
                       () => MissionReviewDetailPage(
                             isCompleted: isCompleted,
+                            orderId: customerList[index].orderId!,
                           ),
                       transition: Transition.rightToLeft);
                 },
@@ -215,8 +216,8 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: PrimaryTagSelectionComponent(
                   tagList: [
-                    "待完成(${waitCompleteCount.toString()})",
-                    "待审核(${waitReviewCount.toString()})",
+                    "待完成(${waitReviewCount.toString()})",
+                    "待审核(${waitCompleteCount.toString()})",
                     "已完成(${completedCount.toString()})"
                   ],
                   selectedIndex: selectedStatusIndex,
