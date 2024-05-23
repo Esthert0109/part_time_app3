@@ -308,11 +308,8 @@ class _PaymentHistoryDetailComponentState
                                       width: double.infinity,
                                       height: 300,
                                       child: PhotoView(
-                                        imageProvider: widget.image != null
-                                            ? NetworkImage(widget.image ?? "")
-                                            : AssetImage(
-                                                    "assets/common/demophoto.svg")
-                                                as ImageProvider,
+                                        imageProvider:
+                                            NetworkImage(widget.image ?? ""),
                                         errorBuilder: (BuildContext context,
                                             Object exception,
                                             StackTrace? stackTrace) {
