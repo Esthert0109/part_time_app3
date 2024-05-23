@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -12,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
-import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/order/tagServices.dart';
@@ -29,13 +26,6 @@ import '../../Model/Task/tagModel.dart';
 import '../../Services/Upload/uploadServices.dart';
 import 'missionDetailStatusIssuerPage.dart';
 
-// class StepModel {
-//   String? description;
-//   List<String>? imageUrls;
-
-//   StepModel({required this.description, this.imageUrls});
-// }
-
 class MissionPublishMainPage extends StatefulWidget {
   final bool isEdit;
   const MissionPublishMainPage({super.key, required this.isEdit});
@@ -51,13 +41,16 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   final TextEditingController descController = TextEditingController();
   TextEditingController stepdescriptionController = TextEditingController();
   PageController pageController = PageController();
+  ScrollController tagScrollController = ScrollController();
 
   List<File> imageUrls = [];
   String titleInput = "";
   String contentInput = "";
   bool isGetTag = false;
   bool picPreview = false;
+  bool isTagLoadingMore = false;
   int tagsLength = 0;
+  int tagPage = 1;
 
   List<String> selectedTag = [];
   String selectedTagIds = "";
@@ -148,8 +141,26 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
       setState(() {
         tagList = model.data!;
         isTagLoading = false;
+        tagPage++;
       });
     }
+  }
+
+  fetchTagPagination() async {
+    setState(() {
+      isTagLoadingMore = true;
+    });
+    TagModel? model = await services.getTagList(tagPage);
+    if (model!.data != [] || model.data != null) {
+      setState(() {
+        tagList.addAll(model.data!);
+        tagPage++;
+      });
+    }
+
+    setState(() {
+      isTagLoadingMore = false;
+    });
   }
 
   showZoomImage(BuildContext context, int index, List<String> imageUrlList,
@@ -282,12 +293,27 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   @override
   void initState() {
     super.initState();
+    tagScrollController.addListener(_tagScrollListener);
     focusNode.addListener(() {
       setState(() {});
     });
 
     fetchTagList();
     fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    tagScrollController.dispose();
+    super.dispose();
+  }
+
+  _tagScrollListener() {
+    if (tagScrollController.position.pixels >=
+            tagScrollController.position.maxScrollExtent - 20 &&
+        !isTagLoadingMore) {
+      fetchTagPagination();
+    }
   }
 
   fetchUserData() async {
@@ -507,6 +533,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                     size: 30))
                                         : ListView.builder(
                                             itemCount: tagList.length,
+                                            controller: tagScrollController,
                                             itemBuilder: (context, index) {
                                               return InkWell(
                                                 onTap: () {
@@ -771,9 +798,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 maxLength: 150,
                                 maxLines: null,
                                 cursorColor: kMainYellowColor,
-                                controller: TextEditingController(
-                                    text:
-                                        "${stepsList?[index].instruction ?? ""}"),
                                 onChanged: (value) {
                                   print("value:$value");
                                   setState(() {
@@ -1007,6 +1031,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                       onPressed: () {
                         if (titleController.text == "" ||
                             descController.text == "" ||
+                            selectedTagIds == "" ||
                             stepsList == [] ||
                             stepsList!.isEmpty ||
                             priceController.text == "" ||
@@ -1030,9 +1055,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           taskSteps = TaskProcedureModel(step: stepsList ?? []);
 
                           orderData = OrderData(
-                              // nickname: userData?.nickname ?? "用户名",
-                              // avatar: userData?.avatar ??
-                              //     "https://pic4.zhimg.com/v2-4370b028739d332dbb525cafb26f77fb_b.jpg",
                               taskTitle: titleController.text,
                               taskContent: descController.text,
                               taskSinglePrice:
