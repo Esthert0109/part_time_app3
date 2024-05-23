@@ -25,9 +25,11 @@ class _secondaryTextFieldComponentState
     extends State<secondaryTextFieldComponent> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 31,
-        child: TextFormField(
+    return IntrinsicHeight(
+        // height: 31,
+        child: Column(
+      children: [
+        TextFormField(
           controller: widget.inputController,
           style: secondaryTextFieldTextStyle,
           cursorColor: kMainYellowColor,
@@ -43,13 +45,14 @@ class _secondaryTextFieldComponentState
                 start: 10, top: 4, bottom: 4, end: 10),
             hintStyle: secondaryTextFieldHintTextStyle,
           ),
-          validator:
-           (value) {
+          validator: (value) {
             if (value!.isEmpty) {
               return '请输入地址';
             }
             return null;
           },
-        ));
+        ),
+      ],
+    ));
   }
 }

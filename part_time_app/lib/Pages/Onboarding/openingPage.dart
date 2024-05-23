@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
-import 'package:part_time_app/Services/Mission/categoryServices.dart';
+import 'package:part_time_app/Services/explore/categoryServices.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
@@ -55,7 +55,6 @@ class _OpeningPageState extends State<OpeningPage> {
           if (userModel!.code == 0) {
             UserModel? user = await services.getUserInfo();
             await SharedPreferencesUtils.saveUserInfo(user!);
-            await SharedPreferencesUtils.saveUserDataInfo(user.data!);
             await SharedPreferencesUtils.saveToken(userModel.data!.token!);
 
             if (user.code == 0) {

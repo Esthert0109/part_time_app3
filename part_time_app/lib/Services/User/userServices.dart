@@ -10,7 +10,7 @@ import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Pages/Message/user/chatConfig.dart';
-import '../Mission/categoryServices.dart';
+import '../explore/categoryServices.dart';
 import '../explore/exploreServices.dart';
 import '../notification/systemMessageServices.dart';
 
@@ -56,6 +56,8 @@ class UserServices {
             await SharedPreferencesUtils.savePassword(password);
 
             try {
+              UserModel? userModel = await getUserInfo();
+
               CategoryModel? model = await categoryServices.getCategoryList();
               if (model!.data != null) {
                 exploreCategoryList = model.data!;
@@ -345,10 +347,55 @@ class UserServices {
       userModel =
           UserModel(code: responseCode, msg: responseMsg, data: responseData);
 
+      await SharedPreferencesUtils.saveUserDataInfo(responseData);
+
       return userModel;
     } catch (e) {
       print("Error in get user info: $e");
       return userModel;
+    }
+  }
+
+  Future<CheckOTPModel?> updateUSDT(UserData userInfo) async {
+    url = port + updateUserInfoUrl;
+    CheckOTPModel? updateModel;
+    String? token = await SharedPreferencesUtils.getToken();
+    String? phone = await SharedPreferencesUtils.getPhoneNo();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      'billingNetwork': userInfo.billingNetwork,
+      'billingAddress': userInfo.billingAddress,
+      'billingCurrency': 'USDT',
+      'firstPhoneNo': phone
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+        if (responseCode == 0) {
+          bool responseData = jsonData['data'];
+          updateModel = CheckOTPModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          getUserInfo();
+
+          return updateModel;
+        }
+
+        updateModel =
+            CheckOTPModel(code: responseCode, msg: responseMsg, data: false);
+        return updateModel;
+      }
+    } catch (e) {
+      print("Error in update USDT: $e");
     }
   }
 }

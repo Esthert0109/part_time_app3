@@ -43,7 +43,6 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    getUserInfo();
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(

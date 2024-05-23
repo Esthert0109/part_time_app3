@@ -1,19 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Services/Upload/uploadServices.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../Dialog/alertDialogComponent.dart';
+
+List<String> updateUploadList = [];
 
 class MissionSubmissionCardComponent extends StatefulWidget {
   List<String>? submissionPics;
   final bool isEdit;
   final bool isCollapsed;
   final bool isCollapseAble;
+
   MissionSubmissionCardComponent(
       {super.key,
       this.submissionPics,
@@ -32,6 +38,21 @@ class _MissionSubmissionCardComponentState
   List<XFile>? selectedImageList;
   int imageSelected = 0;
   PageController pageController = PageController();
+
+  // services
+  UploadServices uploadServices = UploadServices();
+  List<String>? uploadedList = [];
+  bool isUploadLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.submissionPics != []) {
+      setState(() {
+        uploadedList = widget.submissionPics;
+      });
+    }
+  }
 
   showZoomImage(BuildContext context, int index) {
     pageController = PageController(initialPage: index);
@@ -56,7 +77,7 @@ class _MissionSubmissionCardComponentState
                                 pageController: pageController,
                                 backgroundDecoration:
                                     const BoxDecoration(color: kTransparent),
-                                itemCount: widget.submissionPics?.length ?? 0,
+                                itemCount: uploadedList?.length ?? 0,
                                 loadingBuilder: (context, event) {
                                   if (event == null) {}
                                   return Center(
@@ -68,13 +89,12 @@ class _MissionSubmissionCardComponentState
                                 builder: (context, index) {
                                   return PhotoViewGalleryPageOptions(
                                       imageProvider: NetworkImage(
-                                          widget.submissionPics?[index] ?? ""),
+                                          uploadedList?[index] ?? ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
                                       heroAttributes: PhotoViewHeroAttributes(
-                                          tag: widget.submissionPics?[index] ??
-                                              ""));
+                                          tag: uploadedList?[index] ?? ""));
                                 }))
                       ],
                     ),
@@ -139,6 +159,9 @@ class _MissionSubmissionCardComponentState
                                       secondButtonOnTap: () {
                                         setState(() {
                                           Navigator.pop(context);
+                                          uploadedList!.removeAt(index);
+                                          imageSelected = uploadedList!.length;
+                                          updateUploadList = uploadedList!;
                                           Navigator.pop(context);
 
                                           Fluttertoast.showToast(
@@ -167,9 +190,48 @@ class _MissionSubmissionCardComponentState
     void imageSelect() async {
       selectedImageList = await imagePicker.pickMultiImage();
 
-      setState(() {
-        imageSelected += selectedImageList?.length ?? 0;
-      });
+      List<File> imagePath = [];
+
+      if (selectedImageList!.isNotEmpty) {
+        for (int i = 0; i < selectedImageList!.length; i++) {
+          imagePath.add(File(selectedImageList![i].path));
+        }
+
+        try {
+          setState(() {
+            isUploadLoading = true;
+          });
+          List<String>? uploadList =
+              await uploadServices.uploadTaskImages(imagePath);
+          if (uploadList != []) {
+            Fluttertoast.showToast(
+                msg: "已上传",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: kMainGreyColor,
+                textColor: kThirdGreyColor);
+            setState(() {
+              isUploadLoading = false;
+              uploadedList?.addAll(uploadList!);
+              imageSelected = uploadedList!.length;
+              updateUploadList = uploadedList!;
+            });
+          } else {
+            Fluttertoast.showToast(
+                msg: "上传失败",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: kMainGreyColor,
+                textColor: kThirdGreyColor);
+            setState(() {
+              imageSelected += 0;
+              isUploadLoading = false;
+            });
+          }
+        } catch (e) {
+          print("Error in upload: $e");
+        }
+      }
     }
 
     return Card(
@@ -216,9 +278,11 @@ class _MissionSubmissionCardComponentState
                     children: [
                       widget.isEdit
                           ? GestureDetector(
-                              onTap: () {
-                                imageSelect();
-                              },
+                              onTap: isUploadLoading
+                                  ? null
+                                  : () {
+                                      imageSelect();
+                                    },
                               child: Container(
                                   height: 100,
                                   width: 100,
@@ -226,18 +290,24 @@ class _MissionSubmissionCardComponentState
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: kThirdGreyColor),
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/common/add.svg",
-                                      height: 40,
-                                      width: 40,
-                                    ),
-                                  )),
+                                  child: isUploadLoading
+                                      ? Center(
+                                          child: LoadingAnimationWidget
+                                              .stretchedDots(
+                                                  color: kMainYellowColor,
+                                                  size: 50))
+                                      : Center(
+                                          child: SvgPicture.asset(
+                                            "assets/common/add.svg",
+                                            height: 40,
+                                            width: 40,
+                                          ),
+                                        )),
                             )
                           : Container(),
                       Row(
                         children: List.generate(
-                            widget.submissionPics?.length ?? 0,
+                            uploadedList?.length ?? 0,
                             (index) => GestureDetector(
                                   onTap: () {
                                     showZoomImage(context, index);
@@ -253,7 +323,7 @@ class _MissionSubmissionCardComponentState
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(4),
                                       child: Image.network(
-                                        widget.submissionPics?[index] ?? "",
+                                        uploadedList?[index] ?? "",
                                         fit: BoxFit.cover,
                                         loadingBuilder:
                                             (context, child, loadingProgress) {

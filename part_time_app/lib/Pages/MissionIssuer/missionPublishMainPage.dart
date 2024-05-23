@@ -1,31 +1,30 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
+import 'package:part_time_app/Model/Task/missionClass.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
+import 'package:part_time_app/Services/order/tagServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../Components/Dialog/alertDialogComponent.dart';
+import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/Task/tagModel.dart';
+import '../../Services/Upload/uploadServices.dart';
 import 'missionDetailStatusIssuerPage.dart';
-
-class StepModel {
-  String? description;
-  List<String>? imageUrls;
-
-  StepModel({required this.description, this.imageUrls});
-}
 
 class MissionPublishMainPage extends StatefulWidget {
   final bool isEdit;
@@ -37,25 +36,135 @@ class MissionPublishMainPage extends StatefulWidget {
 
 class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   FocusNode focusNode = FocusNode();
-  final ImagePicker picker = ImagePicker();
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   TextEditingController stepdescriptionController = TextEditingController();
   PageController pageController = PageController();
+  ScrollController tagScrollController = ScrollController();
 
-  List<StepModel> steps = [];
-  List<String> imageUrls = [];
+  List<File> imageUrls = [];
   String titleInput = "";
   String contentInput = "";
   bool isGetTag = false;
   bool picPreview = false;
+  bool isTagLoadingMore = false;
   int tagsLength = 0;
+  int tagPage = 1;
 
   List<String> selectedTag = [];
-  List<String> tagDisplayMock = ["急招", "用时短", "易审核", "长期兼职", "写作", "长期"];
+  String selectedTagIds = "";
+  List<TagData> selectedTagList = [];
 
-  showZoomImage(BuildContext context, int index) {
+  // services
+  TagServices services = TagServices();
+  List<TagData> tagList = [];
+  bool isTagLoading = false;
+  OrderData orderData = OrderData();
+  UserData? userData;
+
+  // upload picture service
+  final ImagePicker imagePicker = ImagePicker();
+  UploadServices uploadServices = UploadServices();
+  List<String>? uploadedList = [];
+  bool isUploadLoading = false;
+
+  // Steps
+  TaskProcedureModel? taskSteps;
+  List<TaskProcedureData> stepsList = [];
+
+  void imageSelect(int index) async {
+    List<XFile> uploadedImages = await imagePicker.pickMultiImage();
+    List<File> imagePath = [];
+
+    if (uploadedImages.isNotEmpty) {
+      for (int i = 0; i < uploadedImages.length; i++) {
+        imagePath.add(File(uploadedImages[i].path));
+      }
+      print("check image uploaded: $imagePath");
+
+      try {
+        setState(() {
+          isUploadLoading = true;
+        });
+
+        List<String>? uploadedImagesList =
+            await uploadServices.uploadTaskImages(imagePath);
+        if (uploadedImagesList != []) {
+          Fluttertoast.showToast(
+              msg: "已上传",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+
+          setState(() {
+            isUploadLoading = false;
+            if (stepsList[index].image == null) {
+              stepsList[index].image = [];
+            }
+            stepsList[index].image!.addAll(uploadedImagesList ?? []);
+
+            print("check uploaded: ${stepsList[index].image}");
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "上传失败",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+          setState(() {
+            isUploadLoading = false;
+          });
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: "$e",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: kMainGreyColor,
+            textColor: kThirdGreyColor);
+        setState(() {
+          isUploadLoading = false;
+        });
+      }
+    }
+  }
+
+  fetchTagList() async {
+    setState(() {
+      isTagLoading = true;
+    });
+    TagModel? model = await services.getTagList(1);
+    if (model!.data != [] || model.data != null) {
+      setState(() {
+        tagList = model.data!;
+        isTagLoading = false;
+        tagPage++;
+      });
+    }
+  }
+
+  fetchTagPagination() async {
+    setState(() {
+      isTagLoadingMore = true;
+    });
+    TagModel? model = await services.getTagList(tagPage);
+    if (model!.data != [] || model.data != null) {
+      setState(() {
+        tagList.addAll(model.data!);
+        tagPage++;
+      });
+    }
+
+    setState(() {
+      isTagLoadingMore = false;
+    });
+  }
+
+  showZoomImage(BuildContext context, int index, List<String> imageUrlList,
+      int listIndex) {
     pageController = PageController(initialPage: index);
     showDialog(
         context: context,
@@ -78,7 +187,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 pageController: pageController,
                                 backgroundDecoration:
                                     const BoxDecoration(color: kTransparent),
-                                itemCount: imageUrls.length,
+                                itemCount: imageUrlList.length,
                                 loadingBuilder: (context, event) {
                                   if (event == null) {}
                                   return Center(
@@ -89,13 +198,13 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 },
                                 builder: (context, index) {
                                   return PhotoViewGalleryPageOptions(
-                                      imageProvider:
-                                          NetworkImage(imageUrls?[index] ?? ""),
+                                      imageProvider: NetworkImage(
+                                          imageUrlList?[index] ?? ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
                                       heroAttributes: PhotoViewHeroAttributes(
-                                          tag: imageUrls?[index] ?? ""));
+                                          tag: imageUrlList?[index] ?? ""));
                                 }))
                       ],
                     ),
@@ -157,6 +266,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 secondButtonOnTap: () {
                                   setState(() {
                                     Navigator.pop(context);
+                                    stepsList[listIndex].image!.removeAt(index);
+
                                     Navigator.pop(context);
 
                                     Fluttertoast.showToast(
@@ -182,9 +293,31 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   @override
   void initState() {
     super.initState();
+    tagScrollController.addListener(_tagScrollListener);
     focusNode.addListener(() {
       setState(() {});
     });
+
+    fetchTagList();
+    fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    tagScrollController.dispose();
+    super.dispose();
+  }
+
+  _tagScrollListener() {
+    if (tagScrollController.position.pixels >=
+            tagScrollController.position.maxScrollExtent - 20 &&
+        !isTagLoadingMore) {
+      fetchTagPagination();
+    }
+  }
+
+  fetchUserData() async {
+    userData = await SharedPreferencesUtils.getUserDataInfo();
   }
 
   @override
@@ -392,54 +525,67 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 Container(
                                     height: 130,
                                     padding: EdgeInsets.symmetric(vertical: 2),
-                                    child: ListView.builder(
-                                        itemCount: tagDisplayMock.length,
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isGetTag = false;
-                                                selectedTag
-                                                    .add(tagDisplayMock[index]);
-                                              });
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 8,
-                                                  child: Container(
-                                                      height: 30,
-                                                      child: RichText(
-                                                        text: TextSpan(
-                                                            style:
-                                                                missionDetailText3,
-                                                            children: [
-                                                              TextSpan(
-                                                                  text: "# "),
-                                                              TextSpan(
-                                                                  text:
-                                                                      tagDisplayMock[
-                                                                          index])
-                                                            ]),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Container(
-                                                    height: 30,
-                                                    child: Text(
-                                                      "60 篇" ?? '',
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style:
-                                                          inputCounterTextStyle,
+                                    child: isTagLoading
+                                        ? Center(
+                                            child: LoadingAnimationWidget
+                                                .stretchedDots(
+                                                    color: kMainYellowColor,
+                                                    size: 30))
+                                        : ListView.builder(
+                                            itemCount: tagList.length,
+                                            controller: tagScrollController,
+                                            itemBuilder: (context, index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isGetTag = false;
+                                                    selectedTag.add(
+                                                        tagList[index].tagName);
+                                                    selectedTagList
+                                                        .add(tagList[index]);
+                                                    selectedTagIds =
+                                                        "${tagList[index].tagId.toString()},";
+                                                  });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: Container(
+                                                          height: 30,
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                                style:
+                                                                    missionDetailText3,
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                          "# "),
+                                                                  TextSpan(
+                                                                      text: tagList[
+                                                                              index]
+                                                                          .tagName)
+                                                                ]),
+                                                          )),
                                                     ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        }))
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Container(
+                                                        height: 30,
+                                                        child: Text(
+                                                          "${tagList[index].totalOccurrence.toString()} 篇" ??
+                                                              '',
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style:
+                                                              inputCounterTextStyle,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            }))
                               ],
                             ),
                           )
@@ -557,7 +703,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                 ),
               ),
               ListView.builder(
-                itemCount: steps.length,
+                itemCount: stepsList!.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
@@ -629,7 +775,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                           print(
                                               "delete this steps: ${index + 1}");
                                           setState(() {
-                                            steps.removeAt(index);
+                                            stepsList!.removeAt(index);
                                           });
                                           Fluttertoast.showToast(
                                               msg: "已删除",
@@ -645,7 +791,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                         Expanded(
                             flex: 5,
                             child: Container(
-// color: Colors.amber,
                               margin: EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 5),
                               padding: EdgeInsets.all(0),
@@ -653,10 +798,11 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                 maxLength: 150,
                                 maxLines: null,
                                 cursorColor: kMainYellowColor,
-                                controller: TextEditingController(
-                                    text: "${steps[index].description}"),
                                 onChanged: (value) {
-                                  steps[index].description = value;
+                                  print("value:$value");
+                                  setState(() {
+                                    stepsList?[index].instruction = value;
+                                  });
                                 },
                                 decoration: InputDecoration(
                                     hintText: '请输入文案......',
@@ -669,29 +815,14 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                             flex: 4,
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 10),
-// color: Colors.amber,
                               child: Row(
                                 children: [
                                   InkWell(
-                                    onTap: () async {
-                                      final List<XFile>? selectedImageList =
-                                          await picker.pickMultiImage();
-                                      if (selectedImageList != null &&
-                                          selectedImageList.isNotEmpty) {
-                                        imageUrls = selectedImageList
-                                            .map((image) => image.path)
-                                            .toList();
-                                        steps[index].imageUrls ??= [];
-                                        steps[index]
-                                            .imageUrls!
-                                            .addAll(imageUrls);
-
-                                        setState(() {
-                                          print(
-                                              "check pic: ${steps[index].imageUrls}");
-                                        }); // Update the UI after adding new images
-                                      }
-                                    },
+                                    onTap: isUploadLoading
+                                        ? null
+                                        : () {
+                                            imageSelect(index);
+                                          },
                                     child: Container(
                                       width: 100,
                                       height: 100,
@@ -701,14 +832,20 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                         ),
                                         color: Color(0XFFF9F9F9),
                                       ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 24,
-                                          color:
-                                              Color.fromRGBO(153, 153, 153, 1),
-                                        ),
-                                      ),
+                                      child: isUploadLoading
+                                          ? Center(
+                                              child: LoadingAnimationWidget
+                                                  .stretchedDots(
+                                                      color: kMainYellowColor,
+                                                      size: 50))
+                                          : Center(
+                                              child: Icon(
+                                                Icons.add,
+                                                size: 24,
+                                                color: Color.fromRGBO(
+                                                    153, 153, 153, 1),
+                                              ),
+                                            ),
                                     ),
                                   ),
                                   SizedBox(
@@ -719,12 +856,17 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                       height: 100,
                                       child: ListView.builder(
                                         itemCount:
-                                            steps[index].imageUrls?.length ?? 0,
+                                            stepsList![index].image?.length ??
+                                                0,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, imageIndex) {
                                           return GestureDetector(
                                             onTap: () {
-                                              showZoomImage(context, index);
+                                              showZoomImage(
+                                                  context,
+                                                  imageIndex,
+                                                  stepsList![index].image!,
+                                                  index);
                                             },
                                             child: Container(
                                               height: 100,
@@ -739,8 +881,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(4),
                                                 child: Image.network(
-                                                  steps[index]
-                                                          .imageUrls?[index] ??
+                                                  stepsList![index]
+                                                          .image?[imageIndex] ??
                                                       "",
                                                   fit: BoxFit.cover,
                                                   loadingBuilder: (context,
@@ -769,21 +911,6 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                 ),
                                               ),
                                             ),
-                                            // Container(
-                                            //   width: 157,
-                                            //   margin:
-                                            //       EdgeInsets.only(right: 10),
-                                            //   decoration: BoxDecoration(
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(4),
-                                            //     image: DecorationImage(
-                                            //       image: FileImage(File(
-                                            //           steps[index].imageUrls![
-                                            //               imageIndex])),
-                                            //       fit: BoxFit.cover,
-                                            //     ),
-                                            //   ),
-                                            // ),
                                           );
                                         },
                                       ),
@@ -801,8 +928,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                 onTap: () {
                   print("add steps");
                   setState(() {
-                    steps.add(StepModel(
-                      description: stepdescriptionController.text,
+                    stepsList!.add(TaskProcedureData(
+                      instruction: stepdescriptionController.text,
                     ));
                   });
                 },
@@ -902,14 +1029,59 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(26))),
                       onPressed: () {
-                        Get.to(
-                            () => MissionDetailStatusIssuerPage(
-                                  isWaiting: false,
-                                  isFailed: false,
-                                  isPassed: false,
-                                  isRemoved: false,
-                                ),
-                            transition: Transition.rightToLeft);
+                        if (titleController.text == "" ||
+                            descController.text == "" ||
+                            selectedTagIds == "" ||
+                            stepsList == [] ||
+                            stepsList!.isEmpty ||
+                            priceController.text == "" ||
+                            peopleController.text == "" ||
+                            dayController.text == "" ||
+                            durationController.text == "" ||
+                            totalPrice == 0) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatusDialogComponent(
+                                complete: false,
+                                unsuccessText: "请完整悬赏详情",
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          taskSteps = TaskProcedureModel(step: stepsList ?? []);
+
+                          orderData = OrderData(
+                              taskTitle: titleController.text,
+                              taskContent: descController.text,
+                              taskSinglePrice:
+                                  double.tryParse(priceController.text),
+                              taskAmount: totalPrice,
+                              taskFee: handingFee,
+                              taskPrepay: totalPrepaidPrice,
+                              taskTimeLimitUnit: selectedDuration,
+                              taskEstimateTimeUnit: selectedEndTime,
+                              taskTagIds: selectedTagIds,
+                              taskTagNames: selectedTagList,
+                              taskQuota: int.tryParse(peopleController.text),
+                              taskTimeLimit: int.tryParse(dayController.text),
+                              taskImagesPreview: picPreview ? 1 : 0,
+                              taskEstimateTime:
+                                  int.tryParse(durationController.text),
+                              taskUpdatedTime: DateFormat('yyyy-MM-dd HH:mm:ss')
+                                  .format(DateTime.now()),
+                              taskProcedures: taskSteps);
+                          Get.to(
+                              () => MissionDetailStatusIssuerPage(
+                                    taskId: 0,
+                                    isPreview: true,
+                                    orderData: orderData,
+                                  ),
+                              transition: Transition.rightToLeft);
+                        }
                       },
                       child: Text(
                         "预览发布",

@@ -18,6 +18,7 @@ import '../../Constants/colorConstant.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Services/webSocketService.dart';
+import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -266,20 +267,29 @@ class _RecommendationPageState extends State<RecommendationPage>
         if (index == missionList.length) {
           return const MissionCardLoadingComponent();
         } else {
-          return MissionCardComponent(
-            taskId: missionList[index].taskId,
-            missionTitle: missionList[index].taskTitle ?? "",
-            missionDesc: missionList[index].taskContent ?? "",
-            tagList: missionList[index]
-                    .taskTagNames
-                    ?.map((tag) => tag.tagName)
-                    .toList() ??
-                [],
-            missionPrice: missionList[index].taskSinglePrice ?? 0.0,
-            userAvatar: missionList[index].avatar ?? "",
-            username: missionList[index].nickname ?? "",
-            missionDate: missionList[index].taskUpdatedTime ?? "",
-            isFavorite: missionList[index].collectionValid ?? false,
+          return GestureDetector(
+            onTap: () {
+              Get.to(
+                  () => MissionDetailRecipientPage(
+                        taskId: missionList[index].taskId,
+                      ),
+                  transition: Transition.rightToLeft);
+            },
+            child: MissionCardComponent(
+              taskId: missionList[index].taskId,
+              missionTitle: missionList[index].taskTitle ?? "",
+              missionDesc: missionList[index].taskContent ?? "",
+              tagList: missionList[index]
+                      .taskTagNames
+                      ?.map((tag) => tag.tagName)
+                      .toList() ??
+                  [],
+              missionPrice: missionList[index].taskSinglePrice ?? 0.0,
+              userAvatar: missionList[index].avatar ?? "",
+              username: missionList[index].nickname ?? "",
+              missionDate: missionList[index].taskUpdatedTime ?? "",
+              isFavorite: missionList[index].collectionValid ?? false,
+            ),
           );
         }
       },

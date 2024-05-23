@@ -22,8 +22,8 @@ class _missionFailedReasonCardComponentState
     extends State<missionFailedReasonCardComponent> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
+        width: double.infinity,
         padding: const EdgeInsetsDirectional.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

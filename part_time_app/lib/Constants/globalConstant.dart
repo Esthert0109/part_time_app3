@@ -10,9 +10,6 @@ UserData userData = UserData();
 // Explore module
 List<CategoryListData> exploreCategoryList = [];
 List<AdvertisementData> advertisementList = [];
-// List<TaskClass> allMission = [];
-// List<TaskClass> missionPriceDesc = [];
-// List<TaskClass> missionPriceAsc = [];
 List<TaskClass> missionAvailable = [];
 List<TaskClass> missionAvailableAsec = [];
 List<TaskClass> missionAvailableDesc = [];
@@ -24,3 +21,20 @@ List<NotificationListDate> missionMessageList = [];
 List<NotificationListDate> paymentMessageList = [];
 List<NotificationListDate> publishMessageList = [];
 List<NotificationListDate> ticketingMessageList = [];
+
+// Order
+List<OrderData> orderIncompleted = [];
+List<OrderData> orderWaitReviewed = [];
+List<OrderData> orderFailed = [];
+List<OrderData> orderWaitPayment = [];
+List<OrderData> orderPaid = [];
+
+List<OrderData> taskWaitReviewed = [];
+List<OrderData> taskFailed = [];
+List<OrderData> taskPassed = [];
+List<OrderData> taskCompleted = [];
+List<OrderData> taskWaitReturned = [];
+List<OrderData> taskReturned = [];
+
+int orderPage = 1;
+int taskPage = 1;

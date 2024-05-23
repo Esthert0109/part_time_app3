@@ -4,6 +4,8 @@ import 'package:part_time_app/Constants/apiConstant.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Model/Payment/paymentModel.dart';
+import '../../Model/Task/missionClass.dart';
+import '../../Model/User/userModel.dart';
 import '../../Utils/apiUtils.dart';
 
 class PaymentServices {
@@ -103,5 +105,35 @@ class PaymentServices {
     }
 
     // Return null if there's an erro
+  }
+
+  Future<bool?> createPayment(
+      OrderData paymentData, String billingImage, String? billingUrl) async {
+    String url = port + createPaymentUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+    UserData? userDetails = await SharedPreferencesUtils.getUserDataInfo();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      "taskId": paymentData.taskId,
+      "paymentFromCustomerId": userDetails!.customerId,
+      "paymentToCustomerId": "9c7be416-8a95-425f-ab1c-47f7552945ea",
+      "paymentType": 0,
+      "paymentUsername": userDetails.username,
+      "paymentBillingAddress": userDetails.billingAddress,
+      "paymentBillingNetwork": userDetails.billingNetwork,
+      "paymentBillingCurrency": userDetails.billingCurrency,
+      "paymentBillingImage": billingImage,
+      "paymentBillingUrl": billingUrl,
+      "paymentAmount": paymentData.taskPrepay,
+      "paymentFee": paymentData.taskFee,
+      "paymentTotalAmount": paymentData.taskAmount,
+      "paymentStatus": 1
+    };
   }
 }
