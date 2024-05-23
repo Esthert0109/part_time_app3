@@ -3,18 +3,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:part_time_app/Components/Card/missionReviewRecipientCardComponent.dart';
+import 'package:part_time_app/Services/order/orderServices.dart';
 
 import '../../Components/Loading/missionReviewLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Model/Task/missionClass.dart';
 import 'missionReviewDetailPage.dart';
 
 bool dataFetchedReview = false;
 bool dataEndReview = false;
 
 class MissionReviewPage extends StatefulWidget {
-  const MissionReviewPage({super.key});
+  final int taskId;
+  const MissionReviewPage({super.key, required this.taskId});
 
   @override
   State<MissionReviewPage> createState() => _MissionReviewPageState();
@@ -23,9 +26,6 @@ class MissionReviewPage extends StatefulWidget {
 class _MissionReviewPageState extends State<MissionReviewPage> {
   int totalMissionReview = 0;
   int selectedStatusIndex = 0;
-  int missionImcomplete = 2;
-  int missionReviewing = 6;
-  int missionCompleted = 9;
   bool isMissionFailed = true;
   bool isLoading = false;
 
@@ -39,21 +39,56 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   bool isReviewing = false;
   bool isCompleted = false;
 
+  // services
+  OrderServices services = OrderServices();
+  int waitCompleteCount = 0;
+  List<CustomerList> waitCompleteList = [];
+  int waitReviewCount = 0;
+  List<CustomerList> waitReviewList = [];
+  int completedCount = 0;
+  List<CustomerList> completedList = [];
+
   calculateTotalMission() {
-    totalMissionReview =
-        missionImcomplete + missionReviewing + missionCompleted;
+    setState(() {
+      totalMissionReview = waitCompleteCount + waitReviewCount + completedCount;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    calculateTotalMission();
+
+    fetchData();
 
     if (!dataFetchedReview && !dataEndReview) {
       // Fetch data only if it hasn't been fetched before
       // _loadData();
     }
     _scrollController.addListener(_scrollListener);
+  }
+
+  fetchData() async {
+    for (int i = 0; i < 3; i++) {
+      CustomerListModel? model =
+          await services.getCustomerListByOrderStatusId(i, widget.taskId, 1);
+      if (i == 0) {
+        setState(() {
+          waitCompleteCount = model?.data?.totalCount ?? 0;
+          waitCompleteList = model?.data?.customerList ?? [];
+        });
+      } else if (i == 1) {
+        setState(() {
+          waitReviewCount = model?.data?.totalCount ?? 0;
+          waitReviewList = model?.data?.customerList ?? [];
+        });
+      } else if (i == 2) {
+        setState(() {
+          completedCount = model?.data?.totalCount ?? 0;
+          completedList = model?.data?.customerList ?? [];
+        });
+      }
+    }
+    calculateTotalMission();
   }
 
   @override
@@ -89,32 +124,37 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
       case 0:
         isReviewing = false;
         isCompleted = false;
-        return buildMissionAcceptedListView();
+        return buildMissionAcceptedListView(waitCompleteList, false);
       case 1:
         isReviewing = true;
         isCompleted = false;
-        return buildMissionAcceptedListView();
+        return buildMissionAcceptedListView(waitReviewList, true);
       case 2:
         isReviewing = false;
         isCompleted = true;
-        return buildMissionAcceptedListView();
+        return buildMissionAcceptedListView(completedList, true);
       default:
         return SizedBox();
     }
   }
 
-  Widget buildMissionAcceptedListView() {
+  Widget buildMissionAcceptedListView(
+      List<CustomerList> customerList, bool completed) {
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5 + (isLoading ? 1 : 0),
+        itemCount: customerList.length + (isLoading ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index < 5) {
+          if (index < customerList.length) {
             return MissionReviewRecipientCardComponent(
                 isReviewing: isReviewing,
                 isCompleted: isCompleted,
-                duration: "240:00:00",
+                duration: DateTime.parse(completed
+                    ? customerList[index].orderAExpiredTime ??
+                        "2024-05-24 17:04:53"
+                    : customerList[index].orderBExpiredTime ??
+                        "2024-05-24 17:04:53"),
                 onTap: () {
                   Get.to(
                       () => MissionReviewDetailPage(
@@ -122,9 +162,8 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                           ),
                       transition: Transition.rightToLeft);
                 },
-                userAvatar:
-                    "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                username: "鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡鸡");
+                userAvatar: customerList[index].avatar,
+                username: customerList[index].nickname);
           } else {
             return MissionReviewLoading();
           }
@@ -176,9 +215,9 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: PrimaryTagSelectionComponent(
                   tagList: [
-                    "待完成(${missionImcomplete.toString()})",
-                    "待审核(${missionReviewing.toString()})",
-                    "已完成(${missionCompleted.toString()})"
+                    "待完成(${waitCompleteCount.toString()})",
+                    "待审核(${waitReviewCount.toString()})",
+                    "已完成(${completedCount.toString()})"
                   ],
                   selectedIndex: selectedStatusIndex,
                   onTap: (index) {

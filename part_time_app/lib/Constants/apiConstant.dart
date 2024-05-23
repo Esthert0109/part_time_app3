@@ -30,6 +30,7 @@ const createOrderUrl = "api/v1/orders/create/";
 const createTaskUrl = "api/v1/tasks/create";
 const submitOrderUrl = "api/v1/orders/submit";
 const submitTaskUrl = "api/v1/tasks/submit/";
+const updateTaskUrl = "/api/v1/tasks/updateTask";
 const getCustomerListByOrderStatusIdUrl = "api/v1/tasks/getCustomerListByOrderStatusId/";
 
 //system message Services

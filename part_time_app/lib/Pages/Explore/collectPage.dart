@@ -164,7 +164,9 @@ class _CollectPageState extends State<CollectPage>
               if (userId == missionCollection[index].customerId) {
                 Get.to(
                     () => MissionDetailStatusIssuerPage(
-                          taskId: missionCollection[index].taskId!, isPreview: false,
+                          taskId: missionCollection[index].taskId!,
+                          isPreview: false,
+                          isResubmit: false,
                         ),
                     transition: Transition.rightToLeft);
               } else {

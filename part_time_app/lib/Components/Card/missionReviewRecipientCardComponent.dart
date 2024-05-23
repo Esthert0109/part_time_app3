@@ -11,7 +11,7 @@ class MissionReviewRecipientCardComponent extends StatelessWidget {
   final String userAvatar;
   final String username;
   final Function()? onTap;
-  final String? duration;
+  final DateTime? duration;
 
   MissionReviewRecipientCardComponent({
     Key? key,

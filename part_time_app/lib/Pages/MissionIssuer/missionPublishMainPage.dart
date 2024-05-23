@@ -16,6 +16,7 @@ import 'package:part_time_app/Services/order/tagServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:pinput/pinput.dart';
 
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Status/statusDialogComponent.dart';
@@ -28,7 +29,9 @@ import 'missionDetailStatusIssuerPage.dart';
 
 class MissionPublishMainPage extends StatefulWidget {
   final bool isEdit;
-  const MissionPublishMainPage({super.key, required this.isEdit});
+  final OrderData? taskReedit;
+  const MissionPublishMainPage(
+      {super.key, required this.isEdit, this.taskReedit});
 
   @override
   State<MissionPublishMainPage> createState() => _MissionPublishMainPageState();
@@ -40,6 +43,8 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   TextEditingController stepdescriptionController = TextEditingController();
+
+  List<TextEditingController> stepInstructionController = [];
   PageController pageController = PageController();
   ScrollController tagScrollController = ScrollController();
 
@@ -72,6 +77,20 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
   // Steps
   TaskProcedureModel? taskSteps;
   List<TaskProcedureData> stepsList = [];
+
+  void newStepController() {
+    setState(() {
+      stepInstructionController.add(TextEditingController());
+    });
+  }
+
+  void removeStepController(int index) {
+    setState(() {
+      stepInstructionController[index].dispose();
+      stepInstructionController.removeAt(index);
+      stepsList.removeAt(index);
+    });
+  }
 
   void imageSelect(int index) async {
     List<XFile> uploadedImages = await imagePicker.pickMultiImage();
@@ -297,14 +316,45 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
     focusNode.addListener(() {
       setState(() {});
     });
+    // newStepController();
 
     fetchTagList();
     fetchUserData();
+
+    if (widget.isEdit) {
+      fetchReedit();
+    }
+  }
+
+  fetchReedit() {
+    setState(() {
+      titleController.setText(widget.taskReedit?.taskTitle ?? "");
+      titleInput = widget.taskReedit?.taskTitle ?? "";
+      descController.setText(widget.taskReedit?.taskContent ?? "");
+      contentInput = widget.taskReedit?.taskContent ?? "";
+      selectedTagList.addAll(widget.taskReedit?.taskTagNames ?? []);
+      for (int i = 0; i < selectedTagList.length; i++) {
+        selectedTag.add(widget.taskReedit!.taskTagNames![i].tagName);
+        selectedTagIds =
+            "$selectedTagIds${widget.taskReedit!.taskTagNames![i].tagId.toString()},";
+      }
+      stepsList = widget.taskReedit?.taskProcedures?.step ?? [];
+      picPreview = widget.taskReedit?.taskImagesPreview == 1 ? true : false;
+      for (int i = 0; i < widget.taskReedit!.taskProcedures!.step.length; i++) {
+        newStepController();
+        stepInstructionController[i]
+            .setText(widget.taskReedit!.taskProcedures!.step[i].instruction);
+      }
+    });
   }
 
   @override
   void dispose() {
     tagScrollController.dispose();
+
+    for (var controller in stepInstructionController) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -544,7 +594,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                                     selectedTagList
                                                         .add(tagList[index]);
                                                     selectedTagIds =
-                                                        "${tagList[index].tagId.toString()},";
+                                                        "$selectedTagIds${tagList[index].tagId.toString()},";
                                                   });
                                                 },
                                                 child: Row(
@@ -775,7 +825,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                           print(
                                               "delete this steps: ${index + 1}");
                                           setState(() {
-                                            stepsList!.removeAt(index);
+                                            removeStepController(index);
                                           });
                                           Fluttertoast.showToast(
                                               msg: "已删除",
@@ -796,6 +846,7 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                               padding: EdgeInsets.all(0),
                               child: TextFormField(
                                 maxLength: 150,
+                                controller: stepInstructionController[index],
                                 maxLines: null,
                                 cursorColor: kMainYellowColor,
                                 onChanged: (value) {
@@ -928,8 +979,9 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                 onTap: () {
                   print("add steps");
                   setState(() {
+                    newStepController();
                     stepsList!.add(TaskProcedureData(
-                      instruction: stepdescriptionController.text,
+                      instruction: stepInstructionController.last.text,
                     ));
                   });
                 },
@@ -954,7 +1006,19 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: MissionPublishCheckoutCardComponent(isSubmit: false),
+                child: widget.isEdit
+                    ? MissionPublishCheckoutCardComponent(
+                        isSubmit: false,
+                        priceInitial:
+                            widget.taskReedit!.taskSinglePrice.toString(),
+                        peopleInitial: widget.taskReedit!.taskQuota.toString(),
+                        dayInitial: widget.taskReedit!.taskTimeLimit.toString(),
+                        durationInitial:
+                            widget.taskReedit!.taskEstimateTime.toString(),
+                      )
+                    : MissionPublishCheckoutCardComponent(
+                        isSubmit: false,
+                      ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1075,11 +1139,19 @@ class _MissionPublishMainPageState extends State<MissionPublishMainPage> {
                                   .format(DateTime.now()),
                               taskProcedures: taskSteps);
                           Get.to(
-                              () => MissionDetailStatusIssuerPage(
-                                    taskId: 0,
-                                    isPreview: true,
-                                    orderData: orderData,
-                                  ),
+                              () => widget.isEdit
+                                  ? MissionDetailStatusIssuerPage(
+                                      taskId: widget.taskReedit?.taskId ?? 0,
+                                      isPreview: true,
+                                      orderData: orderData,
+                                      isResubmit: true,
+                                    )
+                                  : MissionDetailStatusIssuerPage(
+                                      taskId: 0,
+                                      isPreview: true,
+                                      orderData: orderData,
+                                      isResubmit: false,
+                                    ),
                               transition: Transition.rightToLeft);
                         }
                       },
