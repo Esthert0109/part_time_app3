@@ -389,8 +389,8 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
               textStyle: buttonTextStyle,
               onPressed: () {
                 setState(() {
-                  print("here:" + nameController.text);
-                  print("here:" + sexController.text);
+                  print("here:" + nameControllerPayment.text);
+                  print("here:" + sexControllerPayment.text);
                   isLoading =
                       true; // Set isLoading to true when the button is pressed
                 });

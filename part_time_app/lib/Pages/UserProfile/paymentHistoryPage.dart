@@ -123,8 +123,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
               ),
               child: RefreshIndicator(
                 onRefresh: _refresh,
-                color:
-                    kMainYellowColor, // Replace kMainYellowColor with actual color
+                color: kMainYellowColor,
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: paymentList.length + (isLoading ? 1 : 0),

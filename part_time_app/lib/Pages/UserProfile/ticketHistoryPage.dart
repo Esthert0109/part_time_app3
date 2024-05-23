@@ -12,6 +12,7 @@ import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Services/ticketing/ticketingServices.dart';
+import 'ticketDetailsRecordPage.dart';
 
 class TicketHistoryPage extends StatefulWidget {
   const TicketHistoryPage({super.key});
@@ -86,50 +87,93 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          extendBodyBehindAppBar: false,
-          appBar: AppBar(
-              automaticallyImplyLeading: false,
-              scrolledUnderElevation: 0.0,
-              leading: IconButton(
-                iconSize: 15,
-                icon: Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-              centerTitle: true,
-              title: Container(
-                  color: kTransparent,
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: thirdTitleComponent(
-                    text: "工单通知",
-                  ))),
-          body:
-              // _isLoading
-              //     ? PaymentHistoryLoading()
-              //     :
-              Container(
-            constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-            decoration: const BoxDecoration(
-              color: kThirdGreyColor,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  kBackgroundFirstGradientColor,
-                  kBackgroundSecondGradientColor
-                ],
-                stops: [0.0, 0.15],
-              ),
+        extendBodyBehindAppBar: false,
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            scrolledUnderElevation: 0.0,
+            leading: IconButton(
+              iconSize: 15,
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Get.back();
+              },
             ),
-            child: RefreshIndicator(
-              onRefresh: _refresh,
-              child: SingleChildScrollView(
-                child: _buildListView(ticketingList),
-              ),
+            centerTitle: true,
+            title: Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "工单通知",
+                ))),
+        body: Container(
+          constraints: const BoxConstraints.expand(),
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+          decoration: const BoxDecoration(
+            color: kThirdGreyColor,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                kBackgroundFirstGradientColor,
+                kBackgroundSecondGradientColor
+              ],
+              stops: [0.0, 0.15],
             ),
-          )),
+          ),
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            color: kMainYellowColor,
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: ticketingList.length + (isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == ticketingList.length) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PaymentHistoryLoading(),
+                    ),
+                  );
+                }
+                final ticket = ticketingList[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 15),
+                        child: Text(
+                          ticket.ticketDate ?? "",
+                          style:
+                              missionIDtextStyle, // Replace missionIDtextStyle with actual style
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      separatorBuilder: (context, subIndex) =>
+                          SizedBox(height: 10),
+                      itemCount: ticketingList.length,
+                      itemBuilder: (context, subIndex) {
+                        final ticketDetail = ticketingList[subIndex];
+                        return _buildCard(
+                          title: ticketDetail.complaintTypeName,
+                          description: ticketDetail.ticketComplaintDescription,
+                          complete: ticketDetail.ticketStatus,
+                          ticketId: ticketDetail.ticketId,
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -138,13 +182,17 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
     String? title,
     String? description,
     String? date,
+    int? ticketId,
   }) {
     return GestureDetector(
       onTap: () {
-        // Navigate to detail page
+        Get.to(
+            () => TicketDetailsRecordPage(
+                  ticketID: ticketId,
+                ),
+            transition: Transition.rightToLeft);
       },
       child: Container(
-        height: 92,
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -192,61 +240,6 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildListView(List<TicketingData> list) {
-    // Sort the list based on time
-    list.sort((a, b) => b.ticketDate!.compareTo(a.ticketDate!));
-
-    List<Widget> ticketWidgets = [];
-
-    // Determine the number of messages to load
-    int messagesToLoad = list.length < 20 ? list.length : 20;
-
-    for (int index = 0; index < messagesToLoad; index++) {
-      if (index == 0 || list[index].ticketDate != list[index - 1].ticketDate) {
-        ticketWidgets.add(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 5),
-                  child: Text(
-                    list[index].ticketDate!,
-                    style: missionIDtextStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              _buildCard(
-                complete: list[index].ticketStatus,
-                title: list[index].complaintTypeName,
-                description: list[index].ticketComplaintDescription,
-                date: list[index].ticketDate,
-              ),
-            ],
-          ),
-        );
-      } else {
-        ticketWidgets.add(
-          _buildCard(
-            complete: list[index].ticketStatus,
-            title: list[index].complaintTypeName,
-            description: list[index].ticketComplaintDescription,
-            date: list[index].ticketDate,
-          ),
-        );
-      }
-    }
-
-    return ListView(
-      padding: EdgeInsets.only(top: 10),
-      shrinkWrap: true,
-      physics: PageScrollPhysics(),
-      children: ticketWidgets,
     );
   }
 }

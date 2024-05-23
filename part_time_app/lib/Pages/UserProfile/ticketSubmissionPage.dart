@@ -13,6 +13,7 @@ import 'package:part_time_app/Components/Loading/editProfilePageLoading.dart';
 import 'package:part_time_app/Components/Title/secondaryTitleComponent.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 
 class TicketSubmissionPage extends StatefulWidget {
@@ -84,7 +85,12 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: TicketSubmissionComponent(isEdit: true,),
+                  child: TicketSubmissionComponent(
+                    isEdit: true,
+                    nameInitial: userData.username,
+                    phoneNumberInitial: userData.firstPhoneNo,
+                    emailInitial: userData.email,
+                  ),
                 ),
               ],
             ))),
@@ -97,7 +103,12 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                   width: double.infinity,
                   child: primaryButtonComponent(
                     text: "提交",
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        print("here:" + nameControllerTicket.text);
+                        print("here:" + phoneNumControllerTicket.text);
+                      });
+                    },
                     buttonColor: kMainYellowColor,
                     textStyle: missionCheckoutTotalPriceTextStyle,
                     isLoading: false,

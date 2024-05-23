@@ -46,6 +46,7 @@ class TicketingModel {
 }
 
 class TicketingData {
+  final int? ticketId;
   final String? customerId;
   final String? ticketCustomerUsername;
   final String? ticketCustomerPhoneNum;
@@ -55,13 +56,14 @@ class TicketingData {
   final int? complaintTypeId;
   final int? complaintUserId;
   final String? ticketComplaintDescription;
-  final String? ticketComplaintAttachment;
+  final List<String>? ticketComplaintAttachment;
   final int? ticketStatus;
   final String? ticketCreatedTime;
   final String? ticketUpdatedTime;
   static Map<int, String> complaintTypeMap = {};
 
   TicketingData({
+    this.ticketId,
     this.customerId,
     this.ticketCustomerUsername,
     this.ticketCustomerPhoneNum,
@@ -98,6 +100,7 @@ class TicketingData {
 
   Map<String, dynamic> toJson() {
     return {
+      "ticketId": ticketId,
       "customerId": customerId,
       "ticketCustomerUsername": ticketCustomerUsername,
       "ticketCustomerPhoneNum": ticketCustomerPhoneNum,
@@ -107,7 +110,8 @@ class TicketingData {
       "complaintTypeId": complaintTypeId,
       "complaintUserId": complaintUserId,
       "ticketComplaintDescription": ticketComplaintDescription,
-      "ticketComplaintAttachment": ticketComplaintAttachment,
+      'ticketComplaintAttachment':
+          jsonEncode({'image': ticketComplaintAttachment}),
       "ticketStatus": ticketStatus,
       "ticketCreatedTime": ticketCreatedTime,
       "ticketUpdatedTime": ticketUpdatedTime,
@@ -115,7 +119,25 @@ class TicketingData {
   }
 
   factory TicketingData.fromJson(Map<String, dynamic> json) {
+    List<String> ticketComplaintAttachment = [];
+    try {
+      final attachmentValue = json['ticketComplaintAttachment'];
+      if (attachmentValue is String) {
+        Map<String, dynamic> attachmentMap = jsonDecode(attachmentValue);
+        if (attachmentMap.containsKey('image') &&
+            attachmentMap['image'] is List) {
+          ticketComplaintAttachment = List<String>.from(attachmentMap['image']);
+        } else {
+          print('Invalid format for ticketComplaintAttachment: $attachmentMap');
+        }
+      } else {
+        print('ticketComplaintAttachment is not a JSON string');
+      }
+    } catch (e) {
+      print('Error parsing ticketComplaintAttachment: $e');
+    }
     return TicketingData(
+      ticketId: json['ticketId'] ?? "",
       customerId: json['customerId'] ?? "",
       ticketCustomerUsername: json['ticketCustomerUsername'] ?? "",
       ticketCustomerPhoneNum: json['ticketCustomerPhoneNum'] ?? "",
@@ -125,7 +147,7 @@ class TicketingData {
       complaintTypeId: json['complaintTypeId'] ?? 1,
       complaintUserId: json['complaintUserId'] ?? 1,
       ticketComplaintDescription: json['ticketComplaintDescription'] ?? "",
-      ticketComplaintAttachment: json['ticketComplaintAttachment'] ?? "",
+      ticketComplaintAttachment: ticketComplaintAttachment ?? [],
       ticketStatus: json['ticketStatus'] ?? 0,
       ticketCreatedTime: json['ticketCreatedTime'] ?? "",
       ticketUpdatedTime: json['ticketUpdatedTime'] ?? "",

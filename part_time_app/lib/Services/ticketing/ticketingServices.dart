@@ -19,24 +19,29 @@ class TicketingService {
     try {
       final response = await getRequest(url, headers);
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonData = json.decode(response.responseBody);
-        int responseCode = jsonData['code'];
-        String responseMsg = jsonData['msg'];
-        List<dynamic> data = jsonData['data'];
+        Map<String, dynamic>? jsonData = json.decode(response.responseBody);
+        if (jsonData != null) {
+          int responseCode = jsonData['code'];
+          String responseMsg = jsonData['msg'];
+          List<dynamic> data = jsonData['data'] ?? [];
 
-        if (responseCode == 0) {
-          List<TicketingData>? responseData =
-              data.map((e) => TicketingData.fromJson(e)).toList();
-          TicketingModel model = TicketingModel(
-              code: responseCode, msg: responseMsg, data: responseData);
-          print(responseData);
-          return model;
+          if (responseCode == 0) {
+            List<TicketingData> responseData = data
+                .map<TicketingData>((e) => TicketingData.fromJson(e))
+                .toList();
+            TicketingModel model = TicketingModel(
+                code: responseCode, msg: responseMsg, data: responseData);
+            return model;
+          } else {
+            TicketingModel model =
+                TicketingModel(code: responseCode, msg: responseMsg, data: []);
+            return model;
+          }
         } else {
-          TicketingModel model =
-              TicketingModel(code: responseCode, msg: responseMsg, data: []);
-
-          return model;
+          throw Exception("Failed to decode JSON response");
         }
+      } else {
+        throw Exception("Failed to fetch data: ${response.statusCode}");
       }
     } catch (e) {
       print("Error in Ticketing: $e");
@@ -46,7 +51,7 @@ class TicketingService {
 
   Future<TicketingData?> getTicketDetail(int ticketId) async {
     String url = port + getTicketingDetailUrl + ticketId.toString();
-
+    print(url);
     String? token = await SharedPreferencesUtils.getToken();
 
     final Map<String, String> headers = {

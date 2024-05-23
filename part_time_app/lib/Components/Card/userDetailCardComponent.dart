@@ -7,15 +7,15 @@ import '../../Constants/textStyleConstant.dart';
 import '../../Model/User/userModel.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
 
-late TextEditingController usernameController;
-late TextEditingController countryController;
-late TextEditingController fieldController;
-late TextEditingController sexController;
-late TextEditingController emailController;
-late TextEditingController nameController;
-late TextEditingController walletNetworkController;
-late TextEditingController walletAddressController;
-late TextEditingController usdtLinkController;
+late TextEditingController usernameControllerPayment;
+late TextEditingController countryControllerPayment;
+late TextEditingController fieldControllerPayment;
+late TextEditingController sexControllerPayment;
+late TextEditingController emailControllerPayment;
+late TextEditingController nameControllerPayment;
+late TextEditingController walletNetworkControllerPayment;
+late TextEditingController walletAddressControllerPayment;
+late TextEditingController usdtLinkControllerPayment;
 
 class UserDetailCardComponent extends StatefulWidget {
   bool isEditProfile;
@@ -81,17 +81,20 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   void initState() {
     super.initState();
     _loadDataFromShared();
-    usernameController = TextEditingController(text: widget.usernameInitial);
-    countryController = TextEditingController(text: widget.countryInitial);
-    fieldController = TextEditingController(text: widget.fieldInitial);
-    sexController = TextEditingController(text: widget.sexInitial);
-    emailController = TextEditingController(text: widget.emailInitial);
-    nameController = TextEditingController(text: widget.nameInitial);
-    walletNetworkController =
+    usernameControllerPayment =
+        TextEditingController(text: widget.usernameInitial);
+    countryControllerPayment =
+        TextEditingController(text: widget.countryInitial);
+    fieldControllerPayment = TextEditingController(text: widget.fieldInitial);
+    sexControllerPayment = TextEditingController(text: widget.sexInitial);
+    emailControllerPayment = TextEditingController(text: widget.emailInitial);
+    nameControllerPayment = TextEditingController(text: widget.nameInitial);
+    walletNetworkControllerPayment =
         TextEditingController(text: widget.walletNetworkInitial);
-    walletAddressController =
+    walletAddressControllerPayment =
         TextEditingController(text: widget.walletAddressInitial);
-    usdtLinkController = TextEditingController(text: widget.usdtLinkInitial);
+    usdtLinkControllerPayment =
+        TextEditingController(text: widget.usdtLinkInitial);
   }
 
   Future<void> _loadDataFromShared() async {
@@ -132,7 +135,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("用户名", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "请输入用户名",
-                controller: usernameController,
+                controller: usernameControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -143,7 +146,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("真实姓名", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "真实姓名",
-                controller: nameController,
+                controller: nameControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -172,7 +175,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                   flex: 5,
                   child: _buildTextInput(
                       hintText: "请输入国家",
-                      controller: countryController,
+                      controller: countryControllerPayment,
                       onChanged: (value) {
                         if (widget.onUsernameChange != null) {
                           widget.onUsernameChange!(value);
@@ -185,7 +188,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                   flex: 4,
                   child: _buildTextInput(
                       hintText: "请输入范围",
-                      controller: fieldController,
+                      controller: fieldControllerPayment,
                       onChanged: (value) {
                         if (widget.onCountryChange != null) {
                           widget.onCountryChange!(value);
@@ -233,7 +236,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("邮箱", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "邮箱",
-                controller: emailController,
+                controller: emailControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -244,7 +247,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("真实姓名", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "真实姓名",
-                controller: nameController,
+                controller: nameControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -362,7 +365,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             Text("收款信息", style: depositTextStyle2),
             _buildTextInput(
                 hintText: "钱包地址 (account number)",
-                controller: walletAddressController,
+                controller: walletAddressControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -372,7 +375,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 5),
             _buildTextInput(
                 hintText: "NETWORK 名称",
-                controller: walletNetworkController,
+                controller: walletNetworkControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -382,7 +385,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 5),
             _buildTextInput(
                 hintText: "货币- USDT",
-                controller: nameController,
+                controller: nameControllerPayment,
                 onChanged: (value) {
                   if (widget.onUsernameChange != null) {
                     widget.onUsernameChange!(value);
@@ -401,7 +404,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 5),
             _buildTextInput(
                 hintText: "USDT 链名称",
-                controller: walletNetworkController,
+                controller: walletNetworkControllerPayment,
                 onChanged: (value) {
                   if (widget.onWalletNetworkChange != null) {
                     widget.onWalletNetworkChange!(value);
@@ -411,7 +414,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 10),
             _buildTextInput(
                 hintText: "USDT 链地址",
-                controller: walletAddressController,
+                controller: walletAddressControllerPayment,
                 onChanged: (value) {
                   if (widget.onWalletAddressChange != null) {
                     widget.onWalletAddressChange!(value);

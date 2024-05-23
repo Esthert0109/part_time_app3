@@ -110,7 +110,7 @@ class _TicketMainPageState extends State<TicketMainPage> {
                                 transition: Transition.rightToLeft);
                           }
                         : () {
-                          Get.to(() => TicketSubmissionPage(),
+                            Get.to(() => TicketSubmissionPage(),
                                 transition: Transition.rightToLeft);
                           },
                     child: Text(verify ? " 查看工单" : " 提交工单",
