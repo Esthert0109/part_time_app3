@@ -48,6 +48,12 @@ const postSystemNotificationReadStatusUrl =
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";
 
+//About Us Services
+const aboutUsUrl = "api/v1/aboutUs/";
+
+//Settings Services
+const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";
+
 //Payment
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";
 const getPaymentDetailUrl = "api/v1/payments/detail/";

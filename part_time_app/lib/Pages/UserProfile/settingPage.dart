@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
+import 'package:part_time_app/Model/User/userModel.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -18,6 +20,57 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   bool isPrivate = false;
+  final UserServices _userServices = UserServices();
+  UserData? userData = UserData();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPrivacySetting();
+  }
+
+  void _loadPrivacySetting() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+    setState(() {
+      // userData = data;
+      isPrivate = (prefs.getBool('isPrivate') ?? false);
+    });
+  }
+
+  void _togglePrivacy(bool value) async {
+    setState(() {
+      isPrivate = value;
+    });
+
+    // Save the switch state
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+    // userData = data;
+    prefs.setBool('isPrivate', isPrivate);
+
+    // Retrieve the token
+    String? token = await SharedPreferencesUtils.getToken();
+    // if (token == null) {
+    //   Fluttertoast.showToast(
+    //       msg: "Error: Unable to get token",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       backgroundColor: Colors.red,
+    //       textColor: Colors.white);
+    //   return;
+    // } else {
+    //   Fluttertoast.showToast(
+    //       msg: token,
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //       backgroundColor: Colors.green,
+    //       textColor: Colors.white);
+    // }
+
+    // Call the updateCollectionViewable method
+    final response = await _userServices.updateCollectionViewable();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,11 +175,9 @@ class _SettingPageState extends State<SettingPage> {
                                         ),
                                         trackOutlineWidth:
                                             MaterialStateProperty.all(1),
-                                        onChanged: (private) {
-                                          setState(() {
-                                            isPrivate = private;
-                                          });
-                                        }),
+                                        onChanged:
+                                            _togglePrivacy // Call the method
+                                        ),
                                   ),
                                 ),
                               ],

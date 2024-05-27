@@ -356,6 +356,45 @@ class UserServices {
     }
   }
 
+  Future<UpdateCollectionModel?> updateCollectionViewable() async {
+    url = port + updateCollectionViewUrl;
+    UpdateCollectionModel? updateCollectionModel;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    final Map<String, dynamic> body = {
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      bool data = jsonData['data'];
+      // UserData responseData = UserData.fromJson(data);
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          if (data) {
+            return updateCollectionModel;
+          }
+        } else {
+          return updateCollectionModel;
+        }
+      }
+    } catch (e) {
+      print("Error in updateCollectionViewable: $e");
+    }
+    return null;
+  }
+
   Future<CheckOTPModel?> updateUSDT(UserData userInfo) async {
     url = port + updateUserInfoUrl;
     CheckOTPModel? updateModel;
