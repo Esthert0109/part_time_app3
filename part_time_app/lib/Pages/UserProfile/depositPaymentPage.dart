@@ -451,12 +451,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,
               onPressed: () async {
-                // Check if not already loading
-                if (!isLoading) {
+                setState(() {
+                  isLoading = true;
+                });
+                try {
                   setState(() {
-                    isLoading = true;
-                    // Create the paymentDetail object inside the setState callback
-                    PaymentDetail paymentDetail = PaymentDetail(
+                    PaymentDetail? paymentDetailForPay = PaymentDetail(
                       paymentFromCustomerId: customerId,
                       paymentType: 0,
                       paymentStatus: 0,
@@ -467,22 +467,22 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                           walletNetworkControllerPayment.text,
                       paymentBillingCurrency: "USDT",
                       paymentBillingImage: uploadedPaymentSS,
-                      paymentBillingUrl: usdtLinkControllerPayment.text,
+                      paymentBillingUrl: usdtLinkControllerPayment!.text,
                       paymentAmount: 20,
                       paymentFee: 0,
                       paymentTotalAmount: 20,
                     );
 
-                    // Call createDeposit function here
                     PaymentServices paymentServices = PaymentServices();
                     paymentServices
-                        .createDeposit(paymentDetail)
+                        .createDeposit(paymentDetailForPay)
                         .then((success) {
                       // Handle success or failure accordingly
                       if (success != null && success) {
                         print("Submitted success");
                         setState(() {
                           uploadedPaymentSS = "";
+                          paymentDetailForPay = null;
                           Navigator.pop(context);
                           showDialog(
                             context: context,
@@ -508,6 +508,14 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       });
                     });
                   });
+                } catch (e) {
+                  print("Error: $e");
+                  // Handle error
+                  if (mounted) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
                 }
               },
             ),

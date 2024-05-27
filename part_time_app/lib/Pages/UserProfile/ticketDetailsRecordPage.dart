@@ -53,6 +53,7 @@ class _TicketDetailsRecordPageState extends State<TicketDetailsRecordPage> {
       isLoading = true;
     });
     try {
+      await TicketingData.fetchComplaintTypes();
       TicketingData? data =
           await TicketingService().getTicketDetail(widget.ticketID!);
       setState(() {

@@ -15,7 +15,7 @@ late TextEditingController emailControllerPayment;
 late TextEditingController nameControllerPayment;
 late TextEditingController walletNetworkControllerPayment;
 late TextEditingController walletAddressControllerPayment;
-late TextEditingController usdtLinkControllerPayment;
+TextEditingController usdtLinkControllerPayment = TextEditingController();
 
 class UserDetailCardComponent extends StatefulWidget {
   bool isEditProfile;

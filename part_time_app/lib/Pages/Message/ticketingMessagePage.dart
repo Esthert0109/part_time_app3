@@ -30,6 +30,7 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+    _loadData();
     _readStatus();
   }
 

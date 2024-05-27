@@ -9,6 +9,7 @@ import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/userDetailCardComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class DepositReturnPage extends StatefulWidget {
@@ -62,6 +63,12 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
               children: [
                 UserDetailCardComponent(
                   isEditProfile: false,
+                  nameInitial: userData.username,
+                  countryInitial: userData.country,
+                  fieldInitial: userData.businessScopeName,
+                  sexInitial: userData.gender,
+                  walletNetworkInitial: userData.billingNetwork,
+                  walletAddressInitial: userData.billingAddress,
                 ),
                 SizedBox(height: 10),
                 Container(
