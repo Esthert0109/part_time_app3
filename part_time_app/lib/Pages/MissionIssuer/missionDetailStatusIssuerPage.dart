@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,8 +26,6 @@ import '../../Components/Loading/missionDetailLoading.dart';
 import '../../Components/Status/statusDialogComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../../Model/MockModel/missionStepMockModel.dart';
-import '../../Services/Upload/uploadServices.dart';
 import '../../Services/order/orderServices.dart';
 import '../MissionStatus/missionReviewPage.dart';
 
@@ -283,7 +280,7 @@ class _MissionDetailStatusIssuerPageState
                                     );
                                   })
                               : (isPassed)
-                                  ? (checkNoRecipient == 0)
+                                  ? (noRecipient != 0)
                                       ? showDialog(
                                           context: context,
                                           builder: (context) {
