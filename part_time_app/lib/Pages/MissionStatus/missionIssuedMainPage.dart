@@ -155,6 +155,7 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
                     () => MissionDetailStatusIssuerPage(
                           taskId: missionList[index].taskId!,
                           isPreview: false,
+                          isResubmit: false,
                         ),
                     transition: Transition.rightToLeft);
               },

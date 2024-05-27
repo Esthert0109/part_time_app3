@@ -31,8 +31,10 @@ const createOrderUrl = "api/v1/orders/create/";
 const createTaskUrl = "api/v1/tasks/create";
 const submitOrderUrl = "api/v1/orders/submit";
 const submitTaskUrl = "api/v1/tasks/submit/";
+const updateTaskUrl = "api/v1/tasks/updateTask";
 const getCustomerListByOrderStatusIdUrl =
     "api/v1/tasks/getCustomerListByOrderStatusId/";
+const acceptRejectOrderUrl = "api/v1/orders/update";
 
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
@@ -45,6 +47,12 @@ const postSystemNotificationReadStatusUrl =
 
 // Categories
 const getCategoryListUrl = "api/v1/categories/getCategoryList";
+
+//About Us Services
+const aboutUsUrl = "api/v1/aboutUs/";
+
+//Settings Services
+const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";
 
 //Payment
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";

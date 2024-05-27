@@ -85,6 +85,45 @@ class OrderServices {
     }
   }
 
+  Future<bool?> acceptRejectOrder(
+      bool isAccept, int orderId, String? rejectReason) async {
+    url = port + acceptRejectOrderUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    Map<String, dynamic> body = {};
+
+    if (isAccept) {
+      body = {
+        "orderId": orderId,
+      };
+    } else {
+      body = {"orderId": orderId, "orderRejectReason": rejectReason};
+    }
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        if (responseCode == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error in update: $e");
+    }
+  }
+
   Future<OrderDetailModel?> getOrderDetailsByOrderId(int orderId) async {
     url = port + getOrderDetailByOrderIdUrl + orderId.toString();
 
@@ -328,6 +367,53 @@ class OrderServices {
     }
   }
 
+  Future<bool?> resubmitTask(OrderData taskDetails, int taskId) async {
+    url = port + updateTaskUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      "taskId": taskId,
+      "taskTitle": taskDetails.taskTitle,
+      "taskContent": taskDetails.taskContent,
+      "taskSinglePrice": taskDetails.taskSinglePrice,
+      "taskQuota": taskDetails.taskQuota,
+      "taskAmount": taskDetails.taskAmount,
+      "taskFee": taskDetails.taskFee,
+      "taskPrepay": taskDetails.taskPrepay,
+      "taskTimeLimit": taskDetails.taskTimeLimit,
+      "taskTimeLimitUnit": taskDetails.taskTimeLimitUnit,
+      "taskEstimateTime": taskDetails.taskEstimateTime,
+      "taskEstimateTimeUnit": taskDetails.taskEstimateTimeUnit,
+      "taskTagIds": taskDetails.taskTagIds,
+      "taskProcedures": taskDetails.taskProcedures,
+      "taskImagesPreview": taskDetails.taskImagesPreview
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+        if (responseCode == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error in update task: $e");
+    }
+  }
+
   Future<CustomerListModel?> getCustomerListByOrderStatusId(
       int status, int taskId, int page) async {
     String urlss = port +
@@ -344,7 +430,7 @@ class OrderServices {
 
     try {
       final response = await getRequest(urlss, headers);
-      if (response.responseBody == 200) {
+      if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = json.decode(response.responseBody);
         int responseCode = jsonData['code'];
         String responseMsg = jsonData['msg'];

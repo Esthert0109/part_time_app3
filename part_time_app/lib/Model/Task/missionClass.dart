@@ -93,42 +93,47 @@ class OrderData {
   final double? taskFee;
   final double? taskPrepay;
   final OrderScreenShotList? orderScreenshots;
+  final String? taskRejectReason;
+  final String? taskReeditTime;
 
-  OrderData(
-      {this.orderId,
-      this.taskId,
-      this.customerId,
-      this.taskTitle,
-      this.taskContent,
-      this.taskTagIds,
-      this.taskTagNames,
-      this.orderSinglePrice,
-      this.orderStatus,
-      this.taskUpdatedTime,
-      this.username,
-      this.nickname,
-      this.avatar,
-      this.categoryId,
-      this.taskSinglePrice,
-      this.taskQuota,
-      this.taskTimeLimit,
-      this.taskTimeLimitUnit,
-      this.taskEstimateTime,
-      this.taskEstimateTimeUnit,
-      this.taskStatus,
-      this.taskProcedures,
-      this.orderRejectReason,
-      this.taskCreatedTime,
-      this.taskImagesPreview,
-      this.taskReceivedNum,
-      this.taskIsDelete,
-      this.collectionValid,
-      this.updatedTime,
-      this.orderBExpiredTime,
-      this.taskAmount,
-      this.orderScreenshots,
-      this.taskFee,
-      this.taskPrepay});
+  OrderData({
+    this.orderId,
+    this.taskId,
+    this.customerId,
+    this.taskTitle,
+    this.taskContent,
+    this.taskTagIds,
+    this.taskTagNames,
+    this.orderSinglePrice,
+    this.orderStatus,
+    this.taskUpdatedTime,
+    this.username,
+    this.nickname,
+    this.avatar,
+    this.categoryId,
+    this.taskSinglePrice,
+    this.taskQuota,
+    this.taskTimeLimit,
+    this.taskTimeLimitUnit,
+    this.taskEstimateTime,
+    this.taskEstimateTimeUnit,
+    this.taskStatus,
+    this.taskProcedures,
+    this.orderRejectReason,
+    this.taskCreatedTime,
+    this.taskImagesPreview,
+    this.taskReceivedNum,
+    this.taskIsDelete,
+    this.collectionValid,
+    this.updatedTime,
+    this.orderBExpiredTime,
+    this.taskAmount,
+    this.orderScreenshots,
+    this.taskFee,
+    this.taskPrepay,
+    this.taskRejectReason,
+    this.taskReeditTime,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -165,53 +170,58 @@ class OrderData {
       "orderScreenshots": orderScreenshots,
       "taskAmount": taskAmount,
       "taskFee": taskFee,
-      "taskPrepay": taskPrepay
+      "taskPrepay": taskPrepay,
+      "taskRejectReason": taskRejectReason,
+      "taskReeditTime": taskReeditTime,
     };
   }
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
     return OrderData(
-        orderId: json['orderId'],
-        taskId: json['taskId'],
-        customerId: json['customerId'],
-        taskTitle: json['taskTitle'],
-        taskContent: json['taskContent'],
-        taskTagIds: json['taskTagIds'],
-        taskTagNames: json['taskTagNames'] != null
-            ? List<TagData>.from(
-                json['taskTagNames'].map((data) => TagData.fromJson(data)))
-            : [],
-        orderSinglePrice: json['orderSinglePrice'],
-        orderStatus: json['orderStatus'],
-        taskUpdatedTime: json['taskUpdatedTime'],
-        username: json['username'],
-        avatar: json['avatar'],
-        nickname: json['nickname'],
-        categoryId: json['categoryId'],
-        taskSinglePrice: json['taskSinglePrice'],
-        taskQuota: json['taskQuota'],
-        taskTimeLimit: json['taskTimeLimit'],
-        taskTimeLimitUnit: json['taskTimeLimitUnit'],
-        taskEstimateTime: json['taskEstimateTime'],
-        taskEstimateTimeUnit: json['taskEstimateTimeUnit'],
-        taskStatus: json['taskStatus'],
-        taskProcedures: json['taskProcedures'] != null
-            ? TaskProcedureModel.fromJson(json['taskProcedures'])
-            : null,
-        orderRejectReason: json['orderRejectReason'],
-        taskCreatedTime: json['taskCreatedTime'],
-        taskImagesPreview: json['taskImagesPreview'],
-        taskReceivedNum: json['taskReceivedNum'],
-        taskIsDelete: json['taskIsDelete'],
-        collectionValid: json['collectionValid'],
-        updatedTime: json['updatedTime'],
-        orderBExpiredTime: json['orderBExpiredTime'],
-        orderScreenshots: json['orderScreenshots'] != null
-            ? OrderScreenShotList.fromJson(json['orderScreenshots'])
-            : null,
-        taskAmount: json['taskAmount'],
-        taskFee: json['taskFee'],
-        taskPrepay: json['taskPrepay']);
+      orderId: json['orderId'],
+      taskId: json['taskId'],
+      customerId: json['customerId'],
+      taskTitle: json['taskTitle'],
+      taskContent: json['taskContent'],
+      taskTagIds: json['taskTagIds'],
+      taskTagNames: json['taskTagNames'] != null
+          ? List<TagData>.from(
+              json['taskTagNames'].map((data) => TagData.fromJson(data)))
+          : [],
+      orderSinglePrice: json['orderSinglePrice'],
+      orderStatus: json['orderStatus'],
+      taskUpdatedTime: json['taskUpdatedTime'],
+      username: json['username'],
+      avatar: json['avatar'],
+      nickname: json['nickname'],
+      categoryId: json['categoryId'],
+      taskSinglePrice: json['taskSinglePrice'],
+      taskQuota: json['taskQuota'],
+      taskTimeLimit: json['taskTimeLimit'],
+      taskTimeLimitUnit: json['taskTimeLimitUnit'],
+      taskEstimateTime: json['taskEstimateTime'],
+      taskEstimateTimeUnit: json['taskEstimateTimeUnit'],
+      taskStatus: json['taskStatus'],
+      taskProcedures: json['taskProcedures'] != null
+          ? TaskProcedureModel.fromJson(json['taskProcedures'])
+          : null,
+      orderRejectReason: json['orderRejectReason'],
+      taskCreatedTime: json['taskCreatedTime'],
+      taskImagesPreview: json['taskImagesPreview'],
+      taskReceivedNum: json['taskReceivedNum'],
+      taskIsDelete: json['taskIsDelete'],
+      collectionValid: json['collectionValid'],
+      updatedTime: json['updatedTime'],
+      orderBExpiredTime: json['orderBExpiredTime'],
+      orderScreenshots: json['orderScreenshots'] != null
+          ? OrderScreenShotList.fromJson(json['orderScreenshots'])
+          : null,
+      taskAmount: json['taskAmount'],
+      taskFee: json['taskFee'],
+      taskPrepay: json['taskPrepay'],
+      taskRejectReason: json['taskRejectReason'],
+      taskReeditTime: json['taskReeditTime'],
+    );
   }
 }
 

@@ -118,7 +118,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionReviewRecipientCardComponent(
                 isReviewing: false,
                 isCompleted: false,
-                duration: "48:00:00",
+                duration: DateTime(2024),
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
                 username: '新鲜哥',
@@ -126,7 +126,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionReviewRecipientCardComponent(
                 isReviewing: true,
                 isCompleted: false,
-                duration: "48:00:00",
+                duration: DateTime(2024),
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s',
                 username: '微笑姐',
@@ -134,7 +134,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionReviewRecipientCardComponent(
                 isReviewing: false,
                 isCompleted: true,
-                duration: "48:00:00",
+                duration: DateTime(2024),
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
                 username: '新鲜哥',
@@ -332,7 +332,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return RejectReasonDialogComponent();
+                      return RejectReasonDialogComponent(orderId: 02,);
                     },
                   );
                 },

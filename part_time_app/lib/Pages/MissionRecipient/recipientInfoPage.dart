@@ -11,6 +11,7 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/User/userModel.dart';
 import '../../Services/order/orderServices.dart';
+import 'missionDetailRecipientPage.dart';
 
 class RecipientInfoPage extends StatefulWidget {
   final int taskId;
@@ -167,7 +168,10 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
                     if (model!.data!) {
                       int? create =
                           await orderServices.createOrder(widget.taskId!);
-                      Get.off(() => MissionReviewDetailPage(isCompleted: false),
+                      Get.off(
+                          () => MissionDetailRecipientPage(
+                                orderId: create,
+                              ),
                           transition: Transition.rightToLeft);
 
                       Fluttertoast.showToast(
