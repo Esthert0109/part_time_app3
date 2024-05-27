@@ -7,6 +7,7 @@ import '../../Constants/apiConstant.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Model/Advertisement/advertisementModel.dart';
 import '../../Model/Category/categoryModel.dart';
+import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Pages/Message/user/chatConfig.dart';
@@ -367,8 +368,7 @@ class UserServices {
       'token': token!,
     };
 
-    final Map<String, dynamic> body = {
-    };
+    final Map<String, dynamic> body = {};
 
     try {
       final response = await patchRequest(url, headers, body);
@@ -435,6 +435,118 @@ class UserServices {
       }
     } catch (e) {
       print("Error in update USDT: $e");
+    }
+  }
+
+  Future<UserData?> getCustomerHomePage(String customerId) async {
+    url = port + customerHomePageUrl + customerId.toString();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          Map<String, dynamic> data = jsonData['data'];
+          UserData? responseData = UserData.fromJson(data);
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in customer home page: $e");
+    }
+  }
+
+  Future<int?> getCustomerTaskTotalCount(String customerId) async {
+    url = port + customerTotalPostUrl + "customerId=${customerId}";
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          int responseData = jsonData['data'];
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in task total count: $e");
+    }
+  }
+
+  Future<int?> getCustomerCollectionCount(String customerId) async {
+    url = port + customerTotalCollectionUrl + customerId;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          int responseData = jsonData['data'];
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in collection total count: $e");
+    }
+  }
+
+  Future<OrderModel?> getCustomerHomePageTask(
+      String customerId, int page) async {
+    url = port +
+        customerHomePageTaskUrl +
+        customerId +
+        "?page=${page.toString()}";
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          List<dynamic>? data = jsonData['data'];
+          List<OrderData>? responseData =
+              data?.map((e) => OrderData.fromJson(e)).toList();
+          OrderModel orderModel = OrderModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+          return orderModel;
+        } else {
+          OrderModel orderModel =
+              OrderModel(code: responseCode, msg: responseMsg, data: []);
+          return orderModel;
+        }
+      }
+    } catch (e) {
+      print("Error in home page task: $e");
     }
   }
 }

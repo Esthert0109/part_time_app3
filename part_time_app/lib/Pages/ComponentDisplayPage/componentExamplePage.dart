@@ -151,7 +151,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                 missionDate: "2024-04-29",
                 isStatus: true,
                 isFavorite: false,
-                missionStatus: 0,
+                missionStatus: 0, customerId: '',
               ),
               MissionSubmissionCardComponent(
                 submissionPics: [

@@ -71,3 +71,9 @@ const uploadDepositUrl = "api/v1/files/upload/deposit-screenshot";
 
 // Payment
 const createPaymentUrl = "api/v1/payments/create";
+
+// Customer
+const customerHomePageUrl = "api/v1/customers/detailsByCustomerId/";
+const customerTotalPostUrl = "api/v1/customers/totalPostCount?";
+const customerTotalCollectionUrl = "api/v1/collection/totalCount/";
+const customerHomePageTaskUrl = "api/v1/customers/getCustomerHomePageTask/";

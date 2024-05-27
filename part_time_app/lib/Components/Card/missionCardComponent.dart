@@ -22,6 +22,7 @@ class MissionCardComponent extends StatefulWidget {
   final bool? isFavorite;
   final int? missionStatus;
   final bool? isPublished;
+  final String customerId;
 
   const MissionCardComponent(
       {super.key,
@@ -36,7 +37,8 @@ class MissionCardComponent extends StatefulWidget {
       this.missionDate,
       this.isFavorite,
       this.missionStatus,
-      this.isPublished});
+      this.isPublished,
+      required this.customerId});
 
   @override
   State<MissionCardComponent> createState() => _MissionCardComponentState();
@@ -268,7 +270,7 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
                     Get.to(
                       () => UserProfilePage(
                         isOthers: true,
-                        userID: "",
+                        userID: widget.customerId,
                       ),
                       transition: Transition.rightToLeft,
                     );

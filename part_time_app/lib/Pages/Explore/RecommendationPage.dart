@@ -289,6 +289,7 @@ class _RecommendationPageState extends State<RecommendationPage>
               username: missionList[index].nickname ?? "",
               missionDate: missionList[index].taskUpdatedTime ?? "",
               isFavorite: missionList[index].collectionValid ?? false,
+              customerId: missionList[index].customerId!,
             ),
           );
         }

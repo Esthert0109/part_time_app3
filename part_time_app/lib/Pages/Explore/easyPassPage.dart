@@ -197,7 +197,7 @@ class _EasyPassPageState extends State<EasyPassPage> {
             missionDate: missionList[index].missionDate,
             isStatus: missionList[index].isStatus,
             isFavorite: missionList[index].isFavorite,
-            missionStatus: missionList[index].missionStatus,
+            missionStatus: missionList[index].missionStatus, customerId: "",
           );
         } else {
           return const MissionCardLoadingComponent();

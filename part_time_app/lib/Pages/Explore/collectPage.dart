@@ -191,6 +191,7 @@ class _CollectPageState extends State<CollectPage>
               username: missionCollection[index].nickname ?? "",
               missionDate: missionCollection[index].updatedTime,
               isFavorite: true,
+              customerId: missionCollection[index].customerId!,
             ),
           );
         }

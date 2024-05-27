@@ -294,6 +294,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
             username: missionList[index].nickname ?? "",
             missionDate: missionList[index].taskUpdatedTime ?? "",
             isFavorite: missionList[index].collectionValid ?? false,
+            customerId: missionList[index].customerId!,
           );
         }
       },
