@@ -152,11 +152,13 @@ class PaymentServices {
     try {
       final response = await postRequest(url, headers, body);
       if (response.statusCode == 200) {
+        if (response.statusCode == 0) {
+          return true;
+        } else {
+          // Handle other status codes if needed
+          return false;
+        }
         // Check the response status code or any other condition based on your API
-        return true;
-      } else {
-        // Handle other status codes if needed
-        return false;
       }
     } catch (e) {
       return false;
