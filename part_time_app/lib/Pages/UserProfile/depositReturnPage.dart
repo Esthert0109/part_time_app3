@@ -7,10 +7,13 @@ import 'package:get/get.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/userDetailCardComponent.dart';
+import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/Payment/paymentModel.dart';
+import '../../Services/Payment/paymentServices.dart';
 
 class DepositReturnPage extends StatefulWidget {
   const DepositReturnPage({super.key});
@@ -21,6 +24,8 @@ class DepositReturnPage extends StatefulWidget {
 
 class _DepositReturnPageState extends State<DepositReturnPage> {
   bool isLoading = false;
+  String? username;
+  String? customerId;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -126,24 +131,66 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                     text: "确认提交",
                     buttonColor: kMainYellowColor,
                     textStyle: buttonTextStyle,
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         isLoading = true;
                       });
-
-                      Future.delayed(Duration(seconds: 2), () {
+                      try {
                         setState(() {
-                          isLoading = false;
-                          Get.back();
-                          Fluttertoast.showToast(
-                            msg: "已提交",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: kMainGreyColor,
-                            textColor: kThirdGreyColor,
+                          PaymentDetail? paymentDetailForPay = PaymentDetail(
+                            paymentFromCustomerId: customerId,
+                            paymentType: 1,
+                            paymentStatus: 0,
+                            paymentUsername: "hendrik",
+                            paymentBillingAddress:
+                                walletAddressControllerPayment.text,
+                            paymentBillingNetwork:
+                                walletNetworkControllerPayment.text,
                           );
+
+                          PaymentServices paymentServices = PaymentServices();
+                          paymentServices
+                              .createDeposit(paymentDetailForPay)
+                              .then((success) {
+                            // Handle success or failure accordingly
+                            if (success != null && success) {
+                              print("Submitted success");
+                              setState(() {
+                                paymentDetailForPay = null;
+                                Navigator.pop(context);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return StatusDialogComponent(
+                                      complete: true,
+                                      successText: "系统将审核你的支付押金，审核通过后将发布该悬赏。",
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        Get.offAllNamed('/home');
+                                      },
+                                    );
+                                  },
+                                );
+                              });
+                            } else {
+                              print("Submitted FAILED");
+                            }
+
+                            setState(() {
+                              isLoading =
+                                  false; // Set loading state back to false after request is completed
+                            });
+                          });
                         });
-                      });
+                      } catch (e) {
+                        print("Error: $e");
+                        // Handle error
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      }
                     },
                   ),
                 ),

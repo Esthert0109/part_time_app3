@@ -489,7 +489,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                             builder: (BuildContext context) {
                               return StatusDialogComponent(
                                 complete: true,
-                                successText: "系统将审核你的内容，审核通过后将发布该悬赏。",
+                                successText: "系统将审核你的支付押金，审核通过后将发布该悬赏。",
                                 onTap: () {
                                   Navigator.pop(context);
                                   Get.offAllNamed('/home');
