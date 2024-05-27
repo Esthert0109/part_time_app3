@@ -11,6 +11,7 @@ import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import 'depositPaymentStatusPage.dart';
 
 class DepositMainPage extends StatefulWidget {
   const DepositMainPage({super.key});
@@ -119,7 +120,11 @@ class _DepositMainPageState extends State<DepositMainPage> {
                   child: GestureDetector(
                     onTap: deposit
                         ? () {
-                            Get.to(() => PaymentHistoryDetailPage(),
+                            Get.to(
+                                () => DepositPaymentStatusPage(
+                                      isPass: false,
+                                      isFailed: false,
+                                    ),
                                 transition: Transition.rightToLeft);
                           }
                         : () {

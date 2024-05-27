@@ -537,23 +537,6 @@ class CustomerList {
   }
 }
 
-// class OrderSubmission {
-//   final int orderId;
-//   final OrderScreenShotList orderScreenshots;
-
-//   OrderSubmission({
-//     required this.orderId,
-//     required this.orderScreenshots
-//   });
-
-//   Map<String, dynamic> toJson(){
-//     return {
-//       "orderId":orderId,
-//       "orderScreenshots":orderScreenshots,
-//     };
-//   }
-// }
-
 class OrderScreenShotList {
   final List<String> image;
 

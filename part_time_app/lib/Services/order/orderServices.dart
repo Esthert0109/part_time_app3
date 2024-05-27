@@ -453,4 +453,35 @@ class OrderServices {
       print("Error in get customer list from order: $e");
     }
   }
+
+  Future<List<TaskClass>?> getRandomTwoTask() async {
+    String url = port + getTwoRandomTaskUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          List<dynamic> data = jsonData['data'];
+          List<TaskClass>? responseData =
+              data?.map((e) => TaskClass.fromJson(e)).toList();
+          return responseData;
+        } else {
+          return [];
+        }
+      }
+    } catch (e) {
+      print("Error in random 2 task: $e");
+    }
+  }
 }
