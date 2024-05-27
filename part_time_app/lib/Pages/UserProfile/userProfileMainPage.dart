@@ -87,7 +87,7 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                         leading: CircleAvatar(
                           radius: 29,
                           backgroundColor: kSecondGreyColor,
-                          backgroundImage: NetworkImage(userData.avatar!),
+                          backgroundImage: NetworkImage(userData?.avatar ?? ""),
                         ),
                         title: Row(
                           mainAxisSize: MainAxisSize.min,

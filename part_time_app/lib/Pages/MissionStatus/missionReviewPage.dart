@@ -110,7 +110,7 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      // _loadData();
+      fetchData();
     }
   }
 

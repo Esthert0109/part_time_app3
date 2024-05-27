@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
@@ -8,7 +10,8 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Services/explore/exploreServices.dart';
-import '../MockData/missionMockData.dart';
+import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
+import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String? searchKeyword;
@@ -43,6 +46,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   bool isEmpty = false;
   int totalResult = 0;
   late bool bytag;
+  UserData? userDetails;
 
   String listToCommaSeparatedString(List<int>? list) {
     return list?.join(',') ?? '';
@@ -51,6 +55,8 @@ class _SearchResultPageState extends State<SearchResultPage> {
   @override
   void initState() {
     super.initState();
+    fetchUserData();
+
     keyword = widget.searchKeyword ?? '';
     tag = listToCommaSeparatedString(widget.selectedTags);
     tagName = widget.selectedTagsName;
@@ -63,6 +69,10 @@ class _SearchResultPageState extends State<SearchResultPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  fetchUserData() async {
+    userDetails = await SharedPreferencesUtils.getUserDataInfo();
   }
 
   void _scrollListener() {
@@ -280,21 +290,40 @@ class _SearchResultPageState extends State<SearchResultPage> {
         if (index == missionList.length) {
           return isLoading ? const MissionCardLoadingComponent() : Container();
         } else {
-          return MissionCardComponent(
-            taskId: missionList[index].taskId,
-            missionTitle: missionList[index].taskTitle ?? "",
-            missionDesc: missionList[index].taskContent ?? "",
-            tagList: missionList[index]
-                    .taskTagNames
-                    ?.map((tag) => tag.tagName)
-                    .toList() ??
-                [],
-            missionPrice: missionList[index].taskSinglePrice ?? 0.0,
-            userAvatar: missionList[index].avatar ?? "",
-            username: missionList[index].nickname ?? "",
-            missionDate: missionList[index].taskUpdatedTime ?? "",
-            isFavorite: missionList[index].collectionValid ?? false,
-            customerId: missionList[index].customerId!,
+          return GestureDetector(
+            onTap: () {
+              if (userDetails!.customerId == missionList[index].customerId) {
+                Get.to(
+                    () => MissionDetailStatusIssuerPage(
+                          taskId: missionList[index].taskId!,
+                          isPreview: false,
+                          isResubmit: false,
+                        ),
+                    transition: Transition.rightToLeft);
+              } else {
+                Get.to(
+                    () => MissionDetailRecipientPage(
+                          taskId: missionList[index].taskId!,
+                        ),
+                    transition: Transition.rightToLeft);
+              }
+            },
+            child: MissionCardComponent(
+              taskId: missionList[index].taskId,
+              missionTitle: missionList[index].taskTitle ?? "",
+              missionDesc: missionList[index].taskContent ?? "",
+              tagList: missionList[index]
+                      .taskTagNames
+                      ?.map((tag) => tag.tagName)
+                      .toList() ??
+                  [],
+              missionPrice: missionList[index].taskSinglePrice ?? 0.0,
+              userAvatar: missionList[index].avatar ?? "",
+              username: missionList[index].nickname ?? "",
+              missionDate: missionList[index].taskUpdatedTime ?? "",
+              isFavorite: missionList[index].collectionValid ?? false,
+              customerId: missionList[index].customerId!,
+            ),
           );
         }
       },
