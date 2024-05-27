@@ -1,23 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Message/messageCardComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Pages/Message/user/chatConfig.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
-import '../../Components/Common/countdownTimer.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_value_callback.dart';
+import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 import '../../Constants/colorConstant.dart';
-import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
-import 'package:part_time_app/Components/Card/missionPublishCheckoutCardComponent.dart';
-import 'package:part_time_app/Pages/UserAuth/changePassword.dart';
-import 'package:part_time_app/Pages/UserAuth/loginPage.dart';
-import 'package:part_time_app/Pages/UserAuth/otpCode.dart';
-import 'package:part_time_app/Pages/UserAuth/signupPage.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
-import '../MockData/missionMockData.dart';
+import '../../Model/notification/messageModel.dart';
+import '../../Services/notification/systemMessageServices.dart';
+import 'package:provider/provider.dart';
+import '../../Services/webSocketService.dart';
+
+List<V2TimConversation> _conversationList = [];
 
 class MessageMainPage extends StatefulWidget {
   const MessageMainPage({Key? key}) : super(key: key);
@@ -30,87 +30,81 @@ class _MessageMainPageState extends State<MessageMainPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+
   int titleSelection = 0;
-  bool _isLoading = true;
-  double _scrollPosition = 0;
-  late String latestSystemMessageDate;
+  bool isLoading = false;
+  late String? latestSystemMessageDate;
   late String? latestSystemMessageDescription;
-  late String latestMissionMessageDate;
+  late String? latestMissionMessageDate;
   late String? latestMissionMessageDescription;
-  late String latestPaymentMessageDate;
+  late String? latestPaymentMessageDate;
   late String? latestPaymentMessageDescription;
-  late String latestPostingMessageDate;
-  late String? latestPostingMessageDescription;
-  late String latestToolMessageDate;
-  late String? latestToolMessageDescription;
-
-  // test on global
-
-  void _onRefresh() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 2000));
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
-  }
-
-  void _onLoading() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 100));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    if (mounted) setState(() {});
-    _refreshController.loadComplete();
-  }
-
-  Future<void> _refresh() async {
-    // Add your refresh logic here
-    setState(() {
-      // Set _isLoading to true to show loading animation
-      _isLoading = true;
-    });
-
-    // Simulate a delay for demonstration purposes
-    await Future.delayed(Duration(seconds: 10));
-
-    setState(() {
-      // Set _isLoading to false to hide loading animation
-      _isLoading = false;
-    });
-  }
+  late String? latestPublishMessageDate;
+  late String? latestPublishMessageDescription;
+  late String? latestTicketingMessageDate;
+  late String? latestTicketingMessageDescription;
 
   @override
   void initState() {
     super.initState();
-    latestSystemMessageDate = systemMessageLists.isNotEmpty
-        ? systemMessageLists.last.createdTime
-        : "";
-    latestSystemMessageDescription = systemMessageLists.isNotEmpty
-        ? systemMessageLists.last.description
-        : "";
-    latestMissionMessageDate = MissionMessageList.isNotEmpty
-        ? MissionMessageList.last.createdTime
-        : "";
-    latestMissionMessageDescription = MissionMessageList.isNotEmpty
-        ? MissionMessageList.last.description
-        : "";
-    latestPaymentMessageDate = PaymentMessageList.isNotEmpty
-        ? PaymentMessageList.last.createdTime
-        : "";
-    latestPaymentMessageDescription = PaymentMessageList.isNotEmpty
-        ? PaymentMessageList.last.description
-        : "";
-    latestPostingMessageDate = PostingMessageList.isNotEmpty
-        ? PostingMessageList.last.createdTime
-        : "";
-    latestPostingMessageDescription = PostingMessageList.isNotEmpty
-        ? PostingMessageList.last.description
-        : "";
-    latestToolMessageDate =
-        ToolMessageList.isNotEmpty ? ToolMessageList.last.createdTime : "";
-    latestToolMessageDescription =
-        ToolMessageList.isNotEmpty ? ToolMessageList.last.description : "";
+    webSocketService.addListener(_updateState);
+
+    // _tencent();
     getMessageFromSharedPreferences();
+  }
+
+  // Future<void> _tencent() async {
+  //   bool isLoginTencent = await userTencentLogin('2206');
+  //   print("tencent:${isLoginTencent}");
+  // }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      NotificationTipsModel? data =
+          await SystemMessageServices().getNotificationTips();
+      // print();
+      setState(() {
+        if (data != null && data.data != null) {
+          notificationTips = data.data!;
+          print("Received data: $notificationTips"); // Print received data
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      ;
+    }
+  }
+
+  Future<void> _refresh() async {
+    if (!isLoading && mounted) {
+      setState(() {
+        notificationTips?.responseData.clear();
+        _loadData();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _updateState() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   getMessageFromSharedPreferences() async {
@@ -127,6 +121,7 @@ class _MessageMainPageState extends State<MessageMainPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
@@ -135,7 +130,7 @@ class _MessageMainPageState extends State<MessageMainPage>
               color: kTransparent,
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: SecondaryTitleComponent(
-                titleList: ["我接收的"],
+                titleList: const ["我接收的"],
                 selectedIndex: titleSelection,
                 onTap: (index) {},
               ),
@@ -155,78 +150,50 @@ class _MessageMainPageState extends State<MessageMainPage>
               stops: [0.0, 0.15],
             ),
           ),
-          child: CustomRefreshComponent(
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              controller: _refreshController,
+          child: RefreshIndicator(
+              onRefresh: _refresh,
+              color: kMainYellowColor,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
                     MessageCardComponent(
-                      systemDate: latestSystemMessageDate,
-                      systemDetail: latestSystemMessageDescription,
-                      missionDate: latestMissionMessageDate,
-                      missionDetail: latestMissionMessageDescription,
-                      paymentDate: latestPaymentMessageDate,
-                      paymentDetail: latestPaymentMessageDescription,
-                      postingDate: latestPostingMessageDate,
-                      postingDetail: latestPostingMessageDescription,
-                      toolDate: latestToolMessageDate,
-                      toolDetail: latestToolMessageDescription,
-                    ),
-                    Text(notificationTips!
-                            .responseData!['悬赏通知']?.notificationTitle ??
-                        ""),
-                    Text(
-                      systemMessageList.isNotEmpty &&
-                              systemMessageList[0].notifications != null &&
-                              systemMessageList[0].notifications!.isNotEmpty
-                          ? systemMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      missionMessageList.isNotEmpty &&
-                              missionMessageList[0].notifications != null &&
-                              missionMessageList[0].notifications!.isNotEmpty
-                          ? missionMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      paymentMessageList.isNotEmpty &&
-                              paymentMessageList[0].notifications != null &&
-                              paymentMessageList[0].notifications!.isNotEmpty
-                          ? paymentMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      publishMessageList.isNotEmpty &&
-                              publishMessageList[0].notifications != null &&
-                              publishMessageList[0].notifications!.isNotEmpty
-                          ? publishMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
-                    ),
-                    Text(
-                      ticketingMessageList.isNotEmpty &&
-                              ticketingMessageList[0].notifications != null &&
-                              ticketingMessageList[0].notifications!.isNotEmpty
-                          ? ticketingMessageList[0]
-                                  .notifications![0]
-                                  .notificationTitle ??
-                              ""
-                          : "",
+                      //system
+                      systemDate:
+                          notificationTips?.responseData['系统通知']?.createdTime,
+                      systemDetail: notificationTips
+                          ?.responseData['系统通知']?.notificationContent,
+                      systemTotalMessage: notificationTips
+                          ?.responseData['系统通知']?.notificationTotalUnread,
+                      // mission
+                      missionDate:
+                          notificationTips?.responseData['悬赏通知']?.createdTime,
+                      missionDetail: notificationTips
+                          ?.responseData['悬赏通知']?.notificationContent,
+                      missionTotalMessage: notificationTips
+                          ?.responseData['悬赏通知']?.notificationTotalUnread,
+                      //payment
+                      paymentDate:
+                          notificationTips?.responseData['款项通知']?.createdTime,
+                      paymentDetail: notificationTips
+                          ?.responseData['款项通知']?.notificationContent,
+                      paymentTotalMessage: notificationTips
+                          ?.responseData['款项通知']?.notificationTotalUnread,
+                      //publish
+                      postingDate:
+                          notificationTips?.responseData['发布通知']?.createdTime,
+                      postingDetail: notificationTips
+                          ?.responseData['发布通知']?.notificationContent,
+                      postingTotalMessage: notificationTips
+                          ?.responseData['发布通知']?.notificationTotalUnread,
+                      //ticketing
+                      toolDate:
+                          notificationTips?.responseData['工单通知']?.createdTime,
+                      toolDetail: notificationTips
+                          ?.responseData['工单通知']?.notificationContent,
+                      toolTotalMessage: notificationTips
+                          ?.responseData['工单通知']?.notificationTotalUnread,
+                      //user
                     ),
                   ],
                 ),

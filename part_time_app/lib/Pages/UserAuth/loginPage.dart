@@ -262,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             // bool isLoginTencent =
                             //     await userTencentLogin('2206');
-
+                            // print('login tencent');
                             // if (isLoginTencent) {
                             //   Get.to(() => UserMessagePage(),
                             //       transition: Transition.rightToLeft);

@@ -10,6 +10,9 @@ class NotificationTipsModel {
 
 class NotificationTipsData {
   final Map<String, TipsData> responseData;
+  void updateNotification(String type, TipsData newData) {
+    responseData[type] = newData;
+  }
 
   NotificationTipsData({required this.responseData});
 
@@ -37,7 +40,7 @@ class TipsData {
   final int? paymentId;
   final int? ticketId;
   final String? createdTime;
-  final int? notificationTotalUnread;
+  int? notificationTotalUnread;
 
   TipsData({
     this.notificationTitle,
@@ -61,7 +64,7 @@ class TipsData {
       paymentId: json['paymentId'],
       ticketId: json['ticketId'],
       createdTime: json['createdTime'],
-      notificationTotalUnread: json['notificationTotalUnread'],
+      notificationTotalUnread: json['notificationTotalUnread'] ?? 0,
     );
   }
 }
@@ -190,5 +193,29 @@ class NotificationData {
       createdTime: json['createdTime'],
       notificationIsRead: json['notificationIsRead'],
     );
+  }
+}
+
+class NotificationReadModel {
+  final int code;
+  final String msg;
+  final bool? data;
+
+  NotificationReadModel({
+    required this.code,
+    required this.msg,
+    this.data,
+  });
+
+  factory NotificationReadModel.fromJson(Map<String, dynamic> json) {
+    return NotificationReadModel(
+      code: json['code'],
+      msg: json['msg'],
+      data: json['data'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {"code": code, "msg": msg, "data": data};
   }
 }

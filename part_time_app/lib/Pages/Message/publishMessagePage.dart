@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Components/List/messageListComponent.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import '../../Components/List/messageListComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Services/notification/systemMessageServices.dart';
 
-class MissionMessagePage extends StatefulWidget {
-  const MissionMessagePage({Key? key}) : super(key: key);
+class PublishMessagePage extends StatefulWidget {
+  const PublishMessagePage({Key? key}) : super(key: key);
 
   @override
-  State<MissionMessagePage> createState() => _MissionMessagePageState();
+  State<PublishMessagePage> createState() => _PublishMessagePageState();
 }
 
-class _MissionMessagePageState extends State<MissionMessagePage> {
+class _PublishMessagePageState extends State<PublishMessagePage> {
   ScrollController _scrollController = ScrollController();
   bool isLoading = false;
   int page = 2;
@@ -27,8 +27,13 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
     _readStatus();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _scrollListener() {
@@ -42,8 +47,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
 
   Future<void> _readStatus() async {
     try {
-      final response = await SystemMessageServices().patchUpdateRead(1);
-      notificationTips?.responseData['悬赏通知']?.notificationTotalUnread = 0;
+      final response = await SystemMessageServices().patchUpdateRead(3);
     } catch (e) {
       print("Error: $e");
     }
@@ -55,10 +59,10 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
     });
     try {
       NotificationListModel? data =
-          await SystemMessageServices().getNotificationList(1, page);
+          await SystemMessageServices().getNotificationList(3, page);
       setState(() {
         if (data != null && data.data != null) {
-          missionMessageList.addAll(data.data!);
+          publishMessageList.addAll(data.data!);
         } else {
           // Handle the case when data is null or data.data is null
         }
@@ -77,7 +81,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
     await Future.delayed(Duration(seconds: 1));
     if (!isLoading && mounted) {
       setState(() {
-        missionMessageList.clear();
+        publishMessageList.clear();
         page = 1;
         continueLoading = true;
         _loadData();
@@ -105,7 +109,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
                   color: kTransparent,
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: thirdTitleComponent(
-                    text: "悬赏通知",
+                    text: "发布通知",
                   ))),
           body: Container(
             constraints: const BoxConstraints.expand(),
@@ -129,7 +133,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: missionMessageList.reversed.expand((date) {
+                  children: publishMessageList.reversed.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {
@@ -165,6 +169,17 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
               ),
             ),
           )),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant PublishMessagePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Scroll to bottom whenever the widget updates
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 }

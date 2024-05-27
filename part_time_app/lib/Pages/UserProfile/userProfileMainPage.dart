@@ -12,7 +12,7 @@ import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/editProfilePage.dart';
 import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
 import 'package:part_time_app/Pages/UserProfile/settingPage.dart';
-import 'package:part_time_app/Pages/UserProfile/tickerMainPage.dart';
+import 'package:part_time_app/Pages/UserProfile/ticketMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/userProfilePage.dart';
 
 import '../../Constants/globalConstant.dart';
@@ -43,7 +43,6 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    getUserInfo();
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
@@ -94,9 +93,13 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              userData.nickname ?? "",
-                              style: userProfileNameTextStyle,
+                            //name too long will effect.
+                            Container(
+                              width: 100,
+                              child: Text(
+                                userData.nickname ?? "",
+                                style: userProfileNameTextStyle,
+                              ),
                             ),
                             const SizedBox(width: 20),
                             InkWell(

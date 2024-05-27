@@ -7,6 +7,7 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
+import '../../Pages/Explore/testWebsocket.dart';
 import '../../Pages/Search/searchResultPage.dart';
 
 class SearchBarComponent extends StatefulWidget {

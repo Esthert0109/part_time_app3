@@ -9,6 +9,7 @@ import '../../Model/Advertisement/advertisementModel.dart';
 import '../../Model/Category/categoryModel.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
+import '../../Pages/Message/user/chatConfig.dart';
 import '../explore/categoryServices.dart';
 import '../explore/exploreServices.dart';
 import '../notification/systemMessageServices.dart';
@@ -70,7 +71,7 @@ class UserServices {
 
               for (int i = 0; i < 5; i++) {
                 NotificationListModel? notiModel =
-                    await messageServices.getNotificationList(i);
+                    await messageServices.getNotificationList(i, 1);
                 if (notiModel!.data != null) {
                   switch (i) {
                     case 0:
@@ -119,6 +120,9 @@ class UserServices {
                   await exploreServices.fetchExploreByPrice("Asc", 1);
               print(
                   "check all mission: ${missionAvailableAsec[0].taskContent}");
+
+              // bool isLoginTencent = await userTencentLogin(data['customerId']);
+              // print("login tencent");
             } catch (e) {
               print("get info after logined error: $e");
             }

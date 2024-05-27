@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Pages/Message/missionMessagePage.dart';
 import 'package:part_time_app/Pages/Message/paymentMessagePage.dart';
 import 'package:part_time_app/Pages/Message/systemMessagePage.dart';
-import 'package:part_time_app/Pages/Message/toolMessagePage.dart';
+import 'package:part_time_app/Pages/Message/ticketingMessagePage.dart';
 import 'package:part_time_app/Pages/Message/user/userMessagePage.dart';
+import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
-import '../../Pages/Message/postingMessagePage.dart';
-import '../../Pages/Message/systemMessage1Page.dart';
+import '../../Pages/Message/publishMessagePage.dart';
 
 class MessageCardComponent extends StatefulWidget {
   String? systemDetail;
@@ -61,6 +61,25 @@ class MessageCardComponent extends StatefulWidget {
 }
 
 class _MessageCardComponentState extends State<MessageCardComponent> {
+  void _resetCountAndNavigate(String type, VoidCallback onTap) {
+    setState(() {
+      if (type == '系统通知') {
+        widget.systemTotalMessage = 0;
+      } else if (type == '悬赏通知') {
+        widget.missionTotalMessage = 0;
+      } else if (type == '款项通知') {
+        widget.paymentTotalMessage = 0;
+      } else if (type == '发布通知') {
+        widget.postingTotalMessage = 0;
+      } else if (type == '工单通知') {
+        widget.toolTotalMessage = 0;
+      } else if (type == '用户消息') {
+        widget.userTotalMessage = 0;
+      }
+    });
+    onTap();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,8 +91,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.systemDate,
           widget.systemTotalMessage,
           () {
-            Get.to(() => const SystemMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('系统通知', () {
+              Get.to(() => const SystemMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -84,8 +105,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.missionDate,
           widget.missionTotalMessage,
           () {
-            Get.to(() => const MissionMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('悬赏通知', () {
+              Get.to(() => const MissionMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -96,8 +119,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.paymentDate,
           widget.paymentTotalMessage,
           () {
-            Get.to(() => const PaymentMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('款项通知', () {
+              Get.to(() => const PaymentMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -108,8 +133,10 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.postingDate,
           widget.postingTotalMessage,
           () {
-            Get.to(() => const PostingMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('发布通知', () {
+              Get.to(() => const PublishMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
@@ -120,20 +147,23 @@ class _MessageCardComponentState extends State<MessageCardComponent> {
           widget.toolDate,
           widget.toolTotalMessage,
           () {
-            Get.to(() => const ToolMessagePage(),
-                transition: Transition.rightToLeft);
+            _resetCountAndNavigate('工单通知', () {
+              Get.to(() => const TicketingMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
         const SizedBox(height: 10),
-        _buildMessageCard(
+        _buildUserMessageCard(
           "用户消息",
           widget.userDetail,
           "assets/message/messageUser.svg",
           widget.userDate,
-          widget.userTotalMessage,
-          () {
-            Get.to(() => const UserMessagePage(),
-                transition: Transition.rightToLeft);
+          () async {
+            _resetCountAndNavigate('用户消息', () {
+              Get.to(() => const UserMessagePage(),
+                  transition: Transition.rightToLeft);
+            });
           },
         ),
       ],
@@ -192,11 +222,12 @@ Widget _buildMessageCard(
                 Row(
                   children: [
                     Container(
-                      width: 236,
-                      child: Text(
-                        detail ?? '',
-                        style: messageText1,
-                        overflow: TextOverflow.ellipsis,
+                      child: Expanded(
+                        child: Text(
+                          detail ?? '',
+                          style: messageText1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     if (totalMessage != null && totalMessage >= 1)
@@ -217,6 +248,80 @@ Widget _buildMessageCard(
                           ),
                         ),
                       ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _buildUserMessageCard(
+  String title,
+  String? detail,
+  String icon,
+  String? date,
+  void Function()? onTap,
+) {
+  return Container(
+    height: 75,
+    decoration: BoxDecoration(
+      color: kMainWhiteColor,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: EdgeInsets.all(10),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            child: SvgPicture.asset(
+              icon,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: missionDetailText6,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Text(
+                      date ?? '',
+                      style: messageText1,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      child: Expanded(
+                        child: Text(
+                          detail ?? '',
+                          style: messageText1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    // Container(
+                    //   padding: EdgeInsets.only(left: 35),
+                    //   child: TIMUIKitConversationTotalUnread(
+                    //       width: 16, height: 16),
+                    // ),
                   ],
                 ),
               ],
