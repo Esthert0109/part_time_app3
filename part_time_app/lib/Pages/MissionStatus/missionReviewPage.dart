@@ -68,6 +68,9 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   }
 
   fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
     for (int i = 0; i < 3; i++) {
       CustomerListModel? model =
           await services.getCustomerListByOrderStatusId(i, widget.taskId, 1);
@@ -89,6 +92,10 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
       }
     }
     calculateTotalMission();
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -120,19 +127,50 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
   }
 
   Widget buildListView() {
+    double screenHeight = MediaQuery.of(context).size.height;
     switch (selectedStatusIndex) {
       case 0:
         isReviewing = false;
         isCompleted = false;
-        return buildMissionAcceptedListView(waitReviewList, false);
+        if (waitReviewList.length > 0) {
+          return buildMissionAcceptedListView(waitReviewList, false);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 1:
         isReviewing = true;
         isCompleted = false;
-        return buildMissionAcceptedListView(waitCompleteList, true);
+        if (waitCompleteList.length > 0) {
+          return buildMissionAcceptedListView(waitCompleteList, false);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 2:
         isReviewing = false;
         isCompleted = true;
-        return buildMissionAcceptedListView(completedList, true);
+        if (completedList.length > 0) {
+          return buildMissionAcceptedListView(completedList, false);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       default:
         return SizedBox();
     }
@@ -234,7 +272,7 @@ class _MissionReviewPageState extends State<MissionReviewPage> {
                 child: RefreshIndicator(
                   onRefresh: _refresh,
                   color: kMainYellowColor,
-                  child: buildListView(),
+                  child: isLoading ? MissionReviewLoading() : buildListView(),
                 ),
               ))
             ],
