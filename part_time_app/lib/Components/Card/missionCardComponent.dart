@@ -68,7 +68,7 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
           isFavorite = !isFavorite!;
         });
         Fluttertoast.showToast(
-            msg: isFavorite! ? '已收藏' : '不收藏',
+            msg: isFavorite! ? '已收藏' : '取消收藏',
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: kMainGreyColor,
