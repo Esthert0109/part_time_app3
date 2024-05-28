@@ -40,11 +40,11 @@ class _AboutUsPageState extends State<AboutUsPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    // Future.delayed(const Duration(seconds: 0), () {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
     fetchAboutUsDetails();
   }
 
@@ -62,6 +62,10 @@ class _AboutUsPageState extends State<AboutUsPage> {
     } else {
       print('Failed to load about us details');
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -112,8 +116,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 const SizedBox(height: 20),
                 Container(
                     alignment: Alignment.center,
-                    child: 
-                    Image.network(
+                    child: Image.network(
                       logo,
                       height: 70,
                       width: 70,

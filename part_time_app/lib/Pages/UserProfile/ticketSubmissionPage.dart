@@ -87,9 +87,9 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TicketSubmissionComponent(
                     isEdit: true,
-                    nameInitial: userData.username,
-                    phoneNumberInitial: userData.firstPhoneNo,
-                    emailInitial: userData.email,
+                    nameInitial: userData?.username,
+                    phoneNumberInitial: userData?.firstPhoneNo,
+                    emailInitial: userData?.email,
                   ),
                 ),
               ],

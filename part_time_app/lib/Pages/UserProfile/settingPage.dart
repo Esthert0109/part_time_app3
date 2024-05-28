@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
@@ -39,37 +40,27 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _togglePrivacy(bool value) async {
-    setState(() {
-      isPrivate = value;
-    });
+    if (isLogin) {
+      setState(() {
+        isPrivate = value;
+      });
 
-    // Save the switch state
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
-    // userData = data;
-    prefs.setBool('isPrivate', isPrivate);
+      // Save the switch state
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isPrivate', isPrivate);
 
-    // Retrieve the token
-    String? token = await SharedPreferencesUtils.getToken();
-    // if (token == null) {
-    //   Fluttertoast.showToast(
-    //       msg: "Error: Unable to get token",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       backgroundColor: Colors.red,
-    //       textColor: Colors.white);
-    //   return;
-    // } else {
-    //   Fluttertoast.showToast(
-    //       msg: token,
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //       backgroundColor: Colors.green,
-    //       textColor: Colors.white);
-    // }
+      String? token = await SharedPreferencesUtils.getToken();
 
-    // Call the updateCollectionViewable method
-    final response = await _userServices.updateCollectionViewable();
+      // Call the updateCollectionViewable method
+      final response = await _userServices.updateCollectionViewable();
+    } else {
+      Fluttertoast.showToast(
+          msg: "请登录以继续操作",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: kMainGreyColor,
+          textColor: kThirdGreyColor);
+    }
   }
 
   @override
@@ -247,6 +238,8 @@ class _SettingPageState extends State<SettingPage> {
                                               .clearSharedPreferences();
                                           setState(() {
                                             Navigator.pop(context);
+                                            isLogin = false;
+                                            userData!.clear();
 
                                             Fluttertoast.showToast(
                                                 msg: "已登出",

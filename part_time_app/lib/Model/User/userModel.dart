@@ -243,4 +243,6 @@ class UserData {
       rejectReason: json['rejectReason'],
     );
   }
+
+  void clear() {}
 }

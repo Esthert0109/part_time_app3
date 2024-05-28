@@ -8,6 +8,11 @@ import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/homePage.dart';
 
+import '../../Constants/globalConstant.dart';
+import '../../Model/Advertisement/advertisementModel.dart';
+import '../../Model/Category/categoryModel.dart';
+import '../../Services/explore/categoryServices.dart';
+import '../../Services/explore/exploreServices.dart';
 import '../UserAuth/loginPage.dart';
 import '../UserAuth/signupPage.dart';
 
@@ -19,6 +24,24 @@ class OnboradingPage extends StatefulWidget {
 }
 
 class _OnboradingPageState extends State<OnboradingPage> {
+  CategoryServices categoryServices = CategoryServices();
+  ExploreService exploreServices = ExploreService();
+
+  fetchDataUnlogin() async {
+    CategoryModel? model = await categoryServices.getCategoryList();
+    if (model!.data != null) {
+      exploreCategoryList = model.data!;
+    }
+    AdvertisementModel? advertisementModel =
+        await exploreServices.getAdvertisement();
+    if (advertisementModel!.data != null) {
+      advertisementList = advertisementModel.data!;
+    }
+    missionAvailable = await exploreServices.fetchExplore(1);
+    missionAvailableDesc = await exploreServices.fetchExploreByPrice("Desc", 1);
+    missionAvailableAsec = await exploreServices.fetchExploreByPrice("Asc", 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
@@ -106,7 +129,8 @@ class _OnboradingPageState extends State<OnboradingPage> {
                   height: 90 * fem,
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    fetchDataUnlogin();
                     Get.to(() => HomePage());
                   },
                   child: const Text(

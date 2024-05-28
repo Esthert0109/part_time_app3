@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:part_time_app/Pages/Explore/collectPage.dart';
 import 'package:part_time_app/Pages/Explore/collectPageTest.dart';
 import 'package:part_time_app/Pages/Message/systemMessage1Page.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
+import '../../Constants/globalConstant.dart';
 import 'RecommendationPage.dart';
 
 import '../../Components/Title/secondaryTitleComponent.dart';
@@ -33,7 +35,7 @@ class _ExploreMainPageState extends State<ExploreMainPage>
             color: kTransparent,
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: SecondaryTitleComponent(
-              titleList: ["推荐", "收藏"],
+              titleList: isLogin ? ["推荐", "收藏"] : ["推荐"],
               selectedIndex: selectIndex,
               onTap: (index) {
                 setState(() {
@@ -53,42 +55,62 @@ class _ExploreMainPageState extends State<ExploreMainPage>
             selectIndex = index;
           });
         },
-        children: <Widget>[
-          Container(
-            constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: kThirdGreyColor,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  kBackgroundFirstGradientColor,
-                  kBackgroundSecondGradientColor
-                ],
-                stops: [0.0, 0.15],
-              ),
-            ),
-            child: const RecommendationPage(),
-          ),
-          Container(
-            constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: kThirdGreyColor,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  kBackgroundFirstGradientColor,
-                  kBackgroundSecondGradientColor
-                ],
-                stops: [0.0, 0.15],
-              ),
-            ),
-            child: const CollectPage(),
-          ),
-        ],
+        children: isLogin
+            ? <Widget>[
+                Container(
+                  constraints: const BoxConstraints.expand(),
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: kThirdGreyColor,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        kBackgroundFirstGradientColor,
+                        kBackgroundSecondGradientColor
+                      ],
+                      stops: [0.0, 0.15],
+                    ),
+                  ),
+                  child: const RecommendationPage(),
+                ),
+                Container(
+                  constraints: const BoxConstraints.expand(),
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: kThirdGreyColor,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        kBackgroundFirstGradientColor,
+                        kBackgroundSecondGradientColor
+                      ],
+                      stops: [0.0, 0.15],
+                    ),
+                  ),
+                  child: const CollectPage(),
+                ),
+              ]
+            : [
+                Container(
+                  constraints: const BoxConstraints.expand(),
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: kThirdGreyColor,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        kBackgroundFirstGradientColor,
+                        kBackgroundSecondGradientColor
+                      ],
+                      stops: [0.0, 0.15],
+                    ),
+                  ),
+                  child: const RecommendationPage(),
+                ),
+              ],
       ),
     );
   }

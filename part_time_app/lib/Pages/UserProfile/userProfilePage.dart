@@ -544,7 +544,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     style: splashScreenTextStyle,
                                   ),
                                 )
-                              : (selectedIndex == 0 && noPublish == 0)
+                              : (selectedIndex == 0 &&
+                                      noPublish == 0 &&
+                                      isAutho)
                                   ? Container(
                                       height: 159,
                                       decoration: BoxDecoration(

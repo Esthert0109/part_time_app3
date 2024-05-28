@@ -47,8 +47,8 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
 
   Future<void> _loadDataFromShared() async {
     setState(() {
-      username = userData.username;
-      customerId = userData.customerId;
+      username = userData?.username;
+      customerId = userData?.customerId;
       print("username:${username}");
     });
   }
@@ -151,12 +151,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                 ),
                 UserDetailCardComponent(
                   isEditProfile: false,
-                  nameInitial: userData.username,
-                  countryInitial: userData.country,
-                  fieldInitial: userData.businessScopeName,
-                  sexInitial: userData.gender,
-                  walletNetworkInitial: userData.billingNetwork,
-                  walletAddressInitial: userData.billingAddress,
+                  nameInitial: userData?.username,
+                  countryInitial: userData?.country,
+                  fieldInitial: userData?.businessScopeName,
+                  sexInitial: userData?.gender,
+                  walletNetworkInitial: userData?.billingNetwork,
+                  walletAddressInitial: userData?.billingAddress,
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 20, bottom: 10),

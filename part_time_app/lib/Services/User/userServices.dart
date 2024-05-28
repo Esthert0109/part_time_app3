@@ -58,6 +58,8 @@ class UserServices {
 
             try {
               UserModel? userModel = await getUserInfo();
+              isLogin = true;
+              
 
               CategoryModel? model = await categoryServices.getCategoryList();
               if (model!.data != null) {
