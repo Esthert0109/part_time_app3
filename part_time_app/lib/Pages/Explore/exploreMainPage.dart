@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:part_time_app/Pages/Explore/collectPage.dart';
-import 'package:part_time_app/Pages/Explore/collectPageTest.dart';
-import 'package:part_time_app/Pages/Message/systemMessage1Page.dart';
-import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/globalConstant.dart';
 import 'RecommendationPage.dart';
 
-import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
-import 'RecommendationPage.dart';
 
 class ExploreMainPage extends StatefulWidget {
   const ExploreMainPage({super.key});

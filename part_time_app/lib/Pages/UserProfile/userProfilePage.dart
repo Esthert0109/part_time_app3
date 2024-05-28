@@ -7,7 +7,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Services/collection/collectionServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
@@ -131,12 +130,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
     setState(() {
       taskPublished!.clear();
       taskCollected!.clear();
     });
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -318,7 +318,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       child: GestureDetector(
                                         onTap: () {
                                           print("complain");
-                                          Get.to(() => TicketSubmissionPage(),
+                                          Get.to(
+                                              () => TicketSubmissionPage(
+                                                    reportUserIDInitial:
+                                                        userDetails
+                                                                ?.customerId ??
+                                                            "",
+                                                    complainType: 0,
+                                                  ),
                                               transition:
                                                   Transition.rightToLeft);
                                         },

@@ -66,10 +66,11 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
           await SystemMessageServices().getNotificationList(4, page);
 
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           ticketingMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });
@@ -173,17 +174,6 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
               ),
             ),
           )),
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant TicketingMessagePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Scroll to bottom whenever the widget updates
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
     );
   }
 }

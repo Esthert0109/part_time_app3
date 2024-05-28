@@ -3,7 +3,7 @@ import 'package:part_time_app/Utils/apiUtils.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Model/Advertisement/advertisementModel.dart';
-import '../../Model/Tag/tagModel.dart';
+import '../../Model/Tag/tagModelForSearch.dart';
 import '../../Model/Task/missionClass.dart';
 
 class ExploreService {
@@ -44,6 +44,7 @@ class ExploreService {
   Future<List<TaskClass>> fetchExplore(int page) async {
     String? _token = await SharedPreferencesUtils.getToken();
     final String url = port + exploreURL + 'page=$page';
+    print(url);
     final Map<String, String> headers = {
       'token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
@@ -158,38 +159,27 @@ class ExploreService {
     }
   }
 
-  Future<TagModel?> getTag(int page) async {
-    String url = port + getTagUrl + page.toString();
-    String? token = await SharedPreferencesUtils.getToken();
+  Future<List<TaskClass>> fetchCategoryList(int category, int page) async {
+    String? _token = await SharedPreferencesUtils.getToken();
+    final String url = port + getCategoryList + '$category' + '?page=$page';
+    print(url);
     final Map<String, String> headers = {
+      'token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
-      'token': token!,
     };
 
     try {
       final response = await getRequest(url, headers);
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonData = json.decode(response.responseBody);
-        int responseCode = jsonData['code'];
-        String responseMsg = jsonData['msg'];
-        List<dynamic> data = jsonData['data'];
-
-        if (responseCode == 0) {
-          List<TagData>? responseData =
-              data.map((e) => TagData.fromJson(e)).toList();
-          TagModel model = TagModel(
-              code: responseCode, msg: responseMsg, data: responseData);
-          return model;
-        } else {
-          TagModel model =
-              TagModel(code: responseCode, msg: responseMsg, data: []);
-
-          return model;
-        }
+        final jsonResponse = json
+            .decode(response.responseBody); // Directly decode the response body
+        final List<dynamic> data = jsonResponse['data'];
+        return data.map((item) => TaskClass.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load data');
       }
     } catch (e) {
-      print("Error in Ticketing: $e");
+      throw Exception('Failed to load data: $e');
     }
-    return null;
   }
 }

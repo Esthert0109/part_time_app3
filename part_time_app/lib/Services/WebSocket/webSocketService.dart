@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:part_time_app/Services/notification/notifacationServices.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../Constants/globalConstant.dart';
-import '../Model/notification/messageModel.dart';
+import '../../Constants/globalConstant.dart';
+import '../../Model/notification/messageModel.dart';
 
 late int total;
 final WebSocketService webSocketService = WebSocketService();

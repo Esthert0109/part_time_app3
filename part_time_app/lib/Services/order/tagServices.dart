@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:part_time_app/Model/Tag/tagModelForSearch.dart';
 import 'package:part_time_app/Model/Task/tagModel.dart';
 
 import '../../Constants/apiConstant.dart';
 import '../../Utils/apiUtils.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
 
 class TagServices {
   String url = "";
@@ -43,5 +45,35 @@ class TagServices {
     } catch (e) {
       print("Error in task lists: $e");
     }
+  }
+
+  Future<TagModelForSearch?> getTagForSearch() async {
+    String url = port + getFilterTagListUrl;
+    String? token = await SharedPreferencesUtils.getToken();
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          TagModelForSearch model = TagModelForSearch.fromJson(jsonData);
+          return model;
+        } else {
+          TagModelForSearch model =
+              TagModelForSearch(code: responseCode, msg: responseMsg, data: []);
+          return model;
+        }
+      }
+    } catch (e) {
+      print("Error in Ticketing: $e");
+    }
+    return null;
   }
 }

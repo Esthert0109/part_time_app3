@@ -53,7 +53,7 @@ class _TicketDetailsRecordPageState extends State<TicketDetailsRecordPage> {
       isLoading = true;
     });
     try {
-      await TicketingData.fetchComplaintTypes();
+      await TicketingService.fetchComplaintTypes();
       TicketingData? data =
           await TicketingService().getTicketDetail(widget.ticketID!);
       setState(() {
@@ -137,6 +137,9 @@ class _TicketDetailsRecordPageState extends State<TicketDetailsRecordPage> {
                   ticketStatus: ticketDetail?.ticketStatus,
                 ),
               ),
+              SizedBox(
+                height: 50,
+              )
             ]))),
           ],
         ));

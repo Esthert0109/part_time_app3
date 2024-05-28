@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionMessageCardComponent.dart';
+import 'package:part_time_app/Pages/MissionIssuer/missionDetailStatusIssuerPage.dart';
 import 'package:part_time_app/Pages/UserProfile/ticketDetailsRecordPage.dart';
 import '../../Pages/MissionRecipient/missionDetailRecipientPage.dart';
 import '../../Pages/UserProfile/paymentHistoryDetailPage.dart';
@@ -82,9 +83,10 @@ class _MessageListState extends State<MessageList> {
           if (widget.isMission == true) {
             setState(() {
               Get.to(
-                  () => MissionDetailRecipientPage(
-                        taskId: widget.taskID,
-                      ),
+                  () => MissionDetailStatusIssuerPage(
+                      taskId: widget.taskID!,
+                      isPreview: false,
+                      isResubmit: false),
                   transition: Transition.rightToLeft);
             });
           }

@@ -15,7 +15,7 @@ import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Services/notification/systemMessageServices.dart';
 import 'package:provider/provider.dart';
-import '../../Services/webSocketService.dart';
+import '../../Services/WebSocket/webSocketService.dart';
 
 List<V2TimConversation> _conversationList = [];
 

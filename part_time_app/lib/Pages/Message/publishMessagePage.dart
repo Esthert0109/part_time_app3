@@ -61,10 +61,11 @@ class _PublishMessagePageState extends State<PublishMessagePage> {
       NotificationListModel? data =
           await SystemMessageServices().getNotificationList(3, page);
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           publishMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });

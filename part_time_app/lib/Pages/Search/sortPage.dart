@@ -7,7 +7,8 @@ import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Selection/secondaryCategorySelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../../Model/Tag/tagModel.dart';
+import '../../Model/Tag/tagModelForSearch.dart';
+import '../../Services/order/tagServices.dart';
 
 class SortPage extends StatefulWidget {
   const SortPage({super.key});
@@ -17,28 +18,27 @@ class SortPage extends StatefulWidget {
 }
 
 Map<String, List<Map<String, dynamic>>> sorts = {
-  "工作期限": [
-    {"id": 1, "name": '短期'},
-    {"id": 2, "name": '长期'}
-  ],
-  "工作内容": [
-    {"id": 3, "name": '写作'},
-    {"id": 4, "name": '录入'},
-    {"id": 5, "name": '游戏'},
-    {"id": 6, "name": '发帖'},
-    {"id": 7, "name": '网页设计'},
-    {"id": 8, "name": '平面设计'},
-  ],
-  "工作性质": [
-    {"id": 9, "name": '新任务'},
-    {"id": 10, "name": '易审核'},
-    {"id": 11, "name": '高悬赏'}
-  ],
+  // "工作期限": [
+  //   {"id": 1, "name": '短期'},
+  //   {"id": 2, "name": '长期'}
+  // ],
+  // "工作内容": [
+  //   {"id": 3, "name": '写作'},
+  //   {"id": 4, "name": '录入'},
+  //   {"id": 5, "name": '游戏'},
+  //   {"id": 6, "name": '发帖'},
+  //   {"id": 7, "name": '网页设计'},
+  //   {"id": 8, "name": '平面设计'},
+  // ],
+  // "工作性质": [
+  //   {"id": 9, "name": '新任务'},
+  //   {"id": 10, "name": '易审核'},
+  //   {"id": 11, "name": '高悬赏'}
+  // ],
 };
 
 class _SortPageState extends State<SortPage> {
   ScrollController _scrollController = ScrollController();
-  List<TagData> tagList = [];
   bool isLoading = false;
   int page = 1;
 
@@ -50,7 +50,6 @@ class _SortPageState extends State<SortPage> {
     super.initState();
     // _scrollController.addListener(_scrollListener);
     _loadData();
-    print(sorts);
   }
 
   Future<void> _loadData() async {
@@ -58,12 +57,10 @@ class _SortPageState extends State<SortPage> {
       isLoading = true;
     });
     try {
-      TagModel? data = await ExploreService().getTag(page);
+      TagModelForSearch? data = await TagServices().getTagForSearch();
       setState(() {
-        if (data!.data != null) {
-          tagList.addAll(data.data!);
-          // updateWorkDuration(tagList);
-          page++;
+        if (data != null && data.data != null) {
+          sorts = transformTagData(data.data);
         } else {
           // Handle the case when data is null or data.data is null
         }
@@ -80,13 +77,17 @@ class _SortPageState extends State<SortPage> {
     }
   }
 
-  void updateWorkDuration(List<TagData> tagList) {
-    // Convert List<TagData> to List<Map<String, dynamic>>
-    List<Map<String, dynamic>> tagMaps =
-        tagList.map((tag) => tag.toMap()).toList();
+  Map<String, List<Map<String, dynamic>>> transformTagData(
+      List<TagDataForSearch> tagDataList) {
+    Map<String, List<Map<String, dynamic>>> result = {};
 
-    // Update the '工作期限' field in the sorts map
-    sorts['工作期限'] = tagMaps;
+    for (var tagData in tagDataList) {
+      result[tagData.category] = tagData.tags.map((tag) {
+        return {'id': tag.id, 'name': tag.name};
+      }).toList();
+    }
+
+    return result;
   }
 
   void updateSelectedIndex(List<int> newSelectedIndex) {

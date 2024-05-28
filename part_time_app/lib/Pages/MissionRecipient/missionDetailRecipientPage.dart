@@ -180,8 +180,12 @@ class _MissionDetailRecipientPageState
             actions: [
               GestureDetector(
                 onTap: () {
-                  print("complainnnnn");
-                  Get.to(() => TicketSubmissionPage(),
+                  Get.to(
+                      () => TicketSubmissionPage(
+                            reportUserIDInitial: orderDetail.customerId,
+                            reportTaskIDInitial: orderDetail.taskId,
+                            complainType: 0,
+                          ),
                       transition: Transition.rightToLeft);
                 },
                 child: Padding(
