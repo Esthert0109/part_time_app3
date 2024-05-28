@@ -90,7 +90,7 @@ class _MissionDetailDescriptionCardComponentState
                         if (collection!.data!) {
                           setState(() {
                             _favoriteClick = !_favoriteClick;
-                            print("favourie: ${_favoriteClick}");
+                            print("favourite: ${_favoriteClick}");
                           });
                           Fluttertoast.showToast(
                               msg: _favoriteClick! ? '已收藏' : '取消收藏',
