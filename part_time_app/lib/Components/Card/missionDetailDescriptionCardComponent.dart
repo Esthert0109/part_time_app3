@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Collection/collectionModel.dart';
@@ -91,6 +92,12 @@ class _MissionDetailDescriptionCardComponentState
                             _favoriteClick = !_favoriteClick;
                             print("favourie: ${_favoriteClick}");
                           });
+                          Fluttertoast.showToast(
+                              msg: _favoriteClick! ? '已收藏' : '取消收藏',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainGreyColor,
+                              textColor: kThirdGreyColor);
                         }
                       },
                       child: Align(
