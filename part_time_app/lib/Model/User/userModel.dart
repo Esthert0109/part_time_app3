@@ -162,6 +162,8 @@ class UserData {
       collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;
+  final int? status;
+  final String? rejectReason;
 
   UserData({
     this.customerId,
@@ -184,6 +186,8 @@ class UserData {
     this.createdTime,
     this.updatedTime,
     this.businessScopeName,
+    this.status,
+    this.rejectReason,
   });
 
   Map<String, dynamic> toJson() {
@@ -208,6 +212,8 @@ class UserData {
       "valid": valid,
       "createdTime": createdTime,
       "updatedTime": updatedTime,
+      "status": status,
+      "rejectReason": rejectReason,
     };
   }
 
@@ -233,6 +239,8 @@ class UserData {
       collectionValid: json['collection_valid'],
       createdTime: json['createdTime'],
       updatedTime: json['updatedTime'],
+      status: json['status'],
+      rejectReason: json['rejectReason'],
     );
   }
 }

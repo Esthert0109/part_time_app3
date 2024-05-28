@@ -59,6 +59,7 @@ const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";
 const getPaymentDetailUrl = "api/v1/payments/detail/";
 const getDepositUrl = "api/v1/deposit/info";
+const getDepositStatusUrl = "api/v1/deposit/";
 
 //Ticketing
 const getTicketingHistoryUrl = "api/v1/ticket/getAllByCustomerId?page=";

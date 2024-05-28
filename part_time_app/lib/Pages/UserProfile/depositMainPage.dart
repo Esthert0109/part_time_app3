@@ -120,11 +120,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
                   child: GestureDetector(
                     onTap: deposit
                         ? () {
-                            Get.to(
-                                () => DepositPaymentStatusPage(
-                                      isPass: false,
-                                      isFailed: false,
-                                    ),
+                            Get.to(() => DepositPaymentStatusPage(),
                                 transition: Transition.rightToLeft);
                           }
                         : () {

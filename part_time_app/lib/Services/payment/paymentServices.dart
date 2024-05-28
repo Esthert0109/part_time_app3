@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:part_time_app/Constants/apiConstant.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Model/Payment/paymentModel.dart';
@@ -160,6 +161,36 @@ class PaymentServices {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<UserData?> depositStatus() async {
+    String url = port + getDepositStatusUrl;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          Map<String, dynamic> data = jsonData['data'];
+          UserData? responseCode = UserData.fromJson(data);
+          return responseCode;
+        } else {
+          return null;
+        }
+      }
+    } catch (e) {
+      print("Error in deposit status: $e");
     }
   }
 }
