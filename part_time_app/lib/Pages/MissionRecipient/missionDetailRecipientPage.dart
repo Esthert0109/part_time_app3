@@ -92,7 +92,9 @@ class _MissionDetailRecipientPageState
   void initState() {
     super.initState();
     fetchData();
-    fetchUserData();
+    if (isLogin) {
+      fetchUserData();
+    }
 
     setState(() {
       updateUploadList.clear();
