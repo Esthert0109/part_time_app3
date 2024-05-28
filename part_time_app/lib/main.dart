@@ -11,7 +11,7 @@ import 'Pages/Message/user/chatConfig.dart';
 import 'Pages/UserProfile/ticketDetailsRecordPage.dart';
 import 'Pages/homePage.dart';
 import 'Services/notification/notifacationServices.dart';
-import 'Services/webSocketService.dart';
+import 'Services/WebSocket/webSocketService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

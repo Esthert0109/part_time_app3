@@ -9,7 +9,7 @@ class UploadServices {
 
   Future<List<String>?> uploadTaskImages(List<File> imageList) async {
     url = port + uploadTaskImagesUrl;
-
+    print(url);
     try {
       final response = await postFileRequest(imageList, url);
       int responseCode = response['code'];
@@ -43,6 +43,29 @@ class UploadServices {
       }
     } catch (e) {
       print("Error in upload single deposit: $e");
+    }
+  }
+
+  Future<List<String>?> uploadTicketImages(List<File> imageList) async {
+    url = port + uploadTicketImagesUrl;
+    print(url);
+    try {
+      final response = await postFileRequest(imageList, url);
+      int responseCode = response['code'];
+      String responseMsg = response['msg'];
+      List<dynamic> data = response['data'];
+      List<String> responseData =
+          data.map((dynamic i) => i.toString()).toList();
+
+      if (responseCode == 0) {
+        if (data != null && data != []) {
+          return responseData;
+        }
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print("Error in upload task images: $e");
     }
   }
 }

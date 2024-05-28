@@ -139,9 +139,7 @@ class PaymentServices {
 
   Future<bool?> createDeposit(PaymentDetail paymentDetail) async {
     String url = port + createPaymentUrl;
-
     String? token = await SharedPreferencesUtils.getToken();
-    UserData? userDetails = await SharedPreferencesUtils.getUserDataInfo();
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
@@ -152,7 +150,9 @@ class PaymentServices {
     try {
       final response = await postRequest(url, headers, body);
       if (response.statusCode == 200) {
-        if (response.statusCode == 0) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        if (responseCode == 0) {
           return true;
         } else {
           // Handle other status codes if needed

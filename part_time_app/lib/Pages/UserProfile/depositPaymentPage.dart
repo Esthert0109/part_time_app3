@@ -30,7 +30,6 @@ class DepositPaymentPage extends StatefulWidget {
 }
 
 class _DepositPaymentPageState extends State<DepositPaymentPage> {
-  final String textToCopy = "THE USDT TALALA";
   XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
@@ -49,7 +48,6 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
     setState(() {
       username = userData.username;
       customerId = userData.customerId;
-      print("username:${username}");
     });
   }
 

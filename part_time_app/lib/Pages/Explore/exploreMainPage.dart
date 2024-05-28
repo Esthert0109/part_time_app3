@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:part_time_app/Pages/Explore/collectPage.dart';
-import 'package:part_time_app/Pages/Explore/collectPageTest.dart';
-import 'package:part_time_app/Pages/Message/systemMessage1Page.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import 'RecommendationPage.dart';
 

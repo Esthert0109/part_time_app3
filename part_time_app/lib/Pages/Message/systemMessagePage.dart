@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/List/messageListComponent.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Constants/colorConstant.dart';
@@ -72,10 +71,11 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
           await SystemMessageServices().getNotificationList(0, page);
       print("call the API");
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           systemMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });

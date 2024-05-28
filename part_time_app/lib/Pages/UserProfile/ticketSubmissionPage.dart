@@ -15,9 +15,20 @@ import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
+import 'package:part_time_app/Model/Ticketing/ticketingModel.dart';
+import '../../Components/Status/statusDialogComponent.dart';
+import '../../Services/ticketing/ticketingServices.dart';
 
 class TicketSubmissionPage extends StatefulWidget {
-  const TicketSubmissionPage({super.key});
+  final int? reportTaskIDInitial;
+  final String? reportUserIDInitial;
+  final int? complainType;
+
+  const TicketSubmissionPage(
+      {super.key,
+      this.reportTaskIDInitial,
+      this.reportUserIDInitial,
+      this.complainType});
 
   @override
   State<TicketSubmissionPage> createState() => _TicketSubmissionPageState();
@@ -27,16 +38,33 @@ final ImagePicker _picker = ImagePicker();
 
 class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
   ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
+  bool isUploadLoading = false;
+  String? username;
+  String? customerId;
+  String? phoneNumber;
+  String? email;
+  String iso8601Date = "";
 
   @override
   void initState() {
     super.initState();
+    _loadDataFromShared();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadDataFromShared() async {
+    setState(() {
+      username = userData.username;
+      customerId = userData.customerId;
+      phoneNumber = userData.firstPhoneNo;
+      email = userData.email;
+    });
   }
 
   @override
@@ -52,6 +80,7 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                 // width: 58,
               ),
               onPressed: () {
+                uploadedImagesListSS!.clear();
                 Navigator.pop(context);
               },
             ),
@@ -87,9 +116,12 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TicketSubmissionComponent(
                     isEdit: true,
-                    nameInitial: userData.username,
-                    phoneNumberInitial: userData.firstPhoneNo,
-                    emailInitial: userData.email,
+                    nameInitial: username,
+                    phoneNumberInitial: phoneNumber,
+                    emailInitial: email,
+                    reportUserIDInitial: widget.reportUserIDInitial,
+                    reportTaskIDInitial: widget.reportTaskIDInitial.toString(),
+                    ticketType: widget.complainType,
                   ),
                 ),
               ],
@@ -103,11 +135,71 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                   width: double.infinity,
                   child: primaryButtonComponent(
                     text: "提交",
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
-                        print("here:" + nameControllerTicket.text);
-                        print("here:" + phoneNumControllerTicket.text);
+                        print(ticketSubmssionDate);
+                        DateTime now = DateTime.now();
+                        iso8601Date = now.toIso8601String();
+                        isLoading = true;
                       });
+                      try {
+                        TicketingData? ticketToSubmit = TicketingData(
+                            customerId: customerId,
+                            ticketCustomerUsername: username,
+                            ticketCustomerPhoneNum: phoneNumber,
+                            ticketCustomerEmail: email,
+                            ticketDate: iso8601Date,
+                            taskId: widget.reportTaskIDInitial,
+                            complaintTypeId: widget.complainType! + 1,
+                            complaintUserId: widget.reportUserIDInitial,
+                            ticketComplaintDescription:
+                                fieldControllerTicket.text,
+                            ticketComplaintAttachment: uploadedImagesListSS);
+
+                        TicketingService ticketingService = TicketingService();
+                        ticketingService
+                            .createTicket(ticketToSubmit)
+                            .then((success) {
+                          // Handle success or failure accordingly
+                          if (success != null && success) {
+                            print("Submitted success");
+                            setState(() {
+                              uploadedImagesListSS = [];
+                              ticketToSubmit = null;
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatusDialogComponent(
+                                    complete: true,
+                                    successText: "系统将审核你的工单，审核通过后将通知你。",
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Get.offAllNamed('/home');
+                                    },
+                                  );
+                                },
+                              );
+                            });
+                          } else {
+                            print(success);
+                            print("Submitted FAILED");
+                          }
+
+                          setState(() {
+                            isLoading =
+                                false; // Set loading state back to false after request is completed
+                          });
+                        });
+                      } catch (e) {
+                        print("Error: $e");
+                        // Handle error
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      }
                     },
                     buttonColor: kMainYellowColor,
                     textStyle: missionCheckoutTotalPriceTextStyle,

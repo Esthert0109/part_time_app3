@@ -77,6 +77,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String? firstContact;
   String? code;
   String? username;
+  String? dropdownValue;
   @override
   void initState() {
     super.initState();
@@ -95,6 +96,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         TextEditingController(text: widget.walletAddressInitial);
     usdtLinkControllerPayment =
         TextEditingController(text: widget.usdtLinkInitial);
+    dropdownValue = widget.sexInitial;
   }
 
   Future<void> _loadDataFromShared() async {
@@ -121,7 +123,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     };
   }
 
-  String? dropdownValue;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -207,7 +208,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         borderRadius: BorderRadius.circular(8)),
                     child: DropdownButton<String>(
                       underline: Container(),
-                      value: widget.sexInitial,
+                      value: dropdownValue,
                       icon: Icon(Icons.arrow_drop_down),
                       iconSize: 24,
                       elevation: 16,

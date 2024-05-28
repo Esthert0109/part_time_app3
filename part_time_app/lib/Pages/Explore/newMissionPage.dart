@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
-import '../MockData/missionMockData.dart';
-
-bool noInitialRefresh = true;
-List<MissionMockClass>? missionNewMiss = [];
+import '../../Services/explore/exploreServices.dart';
+import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 class NewMissionPage extends StatefulWidget {
   const NewMissionPage({super.key});
@@ -21,98 +18,72 @@ class NewMissionPage extends StatefulWidget {
 }
 
 class _NewMissionPageState extends State<NewMissionPage> {
-  final RefreshController _refreshRecommendationController =
-      RefreshController(initialRefresh: noInitialRefresh);
-  int currentPage = 1;
-  int itemsPerPage = 10;
-  bool isLoading = false;
-  bool isFirstLaunch = true;
-  bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
+  int page = 1;
+  bool isLoading = false;
+  bool continueLoading = true;
+
+  List<TaskClass> missionNewMission = [];
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+    _loadData();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
 
-  _loadData() async {
-    if (!isLoading && !reachEndOfList) {
-      setState(() {
-        isLoading = true;
-      });
-      // Simulate fetching data
-      await Future.delayed(Duration(seconds: 2));
-      int start = (currentPage - 1) * itemsPerPage;
-      int end = start + itemsPerPage;
-
-      if (MissionAvailableList.length > start) {
-        if (isFirstLaunch) {
-          missionNewMiss = MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end);
-          isFirstLaunch = false;
-        } else {
-          missionNewMiss!.addAll(MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end));
-        }
-
-        // Sort the missionAvailable list
-        _sortMissionAvailable();
-
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-            currentPage++;
-          });
-        }
-      } else {
-        // No more data to load
-        setState(() {
-          reachEndOfList = true;
-          isLoading = false;
-        });
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      if (!isLoading && continueLoading) {
+        _loadData();
       }
-      noInitialRefresh = false;
     }
   }
 
-  void _sortMissionAvailable() {
-    //control time
-    missionNewMiss!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
-  }
-
-  _scrollListener() {
-    if (!_scrollController.hasClients || isLoading) return;
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      _loadData();
+  Future<void> _loadData() async {
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    try {
+      final List<TaskClass> data =
+          await ExploreService().fetchCategoryList(1, page);
+      setState(() {
+        if (data.isNotEmpty) {
+          missionNewMission.addAll(data);
+          page++;
+        } else {
+          continueLoading = false;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error in exploreData: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _refresh() async {
     if (!isLoading) {
       setState(() {
-        currentPage = 1;
-        missionNewMiss = [];
-        reachEndOfList = false;
+        missionNewMission.clear();
+        page = 1;
+        continueLoading = true;
+        _loadData();
       });
-      await _loadData();
     }
-    _refreshRecommendationController.refreshCompleted();
   }
 
   @override
@@ -156,21 +127,15 @@ class _NewMissionPageState extends State<NewMissionPage> {
             }
             return true;
           },
-          child: CustomRefreshComponent(
+          child: RefreshIndicator(
               onRefresh: _refresh,
-              controller: _refreshRecommendationController,
+              color: kMainYellowColor,
               child: SingleChildScrollView(
+                padding: EdgeInsets.all(12),
+                controller: _scrollController,
                 child: Column(
                   children: [
-                    Container(
-                        padding: EdgeInsets.all(12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildMissionListView(missionNewMiss!),
-                          ],
-                        )),
+                    _buildMissionListView(missionNewMission),
                   ],
                 ),
               )),
@@ -179,28 +144,39 @@ class _NewMissionPageState extends State<NewMissionPage> {
     ));
   }
 
-  Widget _buildMissionListView(List<MissionMockClass> missionList) {
+  Widget _buildMissionListView(List<TaskClass> missionList) {
     return ListView.builder(
-      padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
-      physics: PageScrollPhysics(),
-      itemCount: missionList.length + (isLoading ? 1 : 0),
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: missionList.length + (continueLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
-        if (index < missionList.length) {
-          return MissionCardComponent(
-            missionTitle: missionList[index].missionTitle,
-            missionDesc: missionList[index].missionDesc,
-            tagList: missionList[index].tagList ?? [],
-            missionPrice: missionList[index].missionPrice,
-            userAvatar: missionList[index].userAvatar,
-            username: missionList[index].username,
-            missionDate: missionList[index].missionDate,
-            isStatus: missionList[index].isStatus,
-            isFavorite: missionList[index].isFavorite,
-            missionStatus: missionList[index].missionStatus,
-          );
-        } else {
+        if (index == missionList.length) {
           return const MissionCardLoadingComponent();
+        } else {
+          return GestureDetector(
+            onTap: () {
+              Get.to(
+                  () => MissionDetailRecipientPage(
+                        taskId: missionList[index].taskId,
+                      ),
+                  transition: Transition.rightToLeft);
+            },
+            child: MissionCardComponent(
+              taskId: missionList[index].taskId,
+              missionTitle: missionList[index].taskTitle ?? "",
+              missionDesc: missionList[index].taskContent ?? "",
+              tagList: missionList[index]
+                      .taskTagNames
+                      ?.map((tag) => tag.tagName)
+                      .toList() ??
+                  [],
+              missionPrice: missionList[index].taskSinglePrice ?? 0.0,
+              userAvatar: missionList[index].avatar ?? "",
+              username: missionList[index].nickname ?? "",
+              missionDate: missionList[index].taskUpdatedTime ?? "",
+              isFavorite: missionList[index].collectionValid ?? false,
+            ),
+          );
         }
       },
     );

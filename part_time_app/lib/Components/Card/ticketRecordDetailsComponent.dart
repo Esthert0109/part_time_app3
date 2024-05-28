@@ -21,7 +21,7 @@ class TicketRecordDetailsComponent extends StatefulWidget {
   final String? ticketDate;
   final int? taskId;
   final String? complaintType;
-  final int? complaintUserId;
+  final String? complaintUserId;
   final String? ticketComplaintDescription;
   final List<String>? ticketComplaintAttachment;
   final int? ticketStatus;

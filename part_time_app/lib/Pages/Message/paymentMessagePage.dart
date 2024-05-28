@@ -58,10 +58,11 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
       NotificationListModel? data =
           await SystemMessageServices().getNotificationList(2, page);
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           paymentMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });
@@ -165,17 +166,6 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
               ),
             ),
           )),
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant PaymentMessagePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Scroll to bottom whenever the widget updates
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
     );
   }
 }

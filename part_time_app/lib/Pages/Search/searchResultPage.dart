@@ -8,7 +8,6 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Services/explore/exploreServices.dart';
-import '../MockData/missionMockData.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String? searchKeyword;

@@ -7,7 +7,6 @@ import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
 import 'package:part_time_app/Model/Ticketing/ticketingModel.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -49,7 +48,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
       isLoading = true;
     });
     try {
-      await TicketingData.fetchComplaintTypes();
+      await TicketingService.fetchComplaintTypes();
       TicketingModel? data = await TicketingService().getTicketingHistory(page);
       print("call the api");
       setState(() {

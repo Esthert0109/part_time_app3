@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
@@ -47,7 +46,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.initState();
     if (!dataFetchedPublish && !dataEndPublish) {
       // Fetch data only if it hasn't been fetched before
-      _loadData();
     }
     _scrollController.addListener(_scrollListener);
   }
@@ -59,52 +57,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.dispose();
   }
 
-  _loadData() async {
-    if (!isLoading && !reachEndOfList && !dataEndPublish) {
-      setState(() {
-        isLoading = true;
-      });
-      // Simulate fetching data
-      await Future.delayed(Duration(seconds: 2));
-      int start = (currentPage - 1) * itemsPerPage;
-      int end = start + itemsPerPage;
-      List<MissionMockClass> filteredList =
-          MissionAvailableList.where((mission) => mission.isFavorite!).toList();
-      if (filteredList.length > start) {
-        if (isFirstLaunch) {
-          missionPublished = filteredList.sublist(
-              start, end > filteredList.length ? filteredList.length : end);
-          isFirstLaunch = false;
-        } else {
-          missionPublished!.addAll(filteredList.sublist(
-              start, end > filteredList.length ? filteredList.length : end));
-        }
-
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-            currentPage++;
-          });
-        }
-      } else {
-        // No more data to load
-        setState(() {
-          reachEndOfList = true;
-          dataEndPublish = true;
-          isLoading = false;
-        });
-      }
-      dataFetchedPublish = true;
-    }
-  }
-
   _scrollListener() {
     if (!_scrollController.hasClients || isLoading) return;
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      _loadData();
-    }
+        !_scrollController.position.outOfRange) {}
   }
 
   Widget _buildMissionListView(List<MissionMockClass> missionList) {

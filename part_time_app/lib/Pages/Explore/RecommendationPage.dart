@@ -15,9 +15,11 @@ import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Model/User/userModel.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
-import '../../Services/webSocketService.dart';
+import '../../Services/WebSocket/webSocketService.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 class RecommendationPage extends StatefulWidget {
@@ -45,12 +47,20 @@ class _RecommendationPageState extends State<RecommendationPage>
     super.initState();
     webSocketService.addListener(_updateState);
     _scrollController.addListener(_scrollListener);
+    getUserInfo();
   }
 
   void _updateState() {
     if (mounted) {
       setState(() {});
     }
+  }
+
+  getUserInfo() async {
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+    setState(() {
+      userData = data!;
+    });
   }
 
   @override
@@ -73,9 +83,11 @@ class _RecommendationPageState extends State<RecommendationPage>
   }
 
   Future<void> _loadData() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     try {
       final List<TaskClass> data = await ExploreService().fetchExplore(page);

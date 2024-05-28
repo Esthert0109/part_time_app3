@@ -54,7 +54,7 @@ class TicketingData {
   final String? ticketDate;
   final int? taskId;
   final int? complaintTypeId;
-  final int? complaintUserId;
+  final String? complaintUserId;
   final String? ticketComplaintDescription;
   final List<String>? ticketComplaintAttachment;
   final int? ticketStatus;
@@ -78,25 +78,6 @@ class TicketingData {
     this.ticketCreatedTime,
     this.ticketUpdatedTime,
   });
-  static Future<void> fetchComplaintTypes() async {
-    final response = await http
-        .get(Uri.parse('http://103.159.133.27:8085/api/v1/ticket/getTypes'));
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(utf8.decode(response.bodyBytes))['data'];
-      print(data);
-      for (var item in data) {
-        var complaintType = ComplaintType.fromJson(item);
-        complaintTypeMap[complaintType.complaintTypeId] =
-            complaintType.complaintName;
-      }
-    } else {
-      throw Exception('Failed to load complaint types');
-    }
-  }
-
-  String get complaintTypeName {
-    return complaintTypeMap[complaintTypeId] ?? '未知';
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -110,8 +91,7 @@ class TicketingData {
       "complaintTypeId": complaintTypeId,
       "complaintUserId": complaintUserId,
       "ticketComplaintDescription": ticketComplaintDescription,
-      'ticketComplaintAttachment':
-          jsonEncode({'image': ticketComplaintAttachment}),
+      'ticketComplaintAttachment': {'image': ticketComplaintAttachment},
       "ticketStatus": ticketStatus,
       "ticketCreatedTime": ticketCreatedTime,
       "ticketUpdatedTime": ticketUpdatedTime,
@@ -152,5 +132,18 @@ class TicketingData {
       ticketCreatedTime: json['ticketCreatedTime'] ?? "",
       ticketUpdatedTime: json['ticketUpdatedTime'] ?? "",
     );
+  }
+  @override
+  String toString() {
+    return 'TicketingData(customerId: $customerId, '
+        'ticketCustomerUsername: $ticketCustomerUsername, '
+        'ticketCustomerPhoneNum: $ticketCustomerPhoneNum, '
+        'ticketCustomerEmail: $ticketCustomerEmail, '
+        'ticketDate: $ticketDate, '
+        'taskId: $taskId, '
+        'complaintTypeId: $complaintTypeId, '
+        'complaintUserId: $complaintUserId, '
+        'ticketComplaintDescription: $ticketComplaintDescription, '
+        'ticketComplaintAttachment: $ticketComplaintAttachment)';
   }
 }
