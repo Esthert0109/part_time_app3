@@ -37,6 +37,7 @@ class _CollectPageState extends State<CollectPage>
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+    getUserDetails();
     _loadData();
   }
 
@@ -191,6 +192,7 @@ class _CollectPageState extends State<CollectPage>
               username: missionCollection[index].nickname ?? "",
               missionDate: missionCollection[index].updatedTime,
               isFavorite: true,
+              customerId: missionCollection[index].customerId!,
             ),
           );
         }

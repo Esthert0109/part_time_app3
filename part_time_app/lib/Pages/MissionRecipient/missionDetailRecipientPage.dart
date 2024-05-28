@@ -604,6 +604,7 @@ class _MissionDetailRecipientPageState
                                                   textColor: kThirdGreyColor);
                                             }
                                           } catch (e) {
+                                            Navigator.pop(context);
                                             Fluttertoast.showToast(
                                                 msg: "不可重复悬赏",
                                                 toastLength: Toast.LENGTH_LONG,

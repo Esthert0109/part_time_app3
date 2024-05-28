@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionSuggestCardComponent.dart';
+import 'package:part_time_app/Components/Dialog/paymentUploadDialogComponent.dart';
+import 'package:part_time_app/Model/Task/missionClass.dart';
+import 'package:part_time_app/Services/order/orderServices.dart';
+import 'package:part_time_app/Services/payment/paymentServices.dart';
 
 import '../../Components/Loading/depositPaymentStatusLoading.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
 
 class DepositPaymentStatusPage extends StatefulWidget {
-  final bool isPass;
-  final bool isFailed;
-  const DepositPaymentStatusPage(
-      {super.key, required this.isPass, required this.isFailed});
+  const DepositPaymentStatusPage({
+    super.key,
+  });
 
   @override
   State<DepositPaymentStatusPage> createState() =>
@@ -21,6 +25,54 @@ class DepositPaymentStatusPage extends StatefulWidget {
 
 class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
   bool isLoading = false;
+  // services
+  OrderServices services = OrderServices();
+  PaymentServices paymentService = PaymentServices();
+  List<TaskClass>? taskList = [];
+  UserData? depositStatus;
+  bool isTaskLoading = false;
+
+  // status
+  bool isPass = false;
+  bool isFailed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStatus();
+    fetchData();
+  }
+
+  fetchStatus() async {
+    setState(() {
+      isLoading = true;
+    });
+    UserData? data = await paymentService.depositStatus();
+    setState(() {
+      depositStatus = data;
+
+      if (depositStatus!.status == 1) {
+        isPass = true;
+      } else if (depositStatus!.status == 2) {
+        isFailed = true;
+      }
+
+      isLoading = false;
+    });
+  }
+
+  fetchData() async {
+    setState(() {
+      isTaskLoading = true;
+    });
+    List<TaskClass>? task = await services.getRandomTwoTask();
+
+    setState(() {
+      taskList = task;
+      isTaskLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -106,9 +158,9 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                       Positioned(
                                           top: 132,
                                           child: SvgPicture.asset(
-                                              widget.isPass
+                                              isPass
                                                   ? "assets/status/statusPass.svg"
-                                                  : widget.isFailed
+                                                  : isFailed
                                                       ? "assets/status/statusFail.svg"
                                                       : "assets/status/statusWait.svg",
                                               width: 24,
@@ -170,8 +222,7 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                             children: [
                                               Text(
                                                 "审核状态",
-                                                style: (widget.isPass ||
-                                                        widget.isFailed)
+                                                style: (isPass || isFailed)
                                                     ? missionFailedReasonTitleTextStyle
                                                     : missionSubmissionNoPicsTextStyle,
                                               ),
@@ -180,15 +231,15 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                                       style: missionIDtextStyle,
                                                       children: [
                                                     TextSpan(
-                                                        text: widget.isPass
+                                                        text: isPass
                                                             ? "已通过"
                                                             : "等待中"),
                                                     TextSpan(
-                                                        text: widget.isFailed
+                                                        text: isFailed
                                                             ? " - "
                                                             : ""),
                                                     TextSpan(
-                                                        text: widget.isFailed
+                                                        text: isFailed
                                                             ? "重新编辑"
                                                             : "",
                                                         style:
@@ -204,7 +255,7 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                           ],
                         ),
                       ),
-                      widget.isFailed
+                      isFailed
                           ? Container(
                               margin: EdgeInsets.only(top: 10),
                               child: Container(
@@ -262,39 +313,57 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                             ),
                             Container(
                               height: 190,
-                              child: SingleChildScrollView(
-                                child: Column(children: [
-                                  Container(
-                                    margin: EdgeInsets.all(2),
-                                    child: MissionSuggestCardComponent(
-                                      userAvatar:
-                                          "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
-                                      title: '文案写作文案写作文',
-                                      tags: ["其他", "其他", "其他"],
-                                      price: '50000',
-                                      requiredNo: 1046,
-                                      completedNo: 196,
-                                      isLoading: false,
+                              child: isTaskLoading
+                                  ? DepositPaymentStatusLoading()
+                                  : SingleChildScrollView(
+                                      child: Column(children: [
+                                        Container(
+                                          margin: EdgeInsets.all(2),
+                                          child: MissionSuggestCardComponent(
+                                            userAvatar: taskList![0].avatar ??
+                                                "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
+                                            title: taskList![0].taskTitle ??
+                                                '文案写作文案写作文',
+                                            tags: taskList![0]
+                                                    .taskTagNames
+                                                    ?.map((tag) => tag.tagName)
+                                                    .toList() ??
+                                                [],
+                                            price: taskList![0]
+                                                .taskSinglePrice
+                                                .toString(),
+                                            requiredNo: 100,
+                                            completedNo: 50,
+                                            isLoading: isTaskLoading,
+                                            taskId: taskList![0].taskId!,
+                                          ),
+                                        ),
+                                        Divider(
+                                          color: kThirdGreyColor,
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.all(2),
+                                          child: MissionSuggestCardComponent(
+                                              userAvatar: taskList![1].avatar ??
+                                                  "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
+                                              title: taskList![1].taskTitle ??
+                                                  '文案写作文案写作文',
+                                              tags: taskList![1]
+                                                      .taskTagNames
+                                                      ?.map(
+                                                          (tag) => tag.tagName)
+                                                      .toList() ??
+                                                  [],
+                                              price: taskList![1]
+                                                  .taskSinglePrice
+                                                  .toString(),
+                                              requiredNo: 100,
+                                              completedNo: 50,
+                                              isLoading: isTaskLoading,
+                                              taskId: taskList![1].taskId!),
+                                        ),
+                                      ]),
                                     ),
-                                  ),
-                                  Divider(
-                                    color: kThirdGreyColor,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.all(2),
-                                    child: MissionSuggestCardComponent(
-                                      userAvatar:
-                                          "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
-                                      title: '文案写作文案写作文',
-                                      tags: ["其他", "其他", "其他"],
-                                      price: '50000',
-                                      requiredNo: 1046,
-                                      completedNo: 852,
-                                      isLoading: false,
-                                    ),
-                                  ),
-                                ]),
-                              ),
                             )
                           ],
                         ),

@@ -148,6 +148,7 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
                 isPublished: true,
                 missionStatus: missionList[index].taskStatus!,
                 missionDate: missionList[index].taskUpdatedTime!,
+                customerId: missionList[index].customerId!,
               ),
               onTap: () {
                 Get.to(

@@ -84,16 +84,15 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: ListTile(
-                        leading: SvgPicture.asset(
-                          "assets/profile/profile_page.svg",
-                          height: 58,
-                          width: 58,
+                        leading: CircleAvatar(
+                          radius: 29,
+                          backgroundColor: kSecondGreyColor,
+                          backgroundImage: NetworkImage(userData?.avatar ?? ""),
                         ),
                         title: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            //name too long will effect.
                             Container(
                               width: 100,
                               child: Text(
@@ -120,6 +119,7 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                               Get.to(
                                   () => UserProfilePage(
                                         isOthers: false,
+                                        userID: userData.customerId,
                                       ),
                                   transition: Transition.rightToLeft);
                             },

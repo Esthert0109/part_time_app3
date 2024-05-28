@@ -247,6 +247,7 @@ class _MissionAcceptedMainPageState extends State<MissionAcceptedMainPage>
                 isStatus: true,
                 isPublished: false,
                 missionStatus: missionList[index].orderStatus!,
+                customerId: missionList[index].customerId!,
               ),
               onTap: () {
                 Get.to(

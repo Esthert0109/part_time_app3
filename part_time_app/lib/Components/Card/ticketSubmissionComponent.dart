@@ -335,7 +335,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
                   widget.onNameChange!(value);
                 }
               },
-              readOnly: true),
+              readOnly: false),
           const SizedBox(height: 15),
           const Text("电话号码", style: depositTextStyle2),
           _buildTextInput(
@@ -346,7 +346,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
                   widget.onPhoneNumChange!(value);
                 }
               },
-              readOnly: true),
+              readOnly: false),
           const SizedBox(height: 15),
           const Text("电子邮件", style: depositTextStyle2),
           _buildTextInput(
@@ -357,14 +357,14 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
                   widget.onEmailChange!(value);
                 }
               },
-              readOnly: true),
+              readOnly: false),
           const SizedBox(height: 15),
           const Text("日期", style: depositTextStyle2),
           _buildTextInput(
               hintText: "",
               controller: dateControllerTicket,
               onChanged: (value) {},
-              readOnly: true),
+              readOnly: false),
           const SizedBox(height: 15),
           const Text("悬赏ID", style: depositTextStyle2),
           _buildTextInput(
@@ -375,7 +375,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
                   widget.onreportIDChange!(value);
                 }
               },
-              readOnly: true),
+              readOnly: false),
           const SizedBox(height: 15),
           const Text("被举报用户ID", style: depositTextStyle2),
           _buildTextInput(
@@ -386,7 +386,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
                   widget.onreportUserIDChange!(value);
                 }
               },
-              readOnly: true),
+              readOnly: false),
           const SizedBox(height: 15),
           const Text("申述种类", style: depositTextStyle2),
           Container(

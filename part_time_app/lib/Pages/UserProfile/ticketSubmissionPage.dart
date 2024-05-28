@@ -115,12 +115,14 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TicketSubmissionComponent(
-                    isEdit: true,
+                    isEdit: false,
                     nameInitial: username,
                     phoneNumberInitial: phoneNumber,
                     emailInitial: email,
                     reportUserIDInitial: widget.reportUserIDInitial,
-                    reportTaskIDInitial: widget.reportTaskIDInitial.toString(),
+                    reportTaskIDInitial: widget.reportTaskIDInitial == null
+                        ? ""
+                        : widget.reportTaskIDInitial.toString(),
                     ticketType: widget.complainType,
                   ),
                 ),

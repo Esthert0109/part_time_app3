@@ -175,6 +175,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
               username: missionList[index].nickname ?? "",
               missionDate: missionList[index].taskUpdatedTime ?? "",
               isFavorite: missionList[index].collectionValid ?? false,
+              customerId: missionList[index].customerId!,
             ),
           );
         }

@@ -115,6 +115,7 @@ class _SystemMessage1PageState extends State<SystemMessage1Page> {
                       userAvatar: _taskList[index].avatar ?? "",
                       username: _taskList[index].nickname ?? "",
                       missionDate: _taskList[index].taskUpdatedTime ?? "",
+                      customerId: _taskList[index].customerId!,
                     );
                   },
                 ),

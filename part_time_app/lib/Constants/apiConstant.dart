@@ -36,6 +36,7 @@ const updateTaskUrl = "api/v1/tasks/updateTask";
 const getCustomerListByOrderStatusIdUrl =
     "api/v1/tasks/getCustomerListByOrderStatusId/";
 const acceptRejectOrderUrl = "api/v1/orders/update";
+const getTwoRandomTaskUrl = "api/v1/tasks/getRandom";
 
 //system message Services
 const systemMessage = "api/v1/notification/system?page=1";
@@ -59,6 +60,7 @@ const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";
 const getPaymentDetailUrl = "api/v1/payments/detail/";
 const getDepositUrl = "api/v1/deposit/info";
+const getDepositStatusUrl = "api/v1/deposit/";
 
 //Ticketing
 const getTicketingHistoryUrl = "api/v1/ticket/getAllByCustomerId?page=";
@@ -76,3 +78,9 @@ const uploadTicketImagesUrl = "api/v1/files/upload/ticket";
 
 // Payment
 const createPaymentUrl = "api/v1/payments/create";
+
+// Customer
+const customerHomePageUrl = "api/v1/customers/detailsByCustomerId/";
+const customerTotalPostUrl = "api/v1/customers/totalPostCount?";
+const customerTotalCollectionUrl = "api/v1/collection/totalCount/";
+const customerHomePageTaskUrl = "api/v1/customers/getCustomerHomePageTask/";

@@ -81,9 +81,13 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
                       },
                       onSubmitted: (searchText) {
                         if (searchText.isNotEmpty && searchText != "") {
-                          searchController.clear();
-                          searchText = "";
-                          isSearching = false;
+                          print("search: $searchText");
+                          Get.to(
+                              () => SearchResultPage(
+                                    searchKeyword: searchText,
+                                    byTag: false,
+                                  ),
+                              transition: Transition.rightToLeft);
                         }
                       },
                     ),
