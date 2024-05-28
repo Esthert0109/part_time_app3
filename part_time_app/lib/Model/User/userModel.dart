@@ -123,7 +123,7 @@ class UserModel {
 class UpdateCollectionModel {
   final int? code;
   final String? msg;
-  final UserData? data;
+  final bool? data;
 
   UpdateCollectionModel({
     this.code,
@@ -135,10 +135,59 @@ class UpdateCollectionModel {
     return {
       "code": code,
       "msg": msg,
-      "data": data?.toJson(),
+      "data": data,
     };
   }
 }
+
+class UpdateCustomerInfoModel {
+  final int? code;
+  final String? msg;
+  final bool? data;
+
+  UpdateCustomerInfoModel({
+    this.code,
+    this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "code": code,
+      "msg": msg,
+      "data": data,
+    };
+  }
+}
+
+class UploadCustomerAvatarModel {
+  final int? code;
+  final String? msg;
+  final String? data;
+
+  UploadCustomerAvatarModel({
+    this.code,
+    this.msg,
+    this.data,
+  });
+
+  factory UploadCustomerAvatarModel.fromJson(Map<String, dynamic> json) {
+    return UploadCustomerAvatarModel(
+      code: json['code'],
+      msg: json['msg'],
+      data: json['data'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "code": code,
+      "msg": msg,
+      "data": data,
+    };
+  }
+}
+
 
 class UserData {
   final String? customerId;
@@ -147,7 +196,7 @@ class UserData {
   final String? password;
   final String? country;
   final String? gender;
-  final String? avatar;
+  late final String? avatar;
   final String? firstPhoneNo;
   final String? secondPhoneNo;
   final String? email;
@@ -158,7 +207,7 @@ class UserData {
   final String? billingCurrency;
   final int? validIdentity;
   final int? valid;
-  final int?
+  int?
       collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;

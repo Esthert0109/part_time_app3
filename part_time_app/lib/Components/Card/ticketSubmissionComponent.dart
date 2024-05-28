@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -8,6 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Dialog/alertDialogComponent.dart';
 import 'package:part_time_app/Components/Dialog/paymentUploadDialogComponent.dart';
 import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dart';
+import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:intl/intl.dart';
@@ -72,8 +74,8 @@ class TicketSubmissionComponent extends StatefulWidget {
 }
 
 class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
-  List<XFile>? selectedImageList;
-  int imageSelected = 0;
+  List<XFile>? selectedImageList = [];
+  List<String> selectedImageUrls = [];
   PageController pageController = PageController();
   List<ComplaintType> _complaintTypes = [];
 
@@ -321,8 +323,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-          color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -392,9 +393,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
           Container(
             padding: const EdgeInsets.only(left: 10),
             height: 31,
-            decoration: BoxDecoration(
-                color: kInputBackGreyColor,
-                borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: kInputBackGreyColor, borderRadius: BorderRadius.circular(8)),
             child: DropdownButton<String>(
               underline: Container(),
               value: dropdownValueForTicket,

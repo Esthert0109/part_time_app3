@@ -10,6 +10,8 @@ const sendOTPUrl = "api/v1/sms/send/";
 const verifyOTPUrl = "api/v1/sms/verify/mobile/";
 const updateForgotPasswordUrl = "api/v1/customers/updatePassByForgot/";
 const updateUserInfoUrl = "api/v1/customers/updateInfo";
+const updateCustomerPassUrl = "api/v1/customers/updatePass/";
+const uploadAvatarUrl = "api/v1/files/upload/avatar";
 
 //explore Services
 const exploreURL = "api/v1/tasks/getTaskListByDateDesc?";
@@ -84,3 +86,6 @@ const customerHomePageUrl = "api/v1/customers/detailsByCustomerId/";
 const customerTotalPostUrl = "api/v1/customers/totalPostCount?";
 const customerTotalCollectionUrl = "api/v1/collection/totalCount/";
 const customerHomePageTaskUrl = "api/v1/customers/getCustomerHomePageTask/";
+
+//Business Scope Services
+const getBusinessScopeListUrl = "api/v1/business-scope/";

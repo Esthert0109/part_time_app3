@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:part_time_app/Utils/apiUtils.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
@@ -549,6 +550,122 @@ class UserServices {
       }
     } catch (e) {
       print("Error in home page task: $e");
+    }
+  }
+
+   Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
+    url = port + updateUserInfoUrl;
+
+    UpdateCustomerInfoModel updateCustomerInfoModel;
+
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    final Map<String, dynamic> body = {
+      'nickname': userData.nickname,
+      'username': userData.username,
+      'country': userData.country,
+      'gender': userData.gender,
+      'avatar': userData.avatar,
+      'secondPhoneNo': userData.secondPhoneNo,
+      'email': userData.email,
+      'businessScopeId': userData.businessScopeId,
+      'billingNetwork': userData.billingNetwork,
+      'billingAddress': userData.billingAddress,
+      'billingCurrency': userData.billingCurrency
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      bool responseData = jsonData['data'];
+
+      updateCustomerInfoModel = UpdateCustomerInfoModel(
+          code: responseCode, msg: responseMsg, data: responseData);
+      return updateCustomerInfoModel;
+    } catch (e) {
+      print("Error in update customer info");
+      return null;
+    }
+  }
+
+  Future<UpdateCustomerInfoModel?> updateCustomerPassword(
+      String password) async {
+    String? token = await SharedPreferencesUtils.getToken();
+    url = port + updateCustomerPassUrl + token!;
+
+    UpdateCustomerInfoModel updateCustomerInfoModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token,
+    };
+
+    final Map<String, dynamic> body = {'password': userData.password};
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      bool responseData = jsonData['data'];
+
+      updateCustomerInfoModel = UpdateCustomerInfoModel(
+          code: responseCode, msg: responseMsg, data: responseData);
+      return updateCustomerInfoModel;
+    } catch (e) {
+      print("Error in update customer password");
+      return null;
+    }
+  }
+
+  Future<UploadCustomerAvatarModel?> uploadAvatar(File imageFile) async {
+    String? token = await SharedPreferencesUtils.getToken();
+    url = port + uploadAvatarUrl + token!;
+
+    UploadCustomerAvatarModel uploadCustomerAvatarModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token,
+    };
+
+    final Map<String, dynamic> body = {'file': userData.avatar};
+
+    try {
+      final response = await postRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      String responseData = jsonData['data'];
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          uploadCustomerAvatarModel = UploadCustomerAvatarModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return uploadCustomerAvatarModel;
+        } else {
+          uploadCustomerAvatarModel = UploadCustomerAvatarModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return uploadCustomerAvatarModel;
+        }
+      }
+    } catch (e) {
+      print("Error in upload avatar: $e");
     }
   }
 }

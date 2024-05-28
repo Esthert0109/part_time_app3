@@ -23,27 +23,27 @@ class EditProfilePage extends StatefulWidget {
 
 final ImagePicker _picker = ImagePicker();
 
-void openImagePicker() async {
-  XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+// void openImagePicker() async {
+//   XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-  if (image != null) {
-    // showLoadingDialog(context);
-    // 选择了图像
-    File imageFile = File(image.path);
-    print("Checking imageFile $imageFile");
+//   if (image != null) {
+//     // showLoadingDialog(context);
+//     // 选择了图像
+//     File imageFile = File(image.path);
+//     print("Checking imageFile $imageFile");
 
-    try {
-      //  bool isFinish = await customerService.updateProfilePic(imageFile);
-      //   if (isFinish == true) {
+//     try {
+//       //  bool isFinish = await customerService.updateProfilePic(imageFile);
+//       //   if (isFinish == true) {
 
-      //   }
-    } catch (e) {
-      print("Error updating profile picture: $e");
-    }
-  } else {
-    // 用户取消了选择
-  }
-}
+//       //   }
+//     } catch (e) {
+//       print("Error updating profile picture: $e");
+//     }
+//   } else {
+//     // 用户取消了选择
+//   }
+// }
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool isLoading = true;
@@ -68,103 +68,45 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kTextTabBarHeight),
-          child: AppBar(
-            leading: IconButton(
-              icon: SvgPicture.asset(
-                "assets/common/arrow_back.svg",
-                // height: 58,
-                // width: 58,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kTextTabBarHeight),
+        child: AppBar(
+          leading: IconButton(
+            icon: SvgPicture.asset(
+              "assets/common/arrow_back.svg",
+              // height: 58,
+              // width: 58,
             ),
-            flexibleSpace: Container(
-              constraints: const BoxConstraints.expand(),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    kBackgroundFirstGradientColor,
-                    kBackgroundSecondGradientColor
-                  ],
-                  stops: [0.5, 1.0],
-                ),
-              ),
-            ),
-            backgroundColor: const Color(0xFFF9F9F9),
-            title: const thirdTitleComponent(
-              text: '编辑资料',
-            ),
-            centerTitle: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-        ),
-        body: isLoading
-            ? const EditProfilePageLoadingComponent()
-            : Column(
-                children: [
-                  Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          print("edit image");
-                          setState(() {
-                            openImagePicker();
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/profile/profile_img.svg",
-                                height: 58,
-                                width: 58,
-                              ),
-                              Positioned(
-                                bottom: 16,
-                                right: 16,
-                                child: SvgPicture.asset(
-                                  "assets/profile/camera.svg",
-                                  height: 24,
-                                  width: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: UserDetailCardComponent(
-                          isEditProfile: true,
-                        ),
-                      ),
-                    ],
-                  ))),
-                  Material(
-                    elevation: 20,
-                    child: Container(
-                        padding: const EdgeInsets.only(
-                            bottom: 50, left: 10, right: 10, top: 5),
-                        decoration: const BoxDecoration(color: kMainWhiteColor),
-                        width: double.infinity,
-                        child: primaryButtonComponent(
-                          text: "立刻保存",
-                          onPressed: () {},
-                          buttonColor: kMainYellowColor,
-                          textStyle: missionCheckoutTotalPriceTextStyle,
-                          isLoading: isLoading,
-                        )),
-                  )
+          flexibleSpace: Container(
+            constraints: const BoxConstraints.expand(),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  kBackgroundFirstGradientColor,
+                  kBackgroundSecondGradientColor
                 ],
-              ));
+                stops: [0.5, 1.0],
+              ),
+            ),
+          ),
+          backgroundColor: const Color(0xFFF9F9F9),
+          title: const thirdTitleComponent(
+            text: '编辑资料',
+          ),
+          centerTitle: true,
+        ),
+      ),
+      body: isLoading
+          ? const EditProfilePageLoadingComponent()
+          : UserDetailCardComponent(
+              isEditProfile: true,
+            ),
+    );
   }
 }

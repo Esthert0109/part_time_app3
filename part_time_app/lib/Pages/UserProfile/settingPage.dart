@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
@@ -22,7 +23,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   bool isPrivate = false;
   final UserServices _userServices = UserServices();
-  UserData? userData = UserData();
 
   @override
   void initState() {
@@ -31,11 +31,12 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _loadPrivacySetting() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+    // Fetch user data from SharedPreferencesUtils
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
     setState(() {
-      // userData = data;
-      isPrivate = (prefs.getBool('isPrivate') ?? false);
+      userData = data!;
+      isPrivate =
+          data.collectionValid == 0; // Assuming 0 is private and 1 is public
     });
   }
 
@@ -69,22 +70,24 @@ class _SettingPageState extends State<SettingPage> {
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-            automaticallyImplyLeading: false,
-            scrolledUnderElevation: 0.0,
-            leading: IconButton(
-              iconSize: 15,
-              icon: Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () {
-                Get.back();
-              },
+          automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0.0,
+          leading: IconButton(
+            iconSize: 15,
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          centerTitle: true,
+          title: Container(
+            color: kTransparent,
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: thirdTitleComponent(
+              text: "设置",
             ),
-            centerTitle: true,
-            title: Container(
-                color: kTransparent,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: thirdTitleComponent(
-                  text: "设置",
-                ))),
+          ),
+        ),
         body: Container(
           constraints: const BoxConstraints.expand(),
           padding: const EdgeInsets.all(12),
@@ -109,8 +112,9 @@ class _SettingPageState extends State<SettingPage> {
                   height: 92,
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                      color: kMainWhiteColor,
-                      borderRadius: BorderRadius.circular(8)),
+                    color: kMainWhiteColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,27 +152,27 @@ class _SettingPageState extends State<SettingPage> {
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: Switch(
-                                        value: isPrivate,
-                                        activeColor: kMainBlackColor,
-                                        activeTrackColor: kMainYellowColor,
-                                        inactiveTrackColor: kTransparent,
-                                        inactiveThumbColor: kMainBlackColor,
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.padded,
-                                        trackOutlineColor: MaterialStateProperty
-                                            .resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                            if (isPrivate) {
-                                              return kMainBlackColor;
-                                            }
-                                            return kMainBlackColor; // Use the default color.
-                                          },
-                                        ),
-                                        trackOutlineWidth:
-                                            MaterialStateProperty.all(1),
-                                        onChanged:
-                                            _togglePrivacy // Call the method
-                                        ),
+                                      value: isPrivate,
+                                      activeColor: kMainBlackColor,
+                                      activeTrackColor: kMainYellowColor,
+                                      inactiveTrackColor: kTransparent,
+                                      inactiveThumbColor: kMainBlackColor,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.padded,
+                                      trackOutlineColor: MaterialStateProperty
+                                          .resolveWith<Color?>(
+                                        (Set<MaterialState> states) {
+                                          if (isPrivate) {
+                                            return kMainBlackColor;
+                                          }
+                                          return kMainBlackColor; // Use the default color.
+                                        },
+                                      ),
+                                      trackOutlineWidth:
+                                          MaterialStateProperty.all(1),
+                                      onChanged:
+                                          _togglePrivacy, // Call the method
+                                    ),
                                   ),
                                 ),
                               ],
@@ -179,15 +183,14 @@ class _SettingPageState extends State<SettingPage> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 Container(
                   height: 92,
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                      color: kMainWhiteColor,
-                      borderRadius: BorderRadius.circular(8)),
+                    color: kMainWhiteColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,17 +244,19 @@ class _SettingPageState extends State<SettingPage> {
                                             isLogin = false;
                                             userData!.clear();
 
-                                            Fluttertoast.showToast(
-                                                msg: "已登出",
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                backgroundColor: kMainGreyColor,
-                                                textColor: kThirdGreyColor);
-                                            Get.offAllNamed('/onboarding');
-                                          });
-                                        },
-                                      );
-                                    });
+                                          Fluttertoast.showToast(
+                                            msg: "已登出",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: kMainGreyColor,
+                                            textColor: kThirdGreyColor,
+                                          );
+                                          Get.offAllNamed('/onboarding');
+                                        });
+                                      },
+                                    );
+                                  },
+                                );
                               },
                               child: Text(
                                 "登出账号",
@@ -263,7 +268,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
