@@ -69,7 +69,6 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
   List<String> selectedImageUrls = [];
   PageController pageController = PageController();
   TextEditingController stepdescriptionController = TextEditingController();
-  List<SstepModel> steps = [];
   List<String> imageUrls = [];
   final ImagePicker picker = ImagePicker();
   int imageSelected = 0;

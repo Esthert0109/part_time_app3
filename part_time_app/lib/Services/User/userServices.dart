@@ -572,9 +572,9 @@ class UserServices {
       'secondPhoneNo': userData.secondPhoneNo,
       'email': userData.email,
       'businessScopeId': userData.businessScopeId,
-      'billingNetwork': userData.bilingNetwork,
-      'billingAddress': userData.bilingAddress,
-      'billingCurrency': userData.bilingCurrency
+      'billingNetwork': userData.billingNetwork,
+      'billingAddress': userData.billingAddress,
+      'billingCurrency': userData.billingCurrency
     };
 
     try {

@@ -207,7 +207,7 @@ class UserData {
   final String? billingCurrency;
   final int? validIdentity;
   final int? valid;
-  final int?
+  int?
       collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;
