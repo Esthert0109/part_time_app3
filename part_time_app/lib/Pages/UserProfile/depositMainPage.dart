@@ -4,12 +4,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Title/thirdTitleComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
-import 'package:part_time_app/Pages/UserProfile/depositHistoryDetailPage.dart';
+import 'package:part_time_app/Pages/UserProfile/paymentHistoryDetailPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
 import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import 'depositPaymentStatusPage.dart';
 
 class DepositMainPage extends StatefulWidget {
   const DepositMainPage({super.key});
@@ -62,8 +64,13 @@ class _DepositMainPageState extends State<DepositMainPage> {
               //condition(card1,2 is true)
               //card 1 false is NOT verify, then CANT return deposit.
               //condition(card1,2 is false)
-              cardComponent1("• 押金认证", false),
-              cardComponent2("• 退还押金", false)
+              if (userData.validIdentity == 1) ...[
+                cardComponent1("• 押金认证", true),
+                cardComponent2("• 退还押金", true),
+              ] else ...[
+                cardComponent1("• 押金认证", false),
+                cardComponent2("• 退还押金", false),
+              ],
             ],
           ),
         ),
@@ -113,7 +120,11 @@ class _DepositMainPageState extends State<DepositMainPage> {
                   child: GestureDetector(
                     onTap: deposit
                         ? () {
-                            Get.to(() => PaymentHistoryDetailPage(),
+                            Get.to(
+                                () => DepositPaymentStatusPage(
+                                      isPass: false,
+                                      isFailed: false,
+                                    ),
                                 transition: Transition.rightToLeft);
                           }
                         : () {

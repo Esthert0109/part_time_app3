@@ -8,9 +8,11 @@ import '../../Constants/apiConstant.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Model/Advertisement/advertisementModel.dart';
 import '../../Model/Category/categoryModel.dart';
+import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
-import '../Mission/categoryServices.dart';
+import '../../Pages/Message/user/chatConfig.dart';
+import '../explore/categoryServices.dart';
 import '../explore/exploreServices.dart';
 import '../notification/systemMessageServices.dart';
 
@@ -56,6 +58,8 @@ class UserServices {
             await SharedPreferencesUtils.savePassword(password);
 
             try {
+              UserModel? userModel = await getUserInfo();
+
               CategoryModel? model = await categoryServices.getCategoryList();
               if (model!.data != null) {
                 exploreCategoryList = model.data!;
@@ -69,7 +73,7 @@ class UserServices {
 
               for (int i = 0; i < 5; i++) {
                 NotificationListModel? notiModel =
-                    await messageServices.getNotificationList(i);
+                    await messageServices.getNotificationList(i, 1);
                 if (notiModel!.data != null) {
                   switch (i) {
                     case 0:
@@ -108,6 +112,19 @@ class UserServices {
 
                 print("check ads: ${advertisementList[0].advertisementImage}");
               }
+
+              missionAvailable = await exploreServices.fetchExplore(1);
+              print("check all mission: ${missionAvailable[0].nickname}");
+              missionAvailableDesc =
+                  await exploreServices.fetchExploreByPrice("Desc", 1);
+              print("check all mission: ${missionAvailableDesc[0].avatar}");
+              missionAvailableAsec =
+                  await exploreServices.fetchExploreByPrice("Asc", 1);
+              print(
+                  "check all mission: ${missionAvailableAsec[0].taskContent}");
+
+              // bool isLoginTencent = await userTencentLogin(data['customerId']);
+              // print("login tencent");
             } catch (e) {
               print("get info after logined error: $e");
             }
@@ -332,6 +349,8 @@ class UserServices {
       userModel =
           UserModel(code: responseCode, msg: responseMsg, data: responseData);
 
+      await SharedPreferencesUtils.saveUserDataInfo(responseData);
+
       return userModel;
     } catch (e) {
       print("Error in get user info: $e");
@@ -377,8 +396,163 @@ class UserServices {
     return null;
   }
 
-  Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
-    url = port + updateCustomerInfoUrl;
+  Future<CheckOTPModel?> updateUSDT(UserData userInfo) async {
+    url = port + updateUserInfoUrl;
+    CheckOTPModel? updateModel;
+    String? token = await SharedPreferencesUtils.getToken();
+    String? phone = await SharedPreferencesUtils.getPhoneNo();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = {
+      'billingNetwork': userInfo.billingNetwork,
+      'billingAddress': userInfo.billingAddress,
+      'billingCurrency': 'USDT',
+      'firstPhoneNo': phone
+    };
+
+    try {
+      final response = await patchRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+        if (responseCode == 0) {
+          bool responseData = jsonData['data'];
+          updateModel = CheckOTPModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          getUserInfo();
+
+          return updateModel;
+        }
+
+        updateModel =
+            CheckOTPModel(code: responseCode, msg: responseMsg, data: false);
+        return updateModel;
+      }
+    } catch (e) {
+      print("Error in update USDT: $e");
+    }
+  }
+
+  Future<UserData?> getCustomerHomePage(String customerId) async {
+    url = port + customerHomePageUrl + customerId.toString();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          Map<String, dynamic> data = jsonData['data'];
+          UserData? responseData = UserData.fromJson(data);
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in customer home page: $e");
+    }
+  }
+
+  Future<int?> getCustomerTaskTotalCount(String customerId) async {
+    url = port + customerTotalPostUrl + "customerId=${customerId}";
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          int responseData = jsonData['data'];
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in task total count: $e");
+    }
+  }
+
+  Future<int?> getCustomerCollectionCount(String customerId) async {
+    url = port + customerTotalCollectionUrl + customerId;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          int responseData = jsonData['data'];
+          return responseData;
+        }
+      }
+    } catch (e) {
+      print("Error in collection total count: $e");
+    }
+  }
+
+  Future<OrderModel?> getCustomerHomePageTask(
+      String customerId, int page) async {
+    url = port +
+        customerHomePageTaskUrl +
+        customerId +
+        "?page=${page.toString()}";
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!,
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          List<dynamic>? data = jsonData['data'];
+          List<OrderData>? responseData =
+              data?.map((e) => OrderData.fromJson(e)).toList();
+          OrderModel orderModel = OrderModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+          return orderModel;
+        } else {
+          OrderModel orderModel =
+              OrderModel(code: responseCode, msg: responseMsg, data: []);
+          return orderModel;
+        }
+      }
+    } catch (e) {
+      print("Error in home page task: $e");
+    }
+  }
+
+   Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
+    url = port + updateUserInfoUrl;
 
     UpdateCustomerInfoModel updateCustomerInfoModel;
 

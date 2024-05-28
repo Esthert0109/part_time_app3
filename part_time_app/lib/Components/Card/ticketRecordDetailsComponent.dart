@@ -14,11 +14,31 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
 class TicketRecordDetailsComponent extends StatefulWidget {
-  final List<TicketRecordDetailsMockClass> steps;
+  final List<TicketRecordDetailsMockClass>? steps;
+  final String? ticketCustomerUsername;
+  final String? ticketCustomerPhoneNum;
+  final String? ticketCustomerEmail;
+  final String? ticketDate;
+  final int? taskId;
+  final String? complaintType;
+  final int? complaintUserId;
+  final String? ticketComplaintDescription;
+  final List<String>? ticketComplaintAttachment;
+  final int? ticketStatus;
 
   TicketRecordDetailsComponent({
     super.key,
-    required this.steps,
+    this.steps,
+    this.ticketCustomerUsername,
+    this.ticketCustomerPhoneNum,
+    this.ticketCustomerEmail,
+    this.ticketDate,
+    this.taskId,
+    this.complaintType,
+    this.complaintUserId,
+    this.ticketComplaintDescription,
+    this.ticketComplaintAttachment,
+    this.ticketStatus,
   });
 
   @override
@@ -56,7 +76,7 @@ class _TicketRecordDetailsComponentState
                                 backgroundDecoration:
                                     const BoxDecoration(color: kTransparent),
                                 itemCount:
-                                    widget.steps[index].submittedPic?.length ??
+                                    widget.ticketComplaintAttachment?.length ??
                                         0,
                                 loadingBuilder: (context, event) {
                                   if (event == null) {}
@@ -69,13 +89,13 @@ class _TicketRecordDetailsComponentState
                                 builder: (context, i) {
                                   return PhotoViewGalleryPageOptions(
                                       imageProvider: NetworkImage(widget
-                                              .steps[index].submittedPic?[i] ??
+                                              .ticketComplaintAttachment?[i] ??
                                           ""),
                                       initialScale:
                                           PhotoViewComputedScale.contained *
                                               0.85,
                                       heroAttributes: PhotoViewHeroAttributes(
-                                          tag: widget.steps[index]
+                                          tag: widget.steps?[index]
                                                   .submittedPic?[i] ??
                                               ""));
                                 }))
@@ -117,39 +137,37 @@ class _TicketRecordDetailsComponentState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Align(
+          Align(
             alignment: Alignment.center,
             child: Text(
-              '待审核',
+              widget.ticketStatus == 1 ? "已审核" : "待审核",
               style: ticketRecordTextStyle,
             ),
           ),
           const SizedBox(height: 10),
           const Text("姓名", style: depositTextStyle2),
-          _buildText(text: "金泰亨"),
+          _buildText(text: widget.ticketCustomerUsername ?? ""),
           const SizedBox(height: 15),
           const Text("电话号码", style: depositTextStyle2),
-          _buildText(text: "0123456789"),
+          _buildText(text: widget.ticketCustomerPhoneNum ?? ""),
           const SizedBox(height: 15),
           const Text("电子邮件", style: depositTextStyle2),
-          _buildText(text: "xxx@gmail.com"),
+          _buildText(text: widget.ticketCustomerEmail ?? ""),
           const SizedBox(height: 15),
           const Text("日期", style: depositTextStyle2),
-          _buildText(text: "22/4/2024 5:21 P.M."),
+          _buildText(text: widget.ticketDate ?? ""),
           const SizedBox(height: 15),
           const Text("悬赏ID", style: depositTextStyle2),
-          _buildText(text: "XXX"),
+          _buildText(text: (widget.taskId ?? "").toString()),
           const SizedBox(height: 15),
           const Text("被举报用户ID", style: depositTextStyle2),
-          _buildText(text: "XXX"),
+          _buildText(text: (widget.complaintUserId ?? "").toString()),
           const SizedBox(height: 15),
           const Text("申述种类", style: depositTextStyle2),
-          _buildText(text: "举报"),
+          _buildText(text: widget.complaintType ?? ""),
           const SizedBox(height: 15),
           const Text("申述详情", style: depositTextStyle2),
-          _buildTextFieldInput(
-              text:
-                  "blablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablabla"),
+          _buildTextFieldInput(text: widget.ticketComplaintDescription ?? ""),
         ],
       ),
     );
@@ -172,6 +190,7 @@ class _TicketRecordDetailsComponentState
   Widget _buildTextFieldInput({
     required String text,
   }) {
+    final attachmentLength = widget.ticketComplaintAttachment?.length ?? 0;
     return Container(
         margin: const EdgeInsets.only(top: 5),
         padding: const EdgeInsets.only(left: 12, bottom: 10),
@@ -186,91 +205,73 @@ class _TicketRecordDetailsComponentState
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(
-                      widget.steps.length,
-                      (index) => Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 6),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(
+                          attachmentLength,
+                          (i) => GestureDetector(
+                            onTap: () {
+                              showZoomImage(context, 0, i);
+                            },
+                            child: Stack(
                               children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 12, 0, 6),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: List.generate(
-                                          widget.steps[index].submittedPic
-                                                  ?.length ??
-                                              0,
-                                          (i) => GestureDetector(
-                                                onTap: () {
-                                                  showZoomImage(
-                                                      context, index, i);
-                                                },
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      height: 100,
-                                                      width: 157,
-                                                      margin: const EdgeInsets
-                                                          .fromLTRB(0, 6, 6, 0),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4),
-                                                          color:
-                                                              kThirdGreyColor),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4),
-                                                        child: Image.network(
-                                                          widget.steps[index]
-                                                                      .submittedPic?[
-                                                                  i] ??
-                                                              "",
-                                                          fit: BoxFit.cover,
-                                                          loadingBuilder: (context,
-                                                              child,
-                                                              loadingProgress) {
-                                                            if (loadingProgress ==
-                                                                null) {
-                                                              return child;
-                                                            }
-                                                            return Center(
-                                                                child: LoadingAnimationWidget
-                                                                    .stretchedDots(
-                                                                        color:
-                                                                            kMainYellowColor,
-                                                                        size:
-                                                                            50));
-                                                          },
-                                                          errorBuilder:
-                                                              (context, error,
-                                                                  stackTrace) {
-                                                            return const Center(
-                                                              child: Text(
-                                                                "无法显示图片",
-                                                                style:
-                                                                    submissionPicErrorTextStyle,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )),
+                                Container(
+                                  height: 100,
+                                  width: 157,
+                                  margin: const EdgeInsets.fromLTRB(0, 6, 6, 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color:
+                                        Colors.grey, // Use your preferred color
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: Image.network(
+                                      widget.ticketComplaintAttachment?[i] ??
+                                          "",
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return Center(
+                                          child: LoadingAnimationWidget
+                                              .stretchedDots(
+                                            color: Colors
+                                                .yellow, // Use your preferred color
+                                            size: 50,
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Center(
+                                          child: Text(
+                                            "无法显示图片",
+                                            style: TextStyle(
+                                                color: Colors
+                                                    .red), // Use your preferred style
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ));

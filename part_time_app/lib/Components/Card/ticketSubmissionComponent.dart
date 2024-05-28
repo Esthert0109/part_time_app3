@@ -16,21 +16,14 @@ import 'package:intl/intl.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 
-late TextEditingController fieldController;
-late TextEditingController emailController;
-late TextEditingController nameController;
-late TextEditingController phoneNumController;
-late TextEditingController dateController;
-late TextEditingController detailsFieldController;
-late TextEditingController reportIDController;
-late TextEditingController reportUserIDController;
-
-class SstepModel {
-  String? description;
-  List<String>? imageUrls;
-
-  SstepModel({required this.description, this.imageUrls});
-}
+late TextEditingController fieldControllerTicket;
+late TextEditingController emailControllerTicket;
+late TextEditingController nameControllerTicket;
+late TextEditingController phoneNumControllerTicket;
+late TextEditingController dateControllerTicket;
+late TextEditingController detailsFieldControllerTicket;
+late TextEditingController reportIDControllerTicket;
+late TextEditingController reportUserIDControllerTicket;
 
 class TicketSubmissionComponent extends StatefulWidget {
   List<String>? submissionPics;
@@ -209,13 +202,17 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
   @override
   void initState() {
     super.initState();
-    fieldController = TextEditingController(text: widget.fieldInitial);
-    emailController = TextEditingController(text: widget.emailInitial);
-    nameController = TextEditingController(text: widget.nameInitial);
-    phoneNumController = TextEditingController(text: widget.phoneNumberInitial);
-    reportIDController = TextEditingController(text: widget.reportIDInitial);
-    reportUserIDController = TextEditingController(text: widget.reportUserIDInitial);
-    dateController = TextEditingController(text: _getCurrentDateAndTime());
+    fieldControllerTicket = TextEditingController(text: widget.fieldInitial);
+    emailControllerTicket = TextEditingController(text: widget.emailInitial);
+    nameControllerTicket = TextEditingController(text: widget.nameInitial);
+    phoneNumControllerTicket =
+        TextEditingController(text: widget.phoneNumberInitial);
+    reportIDControllerTicket =
+        TextEditingController(text: widget.reportIDInitial);
+    reportUserIDControllerTicket =
+        TextEditingController(text: widget.reportUserIDInitial);
+    dateControllerTicket =
+        TextEditingController(text: _getCurrentDateAndTime());
   }
 
   String _getCurrentDateAndTime() {
@@ -236,71 +233,65 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
         children: [
           const Text("姓名", style: depositTextStyle2),
           _buildTextInput(
-            hintText: "请输入姓名",
-            controller: nameController,
-            onChanged: (value) {
-              if (widget.onNameChange != null) {
-                widget.onNameChange!(value);
-              }
-            },
-            readOnly: true,
-          ),
+              hintText: "请输入姓名",
+              controller: nameControllerTicket,
+              onChanged: (value) {
+                if (widget.onNameChange != null) {
+                  widget.onNameChange!(value);
+                }
+              },
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("电话号码", style: depositTextStyle2),
           _buildTextInput(
-            hintText: "电话号码",
-            controller: phoneNumController,
-            onChanged: (value) {
-              if (widget.onPhoneNumChange != null) {
-                widget.onPhoneNumChange!(value);
-              }
-            },
-            readOnly: true,
-          ),
+              hintText: "电话号码",
+              controller: phoneNumControllerTicket,
+              onChanged: (value) {
+                if (widget.onPhoneNumChange != null) {
+                  widget.onPhoneNumChange!(value);
+                }
+              },
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("电子邮件", style: depositTextStyle2),
           _buildTextInput(
-            hintText: "电子邮件",
-            controller: emailController,
-            onChanged: (value) {
-              if (widget.onEmailChange != null) {
-                widget.onEmailChange!(value);
-              }
-            },
-            readOnly: true,
-          ),
+              hintText: "电子邮件",
+              controller: emailControllerTicket,
+              onChanged: (value) {
+                if (widget.onEmailChange != null) {
+                  widget.onEmailChange!(value);
+                }
+              },
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("日期", style: depositTextStyle2),
           _buildTextInput(
-            hintText: "",
-            controller: dateController,
-            onChanged: (value) {},
-            readOnly: true,
-          ),
+              hintText: "",
+              controller: dateControllerTicket,
+              onChanged: (value) {},
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("悬赏ID", style: depositTextStyle2),
           _buildTextInput(
-            hintText: "XXX",
-            controller: reportIDController,
-            onChanged: (value) {
-              if (widget.onreportIDChange != null) {
-                widget.onreportIDChange!(value);
-              }
-            },
-            readOnly: true,
-          ),
+              hintText: "悬赏ID",
+              controller: reportIDControllerTicket,
+              onChanged: (value) {
+                if (widget.onreportIDChange != null) {
+                  widget.onreportIDChange!(value);
+                }
+              },
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("被举报用户ID", style: depositTextStyle2),
           _buildTextInput(
-            hintText: "XXX",
-            controller: reportUserIDController,
-            onChanged: (value) {
-              if (widget.onreportUserIDChange != null) {
-                widget.onreportUserIDChange!(value);
-              }
-            },
-            readOnly: true,
-          ),
+              hintText: "举报用户ID",
+              controller: reportUserIDControllerTicket,
+              onChanged: (value) {
+                if (widget.onreportUserIDChange != null) {
+                  widget.onreportUserIDChange!(value);
+                }
+              },
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("申述种类", style: depositTextStyle2),
           Container(
@@ -330,15 +321,14 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
           const SizedBox(height: 15),
           const Text("申述详情", style: depositTextStyle2),
           _buildTextFieldInput(
-            hintText: "XXX",
-            controller: fieldController,
-            onChanged: (value) {
-              if (widget.detailsFieldChange != null) {
-                widget.detailsFieldChange!(value);
-              }
-            },
-            readOnly: false,
-          ),
+              hintText: "申述详情",
+              controller: fieldControllerTicket,
+              onChanged: (value) {
+                if (widget.detailsFieldChange != null) {
+                  widget.detailsFieldChange!(value);
+                }
+              },
+              readOnly: false),
         ],
       ),
     );

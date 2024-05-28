@@ -11,7 +11,7 @@ class MissionReviewRecipientCardComponent extends StatelessWidget {
   final String userAvatar;
   final String username;
   final Function()? onTap;
-  final String? duration;
+  final DateTime? duration;
 
   MissionReviewRecipientCardComponent({
     Key? key,
@@ -62,7 +62,7 @@ class MissionReviewRecipientCardComponent extends StatelessWidget {
                 child: CountdownTimer(
                   isOTP: false,
                   isReview: true,
-                  expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
+                  expiredDate: duration!,
                 ),
               ),
             ),

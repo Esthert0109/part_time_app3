@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:part_time_app/Components/Card/paymentHistoryDetailComponent.dart';
+import 'package:part_time_app/Components/Dialog/paymentUploadDialogComponent.dart';
 import 'package:part_time_app/Components/Loading/paymentDetailLoading.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/Payment/paymentModel.dart';
+import '../../Services/payment/paymentServices.dart';
 
 class PaymentHistoryDetailPage extends StatefulWidget {
-  const PaymentHistoryDetailPage({super.key});
+  int? paymentID;
+  PaymentHistoryDetailPage({
+    super.key,
+    this.paymentID,
+  });
 
   @override
   State<PaymentHistoryDetailPage> createState() =>
@@ -16,16 +23,41 @@ class PaymentHistoryDetailPage extends StatefulWidget {
 }
 
 class _PaymentHistoryDetailPageState extends State<PaymentHistoryDetailPage> {
-  bool _isLoading = true;
+  bool isLoading = false;
+  PaymentDetail? paymentDetail;
   @override
   void initState() {
     super.initState();
-    // Simulate loading delay
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
     });
+    try {
+      PaymentDetail? data =
+          await PaymentServices().getPaymentDetail(widget.paymentID!);
+      // print("call the API");
+      // print(data);
+      setState(() {
+        if (data != null && data != null) {
+          print(data);
+          paymentDetail = data;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -65,7 +97,7 @@ class _PaymentHistoryDetailPageState extends State<PaymentHistoryDetailPage> {
             ),
           ),
         ),
-        body: _isLoading
+        body: isLoading
             ? PaymentDetailLoading()
             : Container(
                 constraints: const BoxConstraints.expand(),
@@ -82,22 +114,22 @@ class _PaymentHistoryDetailPageState extends State<PaymentHistoryDetailPage> {
                     stops: [0.0, 0.15],
                   ),
                 ),
-                child: const SingleChildScrollView(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       PaymentHistoryDetailComponent(
-                        condition: 1,
-                        missionTitle: "点赞",
-                        missionID: "21659121591261123",
-                        name: "洪海仁",
-                        date: "2024-4-10, 5:21pm",
-                        walletNetwork: "TRX",
-                        walletAddress: "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
-                        receiptURL:
-                            "https://tronscan.org/#/transaction/4ca87323388d0b202f20e0fee57d2491dd7f3a35ac3841771ca25bdcdcfd74bc",
-                        amount: "10.00",
-                        image:
-                            "https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg",
+                        condition: paymentDetail?.paymentTypeStatus(),
+                        missionTitle: paymentDetail?.taskTitle,
+                        missionID: paymentDetail?.taskId.toString(),
+                        receiverName: paymentDetail?.paymentUsername,
+                        date: paymentDetail?.paymentCreatedTime,
+                        walletNetwork: paymentDetail?.paymentBillingNetwork,
+                        walletAddress: paymentDetail?.paymentBillingAddress,
+                        image: paymentDetail?.paymentBillingImage,
+                        receiptURL: paymentDetail?.paymentBillingUrl,
+                        amount: paymentDetail?.paymentAmount,
+                        fee: paymentDetail?.paymentFee,
+                        totalAmount: paymentDetail?.paymentTotalAmount,
                       )
                     ],
                   ),

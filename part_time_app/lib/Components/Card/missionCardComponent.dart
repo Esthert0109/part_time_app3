@@ -21,21 +21,24 @@ class MissionCardComponent extends StatefulWidget {
   final String? missionDate;
   final bool? isFavorite;
   final int? missionStatus;
+  final bool? isPublished;
+  final String customerId;
 
-  const MissionCardComponent({
-    super.key,
-    this.taskId,
-    required this.missionTitle,
-    required this.missionDesc,
-    required this.tagList,
-    required this.missionPrice,
-    required this.userAvatar,
-    required this.username,
-    this.isStatus,
-    this.missionDate,
-    this.isFavorite,
-    this.missionStatus,
-  });
+  const MissionCardComponent(
+      {super.key,
+      this.taskId,
+      required this.missionTitle,
+      required this.missionDesc,
+      required this.tagList,
+      required this.missionPrice,
+      required this.userAvatar,
+      required this.username,
+      this.isStatus,
+      this.missionDate,
+      this.isFavorite,
+      this.missionStatus,
+      this.isPublished,
+      required this.customerId});
 
   @override
   State<MissionCardComponent> createState() => _MissionCardComponentState();
@@ -80,44 +83,58 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
   @override
   Widget build(BuildContext context) {
     status = widget.missionStatus;
+
     if (status != null) {
-      switch (status) {
-        case 0:
-          statusTextStyle = missionStatusOrangeTextStyle;
-          statusText = "待审核";
-          break;
-        case 1:
-          statusTextStyle = missionStatusOrangeTextStyle;
-          statusText = "待完成";
-          break;
-        case 2:
-          statusTextStyle = missionStatusRedTextStyle;
-          statusText = "未通过";
-          break;
-        case 3:
-          statusTextStyle = missionStatusGreenTextStyle;
-          statusText = "已通过";
-          break;
-        case 4:
-          statusTextStyle = missionStatusGreyTextStyle;
-          statusText = "已完成";
-          break;
-        case 5:
-          statusTextStyle = missionStatusOrangeTextStyle;
-          statusText = "待退款";
-          break;
-        case 6:
-          statusTextStyle = missionStatusGreyTextStyle;
-          statusText = "已退款";
-          break;
-        case 7:
-          statusTextStyle = missionStatusOrangeTextStyle;
-          statusText = "待到账";
-          break;
-        case 8:
-          statusTextStyle = missionStatusGreyTextStyle;
-          statusText = "已到账";
-          break;
+      if (widget.isPublished! == false) {
+        switch (status) {
+          case 0:
+            statusTextStyle = missionStatusOrangeTextStyle;
+            statusText = "待审核";
+            break;
+          case 1:
+            statusTextStyle = missionStatusOrangeTextStyle;
+            statusText = "待完成";
+            break;
+          case 2:
+            statusTextStyle = missionStatusRedTextStyle;
+            statusText = "未通过";
+            break;
+          case 7:
+            statusTextStyle = missionStatusOrangeTextStyle;
+            statusText = "待到账";
+            break;
+          case 8:
+            statusTextStyle = missionStatusGreyTextStyle;
+            statusText = "已到账";
+            break;
+        }
+      } else {
+        switch (status) {
+          case 0:
+            statusTextStyle = missionStatusOrangeTextStyle;
+            statusText = "待审核";
+            break;
+          case 1:
+            statusTextStyle = missionStatusRedTextStyle;
+            statusText = "未通过";
+            break;
+          case 2:
+            statusTextStyle = missionStatusGreenTextStyle;
+            statusText = "已通过";
+            break;
+          case 3:
+            statusTextStyle = missionStatusGreyTextStyle;
+            statusText = "已完成";
+            break;
+          case 4:
+            statusTextStyle = missionStatusOrangeTextStyle;
+            statusText = "待退款";
+            break;
+          case 5:
+            statusTextStyle = missionStatusGreyTextStyle;
+            statusText = "已退款";
+            break;
+        }
       }
     }
 
@@ -253,7 +270,7 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
                     Get.to(
                       () => UserProfilePage(
                         isOthers: true,
-                        userID: "",
+                        userID: widget.customerId,
                       ),
                       transition: Transition.rightToLeft,
                     );

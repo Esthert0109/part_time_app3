@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Loading/paymentHistoryLoading.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Model/Task/missionClass.dart';
+import 'package:part_time_app/Model/Ticketing/ticketingModel.dart';
 import 'package:part_time_app/Pages/MockData/missionMockData.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Services/ticketing/ticketingServices.dart';
+import 'ticketDetailsRecordPage.dart';
 
 class TicketHistoryPage extends StatefulWidget {
   const TicketHistoryPage({super.key});
@@ -21,94 +22,195 @@ class TicketHistoryPage extends StatefulWidget {
 }
 
 class _TicketHistoryPageState extends State<TicketHistoryPage> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-  bool _isLoading = true;
+  ScrollController _scrollController = ScrollController();
+  List<TicketingData> ticketingList = [];
+  bool isLoading = false;
+  bool continueLoading = true;
+  int page = 1;
 
   @override
   void initState() {
     super.initState();
-    // Simulate loading delay
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _scrollController.addListener(_scrollListener);
+    _loadData();
   }
 
-  void _onRefresh() async {
-    // monitor network fetch
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      if (!isLoading && continueLoading) {
+        _loadData();
+      }
+    }
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await TicketingData.fetchComplaintTypes();
+      TicketingModel? data = await TicketingService().getTicketingHistory(page);
+      print("call the api");
+      setState(() {
+        if (data!.data != null) {
+          ticketingList.addAll(data.data!);
+          page++;
+        } else {
+          // Handle the case when data is null or data.data is null
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      // Handle error
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
-    // if failed,use refreshFailed()
-    if (mounted) {
-      _refreshController.refreshCompleted();
+    if (!isLoading && mounted) {
+      setState(() {
+        ticketingList.clear();
+        page = 1;
+        // continueLoading = true;
+        _loadData();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Sort ticketingList by date
+    ticketingList
+        .sort((a, b) => (b.ticketDate ?? "").compareTo(a.ticketDate ?? ""));
+
+// Group tickets by date
+    Map<String, List<TicketingData>> groupedTickets = {};
+    for (var ticket in ticketingList) {
+      final date = ticket.ticketDate!.split(' ')[0];
+      if (!groupedTickets.containsKey(date)) {
+        groupedTickets[date] = [];
+      }
+      groupedTickets[date]!.add(ticket);
+    }
+
+// Flatten the grouped data
+    List<dynamic> flattenedList = [];
+    groupedTickets.forEach((date, tickets) {
+      flattenedList.add(date);
+      flattenedList.addAll(tickets);
+    });
     return SafeArea(
       child: Scaffold(
-          extendBodyBehindAppBar: false,
-          appBar: AppBar(
-              automaticallyImplyLeading: false,
-              scrolledUnderElevation: 0.0,
-              leading: IconButton(
-                iconSize: 15,
-                icon: Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-              centerTitle: true,
-              title: Container(
-                  color: kTransparent,
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: thirdTitleComponent(
-                    text: "工单通知",
-                  ))),
-          body:
-              // _isLoading
-              //     ? PaymentHistoryLoading()
-              //     :
-              Container(
-            constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-            decoration: const BoxDecoration(
-              color: kThirdGreyColor,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  kBackgroundFirstGradientColor,
-                  kBackgroundSecondGradientColor
-                ],
-                stops: [0.0, 0.15],
-              ),
+        extendBodyBehindAppBar: false,
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            scrolledUnderElevation: 0.0,
+            leading: IconButton(
+              iconSize: 15,
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Get.back();
+              },
             ),
-            child: CustomRefreshComponent(
-              onRefresh: _onRefresh,
-              controller: _refreshController,
-              child: SingleChildScrollView(
-                child: _buildListView(TicketHistoryList),
-              ),
+            centerTitle: true,
+            title: Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "工单通知",
+                ))),
+        body: Container(
+          constraints: const BoxConstraints.expand(),
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+          decoration: const BoxDecoration(
+            color: kThirdGreyColor,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                kBackgroundFirstGradientColor,
+                kBackgroundSecondGradientColor
+              ],
+              stops: [0.0, 0.15],
             ),
-          )),
+          ),
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            color: kMainYellowColor,
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: flattenedList.length + (isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (isLoading && index == flattenedList.length) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PaymentHistoryLoading(), // Your loading indicator
+                    ),
+                  );
+                }
+
+                final item = flattenedList[index];
+
+                if (item is String) {
+                  // Render date header
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 15),
+                      child: Text(
+                        item,
+                        style:
+                            missionIDtextStyle, // Replace with missionIDtextStyle
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                } else if (item is TicketingData) {
+                  // Render ticket card
+                  final ticket = item;
+                  return _buildCard(
+                    title: TicketingData
+                            .complaintTypeMap[ticket.complaintTypeId] ??
+                        "Unknown",
+                    description: ticket.ticketComplaintDescription ?? "",
+                    complete: ticket.ticketStatus,
+                    ticketId: ticket.ticketId,
+                  );
+                }
+
+                return SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildCard({
-    required bool complete,
-    required String title,
-    required String description,
-    required String date,
+    int? complete,
+    String? title,
+    String? description,
+    String? date,
+    int? ticketId,
   }) {
     return GestureDetector(
       onTap: () {
-        // Navigate to detail page
+        Get.to(
+            () => TicketDetailsRecordPage(
+                  ticketID: ticketId,
+                ),
+            transition: Transition.rightToLeft);
       },
       child: Container(
-        height: 92,
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -126,7 +228,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                 Expanded(
                   flex: 60,
                   child: Text(
-                    title,
+                    title!,
                     style: messageTitleTextStyle,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -135,8 +237,8 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
                 Expanded(
                   flex: 50,
                   child: Text(
-                    complete ? "已审核" : "待审核",
-                    style: complete
+                    complete == 1 ? "已审核" : "待审核",
+                    style: complete == 1
                         ? ticketCompleteTextStyle
                         : ticketUncompleteTextStyle,
                     textAlign: TextAlign.right,
@@ -147,7 +249,7 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
             Padding(
               padding: EdgeInsets.only(top: 3),
               child: Text(
-                description,
+                description!,
                 style: messageDescTextStyle2,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -156,61 +258,6 @@ class _TicketHistoryPageState extends State<TicketHistoryPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildListView(List<TicketMockClass> list) {
-    // Sort the list based on time
-    list.sort((a, b) => b.date.compareTo(a.date));
-
-    List<Widget> ticketWidgets = [];
-
-    // Determine the number of messages to load
-    int messagesToLoad = list.length < 20 ? list.length : 20;
-
-    for (int index = 0; index < messagesToLoad; index++) {
-      if (index == 0 || list[index].date != list[index - 1].date) {
-        ticketWidgets.add(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 5),
-                  child: Text(
-                    list[index].date,
-                    style: missionIDtextStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              _buildCard(
-                complete: list[index].complete,
-                title: list[index].title,
-                description: list[index].description,
-                date: list[index].date,
-              ),
-            ],
-          ),
-        );
-      } else {
-        ticketWidgets.add(
-          _buildCard(
-            complete: list[index].complete,
-            title: list[index].title,
-            description: list[index].description,
-            date: list[index].date,
-          ),
-        );
-      }
-    }
-
-    return ListView(
-      padding: EdgeInsets.only(top: 10),
-      shrinkWrap: true,
-      physics: PageScrollPhysics(),
-      children: ticketWidgets,
     );
   }
 }

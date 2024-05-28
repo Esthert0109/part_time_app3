@@ -3,21 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/Collection/collectionModel.dart';
+import '../../Services/collection/collectionServices.dart';
 
 class MissionDetailDescriptionCardComponent extends StatefulWidget {
+  final int taskId;
   final String title;
   final String detail;
-  final List<String> tag;
+  final List<String?> tag;
   final String totalSlot;
   final String leaveSlot;
   final String day;
   final String duration;
   final String date;
   final String price;
+  final String limitUnit;
+  final String estimatedUnit;
   bool? isFavourite;
 
   MissionDetailDescriptionCardComponent(
       {Key? key,
+      required this.taskId,
       required this.title,
       required this.detail,
       required this.tag,
@@ -27,7 +33,9 @@ class MissionDetailDescriptionCardComponent extends StatefulWidget {
       required this.duration,
       required this.date,
       required this.price,
-      this.isFavourite});
+      this.isFavourite,
+      required this.limitUnit,
+      required this.estimatedUnit});
 
   @override
   State<MissionDetailDescriptionCardComponent> createState() =>
@@ -36,7 +44,18 @@ class MissionDetailDescriptionCardComponent extends StatefulWidget {
 
 class _MissionDetailDescriptionCardComponentState
     extends State<MissionDetailDescriptionCardComponent> {
+  // services
+  CollectionService collectService = CollectionService();
+  Collection? collection;
   bool _favoriteClick = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _favoriteClick = widget.isFavourite ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,11 +82,16 @@ class _MissionDetailDescriptionCardComponentState
                 Flexible(
                     flex: 10,
                     child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _favoriteClick = !_favoriteClick;
-                          print("favourie: ${_favoriteClick}");
-                        });
+                      onTap: () async {
+                        collection = await collectService.updateCollection(
+                            widget.taskId, _favoriteClick);
+
+                        if (collection!.data!) {
+                          setState(() {
+                            _favoriteClick = !_favoriteClick;
+                            print("favourie: ${_favoriteClick}");
+                          });
+                        }
                       },
                       child: Align(
                           alignment: Alignment.topRight,
@@ -131,11 +155,13 @@ class _MissionDetailDescriptionCardComponentState
               children: [
                 Text("悬赏时限", style: missionDetailText4),
                 SizedBox(width: 5),
-                Text(widget.day + "天", style: bottomNaviBarTextStyle),
+                Text(widget.day + widget.limitUnit,
+                    style: bottomNaviBarTextStyle),
                 SizedBox(width: 20),
                 Text("预计耗时", style: missionDetailText4),
                 SizedBox(width: 5),
-                Text(widget.duration + "小时", style: bottomNaviBarTextStyle),
+                Text(widget.duration + widget.estimatedUnit,
+                    style: bottomNaviBarTextStyle),
               ],
             ),
           ),

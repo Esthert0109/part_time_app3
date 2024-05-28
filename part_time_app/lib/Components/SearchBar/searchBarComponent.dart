@@ -7,6 +7,7 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 
 import '../../Constants/textStyleConstant.dart';
+import '../../Pages/Explore/testWebsocket.dart';
 import '../../Pages/Search/searchResultPage.dart';
 
 class SearchBarComponent extends StatefulWidget {
@@ -81,9 +82,13 @@ class _SearchBarComponentState extends State<SearchBarComponent> {
                       },
                       onSubmitted: (searchText) {
                         if (searchText.isNotEmpty && searchText != "") {
-                          searchController.clear();
-                          searchText = "";
-                          isSearching = false;
+                          print("search: $searchText");
+                          Get.to(
+                              () => SearchResultPage(
+                                    searchKeyword: searchText,
+                                    byTag: false,
+                                  ),
+                              transition: Transition.rightToLeft);
                         }
                       },
                     ),

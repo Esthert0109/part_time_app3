@@ -262,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             // bool isLoginTencent =
                             //     await userTencentLogin('2206');
-
+                            // print('login tencent');
                             // if (isLoginTencent) {
                             //   Get.to(() => UserMessagePage(),
                             //       transition: Transition.rightToLeft);
@@ -289,14 +289,6 @@ class _LoginPageState extends State<LoginPage> {
                                 } else {
                                   UserModel? user =
                                       await services.getUserInfo();
-
-                                  await SharedPreferencesUtils.saveUserInfo(
-                                      user!);
-
-                                  print("check info: ${user.data}");
-
-                                  await SharedPreferencesUtils.saveUserDataInfo(
-                                      user.data!);
 
                                   Get.offAllNamed('/');
                                   setState(() {

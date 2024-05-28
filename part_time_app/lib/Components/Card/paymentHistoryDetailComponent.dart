@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,30 +12,32 @@ import '../../Constants/textStyleConstant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentHistoryDetailComponent extends StatefulWidget {
-  final int? condition;
-  final String missionTitle;
-  final String missionID;
-  final String name;
-  final String date;
-  final String walletNetwork;
-  final String walletAddress;
-  final String image;
-  final String receiptURL;
-  final String amount;
+  String? condition;
+  String? missionTitle;
+  String? missionID;
+  String? receiverName;
+  String? date;
+  String? walletNetwork;
+  String? walletAddress;
+  String? image;
+  String? receiptURL;
+  double? amount;
+  double? fee;
+  double? totalAmount;
 
-  const PaymentHistoryDetailComponent(
-      {Key? key,
-      this.condition,
-      required this.missionTitle,
-      required this.missionID,
-      required this.name,
-      required this.date,
-      required this.walletNetwork,
-      required this.walletAddress,
-      required this.image,
-      required this.receiptURL,
-      required this.amount})
-      : super(key: key);
+  PaymentHistoryDetailComponent(
+      {this.condition,
+      this.missionTitle,
+      this.missionID,
+      this.receiverName,
+      this.date,
+      this.walletNetwork,
+      this.walletAddress,
+      this.image,
+      this.receiptURL,
+      this.amount,
+      this.fee,
+      this.totalAmount});
 
   @override
   State<PaymentHistoryDetailComponent> createState() =>
@@ -98,7 +101,7 @@ class _PaymentHistoryDetailComponentState
   }
 
   void _copyToClipboard() {
-    Clipboard.setData(ClipboardData(text: widget.missionID));
+    Clipboard.setData(ClipboardData(text: widget.missionID!));
   }
 
   Future<void> _launchUrl(String url) async {
@@ -120,12 +123,18 @@ class _PaymentHistoryDetailComponentState
 
   @override
   Widget build(BuildContext context) {
+    // A方支付押金：000
+    // A方押金退还：001
+    // A方悬赏退还：110
+    // A方悬赏支付：010
+    // B方悬赏收款：011
     Widget title = Container();
     Widget purpose = Container();
     Widget calculation = Container();
 
     switch (widget.condition) {
-      case 1:
+      //A方支付悬赏
+      case "010":
         title = _buildTitle('支付成功');
         purpose = _buildPurpose('支付悬赏金额');
         //this is different style.
@@ -144,7 +153,7 @@ class _PaymentHistoryDetailComponentState
                       Padding(
                         padding: EdgeInsets.only(top: 8, bottom: 8),
                         child: Text(
-                          "手续费 0%",
+                          "手续费 1%",
                           style: messageTitleTextStyle,
                         ),
                       ),
@@ -162,17 +171,17 @@ class _PaymentHistoryDetailComponentState
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "共记 20 USDT",
+                        "共记 ${widget.amount.toString()}",
                         style: depositTextStyle3,
                       ),
                       Padding(
                           padding: EdgeInsets.only(top: 8, bottom: 8),
                           child: Text(
-                            "0 USDT",
+                            "${widget.fee}",
                             style: messageTitleTextStyle,
                           )),
                       Text(
-                        "20 USDT",
+                        "${widget.totalAmount}",
                         style: forgotPassSubmitTextStyle,
                       ),
                     ],
@@ -183,25 +192,36 @@ class _PaymentHistoryDetailComponentState
           ),
         );
         break;
-      case 2:
+      //A方悬赏退还
+      case "110":
         title = _buildTitle('退款成功');
         purpose = _buildPurpose('退还悬赏金额');
-        calculation = _buildCalculationRow("共记", widget.amount);
+        calculation = _buildCalculationRow("共记", widget.amount.toString());
         break;
-      case 3:
+      //B方悬赏收款
+      case "011":
         title = _buildTitle('收款成功');
         purpose = _buildPurpose('支付悬赏金额');
-        calculation = _buildCalculationRow("共记", widget.amount);
+        calculation = _buildCalculationRow("共记", widget.amount.toString());
         break;
-      case 4:
+      //A方支付押金
+      case "000":
         title = _buildTitle('支付成功');
         purpose = _buildPurpose('押金支付');
-        calculation = _buildCalculationRow("共记", widget.amount);
+        calculation = _buildCalculationRow("共记", widget.amount.toString());
         break;
-      case 5:
+      //A方押金退还
+      case "100":
         title = _buildTitle('退款成功');
         purpose = _buildPurpose('押金退还');
-        calculation = _buildCalculationRow("共记", widget.amount);
+        calculation = _buildCalculationRow("共记", widget.amount.toString());
+        break;
+      //unknow condition
+      default:
+        title = _buildTitle('未知');
+        widget.receiverName = "未知";
+        purpose = _buildPurpose('未知');
+        calculation = _buildCalculationRow("共记", "0");
         break;
     }
 
@@ -224,7 +244,7 @@ class _PaymentHistoryDetailComponentState
                   purpose,
                   SizedBox(height: 8),
                   Text("悬赏标题", style: depositTextStyle2),
-                  _buildText1(widget.missionTitle),
+                  _buildText1(widget.missionTitle ?? ""),
                   Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Row(
@@ -234,7 +254,7 @@ class _PaymentHistoryDetailComponentState
                             style: missionDetailImgNumTextStyle,
                           ),
                           Text(
-                            widget.missionID,
+                            widget.missionID ?? "",
                             style: missionDetailImgNumTextStyle,
                           ),
                           SizedBox(width: 20),
@@ -245,11 +265,11 @@ class _PaymentHistoryDetailComponentState
                         ],
                       )),
                   SizedBox(height: 18),
-                  Text("交易用途", style: depositTextStyle2),
-                  _buildText1(widget.name),
+                  Text("收款人姓名", style: depositTextStyle2),
+                  _buildText1(widget.receiverName ?? ""),
                   SizedBox(height: 18),
                   Text("日期", style: depositTextStyle2),
-                  _buildText1(widget.date),
+                  _buildText1(widget.date ?? ""),
                   SizedBox(height: 18),
                   Text("收款信息", style: depositTextStyle2),
                   Padding(
@@ -263,7 +283,7 @@ class _PaymentHistoryDetailComponentState
                           style: inputCounterTextStyle,
                         ),
                         SizedBox(height: 5),
-                        Text(widget.walletNetwork,
+                        Text(widget.walletNetwork ?? "",
                             style: userProfileMenuTextStyle),
                         SizedBox(height: 12),
                         Text(
@@ -271,7 +291,7 @@ class _PaymentHistoryDetailComponentState
                           style: inputCounterTextStyle,
                         ),
                         SizedBox(height: 5),
-                        Text(widget.walletAddress,
+                        Text(widget.walletAddress ?? "",
                             style: userProfileMenuTextStyle),
                         SizedBox(height: 20),
                         Container(
@@ -288,11 +308,8 @@ class _PaymentHistoryDetailComponentState
                                       width: double.infinity,
                                       height: 300,
                                       child: PhotoView(
-                                        imageProvider: widget.image != null
-                                            ? NetworkImage(widget.image!)
-                                            : AssetImage(
-                                                    "assets/common/demophoto.svg")
-                                                as ImageProvider,
+                                        imageProvider:
+                                            NetworkImage(widget.image ?? ""),
                                         errorBuilder: (BuildContext context,
                                             Object exception,
                                             StackTrace? stackTrace) {
@@ -313,7 +330,8 @@ class _PaymentHistoryDetailComponentState
                             },
                             child: widget.image != null
                                 ? Image.network(
-                                    widget.image!,
+                                    widget.image ??
+                                        "assets/common/demophoto.svg",
                                     fit: BoxFit.cover,
                                   )
                                 : Center(
@@ -330,9 +348,9 @@ class _PaymentHistoryDetailComponentState
                         Padding(
                             padding: EdgeInsets.fromLTRB(0, 8, 0, 5),
                             child: GestureDetector(
-                              onTap: () => _launchUrl(widget.receiptURL),
+                              onTap: () => _launchUrl(widget.receiptURL!),
                               child: Text(
-                                widget.receiptURL,
+                                widget.receiptURL ?? "",
                                 style: depositURLTextStyle,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,

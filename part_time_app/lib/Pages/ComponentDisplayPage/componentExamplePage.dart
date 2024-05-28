@@ -118,7 +118,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionReviewRecipientCardComponent(
                 isReviewing: false,
                 isCompleted: false,
-                duration: "48:00:00",
+                duration: DateTime(2024),
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
                 username: '新鲜哥',
@@ -126,7 +126,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionReviewRecipientCardComponent(
                 isReviewing: true,
                 isCompleted: false,
-                duration: "48:00:00",
+                duration: DateTime(2024),
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNaT5SvBkYftSASmuj1yAmOFONXoWFqRlJ0mO7ZI_njw&s',
                 username: '微笑姐',
@@ -134,7 +134,7 @@ class _ComponentExampleState extends State<ComponentExample> {
               MissionReviewRecipientCardComponent(
                 isReviewing: false,
                 isCompleted: true,
-                duration: "48:00:00",
+                duration: DateTime(2024),
                 userAvatar:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkGXX7KS0tl9-flc6R2PR8D_2qHR-baQXsmeAGWix4pg&s',
                 username: '新鲜哥',
@@ -151,7 +151,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                 missionDate: "2024-04-29",
                 isStatus: true,
                 isFavorite: false,
-                missionStatus: 0,
+                missionStatus: 0, customerId: '',
               ),
               MissionSubmissionCardComponent(
                 submissionPics: [
@@ -219,7 +219,9 @@ class _ComponentExampleState extends State<ComponentExample> {
                 messageDesc: '您已预付200USDT的赏金至悬赏 [标题] 。',
                 onTap: () {
                   setState(() {
-                    Get.to(() => MissionPublishMainPage(isEdit: false,));
+                    Get.to(() => MissionPublishMainPage(
+                          isEdit: false,
+                        ));
                     print("click");
                   });
                 },
@@ -254,6 +256,9 @@ class _ComponentExampleState extends State<ComponentExample> {
                 duration: "24",
                 date: "2023.12.01",
                 price: "500000",
+                taskId: 0,
+                limitUnit: '',
+                estimatedUnit: '',
               ),
               SizedBox(height: 10),
               Divider(),
@@ -282,7 +287,8 @@ class _ComponentExampleState extends State<ComponentExample> {
                   );
                 },
                 buttonColor: kMainYellowColor,
-                textStyle: buttonTextStyle, isLoading: false,
+                textStyle: buttonTextStyle,
+                isLoading: false,
               ),
               SizedBox(height: 10),
               primaryButtonComponent(
@@ -326,7 +332,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return RejectReasonDialogComponent();
+                      return RejectReasonDialogComponent(orderId: 02,);
                     },
                   );
                 },
@@ -387,7 +393,7 @@ class _ComponentExampleState extends State<ComponentExample> {
                         isSubmit: false,
                       ),
                       primaryButtonComponent(
-                        isLoading: false,
+                          isLoading: false,
                           text: "提交",
                           onPressed: () {
                             setState(() {

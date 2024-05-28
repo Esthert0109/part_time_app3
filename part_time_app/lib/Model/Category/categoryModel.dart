@@ -58,4 +58,8 @@ class CategoryListData {
       categoryUpdatedTime: json['categoryUpdatedTime'],
     );
   }
+  @override
+  String toString() {
+    return 'CategoryListData{categoryId: $categoryId, categoryName: $categoryName, categoryAvatar: $categoryAvatar, categoryCreatedTime: $categoryCreatedTime, categoryUpdatedTime: $categoryUpdatedTime}';
+  }
 }

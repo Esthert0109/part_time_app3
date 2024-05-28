@@ -11,17 +11,20 @@ import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import 'dart:io';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
 
-late TextEditingController usernameController;
-late TextEditingController countryController;
-late TextEditingController sexController;
-late TextEditingController emailController;
-late TextEditingController nameController;
-late TextEditingController walletNetworkController;
-late TextEditingController walletAddressController;
-late TextEditingController usdtLinkController;
-late TextEditingController firstPhoneNoController;
-late TextEditingController secondPhoneNoController;
+late TextEditingController usernameControllerPayment;
+late TextEditingController countryControllerPayment;
+late TextEditingController fieldControllerPayment;
+late TextEditingController sexControllerPayment;
+late TextEditingController emailControllerPayment;
+late TextEditingController nameControllerPayment;
+late TextEditingController walletNetworkControllerPayment;
+late TextEditingController walletAddressControllerPayment;
+late TextEditingController firstPhoneNoControllerPayment;
+late TextEditingController secondPhoneNoControllerPayment;
+TextEditingController usdtLinkControllerPayment = TextEditingController();
 
 class UserDetailCardComponent extends StatefulWidget {
   bool isEditProfile;
@@ -37,6 +40,7 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? usernameInitial;
   final String? countryInitial;
   final String? fieldInitial;
+  final String? sexInitial;
   final String? emailInitial;
   final String? nameInitial;
   final String? countryCode;
@@ -63,6 +67,7 @@ class UserDetailCardComponent extends StatefulWidget {
     this.usernameInitial,
     this.countryInitial,
     this.fieldInitial,
+    this.sexInitial,
     this.emailInitial,
     this.nameInitial,
     this.countryCode,
@@ -89,7 +94,9 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String dialCode = '';
   String phone = '';
   String countryCode = '';
-  String? dropdownGenderValue;
+  String? firstContact;
+  String? code;
+  String? username;  String? dropdownGenderValue;
   String? dropdownbusinessScopeValue;
   String? avatarUrl;
   bool isLoading = false;
@@ -100,79 +107,69 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   @override
   void initState() {
     super.initState();
-
-    getBusinessScopeList();
-    initializeControllers();
-    getUserInfo();
+    _loadDataFromShared();
+    usernameControllerPayment =
+        TextEditingController(text: widget.usernameInitial);
+    countryControllerPayment =
+        TextEditingController(text: widget.countryInitial);
+    fieldControllerPayment = TextEditingController(text: widget.fieldInitial);
+    sexControllerPayment = TextEditingController(text: widget.sexInitial);
+    emailControllerPayment = TextEditingController(text: widget.emailInitial);
+    nameControllerPayment = TextEditingController(text: widget.nameInitial);
+    walletNetworkControllerPayment =
+        TextEditingController(text: widget.walletNetworkInitial);
+    walletAddressControllerPayment =
+        TextEditingController(text: widget.walletAddressInitial);
+    usdtLinkControllerPayment =
+        TextEditingController(text: widget.usdtLinkInitial);
   }
 
-  void initializeControllers() {
-    usernameController = TextEditingController();
-    countryController = TextEditingController();
-    emailController = TextEditingController();
-    nameController = TextEditingController();
-    walletNetworkController = TextEditingController();
-    walletAddressController = TextEditingController();
-    usdtLinkController = TextEditingController();
-    firstPhoneNoController = TextEditingController();
-    secondPhoneNoController = TextEditingController();
-  }
-
-  Future<void> getBusinessScopeList() async {
-    List<BusinessScopeData>? fetchedBusinessScopeList =
-        await businessScopeServices.getBusinessScopeList();
-    if (fetchedBusinessScopeList != null) {
+  Future<void> _loadDataFromShared() async {
+    String? phoneNo = await SharedPreferencesUtils.getPhoneNo();
+    UserData? user = await SharedPreferencesUtils.getUserDataInfo();
+    if (phoneNo != null) {
+      Map<String, String> separated = separatePhoneNumber(phoneNo);
       setState(() {
-        businessScopeList = fetchedBusinessScopeList;
+        code = separated["countryCode"];
+        firstContact = separated["phoneNumber"];
+        username = user?.username;
+         usernameControllerPayment.text = user?.username ?? '';
+      countryControllerPayment.text = user?.country ?? '';
+      emailControllerPayment.text = user?.email ?? '';
+      nameControllerPayment.text = user?.nickname ?? '';
+      walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
+      walletAddressControllerPayment.text = user?.billingAddress ?? '';
+      usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
+      dropdownGenderValue = user?.gender ?? '';
+      // firstPhoneNoController.text =
+      //     _stripCountryCode(user?.firstPhoneNo, "+60");
+      secondPhoneNoControllerPayment.text = user?.secondPhoneNo ?? '';
+      avatarUrl = user?.avatar ?? '';
+      dropdownbusinessScopeValue = user?.businessScopeName ?? '';
+
       });
     }
   }
 
-  Future<void> getUserInfo() async {
-    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-    setState(() {
-      usernameController.text = data?.username ?? '';
-      countryController.text = data?.country ?? '';
-      emailController.text = data?.email ?? '';
-      nameController.text = data?.nickname ?? '';
-      walletNetworkController.text = data?.bilingNetwork ?? '';
-      walletAddressController.text = data?.bilingAddress ?? '';
-      usdtLinkController.text = data?.bilingCurrency ?? '';
-      dropdownGenderValue = data?.gender ?? '';
-      firstPhoneNoController.text =
-          _stripCountryCode(data?.firstPhoneNo, "+60");
-      secondPhoneNoController.text = data?.secondPhoneNo ?? '';
-      avatarUrl = data?.avatar ?? '';
-      dropdownbusinessScopeValue = data?.businessScopeName ?? '';
-    });
-  }
-
-  String _stripCountryCode(String? phoneNumber, String countryCode) {
-    if (phoneNumber != null && phoneNumber.startsWith(countryCode)) {
-      return phoneNumber.substring(countryCode.length);
-    }
-    return phoneNumber ?? '';
-  }
-
-  void _updateUser() async {
+    void _updateUser() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      String firstPhoneNumber = firstPhoneNoController.text.trim();
-      String secondPhoneNumber = secondPhoneNoController.text.trim();
+      String firstPhoneNumber = firstPhoneNoControllerPayment.text.trim();
+      String secondPhoneNumber = secondPhoneNoControllerPayment.text.trim();
 
       UserData updatedUserData = UserData(
-        nickname: nameController.text,
-        username: usernameController.text,
-        country: countryController.text,
+        nickname: usernameControllerPayment.text,
+        username: usernameControllerPayment.text,
+        country: countryControllerPayment.text,
         gender: dropdownGenderValue,
         avatar: avatarUrl,
-        firstPhoneNo: firstPhoneNoController.text,
-        secondPhoneNo: secondPhoneNoController.text,
-        email: emailController.text,
+        firstPhoneNo: firstPhoneNoControllerPayment.text,
+        secondPhoneNo: secondPhoneNoControllerPayment.text,
+        email: emailControllerPayment.text,
         businessScopeName: dropdownbusinessScopeValue,
-        bilingNetwork: walletNetworkController.text,
-        bilingAddress: walletAddressController.text,
-        bilingCurrency: usdtLinkController.text,
+        billingNetwork: walletNetworkControllerPayment.text,
+        billingAddress: walletAddressControllerPayment.text,
+        billingCurrency: usdtLinkControllerPayment.text,
       );
 
       if (firstPhoneNumber == secondPhoneNumber) {
@@ -200,11 +197,22 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
       }
 
       // Refresh the user info after updating
-      getUserInfo();
+      _loadDataFromShared();
     }
   }
 
-void openImagePicker() async {
+  Map<String, String> separatePhoneNumber(String phoneNumber) {
+    String countryCode = phoneNumber.substring(0, 3); // Extracts "+60"
+    String remainingNumber =
+        phoneNumber.substring(3); // Extracts the rest of the number
+
+    return {
+      "countryCode": countryCode,
+      "phoneNumber": remainingNumber,
+    };
+  }
+
+  void openImagePicker() async {
   XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
   if (image != null) {
@@ -248,7 +256,7 @@ void openImagePicker() async {
   }
 }
 
-
+  String? dropdownValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -317,7 +325,7 @@ void openImagePicker() async {
                           Text("用户名", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "请输入用户名",
-                              controller: nameController,
+                              controller: nameControllerPayment,
                               onChanged: (value) {
                                 if (widget.onNameChange != null) {
                                   widget.onNameChange!(value);
@@ -328,7 +336,7 @@ void openImagePicker() async {
                           Text("真实姓名", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "真实姓名",
-                              controller: usernameController,
+                              controller: usernameControllerPayment,
                               onChanged: (value) {
                                 if (widget.onUsernameChange != null) {
                                   widget.onUsernameChange!(value);
@@ -363,7 +371,7 @@ void openImagePicker() async {
                                 flex: 7,
                                 child: _buildTextInput(
                                     hintText: "请输入国家",
-                                    controller: countryController,
+                                    controller: countryControllerPayment,
                                     onChanged: (value) {
                                       if (widget.onCountryChange != null) {
                                         widget.onCountryChange!(value);
@@ -446,7 +454,7 @@ void openImagePicker() async {
                           Text("邮箱", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "邮箱",
-                              controller: emailController,
+                              controller: emailControllerPayment,
                               onChanged: (value) {
                                 if (widget.onEmailChange != null) {
                                   widget.onEmailChange!(value);
@@ -457,7 +465,7 @@ void openImagePicker() async {
                           Text("真实姓名", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "真实姓名",
-                              controller: usernameController,
+                              controller: usernameControllerPayment,
                               onChanged: (value) {
                                 if (widget.onUsernameChange != null) {
                                   widget.onUsernameChange!(value);
@@ -481,7 +489,7 @@ void openImagePicker() async {
                                           borderRadius:
                                               BorderRadius.circular(8)),
                                       child: Text(
-                                        "+60",
+                                        code ?? "",
                                         style: missionUsernameTextStyle,
                                         textAlign: TextAlign.center,
                                       ))),
@@ -495,8 +503,9 @@ void openImagePicker() async {
                                         color: kInputBackGreyColor,
                                         borderRadius: BorderRadius.circular(8)),
                                     child: _buildTextInput(
+                                      // firstContact ?? "",
                                         hintText: "",
-                                        controller: firstPhoneNoController,
+                                        controller: firstPhoneNoControllerPayment,
                                         onChanged: (value) {
                                           if (widget.onfirstPhoneNoChange !=
                                               null) {
@@ -521,7 +530,7 @@ void openImagePicker() async {
                                 child: InternationalPhoneNumberInput(
                                   errorMessage: "手机号码不正确",
                                   initialValue: phoneNumber,
-                                  textFieldController: secondPhoneNoController,
+                                  textFieldController: secondPhoneNoControllerPayment,
                                   formatInput: true,
                                   selectorConfig: const SelectorConfig(
                                       trailingSpace: true,
@@ -586,7 +595,7 @@ void openImagePicker() async {
                           Text("收款信息", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "钱包地址 (account number)",
-                              controller: walletAddressController,
+                              controller: walletAddressControllerPayment,
                               onChanged: (value) {
                                 if (widget.onWalletAddressChange != null) {
                                   widget.onWalletAddressChange!(value);
@@ -596,7 +605,7 @@ void openImagePicker() async {
                           SizedBox(height: 5),
                           _buildTextInput(
                               hintText: "NETWORK 名称",
-                              controller: walletNetworkController,
+                              controller: walletNetworkControllerPayment,
                               onChanged: (value) {
                                 if (widget.onWalletNetworkChange != null) {
                                   widget.onWalletNetworkChange!(value);
@@ -606,7 +615,7 @@ void openImagePicker() async {
                           SizedBox(height: 5),
                           _buildTextInput(
                               hintText: "货币- USDT",
-                              controller: usdtLinkController,
+                              controller: usdtLinkControllerPayment,
                               onChanged: (value) {
                                 if (widget.onUsernameChange != null) {
                                   widget.onUsernameChange!(value);
@@ -646,7 +655,7 @@ void openImagePicker() async {
                           SizedBox(height: 5),
                           _buildTextInput(
                               hintText: "USDT 链名称",
-                              controller: walletAddressController,
+                              controller: walletAddressControllerPayment,
                               onChanged: (value) {
                                 if (widget.onWalletNetworkChange != null) {
                                   widget.onWalletNetworkChange!(value);
@@ -656,7 +665,7 @@ void openImagePicker() async {
                           SizedBox(height: 10),
                           _buildTextInput(
                               hintText: "USDT 链地址",
-                              controller: usdtLinkController,
+                              controller: walletAddressControllerPayment,
                               onChanged: (value) {
                                 if (widget.onUsdtLinkChange != null) {
                                   widget.onUsdtLinkChange!(value);

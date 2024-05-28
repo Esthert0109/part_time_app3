@@ -1,28 +1,29 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
-import 'package:part_time_app/Pages/Explore/highCommisionPage.dart';
-import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
-import 'package:part_time_app/Pages/Message/systemMessage1Page.dart';
-import 'package:part_time_app/Pages/Search/searchResultPage.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
-import 'package:part_time_app/Pages/UserProfile/depositHistoryDetailPage.dart';
-import 'package:part_time_app/Pages/UserProfile/depositMainPage.dart';
-import 'package:part_time_app/Pages/UserProfile/depositPaymentPage.dart';
-import 'package:part_time_app/Pages/UserProfile/paymentHistoryPage.dart';
-
+import 'package:provider/provider.dart';
 import 'Pages/Message/user/chatConfig.dart';
+import 'Pages/UserProfile/ticketDetailsRecordPage.dart';
 import 'Pages/homePage.dart';
+import 'Services/notification/notifacationServices.dart';
+import 'Services/webSocketService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  NotificationController.initializeNotification();
   initAndLoginIm();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => WebSocketService(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/', page: () => const HomePage()),
         GetPage(name: '/sort', page: () => SortPage()),
         GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => SystemMessage1Page()),
+        GetPage(name: '/depo', page: () => TicketDetailsRecordPage()),
       ],
     );
   }

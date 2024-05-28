@@ -5,12 +5,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
+import 'package:part_time_app/Services/order/orderServices.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../Button/secondaryButtonComponent.dart';
 
 class RejectReasonDialogComponent extends StatefulWidget {
-  const RejectReasonDialogComponent({super.key});
+  final int orderId;
+  const RejectReasonDialogComponent({super.key, required this.orderId});
 
   @override
   State<RejectReasonDialogComponent> createState() =>
@@ -19,9 +21,14 @@ class RejectReasonDialogComponent extends StatefulWidget {
 
 class _RejectReasonDialogComponentState
     extends State<RejectReasonDialogComponent> {
-  int _selectedIndex = -1;
+  int _selectedIndex = 0;
   bool _showTextField = false;
   List<String> buttonLabels = ['未根据指示完成任务', '恶意提交', '内容不完整', '其他'];
+  String rejectReason = "";
+  TextEditingController reasonController = TextEditingController();
+
+  // Services
+  OrderServices services = OrderServices();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ class _RejectReasonDialogComponentState
       child: SingleChildScrollView(
         child: Container(
           width: 351,
-          height: _showTextField ? 500 : 450,
+          height: _showTextField ? 500 : 400,
           decoration: BoxDecoration(
             color: kMainWhiteColor,
             borderRadius: BorderRadius.circular(8),
@@ -67,6 +74,9 @@ class _RejectReasonDialogComponentState
                         setState(() {
                           _selectedIndex = index;
                           _showTextField = index == buttonLabels.length - 1;
+                          if (!_showTextField) {
+                            rejectReason = buttonLabels[_selectedIndex];
+                          }
                         });
                       },
                     );
@@ -84,9 +94,17 @@ class _RejectReasonDialogComponentState
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: TextField(
+                        controller: reasonController,
                         style: missionCheckoutHintTextStyle,
                         maxLines: null,
+                        maxLength: 200,
+                        onChanged: (value) {
+                          setState(() {
+                            rejectReason = value;
+                          });
+                        },
                         decoration: InputDecoration(
+                          counterText: "",
                           hintText: "请输入拒绝理由",
                           hintStyle: missionDetailText2,
                           filled: true,
@@ -105,16 +123,38 @@ class _RejectReasonDialogComponentState
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                 child: secondaryButtonComponent(
                   text: "提交",
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Get.back();
-                    Fluttertoast.showToast(
-                        msg: "已提交",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: kMainGreyColor,
-                        textColor: kThirdGreyColor);
+                  onPressed: () async {
+                    try {
+                      bool? reject = await services.acceptRejectOrder(
+                          false, widget.orderId, rejectReason);
+                      if (reject!) {
+                        setState(() {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Get.back();
+                          Fluttertoast.showToast(
+                              msg: "已提交",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainGreyColor,
+                              textColor: kThirdGreyColor);
+                        });
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "提交失败，请重试",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: kMainGreyColor,
+                            textColor: kThirdGreyColor);
+                      }
+                    } catch (e) {
+                      Fluttertoast.showToast(
+                          msg: "$e",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: kMainGreyColor,
+                          textColor: kThirdGreyColor);
+                    }
                   },
                   buttonColor: kMainYellowColor,
                   textStyle: buttonTextStyle2,

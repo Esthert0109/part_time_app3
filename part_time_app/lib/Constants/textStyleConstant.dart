@@ -335,6 +335,8 @@ const alertDialogTitleTextStyle = TextStyle(
 
 const alertDialogContentTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
+const alertDialogContentTextStyle2 = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w600, color: kSecondGreyColor);
 
 const alertDialogFirstButtonTextStyle = TextStyle(
     fontSize: 14, fontWeight: FontWeight.w400, color: kSecondGreyColor);
@@ -417,6 +419,11 @@ const paymentHistoryTextStyle2 = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500,
   color: kMainBlackColor,
+);
+const paymentHistoryTextStyle3 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: kSecondGreyColor,
 );
 const depositURLTextStyle =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kMainBlueColor);

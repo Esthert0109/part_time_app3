@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionMessageCardComponent.dart';
+import 'package:part_time_app/Pages/UserProfile/ticketDetailsRecordPage.dart';
+import '../../Pages/MissionRecipient/missionDetailRecipientPage.dart';
+import '../../Pages/UserProfile/paymentHistoryDetailPage.dart';
 import '../Card/primarySystemMessageCardComponent.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
@@ -9,15 +13,25 @@ import 'package:flutter/material.dart';
 class MessageList extends StatefulWidget {
   final String title;
   final String description;
-  final String createdTime;
   final bool isSystem;
+  final bool? isPayment;
+  final bool? isTicket;
+  final bool? isMission;
+  int? paymentID;
+  int? ticketID;
+  int? taskID;
 
-  const MessageList({
+  MessageList({
     Key? key,
     required this.title,
     required this.description,
-    required this.createdTime,
     required this.isSystem,
+    this.isPayment,
+    this.isTicket,
+    this.isMission,
+    this.paymentID,
+    this.ticketID,
+    this.taskID,
   }) : super(key: key);
 
   @override
@@ -30,17 +44,6 @@ class _MessageListState extends State<MessageList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15, bottom: 5),
-            child: Text(
-              widget.createdTime,
-              style: missionIDtextStyle,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
         widget.isSystem ? _buildSystemMessage() : _buildUserMessage(),
       ],
     );
@@ -58,7 +61,33 @@ class _MessageListState extends State<MessageList> {
         messageTitle: widget.title,
         messageDesc: widget.description,
         onTap: () {
-          print("Touch the talala");
+          if (widget.isPayment == true) {
+            setState(() {
+              Get.to(
+                  () => PaymentHistoryDetailPage(
+                        paymentID: widget.paymentID,
+                      ),
+                  transition: Transition.rightToLeft);
+            });
+          }
+          if (widget.isTicket == true) {
+            setState(() {
+              Get.to(
+                  () => TicketDetailsRecordPage(
+                        ticketID: widget.ticketID,
+                      ),
+                  transition: Transition.rightToLeft);
+            });
+          }
+          if (widget.isMission == true) {
+            setState(() {
+              Get.to(
+                  () => MissionDetailRecipientPage(
+                        taskId: widget.taskID,
+                      ),
+                  transition: Transition.rightToLeft);
+            });
+          }
         });
   }
 }

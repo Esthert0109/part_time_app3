@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Selection/thirdStatusSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Services/order/orderServices.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
-import '../MissionRecipient/missionDetailRecipientPage.dart';
 import '../../Model/Task/missionClass.dart';
 import '../MockData/missionMockData.dart';
-
-bool dataFetchedIssued = false;
-bool dataEndIssued = false;
-List<MissionMockClass>? missionWaitSystemReview = [];
-List<MissionMockClass>? missionSystemFailed = [];
-List<MissionMockClass>? missionSystemPassed = [];
-List<MissionMockClass>? missionCompleted = [];
-List<MissionMockClass>? missionWaitRefund = [];
-List<MissionMockClass>? missionRefund = [];
 
 class MissionIssuedMainPage extends StatefulWidget {
   const MissionIssuedMainPage({super.key});
@@ -27,172 +20,238 @@ class MissionIssuedMainPage extends StatefulWidget {
   State<MissionIssuedMainPage> createState() => _MissionIssuedMainPageState();
 }
 
-class _MissionIssuedMainPageState extends State<MissionIssuedMainPage> {
+class _MissionIssuedMainPageState extends State<MissionIssuedMainPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   int statusSelected = 0;
   bool isLoading = false;
-  bool isFirstLaunch = true;
-  bool reachEndOfList = false;
-  int currentPage = 1;
-  int itemsPerPage = 1;
+  bool isContinueLoading = true;
   ScrollController _scrollController = ScrollController();
 
-  // set status on mission detail status issuer page
-  bool isWaiting = false;
-  bool isFailed = false;
-  bool isPassed = false;
-  bool isRemoved = false;
+  OrderServices services = OrderServices();
+  OrderModel? taskModel;
 
   @override
   void initState() {
     super.initState();
-    if (!dataFetchedIssued && !dataEndIssued) {
-      // Fetch data only if it hasn't been fetched before
-      _loadData();
-    }
+    fetchData();
+    taskPage = 1;
     _scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
 
-  _loadData() async {
-    if (!isLoading && !reachEndOfList && !dataEndIssued) {
-      setState(() {
-        isLoading = true;
-      });
+  fetchData() async {
+    setState(() {
+      isLoading = true;
+      isContinueLoading = true;
+    });
 
-      await Future.delayed(Duration(seconds: 2));
-      int start = (currentPage - 1) * itemsPerPage;
-      int end = start + itemsPerPage;
-
-      if (MissionAvailableList.length > start) {
-        if (isFirstLaunch) {
-          missionWaitSystemReview = MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end);
-          isFirstLaunch = false;
-        } else {
-          missionWaitSystemReview!.addAll(MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end));
-        }
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-            currentPage++;
-          });
-        }
+    for (int i = 0; i < 6; i++) {
+      taskModel = await services.getTaskByStatus(i);
+      if (taskModel != null &&
+          taskModel!.data != null &&
+          taskModel!.data!.isNotEmpty) {
+        setState(() {
+          if (i == 0) {
+            if (taskModel!.data != []) {
+              taskWaitReviewed.addAll(taskModel?.data ?? []);
+            }
+          } else if (i == 1) {
+            if (taskModel!.data != []) {
+              taskFailed.addAll(taskModel?.data ?? []);
+            }
+          } else if (i == 2) {
+            if (taskModel!.data != []) {
+              taskPassed.addAll(taskModel?.data ?? []);
+            }
+          } else if (i == 3) {
+            if (taskModel!.data != []) {
+              taskCompleted.addAll(taskModel?.data ?? []);
+            }
+          } else if (i == 4) {
+            if (taskModel!.data != []) {
+              taskWaitReturned.addAll(taskModel?.data ?? []);
+            }
+          } else if (i == 5) {
+            if (taskModel!.data != []) {
+              taskReturned.addAll(taskModel?.data ?? []);
+            }
+          }
+        });
       } else {
         setState(() {
-          reachEndOfList = true;
-          dataEndIssued = true;
-          isLoading = false;
+          isContinueLoading = false;
         });
       }
-      dataFetchedIssued = true;
     }
+
+    setState(() {
+      taskPage++;
+      isLoading = false;
+    });
   }
 
   _scrollListener() {
-    if (!_scrollController.hasClients || isLoading) return;
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      _loadData();
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 1000) {
+      if (!isLoading && isContinueLoading) {
+        fetchData();
+      }
     }
   }
 
   Future<void> _refresh() async {
-    if (!isLoading) {
+    if (!isLoading && mounted) {
       setState(() {
-        currentPage = 1;
-        missionWaitSystemReview = [];
-        reachEndOfList = false;
-        dataEndIssued = false;
+        taskPage = 1;
+        isContinueLoading = true;
+        taskWaitReviewed.clear();
+        taskFailed.clear();
+        taskPassed.clear();
+        taskCompleted.clear();
+        taskWaitReturned.clear();
+        taskReturned.clear();
       });
-      await _loadData();
+      await fetchData();
     }
   }
 
-  Widget buildMissionAcceptedListView(List<MissionMockClass> missionList) {
+  Widget buildMissionAcceptedListView(List<OrderData> missionList) {
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: missionList.length + (isLoading ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index < missionList.length) {
+          if (index == missionList.length) {
+            return const MissionCardLoadingComponent();
+          } else {
             return GestureDetector(
               child: MissionCardComponent(
-                missionTitle: missionList[index].missionTitle,
-                missionDesc: missionList[index].missionDesc,
-                tagList: missionList[index].tagList ?? [],
-                missionPrice: missionList[index].missionPrice,
-                userAvatar: missionList[index].userAvatar,
-                username: missionList[index].username,
+                missionTitle: missionList[index].taskTitle!,
+                missionDesc: missionList[index].taskContent!,
+                tagList: missionList[index]
+                        .taskTagNames
+                        ?.map((tag) => tag.tagName)
+                        .toList() ??
+                    [],
+                missionPrice: missionList[index].taskSinglePrice!,
+                userAvatar: missionList[index].avatar!,
+                username: missionList[index].nickname!,
                 isStatus: true,
-                missionStatus: missionList[index].missionStatus,
+                isPublished: true,
+                missionStatus: missionList[index].taskStatus!,
+                missionDate: missionList[index].taskUpdatedTime!,
+                customerId: missionList[index].customerId!,
               ),
               onTap: () {
-                Get.to(() => MissionDetailStatusIssuerPage(
-                    isWaiting: isWaiting,
-                    isFailed: isFailed,
-                    isPassed: isPassed,
-                    isRemoved: isRemoved));
+                Get.to(
+                    () => MissionDetailStatusIssuerPage(
+                          taskId: missionList[index].taskId!,
+                          isPreview: false,
+                          isResubmit: false,
+                        ),
+                    transition: Transition.rightToLeft);
               },
             );
-          } else {
-            return MissionCardLoadingComponent();
           }
         });
   }
 
   Widget buildListView() {
+    double screenHeight = MediaQuery.of(context).size.height;
     switch (statusSelected) {
       case 0:
-        isWaiting = true;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = false;
-        return buildMissionAcceptedListView(missionWaitSystemReview!);
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskWaitReviewed.length > 0) {
+          return buildMissionAcceptedListView(taskWaitReviewed);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 1:
-        isWaiting = false;
-        isFailed = true;
-        isPassed = false;
-        isRemoved = false;
-        return buildMissionAcceptedListView(missionWaitSystemReview!);
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskFailed.length > 0) {
+          return buildMissionAcceptedListView(taskFailed);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 2:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = true;
-        isRemoved = false;
-        return buildMissionAcceptedListView(missionWaitSystemReview!);
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskPassed.length > 0) {
+          return buildMissionAcceptedListView(taskPassed);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 3:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = true;
-        return buildMissionAcceptedListView(missionWaitSystemReview!);
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskCompleted.length > 0) {
+          return buildMissionAcceptedListView(taskCompleted);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 4:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = true;
-        return buildMissionAcceptedListView(missionWaitSystemReview!);
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskWaitReturned.length > 0) {
+          return buildMissionAcceptedListView(taskWaitReturned);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       case 5:
-        isWaiting = false;
-        isFailed = false;
-        isPassed = false;
-        isRemoved = true;
-        return buildMissionAcceptedListView(missionWaitSystemReview!);
+        if (isLoading) {
+          return MissionCardLoadingComponent();
+        } else if (taskReturned.length > 0) {
+          return buildMissionAcceptedListView(taskReturned);
+        } else {
+          return SizedBox(
+            height: screenHeight - 200,
+            width: double.infinity,
+            child: Center(
+              child: SvgPicture.asset("assets/mission/statusNullHandle.svg"),
+            ),
+          );
+        }
       default:
         return SizedBox();
     }
@@ -200,29 +259,37 @@ class _MissionIssuedMainPageState extends State<MissionIssuedMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ThirdStatusSelectionComponent(
-            statusList: const ['待审核', '未通过', '已通过', '已完成', '待退款', '已退款'],
-            selectedIndex: statusSelected,
-            onTap: (index) {
-              setState(() {
-                statusSelected = index;
-                _loadData();
-              });
-            }),
-        Expanded(
+    super.build(context);
+    return Scaffold(
+        backgroundColor: kTransparent,
+        body: RefreshIndicator(
+          onRefresh: _refresh,
+          color: kMainYellowColor,
           child: SingleChildScrollView(
-              controller: _scrollController,
-              child: RefreshIndicator(
-                onRefresh: _refresh,
-                color: kMainYellowColor,
-                child: buildListView(),
-              )),
-        )
-      ],
-    );
+            controller: _scrollController,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ThirdStatusSelectionComponent(
+                    statusList: const [
+                      '待审核',
+                      '未通过',
+                      '已通过',
+                      '已完成',
+                      '待退款',
+                      '已退款'
+                    ],
+                    selectedIndex: statusSelected,
+                    onTap: (index) {
+                      setState(() {
+                        statusSelected = index;
+                      });
+                    }),
+                buildListView(),
+              ],
+            ),
+          ),
+        ));
   }
 }

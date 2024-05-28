@@ -87,7 +87,7 @@ class _CollectPageTestState extends State<CollectPageTest> {
               missionDate: item.missionDate,
               isStatus: item.isStatus,
               isFavorite: item.isFavorite,
-              missionStatus: item.missionStatus,
+              missionStatus: item.missionStatus, customerId: "",
             ),
             firstPageProgressIndicatorBuilder: (_) =>
                 MissionCardLoadingComponent(),

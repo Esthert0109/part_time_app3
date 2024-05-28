@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
+import 'package:part_time_app/Pages/UserProfile/ticketSubmissionPage.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
@@ -18,24 +21,15 @@ import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
-import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
+import '../../Model/Task/missionClass.dart';
+import '../../Model/User/userModel.dart';
+import '../../Services/order/orderServices.dart';
 import 'recipientInfoPage.dart';
 
 class MissionDetailRecipientPage extends StatefulWidget {
-  final bool isStarted;
-  final bool isSubmitted;
-  final bool isExpired;
-  final bool isWaitingPaid;
-  final bool isPaid;
-  final bool isFailed;
-  const MissionDetailRecipientPage(
-      {super.key,
-      required this.isStarted,
-      required this.isSubmitted,
-      required this.isExpired,
-      required this.isWaitingPaid,
-      required this.isFailed,
-      required this.isPaid});
+  final int? orderId;
+  final int? taskId;
+  const MissionDetailRecipientPage({super.key, this.orderId, this.taskId});
 
   @override
   State<MissionDetailRecipientPage> createState() =>
@@ -76,6 +70,98 @@ class _MissionDetailRecipientPageState
     extends State<MissionDetailRecipientPage> {
   bool isLoading = false;
 
+  // service
+  OrderServices services = OrderServices();
+  UserData? userData;
+  OrderDetailModel? orderModel;
+  OrderData orderDetail = OrderData();
+  bool isFavourite = false;
+  bool isConfidential = true;
+  int? status;
+  DateTime? expiredDate;
+
+  // status
+  bool isStarted = false;
+  bool isSubmitted = false;
+  bool isExpired = false;
+  bool isWaitingPaid = false;
+  bool isPaid = false;
+  bool isFailed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+    fetchUserData();
+
+    setState(() {
+      updateUploadList.clear();
+    });
+  }
+
+  fetchUserData() async {
+    userData = await SharedPreferencesUtils.getUserDataInfo();
+  }
+
+  fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    if (widget.taskId != null) {
+      orderModel = await services.getTaskDetailsByTaskId(widget.taskId!);
+    } else {
+      orderModel = await services.getOrderDetailsByOrderId(widget.orderId!);
+    }
+
+    if (orderModel!.data != null) {
+      setState(() {
+        orderDetail = orderModel!.data!;
+      });
+      if (orderDetail.collectionValid != null &&
+          orderDetail.collectionValid == 1) {
+        setState(() {
+          isFavourite = true;
+        });
+      }
+      if (orderDetail.taskImagesPreview == 0) {
+        setState(() {
+          isConfidential = false;
+        });
+      }
+      if (orderDetail.orderBExpiredTime != "" &&
+          orderDetail.orderBExpiredTime != null) {
+        setState(() {
+          expiredDate = DateTime.parse(orderDetail.orderBExpiredTime!);
+        });
+      }
+      setState(() {
+        isLoading = false;
+        status = orderDetail.orderStatus ?? 9;
+      });
+
+      if (status == 0) {
+        setState(() {
+          isSubmitted = true;
+        });
+      } else if (status == 1) {
+        setState(() {
+          isStarted = true;
+        });
+      } else if (status == 2) {
+        setState(() {
+          isFailed = true;
+        });
+      } else if (status == 7) {
+        setState(() {
+          isWaitingPaid = true;
+        });
+      } else if (status == 8) {
+        isPaid = true;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,6 +181,8 @@ class _MissionDetailRecipientPageState
               GestureDetector(
                 onTap: () {
                   print("complainnnnn");
+                  Get.to(() => TicketSubmissionPage(),
+                      transition: Transition.rightToLeft);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -138,77 +226,83 @@ class _MissionDetailRecipientPageState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MissionDetailIssuerCardComponent(
-                          image:
+                          image: orderDetail.avatar ??
                               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
-                          title: "墩墩鸡",
+                          title: orderDetail.nickname ?? "墩墩鸡",
                           action: "留言咨询 >",
                           onTap: () {}),
                       const SizedBox(
                         height: 12,
                       ),
                       MissionDetailDescriptionCardComponent(
-                        title: "文案写作文案写作文",
-                        detail:
-                            "负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。负责公司各类宣传方案的策划，宣传文案，新闻稿件活动方案等文案的撰写。",
-                        tag: ["写作", "写作", "写作", "写作", "写作", "写作", "写作", "写作"],
-                        totalSlot: "50",
-                        leaveSlot: "45",
-                        day: "3",
-                        duration: "4",
-                        date: "2024.04.30",
-                        price: "50",
+                        taskId: orderDetail.taskId ?? 0,
+                        title: orderDetail.taskTitle ?? "",
+                        detail: orderDetail.taskContent ?? "",
+                        tag: orderDetail.taskTagNames!
+                                .map((tag) => tag.tagName)
+                                .toList() ??
+                            [],
+                        totalSlot: orderDetail.taskQuota.toString() ?? "0",
+                        leaveSlot: (orderDetail.taskQuota! -
+                                    orderDetail.taskReceivedNum!)
+                                .toString() ??
+                            "0",
+                        day: orderDetail.taskTimeLimit.toString() ?? "0",
+                        duration:
+                            orderDetail.taskEstimateTime.toString() ?? "0",
+                        date: orderDetail.taskUpdatedTime.toString() ?? "",
+                        price: orderDetail.taskSinglePrice.toString() ?? "",
+                        isFavourite: isFavourite,
+                        estimatedUnit: orderDetail.taskTimeLimitUnit ?? "天",
+                        limitUnit: orderDetail.taskEstimateTimeUnit ?? "天",
                       ),
                       const SizedBox(
                         height: 12,
                       ),
                       missionDetailStepsCardComponent(
-                        steps: mockData,
-                        isConfidential: true,
-                        isCollapsed: (widget.isSubmitted ||
-                                widget.isExpired ||
-                                widget.isFailed ||
-                                widget.isWaitingPaid ||
-                                widget.isPaid)
+                        steps: orderDetail.taskProcedures?.step ?? [],
+                        isConfidential: isConfidential,
+                        isCollapsed: (isSubmitted ||
+                                isExpired ||
+                                isFailed ||
+                                isWaitingPaid ||
+                                isPaid)
                             ? false
                             : true,
-                        isCollapseAble: (widget.isSubmitted ||
-                                widget.isExpired ||
-                                widget.isFailed ||
-                                widget.isWaitingPaid ||
-                                widget.isPaid)
+                        isCollapseAble: (isSubmitted ||
+                                isExpired ||
+                                isFailed ||
+                                isWaitingPaid ||
+                                isPaid)
                             ? true
                             : false,
                       ),
                       const SizedBox(
                         height: 6,
                       ),
-                      (widget.isStarted ||
-                              widget.isSubmitted ||
-                              widget.isExpired ||
-                              widget.isFailed ||
-                              widget.isWaitingPaid ||
-                              widget.isPaid)
+                      (isStarted ||
+                              isSubmitted ||
+                              isExpired ||
+                              isFailed ||
+                              isWaitingPaid ||
+                              isPaid)
                           ? MissionSubmissionCardComponent(
-                              isEdit: widget.isStarted ? true : false,
-                              submissionPics: [
-                                "https://cf.shopee.tw/file/tw-11134201-7r98s-lrv9ysusrzlec9",
-                                "https://img.biggo.com/01mTTg9SjvnNQulIQRSz4oBNPjMqWuD3o3cjyhg37Ac/fit/0/0/sm/1/aHR0cHM6Ly90c2hvcC5yMTBzLmNvbS84N2QvYzQzLzJhMjgvZWEzZC9jMDA3LzhhM2QvYzMyZS8xMTg0ZWVhNzI0MDI0MmFjMTEwMDA0LmpwZw.jpg",
-                                "https://img.feebee.tw/i/oAbGGHUxE2jJlIURo-Sd2gc-NEeaMhE980abq5vNsT8/372/aHR0cHM6Ly9jZi5zaG9wZWUudHcvZmlsZS9zZy0xMTEzNDIwMS03cmNjNy1sdHMzamVscTI3eGg4NA.webp"
-                              ],
-                              isCollapsed: widget.isStarted ? true : false,
-                              isCollapseAble: widget.isStarted ? false : true,
+                              isEdit: isStarted ? true : false,
+                              submissionPics:
+                                  orderDetail.orderScreenshots?.image ?? [],
+                              isCollapsed: isStarted ? true : false,
+                              isCollapseAble: isStarted ? false : true,
                             )
                           : Container(
                               width: double.infinity,
                               child: missionNoticeCardComponent(),
                             ),
-                      widget.isFailed
+                      isFailed
                           ? Padding(
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               child: missionFailedReasonCardComponent(
                                   reasonTitle: "拒绝理由",
-                                  reasonDesc:
-                                      "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"),
+                                  reasonDesc: orderDetail.orderRejectReason!),
                             )
                           : Container(),
                       const SizedBox(
@@ -221,13 +315,13 @@ class _MissionDetailRecipientPageState
                                   style: missionIDtextStyle,
                                   children: [
                                 TextSpan(text: "悬赏ID: "),
-                                TextSpan(text: "0292938DHFKAAUBCVAVC")
+                                TextSpan(text: orderDetail.taskId.toString())
                               ])),
                           GestureDetector(
                             onTap: () {
                               print("copied");
-                              Clipboard.setData(const ClipboardData(
-                                  text: "0292938DHFKAAUBCVAVC"));
+                              Clipboard.setData(ClipboardData(
+                                  text: orderDetail.taskId.toString()));
                               Fluttertoast.showToast(
                                   msg: "已复制",
                                   toastLength: Toast.LENGTH_LONG,
@@ -266,7 +360,7 @@ class _MissionDetailRecipientPageState
               spreadRadius: 0,
             ),
           ]),
-          child: widget.isStarted
+          child: isStarted
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -274,7 +368,7 @@ class _MissionDetailRecipientPageState
                     CountdownTimer(
                       isOTP: false,
                       isReview: false,
-                      expiredDate: DateTime(2024, 6, 8, 12, 0, 0),
+                      expiredDate: expiredDate!,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 24),
@@ -286,81 +380,111 @@ class _MissionDetailRecipientPageState
                           textStyle: missionCardTitleTextStyle,
                           buttonColor: kMainYellowColor,
                           onPressed: () {
-                            setState(() {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatusDialogComponent(
-                                    complete: false,
-                                    unsuccessText: "请上传任务截图",
-                                    onTap: () {
-                                      setState(() {
-                                        Navigator.pop(context);
-                                      });
-                                    },
-                                  );
-                                },
-                              );
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (context) {
-                              //       return AlertDialogComponent(
-                              //         alertTitle: '您即将提交该任务',
-                              //         alertDesc: RichText(
-                              //           text: TextSpan(
-                              //             style: alertDialogContentTextStyle,
-                              //             children: [
-                              //               TextSpan(text: '点击确认后，该任务将被提交，\n'),
-                              //               TextSpan(
-                              //                 text: '若审核未通过需自行承担后果(雇主不付款)。\n',
-                              //               ),
-                              //               TextSpan(text: '确定提交后不可重新编辑。\n'),
-                              //               TextSpan(
-                              //                 text: '是否继续？\n',
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //         descTextStyle:
-                              //             alertDialogContentTextStyle,
-                              //         firstButtonText: '继续编辑',
-                              //         firstButtonTextStyle:
-                              //             alertDialogFirstButtonTextStyle,
-                              //         firstButtonColor: kThirdGreyColor,
-                              //         secondButtonText: '确认提交任务',
-                              //         secondButtonTextStyle:
-                              //             alertDialogSecondButtonTextStyle,
-                              //         secondButtonColor: kMainYellowColor,
-                              //         isButtonExpanded: false,
-                              //         firstButtonOnTap: () {
-                              //           setState(() {
-                              //             Navigator.pop(context);
-                              //           });
-                              //         },
-                              //         secondButtonOnTap: () {
-                              //           setState(() {
-                              //             Navigator.pop(context);
-                              //             showDialog(
-                              //               context: context,
-                              //               builder: (BuildContext context) {
-                              //                 return StatusDialogComponent(
-                              //                   complete: true,
-                              //                   successText:
-                              //                       "雇主将在48小时内审核您的悬赏成果。",
-                              //                   onTap: () {
-                              //                     setState(() {
-                              //                       Navigator.pop(context);
-                              //                       Get.offAllNamed('/home');
-                              //                     });
-                              //                   },
-                              //                 );
-                              //               },
-                              //             );
-                              //           });
-                              //         },
-                              //       );
-                              //     });
-                            });
+                            if (updateUploadList == [] ||
+                                updateUploadList == null) {
+                              setState(() {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return StatusDialogComponent(
+                                      complete: false,
+                                      unsuccessText: "请上传任务截图",
+                                      onTap: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                    );
+                                  },
+                                );
+                              });
+                            } else {
+                              setState(() {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialogComponent(
+                                        alertTitle: '您即将提交该任务',
+                                        alertDesc: RichText(
+                                          text: TextSpan(
+                                            style: alertDialogContentTextStyle,
+                                            children: [
+                                              TextSpan(
+                                                  text: '点击确认后，该任务将被提交，\n'),
+                                              TextSpan(
+                                                text: '若审核未通过需自行承担后果(雇主不付款)。\n',
+                                              ),
+                                              TextSpan(text: '确定提交后不可重新编辑。\n'),
+                                              TextSpan(
+                                                text: '是否继续？\n',
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        descTextStyle:
+                                            alertDialogContentTextStyle,
+                                        firstButtonText: '继续编辑',
+                                        firstButtonTextStyle:
+                                            alertDialogFirstButtonTextStyle,
+                                        firstButtonColor: kThirdGreyColor,
+                                        secondButtonText: '确认提交任务',
+                                        secondButtonTextStyle:
+                                            alertDialogSecondButtonTextStyle,
+                                        secondButtonColor: kMainYellowColor,
+                                        isButtonExpanded: false,
+                                        firstButtonOnTap: () {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        secondButtonOnTap: () async {
+                                          try {
+                                            bool? submit =
+                                                await services.submitOrder(
+                                                    widget.orderId!,
+                                                    updateUploadList);
+
+                                            if (submit!) {
+                                              setState(() {
+                                                Navigator.pop(context);
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return StatusDialogComponent(
+                                                      complete: true,
+                                                      successText:
+                                                          "雇主将在48小时内审核您的悬赏成果。",
+                                                      onTap: () {
+                                                        setState(() {
+                                                          Navigator.pop(
+                                                              context);
+                                                          Get.offAllNamed(
+                                                              '/home');
+                                                        });
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              });
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                  msg: "提交失败，请重试",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            }
+                                          } on Exception catch (e) {
+                                            print("error in submission: $e");
+                                          }
+                                        },
+                                      );
+                                    });
+                              });
+                            }
                           },
                         ),
                       ),
@@ -373,29 +497,29 @@ class _MissionDetailRecipientPageState
                       isLoading: isLoading,
                       buttonColor: kMainYellowColor,
                       disableButtonColor: kThirdGreyColor,
-                      text: widget.isSubmitted
+                      text: isSubmitted
                           ? "待审核"
-                          : widget.isExpired
+                          : isExpired
                               ? "已失效"
-                              : widget.isFailed
+                              : isFailed
                                   ? "未通过"
-                                  : widget.isWaitingPaid
+                                  : isWaitingPaid
                                       ? "待到账"
-                                      : widget.isPaid
+                                      : isPaid
                                           ? "已到账"
                                           : "开始悬赏",
-                      textStyle: (widget.isSubmitted ||
-                              widget.isExpired ||
-                              widget.isFailed ||
-                              widget.isWaitingPaid ||
-                              widget.isPaid)
+                      textStyle: (isSubmitted ||
+                              isExpired ||
+                              isFailed ||
+                              isWaitingPaid ||
+                              isPaid)
                           ? disableButtonTextStyle
                           : buttonTextStyle,
-                      onPressed: (widget.isSubmitted ||
-                              widget.isExpired ||
-                              widget.isFailed ||
-                              widget.isWaitingPaid ||
-                              widget.isPaid)
+                      onPressed: (isSubmitted ||
+                              isExpired ||
+                              isFailed ||
+                              isWaitingPaid ||
+                              isPaid)
                           ? null
                           : () {
                               showDialog(
@@ -437,20 +561,64 @@ class _MissionDetailRecipientPageState
                                           Navigator.pop(context);
                                         });
                                       },
-                                      secondButtonOnTap: () {
-                                        setState(() {
-                                          Navigator.pop(context);
-                                          Get.to(() => RecipientInfoPage(),
-                                              transition:
-                                                  Transition.rightToLeft);
+                                      secondButtonOnTap: () async {
+                                        print(
+                                            "what is the user Data: ${userData!.billingAddress}, and ${userData!.billingNetwork}");
+                                        if (userData!.billingAddress != null &&
+                                            userData!.billingAddress != "" &&
+                                            userData!.billingNetwork != null &&
+                                            userData!.billingNetwork != "") {
+                                          try {
+                                            int? create =
+                                                await services.createOrder(
+                                                    orderDetail.taskId!);
 
-                                          Fluttertoast.showToast(
-                                              msg: "悬赏开始",
-                                              toastLength: Toast.LENGTH_LONG,
-                                              gravity: ToastGravity.BOTTOM,
-                                              backgroundColor: kMainGreyColor,
-                                              textColor: kThirdGreyColor);
-                                        });
+                                            if (create! != 0) {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Get.to(() =>
+                                                  MissionDetailRecipientPage(
+                                                    orderId: create,
+                                                  ));
+                                              Fluttertoast.showToast(
+                                                  msg: "悬赏开始",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            } else {
+                                              Navigator.pop(context);
+                                              Fluttertoast.showToast(
+                                                  msg: "悬赏失败，请重试",
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      kMainGreyColor,
+                                                  textColor: kThirdGreyColor);
+                                            }
+                                          } catch (e) {
+                                            Navigator.pop(context);
+                                            Fluttertoast.showToast(
+                                                msg: "不可重复悬赏",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: kMainGreyColor,
+                                                textColor: kThirdGreyColor);
+                                          }
+                                        } else {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                            Get.to(
+                                                () => RecipientInfoPage(
+                                                    taskId:
+                                                        orderDetail.taskId!),
+                                                transition:
+                                                    Transition.rightToLeft);
+                                          });
+                                        }
                                       },
                                     );
                                   });

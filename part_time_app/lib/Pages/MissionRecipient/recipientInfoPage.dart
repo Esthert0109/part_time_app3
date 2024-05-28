@@ -3,13 +3,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/TextField/secondaryTextFieldComponent.dart';
+import 'package:part_time_app/Pages/MissionStatus/missionReviewDetailPage.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
+import '../../Services/order/orderServices.dart';
+import 'missionDetailRecipientPage.dart';
 
 class RecipientInfoPage extends StatefulWidget {
-  const RecipientInfoPage({super.key});
+  final int taskId;
+  const RecipientInfoPage({super.key, required this.taskId});
 
   @override
   State<RecipientInfoPage> createState() => _RecipientInfoPageState();
@@ -18,6 +24,12 @@ class RecipientInfoPage extends StatefulWidget {
 class _RecipientInfoPageState extends State<RecipientInfoPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController networkController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // service
+  UserServices services = UserServices();
+  OrderServices orderServices = OrderServices();
+  UserData? userInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -62,62 +74,65 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
               decoration: BoxDecoration(
                   color: kMainWhiteColor,
                   borderRadius: BorderRadius.circular(8)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(
-                      "钱包地址",
-                      style: messageText1,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        "钱包地址",
+                        style: messageText1,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: secondaryTextFieldComponent(
-                      hintText: "USDT地址",
-                      inputController: addressController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return '请输入地址';
-                        }
-                        return null;
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: secondaryTextFieldComponent(
+                        hintText: "USDT地址",
+                        inputController: addressController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return '请输入地址';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(
-                      "NETWORK名称",
-                      style: messageText1,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        "NETWORK名称",
+                        style: messageText1,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: secondaryTextFieldComponent(
-                      hintText: "Network地址",
-                      inputController: networkController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return '请输入地址';
-                        }
-                        return null;
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: secondaryTextFieldComponent(
+                        hintText: "Network地址",
+                        inputController: networkController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return '请输入地址';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(
-                      "货币",
-                      style: messageText1,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        "货币",
+                        style: messageText1,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "USDT",
-                    style: splashScreenTextStyle,
-                  )
-                ],
+                    Text(
+                      "USDT",
+                      style: splashScreenTextStyle,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -141,16 +156,42 @@ class _RecipientInfoPageState extends State<RecipientInfoPage> {
               text: "提交",
               buttonColor: kMainYellowColor,
               textStyle: buttonTextStyle,
-              onPressed: () {
-                setState(() {
-                  Get.back();
-                  Fluttertoast.showToast(
-                      msg: "已提交",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: kMainGreyColor,
-                      textColor: kThirdGreyColor);
-                });
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    userInfo = UserData(
+                        billingAddress: addressController.text,
+                        billingNetwork: networkController.text);
+                  });
+                  try {
+                    CheckOTPModel? model = await services.updateUSDT(userInfo!);
+                    if (model!.data!) {
+                      int? create =
+                          await orderServices.createOrder(widget.taskId!);
+                      Get.off(
+                          () => MissionDetailRecipientPage(
+                                orderId: create,
+                              ),
+                          transition: Transition.rightToLeft);
+
+                      Fluttertoast.showToast(
+                          msg: "已提交",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: kMainGreyColor,
+                          textColor: kThirdGreyColor);
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: "提交失败",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: kErrorRedColor,
+                          textColor: kMainWhiteColor);
+                    }
+                  } on Exception catch (e) {
+                    // TODO
+                  }
+                }
               },
             ),
           ),
