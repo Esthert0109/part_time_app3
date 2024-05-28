@@ -60,7 +60,6 @@ class UserServices {
             try {
               UserModel? userModel = await getUserInfo();
               isLogin = true;
-              
 
               CategoryModel? model = await categoryServices.getCategoryList();
               if (model!.data != null) {
@@ -553,7 +552,7 @@ class UserServices {
     }
   }
 
-   Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
+  Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
     url = port + updateUserInfoUrl;
 
     UpdateCustomerInfoModel updateCustomerInfoModel;
@@ -609,7 +608,7 @@ class UserServices {
       'token': token,
     };
 
-    final Map<String, dynamic> body = {'password': userData.password};
+    final Map<String, dynamic> body = {'password': userData?.password};
 
     try {
       final response = await patchRequest(url, headers, body);
@@ -640,7 +639,7 @@ class UserServices {
       'token': token,
     };
 
-    final Map<String, dynamic> body = {'file': userData.avatar};
+    final Map<String, dynamic> body = {'file': userData?.avatar};
 
     try {
       final response = await postRequest(url, headers, body);

@@ -96,7 +96,8 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String countryCode = '';
   String? firstContact;
   String? code;
-  String? username;  String? dropdownGenderValue;
+  String? username;
+  String? dropdownGenderValue;
   String? dropdownbusinessScopeValue;
   String? avatarUrl;
   bool isLoading = false;
@@ -134,25 +135,24 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         code = separated["countryCode"];
         firstContact = separated["phoneNumber"];
         username = user?.username;
-         usernameControllerPayment.text = user?.username ?? '';
-      countryControllerPayment.text = user?.country ?? '';
-      emailControllerPayment.text = user?.email ?? '';
-      nameControllerPayment.text = user?.nickname ?? '';
-      walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
-      walletAddressControllerPayment.text = user?.billingAddress ?? '';
-      usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
-      dropdownGenderValue = user?.gender ?? '';
-      // firstPhoneNoController.text =
-      //     _stripCountryCode(user?.firstPhoneNo, "+60");
-      secondPhoneNoControllerPayment.text = user?.secondPhoneNo ?? '';
-      avatarUrl = user?.avatar ?? '';
-      dropdownbusinessScopeValue = user?.businessScopeName ?? '';
-
+        usernameControllerPayment.text = user?.username ?? '';
+        countryControllerPayment.text = user?.country ?? '';
+        emailControllerPayment.text = user?.email ?? '';
+        nameControllerPayment.text = user?.nickname ?? '';
+        walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
+        walletAddressControllerPayment.text = user?.billingAddress ?? '';
+        usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
+        dropdownGenderValue = user?.gender ?? '';
+        // firstPhoneNoController.text =
+        //     _stripCountryCode(user?.firstPhoneNo, "+60");
+        secondPhoneNoControllerPayment.text = user?.secondPhoneNo ?? '';
+        avatarUrl = user?.avatar ?? '';
+        dropdownbusinessScopeValue = user?.businessScopeName ?? '';
       });
     }
   }
 
-    void _updateUser() async {
+  void _updateUser() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       String firstPhoneNumber = firstPhoneNoControllerPayment.text.trim();
@@ -214,48 +214,49 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   }
 
   void openImagePicker() async {
-  XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-  if (image != null) {
-    File imageFile = File(image.path);
-    print("Selected image: $imageFile");
+    if (image != null) {
+      File imageFile = File(image.path);
+      print("Selected image: $imageFile");
 
-    setState(() {
-      isLoading = true; // Start loading indicator
-    });
+      setState(() {
+        isLoading = true; // Start loading indicator
+      });
 
-    try {
-      UploadCustomerAvatarModel? result = await services.uploadAvatar(imageFile);
+      try {
+        UploadCustomerAvatarModel? result =
+            await services.uploadAvatar(imageFile);
 
-      if (result != null && result.code == 200 && result.data != null) {
+        if (result != null && result.code == 200 && result.data != null) {
+          setState(() {
+            avatarUrl = result.data!; // Update with the returned filename
+            isLoading = false; // Stop loading indicator
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Avatar updated successfully!')),
+          );
+        } else {
+          setState(() {
+            isLoading = false; // Stop loading indicator
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to update avatar.')),
+          );
+        }
+      } catch (e) {
         setState(() {
-          avatarUrl = result.data!; // Update with the returned filename
           isLoading = false; // Stop loading indicator
         });
+        print("Error updating profile picture: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Avatar updated successfully!')),
-        );
-      } else {
-        setState(() {
-          isLoading = false; // Stop loading indicator
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update avatar.')),
+          SnackBar(content: Text('Error updating avatar.')),
         );
       }
-    } catch (e) {
-      setState(() {
-        isLoading = false; // Stop loading indicator
-      });
-      print("Error updating profile picture: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating avatar.')),
-      );
+    } else {
+      // User cancelled the selection
     }
-  } else {
-    // User cancelled the selection
   }
-}
 
   String? dropdownValue;
   @override
@@ -504,9 +505,10 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                         color: kInputBackGreyColor,
                                         borderRadius: BorderRadius.circular(8)),
                                     child: _buildTextInput(
-                                      // firstContact ?? "",
+                                        // firstContact ?? "",
                                         hintText: "",
-                                        controller: firstPhoneNoControllerPayment,
+                                        controller:
+                                            firstPhoneNoControllerPayment,
                                         onChanged: (value) {
                                           if (widget.onfirstPhoneNoChange !=
                                               null) {
@@ -531,7 +533,8 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                 child: InternationalPhoneNumberInput(
                                   errorMessage: "手机号码不正确",
                                   initialValue: phoneNumber,
-                                  textFieldController: secondPhoneNoControllerPayment,
+                                  textFieldController:
+                                      secondPhoneNoControllerPayment,
                                   formatInput: true,
                                   selectorConfig: const SelectorConfig(
                                       trailingSpace: true,
