@@ -140,6 +140,55 @@ class UpdateCollectionModel {
   }
 }
 
+class UpdateCustomerInfoModel {
+  final int? code;
+  final String? msg;
+  final bool? data;
+
+  UpdateCustomerInfoModel({
+    this.code,
+    this.msg,
+    this.data,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "code": code,
+      "msg": msg,
+      "data": data,
+    };
+  }
+}
+
+class UploadCustomerAvatarModel {
+  final int? code;
+  final String? msg;
+  final String? data;
+
+  UploadCustomerAvatarModel({
+    this.code,
+    this.msg,
+    this.data,
+  });
+
+  factory UploadCustomerAvatarModel.fromJson(Map<String, dynamic> json) {
+    return UploadCustomerAvatarModel(
+      code: json['code'],
+      msg: json['msg'],
+      data: json['data'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "code": code,
+      "msg": msg,
+      "data": data,
+    };
+  }
+}
+
+
 class UserData {
   final String? customerId;
   final String? nickname;
@@ -147,7 +196,7 @@ class UserData {
   final String? password;
   final String? country;
   final String? gender;
-  final String? avatar;
+  late final String? avatar;
   final String? firstPhoneNo;
   final String? secondPhoneNo;
   final String? email;
@@ -198,9 +247,9 @@ class UserData {
       "email": email,
       "businessScopeId": businessScopeId,
       "businessScopeName": businessScopeName,
-      "bilingNetwork": bilingNetwork,
-      "bilingAddress": bilingAddress,
-      "bilingCurrency": bilingCurrency,
+      "billingNetwork": bilingNetwork,
+      "billingAddress": bilingAddress,
+      "billingCurrency": bilingCurrency,
       "validIdentity": validIdentity,
       "collectionValid": collectionValid,
       "createdTime": createdTime,
@@ -222,9 +271,9 @@ class UserData {
       email: json['email'],
       businessScopeId: json['businessScopeId'],
       businessScopeName: json['businessScopeName'],
-      bilingNetwork: json['bilingNetwork'],
-      bilingAddress: json['bilingAddress'],
-      bilingCurrency: json['bilingCurrency'],
+      bilingNetwork: json['billingNetwork'],
+      bilingAddress: json['billingAddress'],
+      bilingCurrency: json['billingCurrency'],
       validIdentity: json['validIdentity'],
       collectionValid: json['collectionValid'],
       createdTime: json['createdTime'],

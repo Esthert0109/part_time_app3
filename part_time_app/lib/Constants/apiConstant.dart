@@ -9,6 +9,9 @@ const checkUrl = "api/v1/customers/users/check";
 const sendOTPUrl = "api/v1/sms/send/";
 const verifyOTPUrl = "api/v1/sms/verify/mobile/";
 const updateForgotPasswordUrl = "api/v1/customers/updatePassByForgot/";
+const updateCustomerInfoUrl = "api/v1/customers/updateInfo";
+const updateCustomerPassUrl = "api/v1/customers/updatePass/";
+const uploadAvatarUrl = "api/v1/files/upload/avatar";
 
 //explore Services
 const exploreURL = "api/v1/tasks/getTaskListByDateDesc?";
@@ -32,3 +35,6 @@ const aboutUsUrl = "api/v1/aboutUs/";
 
 //Settings Services
 const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";
+
+//Business Scope Services
+const getBusinessScopeListUrl = "api/v1/business-scope/";

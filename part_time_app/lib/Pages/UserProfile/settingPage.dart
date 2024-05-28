@@ -51,7 +51,7 @@ class _SettingPageState extends State<SettingPage> {
     // Save the switch state
     data.collectionValid = isPrivate ? 0 : 1; // Update the userData object
     await SharedPreferencesUtils.saveUserDataInfo(
-        data); // Assuming there's a method to save updated userData
+        data);
 
     // Call the updateCollectionViewable method
     await _userServices.updateCollectionViewable();
