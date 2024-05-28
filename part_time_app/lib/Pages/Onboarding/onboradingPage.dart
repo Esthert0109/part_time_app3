@@ -30,12 +30,16 @@ class _OnboradingPageState extends State<OnboradingPage> {
   fetchDataUnlogin() async {
     CategoryModel? model = await categoryServices.getCategoryList();
     if (model!.data != null) {
-      exploreCategoryList = model.data!;
+      setState(() {
+        exploreCategoryList = model.data!;
+      });
     }
     AdvertisementModel? advertisementModel =
         await exploreServices.getAdvertisement();
     if (advertisementModel!.data != null) {
-      advertisementList = advertisementModel.data!;
+      setState(() {
+        advertisementList = advertisementModel.data!;
+      });
     }
     missionAvailable = await exploreServices.fetchExplore(1);
     missionAvailableDesc = await exploreServices.fetchExploreByPrice("Desc", 1);
