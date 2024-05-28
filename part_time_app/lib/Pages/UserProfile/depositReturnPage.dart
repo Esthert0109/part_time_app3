@@ -174,6 +174,16 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                               });
                             } else {
                               print("Submitted FAILED");
+                              setState(() {
+                                isLoading = false;
+                                Fluttertoast.showToast(
+                                  msg: "提交不成功！",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: kMainGreyColor,
+                                  textColor: kThirdGreyColor,
+                                );
+                              });
                             }
 
                             setState(() {
@@ -184,6 +194,7 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                         });
                       } catch (e) {
                         print("Error: $e");
+
                         // Handle error
                         if (mounted) {
                           setState(() {
