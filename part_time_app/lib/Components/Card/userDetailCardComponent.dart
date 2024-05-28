@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Model/BusinessScope/businessScopeModel.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/BusinessScope/businessScopeServices.dart';
+import 'package:part_time_app/Services/Upload/uploadServices.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 import 'dart:io';
@@ -91,14 +93,21 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   UserServices services = UserServices();
   final BusinessScopeServices businessScopeServices = BusinessScopeServices();
   PhoneNumber phoneNumber = PhoneNumber(isoCode: 'MY');
+  File? imageFile;
+  String uploadedAvatar = "";
   String dialCode = '';
   String phone = '';
   String countryCode = '';
   String? firstContact;
   String? code;
-  String? username;  String? dropdownGenderValue;
+  String? secondContact;
+  String? secondCode;
+  String? username;
+  String? dropdownGenderValue;
   String? dropdownbusinessScopeValue;
   String? avatarUrl;
+  String? dropdownBusinessScopeValue;
+  int? selectedBusinessScopeId;
   bool isLoading = false;
   List<BusinessScopeData> businessScopeList = [];
   UpdateCustomerInfoModel? updateCustomerInfoModel;
@@ -107,21 +116,22 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   @override
   void initState() {
     super.initState();
+
+    getBusinessScopeList();
+    initializeControllers();
     _loadDataFromShared();
-    usernameControllerPayment =
-        TextEditingController(text: widget.usernameInitial);
-    countryControllerPayment =
-        TextEditingController(text: widget.countryInitial);
-    fieldControllerPayment = TextEditingController(text: widget.fieldInitial);
-    sexControllerPayment = TextEditingController(text: widget.sexInitial);
-    emailControllerPayment = TextEditingController(text: widget.emailInitial);
-    nameControllerPayment = TextEditingController(text: widget.nameInitial);
-    walletNetworkControllerPayment =
-        TextEditingController(text: widget.walletNetworkInitial);
-    walletAddressControllerPayment =
-        TextEditingController(text: widget.walletAddressInitial);
-    usdtLinkControllerPayment =
-        TextEditingController(text: widget.usdtLinkInitial);
+  }
+
+  void initializeControllers() {
+    usernameControllerPayment = TextEditingController();
+    countryControllerPayment = TextEditingController();
+    emailControllerPayment = TextEditingController();
+    nameControllerPayment = TextEditingController();
+    walletNetworkControllerPayment = TextEditingController();
+    walletAddressControllerPayment = TextEditingController();
+    usdtLinkControllerPayment = TextEditingController();
+    firstPhoneNoControllerPayment = TextEditingController();
+    secondPhoneNoControllerPayment = TextEditingController();
   }
 
   Future<void> _loadDataFromShared() async {
@@ -133,40 +143,49 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         code = separated["countryCode"];
         firstContact = separated["phoneNumber"];
         username = user?.username;
-         usernameControllerPayment.text = user?.username ?? '';
-      countryControllerPayment.text = user?.country ?? '';
-      emailControllerPayment.text = user?.email ?? '';
-      nameControllerPayment.text = user?.nickname ?? '';
-      walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
-      walletAddressControllerPayment.text = user?.billingAddress ?? '';
-      usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
-      dropdownGenderValue = user?.gender ?? '';
-      // firstPhoneNoController.text =
-      //     _stripCountryCode(user?.firstPhoneNo, "+60");
-      secondPhoneNoControllerPayment.text = user?.secondPhoneNo ?? '';
-      avatarUrl = user?.avatar ?? '';
-      dropdownbusinessScopeValue = user?.businessScopeName ?? '';
-
+        usernameControllerPayment.text = username ?? '';
+        countryControllerPayment.text = user?.country ?? '';
+        emailControllerPayment.text = user?.email ?? '';
+        nameControllerPayment.text = user?.nickname ?? '';
+        walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
+        walletAddressControllerPayment.text = user?.billingAddress ?? '';
+        usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
+        dropdownGenderValue = user?.gender ?? '';
+        firstPhoneNoControllerPayment.text = firstContact ?? '';
+        Map<String, String> separatedSecond =
+            separatePhoneNumber(user?.secondPhoneNo ?? '');
+        secondCode = separatedSecond["countryCode"];
+        secondContact = separatedSecond["phoneNumber"];
+        secondPhoneNoControllerPayment.text = secondContact ?? '';
+        avatarUrl = user?.avatar ?? '';
+        selectedBusinessScopeId = user?.businessScopeId;
       });
+      if (selectedBusinessScopeId != null) {
+        BusinessScopeData? businessScope = await businessScopeServices
+            .getBusinessScopeById(selectedBusinessScopeId!);
+        setState(() {
+          dropdownBusinessScopeValue = businessScope?.businessScopeName;
+        });
+      }
     }
   }
 
-    void _updateUser() async {
+  void _updateUser() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       String firstPhoneNumber = firstPhoneNoControllerPayment.text.trim();
       String secondPhoneNumber = secondPhoneNoControllerPayment.text.trim();
 
       UserData updatedUserData = UserData(
-        nickname: usernameControllerPayment.text,
+        nickname: nameControllerPayment.text,
         username: usernameControllerPayment.text,
         country: countryControllerPayment.text,
         gender: dropdownGenderValue,
-        avatar: avatarUrl,
+        avatar: uploadedAvatar.isNotEmpty ? uploadedAvatar : avatarUrl ?? '',
         firstPhoneNo: firstPhoneNoControllerPayment.text,
-        secondPhoneNo: secondPhoneNoControllerPayment.text,
+        secondPhoneNo: phone,
         email: emailControllerPayment.text,
-        businessScopeName: dropdownbusinessScopeValue,
+        businessScopeId: selectedBusinessScopeId,
         billingNetwork: walletNetworkControllerPayment.text,
         billingAddress: walletAddressControllerPayment.text,
         billingCurrency: usdtLinkControllerPayment.text,
@@ -195,9 +214,24 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
           SnackBar(content: Text('Failed to update user information.')),
         );
       }
-
-      // Refresh the user info after updating
       _loadDataFromShared();
+    }
+  }
+
+  Future<void> getBusinessScopeList() async {
+    List<BusinessScopeData>? fetchedBusinessScopeList =
+        await businessScopeServices.getBusinessScopeList();
+    if (fetchedBusinessScopeList != null) {
+      setState(() {
+        businessScopeList = fetchedBusinessScopeList;
+        if (dropdownBusinessScopeValue == null &&
+            fetchedBusinessScopeList.isNotEmpty) {
+          dropdownBusinessScopeValue =
+              fetchedBusinessScopeList.first.businessScopeName;
+          selectedBusinessScopeId =
+              fetchedBusinessScopeList.first.businessScopeId;
+        }
+      });
     }
   }
 
@@ -213,48 +247,56 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   }
 
   void openImagePicker() async {
-  XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-  if (image != null) {
-    File imageFile = File(image.path);
-    print("Selected image: $imageFile");
-
+    XFile? profilePic = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      isLoading = true; // Start loading indicator
+      if (profilePic != null) {
+        imageFile = File(profilePic.path);
+        isLoading = true;
+      } else {}
     });
-
     try {
-      UploadCustomerAvatarModel? result = await services.uploadAvatar(imageFile);
+      if (imageFile != null) {
+        String? uploaded = await UploadServices().uploadAvatar(imageFile!);
+        print("Checking imageFile $imageFile");
 
-      if (result != null && result.code == 200 && result.data != null) {
-        setState(() {
-          avatarUrl = result.data!; // Update with the returned filename
-          isLoading = false; // Stop loading indicator
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Avatar updated successfully!')),
-        );
-      } else {
-        setState(() {
-          isLoading = false; // Stop loading indicator
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update avatar.')),
-        );
-      }
+        if (uploaded != null) {
+          Fluttertoast.showToast(
+              msg: "已上传",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+
+          setState(() {
+            isLoading = false;
+            uploadedAvatar = uploaded;
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "上传失败",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } else {}
     } catch (e) {
+      Fluttertoast.showToast(
+          msg: "$e",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: kMainGreyColor,
+          textColor: kThirdGreyColor);
+
       setState(() {
-        isLoading = false; // Stop loading indicator
+        isLoading = false;
       });
-      print("Error updating profile picture: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating avatar.')),
-      );
     }
-  } else {
-    // User cancelled the selection
   }
-}
 
   String? dropdownValue;
   @override
@@ -275,35 +317,45 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    avatarUrl != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(29),
-                            child: Image.network(
-                              avatarUrl!,
-                              height: 58,
-                              width: 58,
-                              fit: BoxFit.cover,
+                    if (imageFile != null)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(29),
+                        child: Image.file(
+                          imageFile!,
+                          height: 58,
+                          width: 58,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    else if (avatarUrl != null)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(29),
+                        child: Image.network(
+                          avatarUrl!,
+                          height: 58,
+                          width: 58,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    else
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/profile/profile_img.svg",
+                            height: 58,
+                            width: 58,
+                          ),
+                          Positioned(
+                            bottom: 16,
+                            right: 16,
+                            child: SvgPicture.asset(
+                              "assets/profile/camera.svg",
+                              height: 24,
                             ),
-                          )
-                        : Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/profile/profile_img.svg",
-                                height: 58,
-                                width: 58,
-                              ),
-                              Positioned(
-                                bottom: 16,
-                                right: 16,
-                                child: SvgPicture.asset(
-                                  "assets/profile/camera.svg",
-                                  height: 24,
-                                  width: 24,
-                                ),
-                              ),
-                            ],
-                          )
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -325,10 +377,10 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                           Text("用户名", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "请输入用户名",
-                              controller: nameControllerPayment,
+                              controller: usernameControllerPayment,
                               onChanged: (value) {
-                                if (widget.onNameChange != null) {
-                                  widget.onNameChange!(value);
+                                if (widget.onUsernameChange != null) {
+                                  widget.onUsernameChange!(value);
                                 }
                               },
                               readOnly: false)
@@ -336,10 +388,10 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                           Text("真实姓名", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "真实姓名",
-                              controller: usernameControllerPayment,
+                              controller: nameControllerPayment,
                               onChanged: (value) {
-                                if (widget.onUsernameChange != null) {
-                                  widget.onUsernameChange!(value);
+                                if (widget.onNameChange != null) {
+                                  widget.onNameChange!(value);
                                 }
                               },
                               readOnly: false),
@@ -391,15 +443,20 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                   ),
                                   child: DropdownButton<String>(
                                     underline: Container(),
-                                    value: dropdownbusinessScopeValue,
+                                    value: dropdownBusinessScopeValue,
                                     icon: Icon(Icons.arrow_drop_down),
                                     iconSize: 24,
                                     elevation: 16,
                                     style: missionUsernameTextStyle,
                                     onChanged: (newValue) {
                                       setState(() {
-                                        dropdownbusinessScopeValue = newValue!;
-                                        // Handle business scope value change here if needed
+                                        dropdownBusinessScopeValue = newValue!;
+                                        selectedBusinessScopeId =
+                                            businessScopeList
+                                                .firstWhere((element) =>
+                                                    element.businessScopeName ==
+                                                    newValue)
+                                                .businessScopeId;
                                       });
                                     },
                                     items: businessScopeList
@@ -465,10 +522,10 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                           Text("真实姓名", style: depositTextStyle2),
                           _buildTextInput(
                               hintText: "真实姓名",
-                              controller: usernameControllerPayment,
+                              controller: nameControllerPayment,
                               onChanged: (value) {
-                                if (widget.onUsernameChange != null) {
-                                  widget.onUsernameChange!(value);
+                                if (widget.onNameChange != null) {
+                                  widget.onNameChange!(value);
                                 }
                               },
                               readOnly: false),
@@ -503,9 +560,9 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                         color: kInputBackGreyColor,
                                         borderRadius: BorderRadius.circular(8)),
                                     child: _buildTextInput(
-                                      // firstContact ?? "",
                                         hintText: "",
-                                        controller: firstPhoneNoControllerPayment,
+                                        controller:
+                                            firstPhoneNoControllerPayment,
                                         onChanged: (value) {
                                           if (widget.onfirstPhoneNoChange !=
                                               null) {
@@ -530,7 +587,8 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                 child: InternationalPhoneNumberInput(
                                   errorMessage: "手机号码不正确",
                                   initialValue: phoneNumber,
-                                  textFieldController: secondPhoneNoControllerPayment,
+                                  textFieldController:
+                                      secondPhoneNoControllerPayment,
                                   formatInput: true,
                                   selectorConfig: const SelectorConfig(
                                       trailingSpace: true,
@@ -543,9 +601,13 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                     phone = number.phoneNumber.toString();
                                     dialCode = number.dialCode.toString();
                                     countryCode = number.isoCode.toString();
+                                    setState(() {
+                                      secondCode = dialCode;
+                                      secondContact = number.phoneNumber;
+                                    });
                                   },
-                                  // autoValidateMode:
-                                  //     AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   cursorColor: Colors.black,
                                   inputDecoration: InputDecoration(
                                       errorBorder: OutlineInputBorder(

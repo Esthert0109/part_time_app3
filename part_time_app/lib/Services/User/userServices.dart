@@ -626,44 +626,4 @@ class UserServices {
       return null;
     }
   }
-
-  Future<UploadCustomerAvatarModel?> uploadAvatar(File imageFile) async {
-    String? token = await SharedPreferencesUtils.getToken();
-    url = port + uploadAvatarUrl + token!;
-
-    UploadCustomerAvatarModel uploadCustomerAvatarModel;
-
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'token': token,
-    };
-
-    final Map<String, dynamic> body = {'file': userData.avatar};
-
-    try {
-      final response = await postRequest(url, headers, body);
-      int statusCode = response.statusCode;
-
-      Map<String, dynamic> jsonData = json.decode(response.responseBody);
-      int responseCode = jsonData['code'];
-      String responseMsg = jsonData['msg'];
-      String responseData = jsonData['data'];
-
-      if (statusCode == 200) {
-        if (responseCode == 0) {
-          uploadCustomerAvatarModel = UploadCustomerAvatarModel(
-              code: responseCode, msg: responseMsg, data: responseData);
-
-          return uploadCustomerAvatarModel;
-        } else {
-          uploadCustomerAvatarModel = UploadCustomerAvatarModel(
-              code: responseCode, msg: responseMsg, data: responseData);
-
-          return uploadCustomerAvatarModel;
-        }
-      }
-    } catch (e) {
-      print("Error in upload avatar: $e");
-    }
-  }
 }

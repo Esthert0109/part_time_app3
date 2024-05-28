@@ -83,3 +83,4 @@ const customerHomePageTaskUrl = "api/v1/customers/getCustomerHomePageTask/";
 
 //Business Scope Services
 const getBusinessScopeListUrl = "api/v1/business-scope/";
+const getBusinessScopeByIdUrl = "api/v1/business-scope/";

@@ -18,7 +18,7 @@ class SharedPreferencesUtils {
   static Future<void> saveUserDataInfo(UserData user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String jsonString = jsonEncode(user.toJson());
-    print("check json: ${jsonString}");
+    print("check saved json: ${jsonString}");
     await prefs.setString('userModel', jsonString);
   }
 

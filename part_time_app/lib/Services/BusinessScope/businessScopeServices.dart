@@ -27,7 +27,8 @@ class BusinessScopeServices {
 
         if (responseCode == 0) {
           List<dynamic> data = jsonData['data'];
-          List<BusinessScopeData> businessScopeList = data.map((item) => BusinessScopeData.fromJson(item)).toList();
+          List<BusinessScopeData> businessScopeList =
+              data.map((item) => BusinessScopeData.fromJson(item)).toList();
           return businessScopeList;
         } else {
           print("Error: $responseMsg");
@@ -38,5 +39,34 @@ class BusinessScopeServices {
     }
     return null;
   }
-}
 
+  Future<BusinessScopeData?> getBusinessScopeById(int businessScopeId) async {
+    url = port + getBusinessScopeByIdUrl + "${businessScopeId.toString()}";
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      int statusCode = response.statusCode;
+
+      if (statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+        String responseMsg = jsonData['msg'];
+
+        if (responseCode == 0) {
+          Map<String, dynamic> data = jsonData['data'];
+          BusinessScopeData businessScope = BusinessScopeData.fromJson(data);
+          return businessScope;
+        } else {
+          print("Error: $responseMsg");
+        }
+      }
+    } catch (e) {
+      print("Error in BusinessScopeName: $e");
+    }
+    return null;
+  }
+}

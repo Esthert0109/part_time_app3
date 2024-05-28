@@ -45,4 +45,22 @@ class UploadServices {
       print("Error in upload single deposit: $e");
     }
   }
+
+    Future<String?> uploadAvatar(File imageFile) async {
+    // String? token = await SharedPreferencesUtils.getToken();
+    url = port + uploadAvatarUrl;
+
+   try {
+      final response = await postSingleFileRequest(imageFile, url);
+
+      int responseCode = response['code'];
+      String responseMsg = response['msg'];
+      if (responseCode == 0) {
+        String responseData = response['data'];
+        return responseData;
+      }
+    } catch (e) {
+      print("Error in upload user avatar: $e");
+    }
+  }
 }

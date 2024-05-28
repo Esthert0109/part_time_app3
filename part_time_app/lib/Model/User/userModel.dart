@@ -196,7 +196,7 @@ class UserData {
   final String? password;
   final String? country;
   final String? gender;
-  late final String? avatar;
+  final String? avatar;
   final String? firstPhoneNo;
   final String? secondPhoneNo;
   final String? email;
@@ -279,7 +279,7 @@ class UserData {
       billingCurrency: json['billingCurrency'],
       validIdentity: json['validIdentity'],
       valid: json['valid'],
-      collectionValid: json['collection_valid'],
+      collectionValid: json['collectionValid'],
       createdTime: json['createdTime'],
       updatedTime: json['updatedTime'],
     );
