@@ -108,7 +108,7 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Flexible(
+                            Expanded(
                               child: Text(
                                 userData?.nickname ?? "用户未登录",
                                 style: userProfileNameTextStyle,
@@ -133,11 +133,9 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                                     "assets/profile/edit_profile.svg"))
                           ],
                         ),
-                        subtitle: Flexible(
-                          child: Text(
-                            'UID: ${userData?.customerId ?? "--"}',
-                            style: userProfileUIDTextStyle,
-                          ),
+                        subtitle: Text(
+                          'UID: ${userData?.customerId ?? "--"}',
+                          style: userProfileUIDTextStyle,
                         ),
                         trailing: InkWell(
                             onTap: () {
