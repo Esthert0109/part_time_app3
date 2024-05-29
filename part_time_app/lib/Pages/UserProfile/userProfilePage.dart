@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Services/collection/collectionServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
+import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
@@ -18,7 +19,9 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
+import '../../Services/Chat/chatServices.dart';
 import '../Explore/collectPage.dart';
+import '../Message/user/chat.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
 import 'ticketSubmissionPage.dart';
@@ -55,6 +58,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
   UserServices services = UserServices();
   CollectionService collectionService = CollectionService();
   int page = 1;
+
+  void _handleOnConvItemTaped(
+      V2TimConversation? selectedConv, String peopleToChatId) async {
+    ChatService().sendMessage(peopleToChatId);
+    // ChatService().sendImageMessage();
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Chat(
+            selectedConversation: selectedConv!,
+          ),
+        ));
+  }
 
   @override
   void initState() {
@@ -446,7 +462,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                         BorderRadius.circular(
                                                             8)),
                                                 elevation: 0),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              V2TimConversation conversation =
+                                                  new V2TimConversation(
+                                                      conversationID:
+                                                          "c2c_${userDetails?.customerId}",
+                                                      type: 1,
+                                                      userID:
+                                                          "${userDetails?.customerId}",
+                                                      showName:
+                                                          "${userDetails?.nickname}");
+                                              // V2TimConversation conversation = new V2TimConversation(
+                                              //     conversationID: "c2c_CS_5", type: 1, userID: "CS_5");
+                                              _handleOnConvItemTaped(
+                                                  conversation, "2206");
+                                            },
                                             child: Text(
                                               "发送私信",
                                               style: splashScreenTextStyle,

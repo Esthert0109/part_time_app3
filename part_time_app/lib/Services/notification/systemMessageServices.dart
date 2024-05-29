@@ -49,7 +49,6 @@ class SystemMessageServices {
         getNotificationListByTypeUrl +
         "notificationType=${type.toString()}&page=" +
         page.toString();
-    print(url);
     NotificationListModel? notiModel;
 
     String? token = await SharedPreferencesUtils.getToken();
@@ -89,7 +88,6 @@ class SystemMessageServices {
   Future<NotificationReadModel?> patchUpdateRead(int type) async {
     url = port + patchNotificationReadStatusUrl + type.toString();
     String? _token = await SharedPreferencesUtils.getToken();
-    print(url);
     final Map<String, String> headers = {
       'Token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',
@@ -114,7 +112,6 @@ class SystemMessageServices {
   Future<NotificationReadModel?> postUpdateRead() async {
     url = port + postSystemNotificationReadStatusUrl;
     String? _token = await SharedPreferencesUtils.getToken();
-    print(url);
     final Map<String, String> headers = {
       'Token': '$_token',
       'Content-Type': 'application/json; charset=utf-8',

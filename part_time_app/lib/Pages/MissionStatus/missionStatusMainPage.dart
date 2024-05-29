@@ -6,9 +6,6 @@ import 'package:part_time_app/Pages/MissionStatus/missionIssuedMainPage.dart';
 import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/globalConstant.dart';
-import '../../Model/Task/missionClass.dart';
-import '../../Services/order/orderServices.dart';
-import '../Explore/RecommendationPage.dart';
 
 class MissionStatusMainPage extends StatefulWidget {
   const MissionStatusMainPage({super.key});

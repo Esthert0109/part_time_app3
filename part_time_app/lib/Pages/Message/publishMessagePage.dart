@@ -134,7 +134,7 @@ class _PublishMessagePageState extends State<PublishMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: publishMessageList.reversed.expand((date) {
+                  children: publishMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {
@@ -170,17 +170,6 @@ class _PublishMessagePageState extends State<PublishMessagePage> {
               ),
             ),
           )),
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant PublishMessagePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Scroll to bottom whenever the widget updates
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
     );
   }
 }

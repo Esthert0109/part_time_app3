@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 class TicketingService {
   Future<TicketingModel?> getTicketingHistory(int page) async {
     String url = port + getTicketingHistoryUrl + page.toString();
-    print(url);
     String? token = await SharedPreferencesUtils.getToken();
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
@@ -63,7 +62,6 @@ class TicketingService {
     try {
       final response = await getRequest(url, headers);
       int statusCode = response.statusCode;
-      print(response.responseBody);
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.responseBody);
         return TicketingData.fromJson(jsonResponse['data']);

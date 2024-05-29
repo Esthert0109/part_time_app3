@@ -23,6 +23,7 @@ import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Services/WebSocket/webSocketService.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
+import '../Message/user/chatConfig.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 class RecommendationPage extends StatefulWidget {
@@ -84,9 +85,15 @@ class _RecommendationPageState extends State<RecommendationPage>
 
   getUserInfo() async {
     UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+
     setState(() {
       userData = data!;
     });
+    bool isLoginTencent = await userTencentLogin(data!.customerId!);
+    bool isChangeNicknameTencent =
+        await setNickNameTencent(data.customerId!, data.nickname!);
+    bool isChangeAvatarTencent =
+        await setAvatarTencent(data.customerId!, data.avatar!);
   }
 
   @override
