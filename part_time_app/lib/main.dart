@@ -59,9 +59,6 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/opening', page: () => const OpeningPage()),
         GetPage(name: '/onboarding', page: () => const OnboradingPage()),
         GetPage(name: '/', page: () => const HomePage()),
-        GetPage(name: '/sort', page: () => SortPage()),
-        GetPage(name: '/home', page: () => HomePage()),
-        GetPage(name: '/depo', page: () => TicketDetailsRecordPage()),
       ],
     );
   }
