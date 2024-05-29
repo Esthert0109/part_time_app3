@@ -92,7 +92,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   TextEditingController phoneControllerLogin = TextEditingController();
   UserServices services = UserServices();
   final BusinessScopeServices businessScopeServices = BusinessScopeServices();
-  PhoneNumber phoneNumber = PhoneNumber(isoCode: 'MY');
   File? imageFile;
   String uploadedAvatar = "";
   String dialCode = '';
@@ -103,7 +102,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String? secondContact;
   String? secondCode;
   String? username;
-  String? dropdownGenderValue;
+  String? dropdownGenderValue; // Default value
   String? dropdownbusinessScopeValue;
   String? avatarUrl;
   String? dropdownBusinessScopeValue;
@@ -139,9 +138,13 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     UserData? user = await SharedPreferencesUtils.getUserDataInfo();
     if (phoneNo != null) {
       Map<String, String> separated = separatePhoneNumber(phoneNo);
+      Map<String, String> separatedSecond =
+          separatePhoneNumber(user?.secondPhoneNo ?? '');
       setState(() {
         code = separated["countryCode"];
         firstContact = separated["phoneNumber"];
+        secondCode = separatedSecond["countryCode"];
+        secondContact = separatedSecond["phoneNumber"];
         username = user?.username;
         usernameControllerPayment.text = username ?? '';
         countryControllerPayment.text = user?.country ?? '';
@@ -152,14 +155,11 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
         dropdownGenderValue = user?.gender ?? '';
         firstPhoneNoControllerPayment.text = firstContact ?? '';
-        Map<String, String> separatedSecond =
-            separatePhoneNumber(user?.secondPhoneNo ?? '');
-        secondCode = separatedSecond["countryCode"];
-        secondContact = separatedSecond["phoneNumber"];
         secondPhoneNoControllerPayment.text = secondContact ?? '';
         avatarUrl = user?.avatar ?? '';
         selectedBusinessScopeId = user?.businessScopeId;
       });
+
       if (selectedBusinessScopeId != null) {
         BusinessScopeData? businessScope = await businessScopeServices
             .getBusinessScopeById(selectedBusinessScopeId!);
@@ -200,10 +200,10 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         return;
       }
 
-      await SharedPreferencesUtils.saveUserDataInfo(updatedUserData);
-
       UpdateCustomerInfoModel? result =
           await services.updateCustomerInfo(updatedUserData);
+
+      await SharedPreferencesUtils.saveUserDataInfo(updatedUserData);
 
       if (result != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -236,6 +236,14 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   }
 
   Map<String, String> separatePhoneNumber(String phoneNumber) {
+    // Ensure phoneNumber is at least 3 characters long
+    if (phoneNumber.length < 3) {
+      return {
+        "countryCode": "",
+        "phoneNumber": phoneNumber,
+      };
+    }
+
     String countryCode = phoneNumber.substring(0, 3); // Extracts "+60"
     String remainingNumber =
         phoneNumber.substring(3); // Extracts the rest of the number
@@ -488,7 +496,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                     style: missionUsernameTextStyle,
                                     onChanged: (newValue) {
                                       setState(() {
-                                        dropdownGenderValue = newValue!;
+                                      dropdownGenderValue = newValue!;
                                         // Handle sex value change here if needed
                                       });
                                     },
@@ -586,45 +594,47 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                                 height: 31,
                                 child: InternationalPhoneNumberInput(
                                   errorMessage: "手机号码不正确",
-                                  initialValue: phoneNumber,
+                                  // initialValue: PhoneNumber(
+                                  //   dialCode: secondCode,
+                                  //   // phoneNumber: secondContact,
+                                  // ),
                                   textFieldController:
                                       secondPhoneNoControllerPayment,
                                   formatInput: true,
                                   selectorConfig: const SelectorConfig(
-                                      trailingSpace: true,
-                                      leadingPadding: 10,
-                                      setSelectorButtonAsPrefixIcon: true,
-                                      showFlags: false,
-                                      selectorType:
-                                          PhoneInputSelectorType.DIALOG),
+                                    trailingSpace: true,
+                                    leadingPadding: 10,
+                                    setSelectorButtonAsPrefixIcon: true,
+                                    showFlags: false,
+                                    selectorType: PhoneInputSelectorType.DIALOG,
+                                  ),
                                   onInputChanged: (PhoneNumber number) {
-                                    phone = number.phoneNumber.toString();
-                                    dialCode = number.dialCode.toString();
-                                    countryCode = number.isoCode.toString();
                                     setState(() {
-                                      secondCode = dialCode;
-                                      secondContact = number.phoneNumber;
+                                      phone = number.phoneNumber.toString();
+                                      dialCode = number.dialCode.toString();
+                                      countryCode = number.isoCode.toString();
                                     });
                                   },
                                   autoValidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   cursorColor: Colors.black,
                                   inputDecoration: InputDecoration(
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                            color: Colors.red, width: 1),
-                                      ),
-                                      filled: true,
-                                      fillColor: kInputBackGreyColor,
-                                      contentPadding: EdgeInsets.only(
-                                          right: 100, left: 100),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide.none),
-                                      hintText: "请输入电话号码",
-                                      hintStyle: missionDetailText2),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                          color: Colors.red, width: 1),
+                                    ),
+                                    filled: true,
+                                    fillColor: kInputBackGreyColor,
+                                    contentPadding:
+                                        EdgeInsets.only(right: 100, left: 100),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    hintText: "请输入电话号码",
+                                    hintStyle: missionDetailText2,
+                                  ),
                                 ),
                               ),
                             ),
