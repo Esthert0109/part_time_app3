@@ -130,7 +130,7 @@ class _MessageMainPageState extends State<MessageMainPage>
               color: kTransparent,
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: SecondaryTitleComponent(
-                titleList: const ["我接收的"],
+                titleList: const ["消息"],
                 selectedIndex: titleSelection,
                 onTap: (index) {},
               ),

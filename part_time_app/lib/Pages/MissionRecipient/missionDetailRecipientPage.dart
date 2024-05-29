@@ -24,6 +24,7 @@ import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
 import '../../Services/order/orderServices.dart';
+import '../UserProfile/userProfilePage.dart';
 import 'recipientInfoPage.dart';
 
 class MissionDetailRecipientPage extends StatefulWidget {
@@ -243,7 +244,14 @@ class _MissionDetailRecipientPageState
                               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
                           title: orderDetail.nickname ?? "墩墩鸡",
                           action: "留言咨询 >",
-                          onTap: () {}),
+                          onTap: () {
+                            Get.to(
+                                () => UserProfilePage(
+                                      isOthers: true,
+                                      userID: orderDetail.customerId,
+                                    ),
+                                transition: Transition.rightToLeft);
+                          }),
                       const SizedBox(
                         height: 12,
                       ),

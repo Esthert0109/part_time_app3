@@ -41,7 +41,7 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   bool isAutho = true;
-  bool isPrivate = false;
+  bool isPrivate = true;
   int selectedIndex = 0;
   int noPublish = 0;
   int noCollect = 0;
@@ -95,6 +95,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
       if (userDetails!.validIdentity == 0) {
         isAutho = false;
       }
+
+      if (userDetails!.collectionValid == 0) {
+        isPrivate = false;
+      }
+
       noPublish = noTask ?? 0;
       noCollect = noCollection ?? 0;
 
