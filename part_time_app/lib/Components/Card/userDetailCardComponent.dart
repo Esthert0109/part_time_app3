@@ -201,6 +201,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 Expanded(
                   flex: 2,
                   child: Container(
+                    margin: EdgeInsets.only(top: 5),
                     padding: EdgeInsets.only(left: 10),
                     height: 31,
                     decoration: BoxDecoration(
