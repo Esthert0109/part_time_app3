@@ -4,7 +4,9 @@ import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dar
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/BusinessScope/businessScopeModel.dart';
 import '../../Model/User/userModel.dart';
+import '../../Services/BusinessScope/businessScopeServices.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
 
 late TextEditingController usernameControllerPayment;
@@ -29,7 +31,7 @@ class UserDetailCardComponent extends StatefulWidget {
   final Function(String)? onUsdtLinkChange;
   final String? usernameInitial;
   final String? countryInitial;
-  final String? fieldInitial;
+  final int? fieldInitial;
   final String? sexInitial;
   final String? emailInitial;
   final String? nameInitial;
@@ -78,15 +80,22 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String? code;
   String? username;
   String? dropdownValue;
+
+  // services
+  BusinessScopeServices businessScopeServices = BusinessScopeServices();
+  List<BusinessScopeData> businessScope = [];
+  int bussinessIdSelected = 0;
+  String initialBussiness = "";
+
   @override
   void initState() {
     super.initState();
     _loadDataFromShared();
+    fetchBusinessScopeList();
     usernameControllerPayment =
         TextEditingController(text: widget.usernameInitial);
     countryControllerPayment =
         TextEditingController(text: widget.countryInitial);
-    fieldControllerPayment = TextEditingController(text: widget.fieldInitial);
     sexControllerPayment = TextEditingController(text: widget.sexInitial);
     emailControllerPayment = TextEditingController(text: widget.emailInitial);
     nameControllerPayment = TextEditingController(text: widget.nameInitial);
@@ -97,6 +106,32 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     usdtLinkControllerPayment =
         TextEditingController(text: widget.usdtLinkInitial);
     dropdownValue = widget.sexInitial;
+    bussinessIdSelected = widget.fieldInitial!;
+    // phoneControllerLogin = TextEditingController(
+    //     text: separatePhoneNumber(widget.phoneNumber!)['phoneNumber']);
+    // phoneNumber = PhoneNumber(
+    //     dialCode: separatePhoneNumber(widget.phoneNumber!)['countryCode']);
+    getPhoneNumberWithRegion();
+  }
+
+  getPhoneNumberWithRegion() async {
+    PhoneNumber phone =
+        await PhoneNumber.getRegionInfoFromPhoneNumber(widget.phoneNumber!);
+    setState(() {
+      phoneNumber = phone;
+    });
+  }
+
+  fetchBusinessScopeList() async {
+    List<BusinessScopeData>? fetchedBusinessScopeList =
+        await businessScopeServices.getBusinessScopeList();
+    if (fetchedBusinessScopeList != null ||
+        fetchedBusinessScopeList!.isNotEmpty) {
+      setState(() {
+        businessScope = fetchedBusinessScopeList;
+        initialBussiness = businessScope[bussinessIdSelected].businessScopeName;
+      });
+    }
   }
 
   Future<void> _loadDataFromShared() async {
@@ -187,15 +222,35 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 SizedBox(width: 10),
                 Expanded(
                   flex: 4,
-                  child: _buildTextInput(
-                      hintText: "请输入范围",
-                      controller: fieldControllerPayment,
-                      onChanged: (value) {
-                        if (widget.onCountryChange != null) {
-                          widget.onCountryChange!(value);
-                        }
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    height: 31,
+                    decoration: BoxDecoration(
+                        color: kInputBackGreyColor,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: DropdownButton<String>(
+                      underline: Container(),
+                      value: initialBussiness,
+                      isExpanded: true,
+                      icon: const Icon(Icons.arrow_drop_down),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: missionUsernameTextStyle,
+                      onChanged: (newValue) {
+                        setState(() {
+                          initialBussiness = newValue!;
+                        });
                       },
-                      readOnly: false),
+                      items: businessScope
+                          .map<DropdownMenuItem<String>>((business) {
+                        return DropdownMenuItem<String>(
+                          value: business.businessScopeName,
+                          child: Text(business.businessScopeName),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
                 SizedBox(width: 10),
                 Expanded(
@@ -273,7 +328,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                             borderRadius: BorderRadius.circular(8)),
                         child: Text(
                           code ?? "",
-                          style: missionUsernameTextStyle,
+                          style: missionDetailText2,
                           textAlign: TextAlign.center,
                         ))),
                 SizedBox(width: 10),
@@ -287,7 +342,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                             borderRadius: BorderRadius.circular(8)),
                         child: Text(
                           firstContact ?? "",
-                          style: missionUsernameTextStyle,
+                          style: missionDetailText2,
                           textAlign: TextAlign.left,
                         ))),
               ],
@@ -304,6 +359,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 child: Container(
                   height: 31,
                   child: InternationalPhoneNumberInput(
+                    // autoValidateMode: AutovalidateMode.onUserInteraction,
                     errorMessage: "手机号码不正确",
                     initialValue: phoneNumber,
                     textFieldController: phoneControllerLogin,
@@ -319,8 +375,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                       dialCode = number.dialCode.toString();
                       countryCode = number.isoCode.toString();
                     },
-                    // autoValidateMode:
-                    //     AutovalidateMode.onUserInteraction,
                     cursorColor: Colors.black,
                     inputDecoration: InputDecoration(
                         errorBorder: OutlineInputBorder(
@@ -387,13 +441,13 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 5),
             _buildTextInput(
                 hintText: "货币- USDT",
-                controller: nameControllerPayment,
+                controller: TextEditingController(),
                 onChanged: (value) {
-                  if (widget.onUsernameChange != null) {
-                    widget.onUsernameChange!(value);
+                  if (widget.usdtLinkInitial != null) {
+                    widget.usdtLinkInitial!;
                   }
                 },
-                readOnly: false),
+                readOnly: true),
             SizedBox(height: 15),
             GestureDetector(
                 child: Text(
