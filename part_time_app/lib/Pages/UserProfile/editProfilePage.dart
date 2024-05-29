@@ -46,17 +46,17 @@ final ImagePicker _picker = ImagePicker();
 // }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  bool isLoading = true;
+  bool isLoading = false;
   ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
   }
 
   @override

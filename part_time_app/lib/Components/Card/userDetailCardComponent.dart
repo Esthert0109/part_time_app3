@@ -136,6 +136,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   Future<void> _loadDataFromShared() async {
     String? phoneNo = await SharedPreferencesUtils.getPhoneNo();
     UserData? user = await SharedPreferencesUtils.getUserDataInfo();
+
     if (phoneNo != null) {
       Map<String, String> separated = separatePhoneNumber(phoneNo);
       Map<String, String> separatedSecond =
@@ -145,11 +146,11 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         firstContact = separated["phoneNumber"];
         secondCode = separatedSecond["countryCode"];
         secondContact = separatedSecond["phoneNumber"];
-        username = user?.username;
-        usernameControllerPayment.text = username ?? '';
+        // username = user?.nickname;
+        usernameControllerPayment.text = user?.nickname ?? '';
         countryControllerPayment.text = user?.country ?? '';
         emailControllerPayment.text = user?.email ?? '';
-        nameControllerPayment.text = user?.nickname ?? '';
+        nameControllerPayment.text = user?.username ?? '';
         walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
         walletAddressControllerPayment.text = user?.billingAddress ?? '';
         usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
@@ -443,6 +444,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                               Expanded(
                                 flex: 3,
                                 child: Container(
+                                  margin: EdgeInsets.only(top: 5),
                                   padding: EdgeInsets.only(left: 10),
                                   height: 31,
                                   decoration: BoxDecoration(
@@ -482,6 +484,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                               Expanded(
                                 flex: 2,
                                 child: Container(
+                                  margin: EdgeInsets.only(top: 5),
                                   padding: EdgeInsets.only(left: 10),
                                   height: 31,
                                   decoration: BoxDecoration(
