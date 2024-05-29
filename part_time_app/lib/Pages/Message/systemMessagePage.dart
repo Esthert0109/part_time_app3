@@ -144,7 +144,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: systemMessageList.reversed.expand((date) {
+                  children: systemMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {

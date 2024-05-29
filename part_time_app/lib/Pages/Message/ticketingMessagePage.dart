@@ -139,7 +139,7 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: ticketingMessageList.reversed.expand((date) {
+                  children: ticketingMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {

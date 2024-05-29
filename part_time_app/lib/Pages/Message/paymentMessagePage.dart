@@ -131,7 +131,7 @@ class _PaymentMessagePageState extends State<PaymentMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: paymentMessageList.reversed.expand((date) {
+                  children: paymentMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {

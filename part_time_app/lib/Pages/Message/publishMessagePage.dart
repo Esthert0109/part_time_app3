@@ -134,7 +134,7 @@ class _PublishMessagePageState extends State<PublishMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: publishMessageList.reversed.expand((date) {
+                  children: publishMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {
