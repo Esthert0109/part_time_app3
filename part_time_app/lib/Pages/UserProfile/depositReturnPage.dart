@@ -70,7 +70,7 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                   isEditProfile: false,
                   nameInitial: userData.username,
                   countryInitial: userData.country,
-                  fieldInitial: userData.businessScopeName,
+                  fieldInitial: userData.businessScopeId,
                   sexInitial: userData.gender,
                   walletNetworkInitial: userData.billingNetwork,
                   walletAddressInitial: userData.billingAddress,
