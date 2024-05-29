@@ -48,13 +48,33 @@ class _SettingPageState extends State<SettingPage> {
     UserData? data = await SharedPreferencesUtils.getUserDataInfo();
     userData = data!;
 
-    // Save the switch state
-    data.collectionValid = isPrivate ? 0 : 1; // Update the userData object
-    await SharedPreferencesUtils.saveUserDataInfo(
-        data);
+    // Update the userData object
+    data.collectionValid = isPrivate ? 0 : 1;
 
-    // Call the updateCollectionViewable method
-    await _userServices.updateCollectionViewable();
+    try {
+      // Call the updateCollectionViewable method and wait for it to complete
+      await _userServices.updateCollectionViewable();
+
+      // Save the switch state only after the updateCollectionViewable method completes successfully
+      await SharedPreferencesUtils.saveUserDataInfo(data);
+
+      Fluttertoast.showToast(
+        msg: "隐私设置更新成功",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: kMainGreyColor,
+        textColor: kThirdGreyColor,
+      );
+    } catch (e) {
+      // Handle any errors that occur during the updateCollectionViewable method
+      Fluttertoast.showToast(
+        msg: "更新隐私设置失败，请稍后重试",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: kMainGreyColor,
+        textColor: kThirdGreyColor,
+      );
+    }
   }
 
   @override
