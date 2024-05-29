@@ -323,7 +323,8 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: kMainWhiteColor, borderRadius: BorderRadius.circular(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -365,7 +366,7 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
               hintText: "",
               controller: dateControllerTicket,
               onChanged: (value) {},
-              readOnly: false),
+              readOnly: true),
           const SizedBox(height: 15),
           const Text("悬赏ID", style: depositTextStyle2),
           _buildTextInput(
@@ -391,9 +392,12 @@ class _TicketSubmissionComponentState extends State<TicketSubmissionComponent> {
           const SizedBox(height: 15),
           const Text("申述种类", style: depositTextStyle2),
           Container(
+            margin: const EdgeInsets.only(top: 5),
             padding: const EdgeInsets.only(left: 10),
             height: 31,
-            decoration: BoxDecoration(color: kInputBackGreyColor, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+                color: kInputBackGreyColor,
+                borderRadius: BorderRadius.circular(8)),
             child: DropdownButton<String>(
               underline: Container(),
               value: dropdownValueForTicket,
