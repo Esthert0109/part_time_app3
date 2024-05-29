@@ -23,6 +23,8 @@ import '../../Utils/sharedPreferencesUtils.dart';
 import '../Message/user/chatConfig.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
 
+String? customerIdforWebsocket;
+
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
 
@@ -46,9 +48,9 @@ class _RecommendationPageState extends State<RecommendationPage>
   @override
   void initState() {
     super.initState();
-    webSocketService.addListener(_updateState);
+    // getUserInfo();
     _scrollController.addListener(_scrollListener);
-    getUserInfo();
+    webSocketService.addListener(_updateState);
   }
 
   void _updateState() {
@@ -57,18 +59,18 @@ class _RecommendationPageState extends State<RecommendationPage>
     }
   }
 
-  getUserInfo() async {
-    UserData? data = await SharedPreferencesUtils.getUserDataInfo()!;
+  // getUserInfo() async {
+  //   UserData? data = await SharedPreferencesUtils.getUserDataInfo();
 
-    setState(() {
-      userData = data!;
-    });
-    bool isLoginTencent = await userTencentLogin(data!.customerId!);
-    bool isChangeNicknameTencent =
-        await setNickNameTencent(data.customerId!, data.nickname!);
-    bool isChangeAvatarTencent =
-        await setAvatarTencent(data.customerId!, data.avatar!);
-  }
+  //   setState(() {
+  //     userData = data!;
+  //   });
+  //   bool isLoginTencent = await userTencentLogin(data!.customerId!);
+  //   bool isChangeNicknameTencent =
+  //       await setNickNameTencent(data.customerId!, data.nickname!);
+  //   bool isChangeAvatarTencent =
+  //       await setAvatarTencent(data.customerId!, data.avatar!);
+  // }
 
   @override
   void dispose() {

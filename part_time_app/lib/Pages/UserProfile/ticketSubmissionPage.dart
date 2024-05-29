@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -139,60 +140,145 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                     text: "提交",
                     onPressed: () async {
                       setState(() {
-                        print(ticketSubmssionDate);
                         DateTime now = DateTime.now();
                         iso8601Date = now.toIso8601String();
                         isLoading = true;
                       });
+                      bool isValidEmail(String email) {
+                        String pattern = r'^[^@]+@[^@]+\.[^@]+';
+                        RegExp regex = RegExp(pattern);
+                        return regex.hasMatch(email);
+                      }
+
+                      void showErrorDialog(String message) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Validation Error"),
+                              content: Text(message),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+
+                      bool validateTicket(TicketingData ticket) {
+                        if (ticket.customerId == null ||
+                            ticket.customerId!.isEmpty) {
+                          // Show an error message to the user
+                          Fluttertoast.showToast(
+                              msg: "被举报的用户ID不能为空",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
+                          return false;
+                        }
+                        if (ticket.ticketCustomerUsername == null ||
+                            ticket.ticketCustomerUsername!.isEmpty) {
+                          // Show an error message to the user
+                          Fluttertoast.showToast(
+                              msg: "姓名不能为空",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
+                          return false;
+                        }
+                        if (ticket.ticketCustomerPhoneNum == null ||
+                            ticket.ticketCustomerPhoneNum!.isEmpty) {
+                          // Show an error message to the user
+                          Fluttertoast.showToast(
+                              msg: "电话号码不能为空",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
+                          return false;
+                        }
+                        if (ticket.ticketCustomerEmail == null ||
+                            !isValidEmail(ticket.ticketCustomerEmail!)) {
+                          // Show an error message to the user
+                          Fluttertoast.showToast(
+                              msg: "电子邮件不能为空",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
+                          return false;
+                        }
+                        if (ticket.ticketComplaintDescription == null ||
+                            ticket.ticketComplaintDescription!.isEmpty) {
+                          // Show an error message to the user
+                          Fluttertoast.showToast(
+                              msg: "申述不能为空",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
+                          return false;
+                        }
+                        // Add more validation checks as needed
+                        return true;
+                      }
+
                       try {
                         TicketingData? ticketToSubmit = TicketingData(
-                            customerId: customerId,
-                            ticketCustomerUsername: username,
-                            ticketCustomerPhoneNum: phoneNumber,
-                            ticketCustomerEmail: email,
-                            ticketDate: iso8601Date,
-                            taskId: widget.reportTaskIDInitial,
-                            complaintTypeId: widget.complainType! + 1,
-                            complaintUserId: widget.reportUserIDInitial,
-                            ticketComplaintDescription:
-                                fieldControllerTicket.text,
-                            ticketComplaintAttachment: uploadedImagesListSS);
+                          customerId: customerId,
+                          ticketCustomerUsername: nameControllerTicket.text,
+                          ticketCustomerPhoneNum: phoneNumControllerTicket.text,
+                          ticketCustomerEmail: emailControllerTicket.text,
+                          ticketDate: iso8601Date,
+                          taskId: widget.reportTaskIDInitial,
+                          complaintTypeId: widget.complainType! + 1,
+                          complaintUserId: widget.reportUserIDInitial,
+                          ticketComplaintDescription:
+                              fieldControllerTicket.text,
+                          ticketComplaintAttachment: uploadedImagesListSS,
+                        );
 
-                        TicketingService ticketingService = TicketingService();
-                        ticketingService
-                            .createTicket(ticketToSubmit)
-                            .then((success) {
-                          // Handle success or failure accordingly
-                          if (success != null && success) {
-                            print("Submitted success");
+                        if (validateTicket(ticketToSubmit)) {
+                          TicketingService ticketingService =
+                              TicketingService();
+                          ticketingService
+                              .createTicket(ticketToSubmit)
+                              .then((success) {
+                            if (success != null && success) {
+                              print("Submitted success");
+                              setState(() {
+                                uploadedImagesListSS = [];
+                                Navigator.pop(context);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return StatusDialogComponent(
+                                      complete: true,
+                                      successText: "系统将审核你的工单，审核通过后将通知你。",
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        Get.offAllNamed('/home');
+                                      },
+                                    );
+                                  },
+                                );
+                              });
+                            } else {
+                              print("Submitted FAILED");
+                            }
+
                             setState(() {
-                              uploadedImagesListSS = [];
-                              ticketToSubmit = null;
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatusDialogComponent(
-                                    complete: true,
-                                    successText: "系统将审核你的工单，审核通过后将通知你。",
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      Get.offAllNamed('/home');
-                                    },
-                                  );
-                                },
-                              );
+                              isLoading = false;
                             });
-                          } else {
-                            print(success);
-                            print("Submitted FAILED");
-                          }
-
-                          setState(() {
-                            isLoading =
-                                false; // Set loading state back to false after request is completed
                           });
-                        });
+                        }
                       } catch (e) {
                         print("Error: $e");
                         // Handle error

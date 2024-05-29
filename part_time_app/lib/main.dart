@@ -7,11 +7,14 @@ import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
 import 'package:provider/provider.dart';
+import 'Constants/globalConstant.dart';
+import 'Model/User/userModel.dart';
 import 'Pages/Message/user/chatConfig.dart';
 import 'Pages/UserProfile/ticketDetailsRecordPage.dart';
 import 'Pages/homePage.dart';
 import 'Services/notification/notifacationServices.dart';
 import 'Services/WebSocket/webSocketService.dart';
+import 'Utils/sharedPreferencesUtils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +23,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(
     ChangeNotifierProvider(
-      create: (context) => WebSocketService(),
+      create: (context) => WebSocketService("${userData.customerId}"),
       child: const MyApp(),
     ),
   );
@@ -34,6 +37,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
+
+    setState(() {
+      userData = data!;
+    });
+    bool isLoginTencent = await userTencentLogin(data!.customerId!);
+    bool isChangeNicknameTencent =
+        await setNickNameTencent(data.customerId!, data.nickname!);
+    bool isChangeAvatarTencent =
+        await setAvatarTencent(data.customerId!, data.avatar!);
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

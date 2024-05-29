@@ -50,6 +50,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
     try {
       final response = await SystemMessageServices().patchUpdateRead(0);
       final response1 = await SystemMessageServices().postUpdateRead();
+      notificationTips?.responseData['系统通知']?.notificationTotalUnread = 0;
       print("called");
     } catch (e) {
       print("Error: $e");
