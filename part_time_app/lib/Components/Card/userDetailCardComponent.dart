@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Constants/colorConstant.dart';
@@ -42,6 +44,7 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? walletNetworkInitial;
   final String? walletAddressInitial;
   final String? usdtLinkInitial;
+  final String? avatarUrl;
 
   UserDetailCardComponent({
     super.key,
@@ -65,6 +68,7 @@ class UserDetailCardComponent extends StatefulWidget {
     this.walletNetworkInitial,
     this.walletAddressInitial,
     this.usdtLinkInitial,
+    this.avatarUrl,
   });
 
   @override
@@ -82,6 +86,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String? code;
   String? username;
   String? dropdownValue;
+  String? avatarUrl;
   bool isLoading = false;
 
   // services
@@ -149,25 +154,39 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         username = user?.username;
       });
     }
+    setState(() {
+      usernameControllerPayment.text = user?.nickname ?? '';
+        countryControllerPayment.text = user?.country ?? '';
+        emailControllerPayment.text = user?.email ?? '';
+        nameControllerPayment.text = username ?? '';
+        walletNetworkControllerPayment.text = user?.billingNetwork ?? '';
+        walletAddressControllerPayment.text = user?.billingAddress ?? '';
+        usdtLinkControllerPayment.text = user?.billingCurrency ?? '';
+        dropdownValue = user?.gender ?? '男'; // Default to '男' if null
+        phoneControllerLogin.text = user?.secondPhoneNo ?? '';
+        bussinessIdSelected = user?.businessScopeId ?? 0;
+        avatarUrl = user?.avatar;
+    });
   }
 
-  Future<void> _updateUser() async {
+Future<void> _updateUser() async {
     setState(() {
       isLoading = true;
     });
 
     try {
       UserData updatedUser = UserData(
-        username: usernameControllerPayment.text,
+        username: nameControllerPayment.text,
         country: countryControllerPayment.text,
         businessScopeId: bussinessIdSelected,
         gender: dropdownValue,
         email: emailControllerPayment.text,
-        nickname: nameControllerPayment.text,
-        secondPhoneNo: phoneControllerLogin.text,
+        nickname: usernameControllerPayment.text,
+        // secondPhoneNo: phoneControllerLogin.text,
         billingNetwork: walletNetworkControllerPayment.text,
         billingAddress: walletAddressControllerPayment.text,
         billingCurrency: usdtLinkControllerPayment.text,
+        avatar: widget.avatarUrl ?? userData.avatar,
       );
 
       await userServices.updateCustomerInfo(updatedUser);
