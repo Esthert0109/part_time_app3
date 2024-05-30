@@ -17,6 +17,7 @@ import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/User/userModel.dart';
+import '../../Services/WebSocket/webSocketService.dart';
 import '../Message/user/chatConfig.dart';
 import '../Message/user/userMessagePage.dart';
 
@@ -117,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                           Positioned(
                             child: Container(
                               child: InternationalPhoneNumberInput(
-                                errorMessage: "请正确的电话号码",
+                                errorMessage: "请输入正确的电话号码",
                                 initialValue: phoneNumber,
                                 textFieldController: phoneControllerLogin,
                                 formatInput: true,
@@ -260,8 +261,6 @@ class _LoginPageState extends State<LoginPage> {
                           text: "提交",
                           disableButtonColor: buttonLoadingColor,
                           onPressed: () async {
-                            // bool isLoginTencent =
-                            //     await userTencentLogin('2206');
                             // print('login tencent');
                             // if (isLoginTencent) {
                             //   Get.to(() => UserMessagePage(),
@@ -289,7 +288,6 @@ class _LoginPageState extends State<LoginPage> {
                                 } else {
                                   UserModel? user =
                                       await services.getUserInfo();
-
                                   Get.offAllNamed('/');
                                   setState(() {
                                     isLoading = false;

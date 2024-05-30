@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Components/List/messageListComponent.dart';
 import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Constants/colorConstant.dart';
@@ -51,6 +50,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
     try {
       final response = await SystemMessageServices().patchUpdateRead(0);
       final response1 = await SystemMessageServices().postUpdateRead();
+      notificationTips?.responseData['系统通知']?.notificationTotalUnread = 0;
       print("called");
     } catch (e) {
       print("Error: $e");
@@ -72,10 +72,11 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
           await SystemMessageServices().getNotificationList(0, page);
       print("call the API");
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           systemMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });
@@ -144,7 +145,7 @@ class _SystemMessagePageState extends State<SystemMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: systemMessageList.reversed.expand((date) {
+                  children: systemMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {

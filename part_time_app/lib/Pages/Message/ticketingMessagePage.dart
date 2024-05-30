@@ -9,9 +9,8 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/notification/messageModel.dart';
+import '../../Services/WebSocket/webSocketService.dart';
 import '../../Services/notification/systemMessageServices.dart';
-
-bool noInitialRefresh = true;
 
 class TicketingMessagePage extends StatefulWidget {
   const TicketingMessagePage({Key? key}) : super(key: key);
@@ -29,9 +28,16 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
   @override
   void initState() {
     super.initState();
+    webSocketService.addListener(_updateState);
     _scrollController.addListener(_scrollListener);
-    _loadData();
     _readStatus();
+    _refresh();
+  }
+
+  void _updateState() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -52,6 +58,7 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
   Future<void> _readStatus() async {
     try {
       final response = await SystemMessageServices().patchUpdateRead(4);
+      notificationTips?.responseData['工单通知']?.notificationTotalUnread = 0;
     } catch (e) {
       print("Error: $e");
     }
@@ -66,10 +73,11 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
           await SystemMessageServices().getNotificationList(4, page);
 
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           ticketingMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });
@@ -138,7 +146,7 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: ticketingMessageList.reversed.expand((date) {
+                  children: ticketingMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {
@@ -173,17 +181,6 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
               ),
             ),
           )),
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant TicketingMessagePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Scroll to bottom whenever the widget updates
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
     );
   }
 }

@@ -20,8 +20,9 @@ const collectionURL = "api/v1/collection/my-collection";
 const createCollectionURL = "api/v1/collection/create?taskId=";
 const searchResultPage = "api/v1/tasks/searchByKeywords?";
 const searchbyTag = "api/v1/tasks/searchByTag?";
-const getTagUrl = "api/v1/tags/getTagList?page=";
+const getFilterTagListUrl = "api/v1/tags/getFilterTagList";
 const advertisementPage = "api/v1/advertisement/all";
+const getCategoryList = "api/v1/tasks/getTaskListByCategoryId/";
 
 // order Services
 const getOrderByStatusUrl = "api/v1/orders/getOrderListByStatusId/";
@@ -61,16 +62,21 @@ const updateCollectionViewUrl = "api/v1/customers/updateCollectionViewable";
 const getPaymentHistoryUrl = "api/v1/payments/payment/history?page=";
 const getPaymentDetailUrl = "api/v1/payments/detail/";
 const getDepositUrl = "api/v1/deposit/info";
+const getDepositStatusUrl = "api/v1/deposit/";
 
 //Ticketing
 const getTicketingHistoryUrl = "api/v1/ticket/getAllByCustomerId?page=";
 const getTicketingDetailUrl = "api/v1/ticket/getTicketByTicketId/";
+const getTicketComplainTypeUrl = "api/v1/ticket/getTypes";
+const createTicketUrl = "api/v1/ticket/create";
+
 // tag
 const getTagListUrl = "api/v1/tags/getTagList?";
 
 // upload file
 const uploadTaskImagesUrl = "api/v1/files/upload/post";
 const uploadDepositUrl = "api/v1/files/upload/deposit-screenshot";
+const uploadTicketImagesUrl = "api/v1/files/upload/ticket";
 
 // Payment
 const createPaymentUrl = "api/v1/payments/create";

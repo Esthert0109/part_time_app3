@@ -6,7 +6,6 @@ import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
 import 'package:part_time_app/Components/Loading/missionCardLoading.dart';
 import 'package:part_time_app/Components/Selection/thirdStatusSelectionComponent.dart';
 import 'package:part_time_app/Pages/MissionRecipient/missionDetailRecipientPage.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Constants/colorConstant.dart';

@@ -5,11 +5,11 @@ import 'package:part_time_app/Model/Ticketing/ticketingModel.dart';
 import '../../Constants/apiConstant.dart';
 import '../../Utils/apiUtils.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
+import 'package:http/http.dart' as http;
 
 class TicketingService {
   Future<TicketingModel?> getTicketingHistory(int page) async {
     String url = port + getTicketingHistoryUrl + page.toString();
-    print(url);
     String? token = await SharedPreferencesUtils.getToken();
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
@@ -62,7 +62,6 @@ class TicketingService {
     try {
       final response = await getRequest(url, headers);
       int statusCode = response.statusCode;
-      print(response.responseBody);
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.responseBody);
         return TicketingData.fromJson(jsonResponse['data']);
@@ -73,7 +72,71 @@ class TicketingService {
       // Handle exceptions if needed
       print('Exception: $e');
     }
+  }
 
-    // Return null if there's an erro
+  static Future<void> fetchComplaintTypes() async {
+    String url = port + getTicketComplainTypeUrl;
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+    final response = await getRequest(url, headers);
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.responseBody)['data'];
+      for (var item in data) {
+        var complaintType = ComplaintType.fromJson(item);
+        TicketingData.complaintTypeMap[complaintType.complaintTypeId] =
+            complaintType.complaintName;
+      }
+    } else {
+      throw Exception('Failed to load complaint types');
+    }
+  }
+
+  String get complaintTypeName {
+    return TicketingData.complaintTypeMap[TicketingData.complaintTypeMap] ??
+        '未知';
+  }
+
+  Future<List<ComplaintType>> fetchComplaintTypesForDropdown() async {
+    String url = port + getTicketComplainTypeUrl;
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+    final response = await getRequest(url, headers);
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.responseBody)['data'];
+      return data.map((item) => ComplaintType.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load complaint types');
+    }
+  }
+
+  Future<bool?> createTicket(TicketingData ticketDetail) async {
+    String url = port + createTicketUrl;
+    String? token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token!
+    };
+
+    final Map<String, dynamic> body = ticketDetail.toJson();
+    try {
+      final response = await postRequest(url, headers, body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.responseBody);
+        int responseCode = jsonData['code'];
+
+        if (responseCode == 0) {
+          return true;
+        } else {
+          // Handle other status codes if needed
+          return false;
+        }
+        // Check the response status code or any other condition based on your API
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }

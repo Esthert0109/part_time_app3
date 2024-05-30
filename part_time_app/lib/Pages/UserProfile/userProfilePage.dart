@@ -7,10 +7,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Pages/MockData/missionMockData.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Services/collection/collectionServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
+import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
@@ -19,7 +19,9 @@ import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
+import '../../Services/Chat/chatServices.dart';
 import '../Explore/collectPage.dart';
+import '../Message/user/chat.dart';
 import '../MissionIssuer/missionDetailStatusIssuerPage.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
 import 'ticketSubmissionPage.dart';
@@ -39,7 +41,7 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   bool isAutho = true;
-  bool isPrivate = false;
+  bool isPrivate = true;
   int selectedIndex = 0;
   int noPublish = 0;
   int noCollect = 0;
@@ -56,6 +58,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
   UserServices services = UserServices();
   CollectionService collectionService = CollectionService();
   int page = 1;
+
+  void _handleOnConvItemTaped(
+      V2TimConversation? selectedConv, String peopleToChatId) async {
+    ChatService().sendMessage(peopleToChatId);
+    // ChatService().sendImageMessage();
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Chat(
+            selectedConversation: selectedConv!,
+          ),
+        ));
+  }
 
   @override
   void initState() {
@@ -80,6 +95,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
       if (userDetails!.validIdentity == 0) {
         isAutho = false;
       }
+
+      if (userDetails!.collectionValid == 1) {
+        isPrivate = false;
+      }
+
       noPublish = noTask ?? 0;
       noCollect = noCollection ?? 0;
 
@@ -131,12 +151,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
     setState(() {
       taskPublished!.clear();
       taskCollected!.clear();
     });
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -318,7 +339,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       child: GestureDetector(
                                         onTap: () {
                                           print("complain");
-                                          Get.to(() => TicketSubmissionPage(),
+                                          Get.to(
+                                              () => TicketSubmissionPage(
+                                                    reportUserIDInitial:
+                                                        userDetails
+                                                                ?.customerId ??
+                                                            "",
+                                                    complainType: 0,
+                                                  ),
                                               transition:
                                                   Transition.rightToLeft);
                                         },
@@ -439,7 +467,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                         BorderRadius.circular(
                                                             8)),
                                                 elevation: 0),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              V2TimConversation conversation =
+                                                  new V2TimConversation(
+                                                      conversationID:
+                                                          "c2c_${userDetails?.customerId}",
+                                                      type: 1,
+                                                      userID:
+                                                          "${userDetails?.customerId}",
+                                                      showName:
+                                                          "${userDetails?.nickname}");
+                                              // V2TimConversation conversation = new V2TimConversation(
+                                              //     conversationID: "c2c_CS_5", type: 1, userID: "CS_5");
+                                              _handleOnConvItemTaped(
+                                                  conversation, "2206");
+                                            },
                                             child: Text(
                                               "发送私信",
                                               style: splashScreenTextStyle,
@@ -544,7 +586,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     style: splashScreenTextStyle,
                                   ),
                                 )
-                              : (selectedIndex == 0 && noPublish == 0)
+                              : (selectedIndex == 0 &&
+                                      noPublish == 0 &&
+                                      isAutho)
                                   ? Container(
                                       height: 159,
                                       decoration: BoxDecoration(

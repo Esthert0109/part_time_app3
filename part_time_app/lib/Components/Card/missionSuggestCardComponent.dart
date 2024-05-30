@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Pages/MissionRecipient/missionDetailRecipientPage.dart';
 import '../Loading/missionSuggestLoading.dart';
 
 class MissionSuggestCardComponent extends StatefulWidget {
@@ -12,6 +14,7 @@ class MissionSuggestCardComponent extends StatefulWidget {
   final int requiredNo;
   final int completedNo;
   final bool isLoading;
+  final int taskId;
 
   const MissionSuggestCardComponent(
       {super.key,
@@ -21,7 +24,8 @@ class MissionSuggestCardComponent extends StatefulWidget {
       required this.price,
       required this.requiredNo,
       required this.completedNo,
-      required this.isLoading});
+      required this.isLoading,
+      required this.taskId});
 
   @override
   State<MissionSuggestCardComponent> createState() =>
@@ -131,7 +135,13 @@ class _MissionSuggestCardComponentState
                             fixedSize: const Size.fromHeight(30),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(
+                              () => MissionDetailRecipientPage(
+                                    taskId: widget.taskId,
+                                  ),
+                              transition: Transition.rightToLeft);
+                        },
                         child: Text(
                           "立刻赚钱",
                           style: primaryTextFieldErrorTextStyle,

@@ -14,7 +14,8 @@ import '../../Constants/textStyleConstant.dart';
 import 'depositPaymentStatusPage.dart';
 
 class DepositMainPage extends StatefulWidget {
-  const DepositMainPage({super.key});
+  final bool isHome;
+  const DepositMainPage({super.key, required this.isHome});
 
   @override
   State<DepositMainPage> createState() => _DepositMainPageState();
@@ -29,13 +30,15 @@ class _DepositMainPageState extends State<DepositMainPage> {
         appBar: AppBar(
             automaticallyImplyLeading: false,
             scrolledUnderElevation: 0.0,
-            leading: IconButton(
-              iconSize: 15,
-              icon: Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () {
-                Get.back();
-              },
-            ),
+            leading: widget.isHome
+                ? null
+                : IconButton(
+                    iconSize: 15,
+                    icon: Icon(Icons.arrow_back_ios_new_rounded),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
             centerTitle: true,
             title: Container(
                 color: kTransparent,
@@ -64,7 +67,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
               //condition(card1,2 is true)
               //card 1 false is NOT verify, then CANT return deposit.
               //condition(card1,2 is false)
-              if (userData.validIdentity == 1) ...[
+              if (userData?.validIdentity == 1) ...[
                 cardComponent1("• 押金认证", true),
                 cardComponent2("• 退还押金", true),
               ] else ...[
@@ -120,11 +123,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
                   child: GestureDetector(
                     onTap: deposit
                         ? () {
-                            Get.to(
-                                () => DepositPaymentStatusPage(
-                                      isPass: false,
-                                      isFailed: false,
-                                    ),
+                            Get.to(() => DepositPaymentStatusPage(),
                                 transition: Transition.rightToLeft);
                           }
                         : () {

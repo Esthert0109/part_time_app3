@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Pages/Message/user/user_profile.dart';
@@ -66,9 +67,12 @@ class _MissionCardComponentState extends State<MissionCardComponent> {
         setState(() {
           isFavorite = !isFavorite!;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(isFavorite! ? 'Task liked' : 'Task unliked')),
-        );
+        Fluttertoast.showToast(
+            msg: isFavorite! ? '已收藏' : '取消收藏',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: kMainGreyColor,
+            textColor: kThirdGreyColor);
       } else {
         throw Exception('Failed to update favorite status');
       }

@@ -12,13 +12,21 @@ import 'package:part_time_app/Pages/Explore/newMissionPage.dart';
 import 'package:part_time_app/Pages/Explore/shortTimePage.dart';
 import '../../Components/Card/categoryCardComponent.dart';
 import '../../Components/Card/missionCardComponent.dart';
+import '../../Components/Loading/explorePageLoading.dart';
 import '../../Components/SearchBar/searchBarComponent.dart';
 import '../../Components/Selection/primaryTagSelectionComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Model/Advertisement/advertisementModel.dart';
+import '../../Model/Category/categoryModel.dart';
+import '../../Model/User/userModel.dart';
 import '../../Services/explore/exploreServices.dart';
 import '../../Model/Task/missionClass.dart';
-import '../../Services/webSocketService.dart';
+import '../../Services/WebSocket/webSocketService.dart';
+import '../../Utils/sharedPreferencesUtils.dart';
+import '../Message/user/chatConfig.dart';
 import '../MissionRecipient/missionDetailRecipientPage.dart';
+
+String? customerIdforWebsocket;
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -35,7 +43,14 @@ class _RecommendationPageState extends State<RecommendationPage>
   int page = 2;
   bool isLoading = false;
   bool continueLoading = true;
+  bool isAdsLoading = false;
   String sortType = "";
+
+  List<CategoryListData> exploreCategory = [];
+  List<AdvertisementData> advertisement = [];
+  // List<TaskClass> missionAvailableList = [];
+  // List<TaskClass> missionAvailableAsec = [];
+  // List<TaskClass> missionAvailableDesc = [];
 
   @override
   bool get wantKeepAlive => true;
@@ -43,8 +58,25 @@ class _RecommendationPageState extends State<RecommendationPage>
   @override
   void initState() {
     super.initState();
-    webSocketService.addListener(_updateState);
+    // getUserInfo();
     _scrollController.addListener(_scrollListener);
+    adsLoading();
+  }
+
+  adsLoading() async {
+    if (advertisementList == [] ||
+        exploreCategoryList == [] ||
+        advertisementList.isEmpty ||
+        exploreCategoryList.isEmpty) {
+      setState(() {
+        isAdsLoading = true;
+      });
+    } else {
+      setState(() {
+        isAdsLoading = false;
+      });
+    }
+    webSocketService.addListener(_updateState);
   }
 
   void _updateState() {
@@ -52,6 +84,19 @@ class _RecommendationPageState extends State<RecommendationPage>
       setState(() {});
     }
   }
+
+  // getUserInfo() async {
+  //   UserData? data = await SharedPreferencesUtils.getUserDataInfo();
+
+  //   setState(() {
+  //     userData = data!;
+  //   });
+  //   bool isLoginTencent = await userTencentLogin(data!.customerId!);
+  //   bool isChangeNicknameTencent =
+  //       await setNickNameTencent(data.customerId!, data.nickname!);
+  //   bool isChangeAvatarTencent =
+  //       await setAvatarTencent(data.customerId!, data.avatar!);
+  // }
 
   @override
   void dispose() {
@@ -73,9 +118,11 @@ class _RecommendationPageState extends State<RecommendationPage>
   }
 
   Future<void> _loadData() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     try {
       final List<TaskClass> data = await ExploreService().fetchExplore(page);
@@ -165,41 +212,45 @@ class _RecommendationPageState extends State<RecommendationPage>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SearchBarComponent(),
-              FlutterCarousel(
-                options: CarouselOptions(
-                  enableInfiniteScroll: true,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 10),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 1000),
-                  height: 132.0,
-                  aspectRatio: 16 / 9,
-                  viewportFraction: 1.0,
-                  showIndicator: false,
-                  indicatorMargin: 2,
-                  slideIndicator: const CircularSlideIndicator(
-                    itemSpacing: 20,
-                    currentIndicatorColor: Color.fromARGB(232, 255, 227, 87),
-                  ),
-                ),
-                items: advertisementList.map((advertisement) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 132,
-                        decoration: BoxDecoration(
-                          color: kSecondGreyColor,
-                          borderRadius: BorderRadius.circular(8),
-                          image: DecorationImage(
-                            image:
-                                NetworkImage(advertisement.advertisementImage!),
-                            fit: BoxFit.cover,
-                          ),
+              isAdsLoading
+                  ? const ExplorePageLoading()
+                  : FlutterCarousel(
+                      options: CarouselOptions(
+                        enableInfiniteScroll: true,
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 10),
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 1000),
+                        height: 132.0,
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 1.0,
+                        showIndicator: false,
+                        indicatorMargin: 2,
+                        slideIndicator: const CircularSlideIndicator(
+                          itemSpacing: 20,
+                          currentIndicatorColor:
+                              Color.fromARGB(232, 255, 227, 87),
                         ),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+                      ),
+                      items: advertisementList.map((advertisement) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: 132,
+                              decoration: BoxDecoration(
+                                color: kSecondGreyColor,
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      advertisement.advertisementImage!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
               CategoryItem(
                 list: exploreCategoryList,
                 onTapCallbacks: [

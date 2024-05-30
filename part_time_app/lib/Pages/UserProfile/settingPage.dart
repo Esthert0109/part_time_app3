@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Services/WebSocket/webSocketService.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -34,46 +34,53 @@ class _SettingPageState extends State<SettingPage> {
     UserData? data = await SharedPreferencesUtils.getUserDataInfo();
     setState(() {
       userData = data!;
-      isPrivate =
-          data.collectionValid == 0; // Assuming 0 is private and 1 is public
+      if (data.collectionValid == 0) {
+        isPrivate = true;
+      }
     });
   }
 
   void _togglePrivacy(bool privateStatus) async {
-    setState(() {
-      isPrivate = privateStatus;
-    });
+    if (isLogin) {
+      setState(() {
+        isPrivate = privateStatus;
+      });
 
-    // Fetch user data from SharedPreferencesUtils
-    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-    userData = data!;
+      print("check private: ${isPrivate}");
 
-    // Update the userData object
-    data.collectionValid = isPrivate ? 0 : 1;
-
-    try {
-      // Call the updateCollectionViewable method and wait for it to complete
-      await _userServices.updateCollectionViewable();
-
-      // Save the switch state only after the updateCollectionViewable method completes successfully
-      await SharedPreferencesUtils.saveUserDataInfo(data);
-
+      try {
+        bool? update = await _userServices.updateCollectionViewable();
+        if (update!) {
+          await _userServices.getUserInfo();
+          Fluttertoast.showToast(
+              msg: "已更新",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+        } else {
+          Fluttertoast.showToast(
+              msg: "更新失败，请重试",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: "$e",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: kMainGreyColor,
+            textColor: kThirdGreyColor);
+      }
+    } else {
       Fluttertoast.showToast(
-        msg: "隐私设置更新成功",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: kMainGreyColor,
-        textColor: kThirdGreyColor,
-      );
-    } catch (e) {
-      // Handle any errors that occur during the updateCollectionViewable method
-      Fluttertoast.showToast(
-        msg: "更新隐私设置失败，请稍后重试",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: kMainGreyColor,
-        textColor: kThirdGreyColor,
-      );
+          msg: "请登录以继续操作",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: kMainGreyColor,
+          textColor: kThirdGreyColor);
     }
   }
 
@@ -249,10 +256,12 @@ class _SettingPageState extends State<SettingPage> {
                                         });
                                       },
                                       secondButtonOnTap: () async {
+                                        // webSocketService.disconnect();
                                         await SharedPreferencesUtils
                                             .clearSharedPreferences();
                                         setState(() {
                                           Navigator.pop(context);
+                                          isLogin = false;
 
                                           Fluttertoast.showToast(
                                             msg: "已登出",

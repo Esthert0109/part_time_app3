@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:part_time_app/Components/Loading/customRefreshComponent.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import '../../Components/Card/missionCardComponent.dart';
 import '../../Components/Loading/missionCardLoading.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
-import '../MockData/missionMockData.dart';
-
-bool noInitialRefresh = true;
-List<MissionMockClass>? missionEasyPass = [];
+import '../../Services/explore/exploreServices.dart';
+import '../MissionRecipient/missionDetailRecipientPage.dart';
 
 class EasyPassPage extends StatefulWidget {
   const EasyPassPage({super.key});
@@ -21,186 +18,157 @@ class EasyPassPage extends StatefulWidget {
 }
 
 class _EasyPassPageState extends State<EasyPassPage> {
-  final RefreshController _refreshRecommendationController =
-      RefreshController(initialRefresh: noInitialRefresh);
-  int currentPage = 1;
-  int itemsPerPage = 10;
-  bool isLoading = false;
-  bool isFirstLaunch = true;
-  bool reachEndOfList = false;
   ScrollController _scrollController = ScrollController();
+  int page = 1;
+  bool isLoading = false;
+  bool continueLoading = true;
+
+  List<TaskClass> missionEasyPass = [];
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+    _loadData();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
 
-  _loadData() async {
-    if (!isLoading && !reachEndOfList) {
-      setState(() {
-        isLoading = true;
-      });
-      // Simulate fetching data
-      await Future.delayed(Duration(seconds: 2));
-      int start = (currentPage - 1) * itemsPerPage;
-      int end = start + itemsPerPage;
-
-      if (MissionAvailableList.length > start) {
-        if (isFirstLaunch) {
-          missionEasyPass = MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end);
-          isFirstLaunch = false;
-        } else {
-          missionEasyPass!.addAll(MissionAvailableList.sublist(
-              start,
-              end > MissionAvailableList.length
-                  ? MissionAvailableList.length
-                  : end));
-        }
-
-        // Sort the missionAvailable list
-        _sortMissionAvailable();
-
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-            currentPage++;
-          });
-        }
-      } else {
-        // No more data to load
-        setState(() {
-          reachEndOfList = true;
-          isLoading = false;
-        });
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      if (!isLoading && continueLoading) {
+        _loadData();
       }
-      noInitialRefresh = false;
     }
   }
 
-  void _sortMissionAvailable() {
-    //control time
-    missionEasyPass!.sort((a, b) => b.missionDate!.compareTo(a.missionDate!));
-  }
-
-  _scrollListener() {
-    if (!_scrollController.hasClients || isLoading) return;
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      _loadData();
+  Future<void> _loadData() async {
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    try {
+      final List<TaskClass> data =
+          await ExploreService().fetchCategoryList(3, page);
+      setState(() {
+        if (data.isNotEmpty) {
+          missionEasyPass.addAll(data);
+          page++;
+        } else {
+          continueLoading = false;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error in exploreData: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _refresh() async {
     if (!isLoading) {
       setState(() {
-        currentPage = 1;
-        missionEasyPass = [];
-        reachEndOfList = false;
+        missionEasyPass.clear();
+        page = 1;
+        continueLoading = true;
+        _loadData();
       });
-      await _loadData();
     }
-    _refreshRecommendationController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          scrolledUnderElevation: 0.0,
-          leading: IconButton(
-            iconSize: 15,
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () {
-              Get.back();
-            },
+      child: Scaffold(
+        extendBodyBehindAppBar: false,
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            scrolledUnderElevation: 0.0,
+            leading: IconButton(
+              iconSize: 15,
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            centerTitle: true,
+            title: Container(
+                color: kTransparent,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: thirdTitleComponent(
+                  text: "易审核",
+                ))),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFFFCEEA5), Color(0xFFF9F9F9)],
+              stops: [0.0, 0.2],
+            ),
+            color: Color(0xFFf8f8f8),
           ),
-          centerTitle: true,
-          title: Container(
-              color: kTransparent,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: thirdTitleComponent(
-                text: "易审核",
-              ))),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFFCEEA5), Color(0xFFF9F9F9)],
-            stops: [0.0, 0.2],
-          ),
-          color: Color(0xFFf8f8f8),
-        ),
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (!isLoading &&
-                scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
-              _loadData();
-            }
-            return true;
-          },
-          child: CustomRefreshComponent(
+          child: RefreshIndicator(
               onRefresh: _refresh,
-              controller: _refreshRecommendationController,
+              color: kMainYellowColor,
               child: SingleChildScrollView(
+                padding: EdgeInsets.all(12),
+                controller: _scrollController,
                 child: Column(
                   children: [
-                    Container(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildMissionListView(missionEasyPass!),
-                          ],
-                        )),
+                    _buildMissionListView(missionEasyPass),
                   ],
                 ),
               )),
         ),
       ),
-    ));
+    );
   }
 
-  Widget _buildMissionListView(List<MissionMockClass> missionList) {
+  Widget _buildMissionListView(List<TaskClass> missionList) {
     return ListView.builder(
-      padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
-      physics: PageScrollPhysics(),
-      itemCount: missionList.length + (isLoading ? 1 : 0),
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: missionList.length + (continueLoading ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
-        if (index < missionList.length) {
-          return MissionCardComponent(
-            missionTitle: missionList[index].missionTitle,
-            missionDesc: missionList[index].missionDesc,
-            tagList: missionList[index].tagList ?? [],
-            missionPrice: missionList[index].missionPrice,
-            userAvatar: missionList[index].userAvatar,
-            username: missionList[index].username,
-            missionDate: missionList[index].missionDate,
-            isStatus: missionList[index].isStatus,
-            isFavorite: missionList[index].isFavorite,
-            missionStatus: missionList[index].missionStatus, customerId: "",
-          );
-        } else {
+        if (index == missionList.length) {
           return const MissionCardLoadingComponent();
+        } else {
+          return GestureDetector(
+            onTap: () {
+              Get.to(
+                  () => MissionDetailRecipientPage(
+                        taskId: missionList[index].taskId,
+                      ),
+                  transition: Transition.rightToLeft);
+            },
+            child: MissionCardComponent(
+              taskId: missionList[index].taskId,
+              missionTitle: missionList[index].taskTitle ?? "",
+              missionDesc: missionList[index].taskContent ?? "",
+              tagList: missionList[index]
+                      .taskTagNames
+                      ?.map((tag) => tag.tagName)
+                      .toList() ??
+                  [],
+              missionPrice: missionList[index].taskSinglePrice ?? 0.0,
+              userAvatar: missionList[index].avatar ?? "",
+              username: missionList[index].nickname ?? "",
+              missionDate: missionList[index].taskUpdatedTime ?? "",
+              isFavorite: missionList[index].collectionValid ?? false,
+              customerId: missionList[index].customerId!,
+            ),
+          );
         }
       },
     );

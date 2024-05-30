@@ -68,12 +68,12 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
               children: [
                 UserDetailCardComponent(
                   isEditProfile: false,
-                  nameInitial: userData.username,
-                  countryInitial: userData.country,
-                  fieldInitial: userData.businessScopeName,
-                  sexInitial: userData.gender,
-                  walletNetworkInitial: userData.billingNetwork,
-                  walletAddressInitial: userData.billingAddress,
+                  nameInitial: userData?.username,
+                  countryInitial: userData?.country,
+                  fieldInitial: userData?.businessScopeId,
+                  sexInitial: userData?.gender,
+                  walletNetworkInitial: userData?.billingNetwork,
+                  walletAddressInitial: userData?.billingAddress,
                 ),
                 SizedBox(height: 10),
                 Container(
@@ -114,12 +114,6 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                     onPressed: () {
                       setState(() {
                         Get.back();
-                        // Fluttertoast.showToast(
-                        //     msg: "已提交",
-                        //     toastLength: Toast.LENGTH_LONG,
-                        //     gravity: ToastGravity.BOTTOM,
-                        //     backgroundColor: kMainGreyColor,
-                        //     textColor: kThirdGreyColor);
                       });
                     },
                   ),
@@ -174,6 +168,16 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                               });
                             } else {
                               print("Submitted FAILED");
+                              setState(() {
+                                isLoading = false;
+                                Fluttertoast.showToast(
+                                  msg: "提交不成功！",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: kMainGreyColor,
+                                  textColor: kThirdGreyColor,
+                                );
+                              });
                             }
 
                             setState(() {
@@ -184,6 +188,7 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                         });
                       } catch (e) {
                         print("Error: $e");
+
                         // Handle error
                         if (mounted) {
                           setState(() {

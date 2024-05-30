@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Components/Card/missionFailedReasonCardComponent.dart';
 import 'package:part_time_app/Pages/UserProfile/ticketSubmissionPage.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Card/missionDetailDescriptionCardComponent.dart';
@@ -20,10 +19,12 @@ import '../../Components/Loading/missionDetailLoading.dart';
 import '../../Components/Status/statusDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
 import '../../Services/order/orderServices.dart';
+import '../UserProfile/userProfilePage.dart';
 import 'recipientInfoPage.dart';
 
 class MissionDetailRecipientPage extends StatefulWidget {
@@ -92,7 +93,9 @@ class _MissionDetailRecipientPageState
   void initState() {
     super.initState();
     fetchData();
-    fetchUserData();
+    if (isLogin) {
+      fetchUserData();
+    }
 
     setState(() {
       updateUploadList.clear();
@@ -180,8 +183,19 @@ class _MissionDetailRecipientPageState
             actions: [
               GestureDetector(
                 onTap: () {
-                  print("complainnnnn");
-                  Get.to(() => TicketSubmissionPage(),
+                  Get.to(
+                      isLogin
+                          ? () => TicketSubmissionPage(
+                                reportUserIDInitial: orderDetail.customerId,
+                                reportTaskIDInitial: orderDetail.taskId,
+                                complainType: 0,
+                              )
+                          : Fluttertoast.showToast(
+                              msg: "请登录以继续操作",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainGreyColor,
+                              textColor: kThirdGreyColor),
                       transition: Transition.rightToLeft);
                 },
                 child: Padding(
@@ -230,7 +244,14 @@ class _MissionDetailRecipientPageState
                               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9MU4SwesBOo_JPNEelanllG_YX_v4OWhdffpsPc0Gow&s",
                           title: orderDetail.nickname ?? "墩墩鸡",
                           action: "留言咨询 >",
-                          onTap: () {}),
+                          onTap: () {
+                            Get.to(
+                                () => UserProfilePage(
+                                      isOthers: true,
+                                      userID: orderDetail.customerId,
+                                    ),
+                                transition: Transition.rightToLeft);
+                          }),
                       const SizedBox(
                         height: 12,
                       ),
@@ -515,113 +536,133 @@ class _MissionDetailRecipientPageState
                               isPaid)
                           ? disableButtonTextStyle
                           : buttonTextStyle,
-                      onPressed: (isSubmitted ||
-                              isExpired ||
-                              isFailed ||
-                              isWaitingPaid ||
-                              isPaid)
-                          ? null
-                          : () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialogComponent(
-                                      alertTitle: '您即将开始悬赏',
-                                      alertDesc: RichText(
-                                        text: TextSpan(
-                                          style: alertDialogContentTextStyle,
-                                          children: [
-                                            TextSpan(
-                                                text: '该悬赏的限时为3天（72小时）。\n'),
-                                            TextSpan(
-                                              text: '请注意，用户不能重复开始同一悬赏。\n\n',
+                      onPressed: isLogin
+                          ? (isSubmitted ||
+                                  isExpired ||
+                                  isFailed ||
+                                  isWaitingPaid ||
+                                  isPaid)
+                              ? null
+                              : () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialogComponent(
+                                          alertTitle: '您即将开始悬赏',
+                                          alertDesc: RichText(
+                                            text: TextSpan(
+                                              style:
+                                                  alertDialogContentTextStyle,
+                                              children: [
+                                                TextSpan(
+                                                    text: '该悬赏的限时为3天（72小时）。\n'),
+                                                TextSpan(
+                                                  text: '请注意，用户不能重复开始同一悬赏。\n\n',
+                                                ),
+                                                TextSpan(
+                                                    text: '开始悬赏后将无法终止或放弃悬赏，\n'),
+                                                TextSpan(
+                                                  text: '直至该悬赏过期/被下架。\n\n',
+                                                ),
+                                                TextSpan(text: '是否继续？\n'),
+                                              ],
                                             ),
-                                            TextSpan(
-                                                text: '开始悬赏后将无法终止或放弃悬赏，\n'),
-                                            TextSpan(
-                                              text: '直至该悬赏过期/被下架。\n\n',
-                                            ),
-                                            TextSpan(text: '是否继续？\n'),
-                                          ],
-                                        ),
-                                      ),
-                                      descTextStyle:
-                                          alertDialogContentTextStyle,
-                                      firstButtonText: '返回',
-                                      firstButtonTextStyle:
-                                          alertDialogFirstButtonTextStyle,
-                                      firstButtonColor: kThirdGreyColor,
-                                      secondButtonText: '开始悬赏',
-                                      secondButtonTextStyle:
-                                          alertDialogSecondButtonTextStyle,
-                                      secondButtonColor: kMainYellowColor,
-                                      isButtonExpanded: true,
-                                      firstButtonOnTap: () {
-                                        setState(() {
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                      secondButtonOnTap: () async {
-                                        print(
-                                            "what is the user Data: ${userData!.billingAddress}, and ${userData!.billingNetwork}");
-                                        if (userData!.billingAddress != null &&
-                                            userData!.billingAddress != "" &&
-                                            userData!.billingNetwork != null &&
-                                            userData!.billingNetwork != "") {
-                                          try {
-                                            int? create =
-                                                await services.createOrder(
-                                                    orderDetail.taskId!);
+                                          ),
+                                          descTextStyle:
+                                              alertDialogContentTextStyle,
+                                          firstButtonText: '返回',
+                                          firstButtonTextStyle:
+                                              alertDialogFirstButtonTextStyle,
+                                          firstButtonColor: kThirdGreyColor,
+                                          secondButtonText: '开始悬赏',
+                                          secondButtonTextStyle:
+                                              alertDialogSecondButtonTextStyle,
+                                          secondButtonColor: kMainYellowColor,
+                                          isButtonExpanded: true,
+                                          firstButtonOnTap: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          secondButtonOnTap: () async {
+                                            print(
+                                                "what is the user Data: ${userData!.billingAddress}, and ${userData!.billingNetwork}");
+                                            if (userData!.billingAddress != null &&
+                                                userData!.billingAddress !=
+                                                    "" &&
+                                                userData!.billingNetwork !=
+                                                    null &&
+                                                userData!.billingNetwork !=
+                                                    "") {
+                                              try {
+                                                int? create =
+                                                    await services.createOrder(
+                                                        orderDetail.taskId!);
 
-                                            if (create! != 0) {
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              Get.to(() =>
-                                                  MissionDetailRecipientPage(
-                                                    orderId: create,
-                                                  ));
-                                              Fluttertoast.showToast(
-                                                  msg: "悬赏开始",
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  backgroundColor:
-                                                      kMainGreyColor,
-                                                  textColor: kThirdGreyColor);
+                                                if (create! != 0) {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Get.to(() =>
+                                                      MissionDetailRecipientPage(
+                                                        orderId: create,
+                                                      ));
+                                                  Fluttertoast.showToast(
+                                                      msg: "悬赏开始",
+                                                      toastLength:
+                                                          Toast.LENGTH_LONG,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      backgroundColor:
+                                                          kMainGreyColor,
+                                                      textColor:
+                                                          kThirdGreyColor);
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  Fluttertoast.showToast(
+                                                      msg: "悬赏失败，请重试",
+                                                      toastLength:
+                                                          Toast.LENGTH_LONG,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      backgroundColor:
+                                                          kMainGreyColor,
+                                                      textColor:
+                                                          kThirdGreyColor);
+                                                }
+                                              } catch (e) {
+                                                Navigator.pop(context);
+                                                Fluttertoast.showToast(
+                                                    msg: "不可重复悬赏",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    backgroundColor:
+                                                        kMainGreyColor,
+                                                    textColor: kThirdGreyColor);
+                                              }
                                             } else {
-                                              Navigator.pop(context);
-                                              Fluttertoast.showToast(
-                                                  msg: "悬赏失败，请重试",
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  backgroundColor:
-                                                      kMainGreyColor,
-                                                  textColor: kThirdGreyColor);
+                                              setState(() {
+                                                Navigator.pop(context);
+                                                Get.to(
+                                                    () => RecipientInfoPage(
+                                                        taskId: orderDetail
+                                                            .taskId!),
+                                                    transition:
+                                                        Transition.rightToLeft);
+                                              });
                                             }
-                                          } catch (e) {
-                                            Navigator.pop(context);
-                                            Fluttertoast.showToast(
-                                                msg: "不可重复悬赏",
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                backgroundColor: kMainGreyColor,
-                                                textColor: kThirdGreyColor);
-                                          }
-                                        } else {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                            Get.to(
-                                                () => RecipientInfoPage(
-                                                    taskId:
-                                                        orderDetail.taskId!),
-                                                transition:
-                                                    Transition.rightToLeft);
-                                          });
-                                        }
-                                      },
-                                    );
-                                  });
+                                          },
+                                        );
+                                      });
+                                }
+                          : () {
+                              Fluttertoast.showToast(
+                                  msg: "请登录以继续操作",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: kMainGreyColor,
+                                  textColor: kThirdGreyColor);
                             }),
                 ),
         ),

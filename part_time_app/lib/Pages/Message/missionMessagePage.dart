@@ -57,10 +57,11 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
       NotificationListModel? data =
           await SystemMessageServices().getNotificationList(1, page);
       setState(() {
-        if (data != null && data.data != null) {
+        if (data != null && data.data!.isNotEmpty) {
           missionMessageList.addAll(data.data!);
+          page++;
         } else {
-          // Handle the case when data is null or data.data is null
+          continueLoading = false;
         }
         isLoading = false;
       });
@@ -129,7 +130,7 @@ class _MissionMessagePageState extends State<MissionMessagePage> {
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: missionMessageList.reversed.expand((date) {
+                  children: missionMessageList.expand((date) {
                     List<Widget> widgets = [];
                     if (date.notifications != null &&
                         date.notifications!.isNotEmpty) {

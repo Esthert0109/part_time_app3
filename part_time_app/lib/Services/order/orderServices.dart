@@ -166,11 +166,9 @@ class OrderServices {
     String urls = port + getTaskDetailByTaskIdUrl + taskId.toString();
 
     OrderDetailModel? orderModel;
-    String? token = await SharedPreferencesUtils.getToken();
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json; charset=utf-8',
-      'token': token!
     };
 
     try {

@@ -317,11 +317,11 @@ Widget _buildUserMessageCard(
                         ),
                       ),
                     ),
-                    // Container(
-                    //   padding: EdgeInsets.only(left: 35),
-                    //   child: TIMUIKitConversationTotalUnread(
-                    //       width: 16, height: 16),
-                    // ),
+                    Container(
+                      padding: EdgeInsets.only(left: 35),
+                      child: TIMUIKitConversationTotalUnread(
+                          width: 16, height: 16),
+                    ),
                   ],
                 ),
               ],

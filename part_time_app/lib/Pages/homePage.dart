@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Pages/ComponentDisplayPage/componentExamplePage.dart';
 import 'package:part_time_app/Pages/Explore/exploreMainPage.dart';
 import 'package:part_time_app/Pages/Message/messageMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:part_time_app/Pages/MissionStatus/missionStatusMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/userProfileMainPage.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../Constants/colorConstant.dart';
 import '../Constants/textStyleConstant.dart';
+import '../Model/User/userModel.dart';
+import 'UserAuth/loginPage.dart';
+import 'UserProfile/depositMainPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,20 +26,53 @@ class _HomePageState extends State<HomePage> {
   int selectionIndex = 0;
   double size = 24;
 
-  static const List<Widget> homePageOptions = <Widget>[
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  fetchUserData() async {
+    UserData? user = await SharedPreferencesUtils.getUserDataInfo()!;
+    setState(() {
+      userData = user;
+    });
+  }
+
+  static List<Widget> homePageOptions = <Widget>[
     ExploreMainPage(),
     MissionStatusMainPage(),
-    MissionPublishMainPage(
-      isEdit: false,
-    ),
+    userData?.validIdentity == 1
+        ? MissionPublishMainPage(
+            isEdit: false,
+          )
+        : DepositMainPage(
+            isHome: true,
+          ),
     MessageMainPage(),
     UserProfileMainPage()
   ];
 
   void homePageOnTap(int option) {
-    setState(() {
-      selectionIndex = option;
-    });
+    if (option == 0 || option == 4 || isLogin) {
+      setState(() {
+        selectionIndex = option;
+      });
+    } else {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return ClipRRect(
+              borderRadius: BorderRadius.circular(30.0),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.9,
+                child: const LoginPage(),
+              ));
+        },
+      );
+    }
   }
 
   @override

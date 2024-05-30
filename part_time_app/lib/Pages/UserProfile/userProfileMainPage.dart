@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:part_time_app/Components/Card/userProfileCardComponent.dart';
@@ -18,6 +19,7 @@ import 'package:part_time_app/Pages/UserProfile/userProfilePage.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Model/User/userModel.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
+import '../UserAuth/loginPage.dart';
 
 class UserProfileMainPage extends StatefulWidget {
   const UserProfileMainPage({super.key});
@@ -38,7 +40,10 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserInfo();
+
+    if (isLogin) {
+      getUserInfo();
+    }
   }
 
   @override
@@ -103,36 +108,63 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Flexible(
+                            Expanded(
                               child: Text(
-                                userData.nickname ?? "",
+                                userData?.nickname ?? "用户未登录",
                                 style: userProfileNameTextStyle,
                               ),
                             ),
                             const SizedBox(width: 20),
                             InkWell(
                                 onTap: () {
-                                  Get.to(() => EditProfilePage(),
-                                      transition: Transition.rightToLeft);
+                                  if (isLogin) {
+                                    Get.to(() => EditProfilePage(),
+                                        transition: Transition.rightToLeft);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: "请登录以继续操作",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: kMainGreyColor,
+                                        textColor: kThirdGreyColor);
+                                  }
                                 },
                                 child: SvgPicture.asset(
                                     "assets/profile/edit_profile.svg"))
                           ],
                         ),
-                        subtitle: Flexible(
-                          child: Text(
-                            'UID: ${userData.customerId ?? ""}',
-                            style: userProfileUIDTextStyle,
-                          ),
+                        subtitle: Text(
+                          'UID: ${userData?.customerId ?? "--"}',
+                          style: userProfileUIDTextStyle,
                         ),
                         trailing: InkWell(
                             onTap: () {
-                              Get.to(
-                                  () => UserProfilePage(
-                                        isOthers: false,
-                                        userID: userData.customerId,
-                                      ),
-                                  transition: Transition.rightToLeft);
+                              if (isLogin) {
+                                Get.to(
+                                    () => UserProfilePage(
+                                          isOthers: false,
+                                          userID: userData?.customerId,
+                                        ),
+                                    transition: Transition.rightToLeft);
+                              } else {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  builder: (BuildContext context) {
+                                    return ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                        child: SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.9,
+                                          child: const LoginPage(),
+                                        ));
+                                  },
+                                );
+                              }
                             },
                             child: Container(
                               child: Row(
@@ -156,24 +188,54 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
                     image: "assets/profile/verified_icon.svg",
                     status: "押金认证",
                     ontap: () {
-                      Get.to(() => DepositMainPage(),
-                          transition: Transition.rightToLeft);
+                      if (isLogin) {
+                        Get.to(
+                            () => DepositMainPage(
+                                  isHome: false,
+                                ),
+                            transition: Transition.rightToLeft);
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "请登录以继续操作",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: kMainGreyColor,
+                            textColor: kThirdGreyColor);
+                      }
                     },
                   ),
                   UserProfileCardComponent(
                     image: "assets/profile/transaction_icon.svg",
                     status: "交易记录",
                     ontap: () {
-                      Get.to(() => PaymentHistoryPage(),
-                          transition: Transition.rightToLeft);
+                      if (isLogin) {
+                        Get.to(() => PaymentHistoryPage(),
+                            transition: Transition.rightToLeft);
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "请登录以继续操作",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: kMainGreyColor,
+                            textColor: kThirdGreyColor);
+                      }
                     },
                   ),
                   UserProfileCardComponent(
                     image: "assets/profile/workorder_icon.svg",
                     status: "工单",
                     ontap: () {
-                      Get.to(() => TicketMainPage(),
-                          transition: Transition.rightToLeft);
+                      if (isLogin) {
+                        Get.to(() => TicketMainPage(),
+                            transition: Transition.rightToLeft);
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "请登录以继续操作",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: kMainGreyColor,
+                            textColor: kThirdGreyColor);
+                      }
                     },
                   ),
                   UserProfileCardComponent(

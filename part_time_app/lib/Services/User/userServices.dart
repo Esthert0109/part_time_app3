@@ -59,6 +59,7 @@ class UserServices {
 
             try {
               UserModel? userModel = await getUserInfo();
+              isLogin = true;
 
               CategoryModel? model = await categoryServices.getCategoryList();
               if (model!.data != null) {
@@ -358,7 +359,7 @@ class UserServices {
     }
   }
 
-  Future<UpdateCollectionModel?> updateCollectionViewable() async {
+  Future<bool?> updateCollectionViewable() async {
     url = port + updateCollectionViewUrl;
     UpdateCollectionModel? updateCollectionModel;
 
@@ -383,12 +384,12 @@ class UserServices {
 
       if (statusCode == 200) {
         if (responseCode == 0) {
-          if (data) {
-            return updateCollectionModel;
-          }
+          return data;
         } else {
-          return updateCollectionModel;
+          return false;
         }
+      } else {
+        return false;
       }
     } catch (e) {
       print("Error in updateCollectionViewable: $e");
@@ -551,7 +552,7 @@ class UserServices {
     }
   }
 
-   Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
+  Future<UpdateCustomerInfoModel?> updateCustomerInfo(UserData userData) async {
     url = port + updateUserInfoUrl;
 
     UpdateCustomerInfoModel updateCustomerInfoModel;
@@ -574,7 +575,7 @@ class UserServices {
       'businessScopeId': userData.businessScopeId,
       'billingNetwork': userData.billingNetwork,
       'billingAddress': userData.billingAddress,
-      'billingCurrency': userData.billingCurrency
+      // 'billingCurrency': userData.billingCurrency
     };
 
     try {
@@ -607,7 +608,7 @@ class UserServices {
       'token': token,
     };
 
-    final Map<String, dynamic> body = {'password': userData.password};
+    final Map<String, dynamic> body = {'password': userData?.password};
 
     try {
       final response = await patchRequest(url, headers, body);
@@ -624,6 +625,46 @@ class UserServices {
     } catch (e) {
       print("Error in update customer password");
       return null;
+    }
+  }
+
+  Future<UploadCustomerAvatarModel?> uploadAvatar(File imageFile) async {
+    String? token = await SharedPreferencesUtils.getToken();
+    url = port + uploadAvatarUrl + token!;
+
+    UploadCustomerAvatarModel uploadCustomerAvatarModel;
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'token': token,
+    };
+
+    final Map<String, dynamic> body = {'file': userData?.avatar};
+
+    try {
+      final response = await postRequest(url, headers, body);
+      int statusCode = response.statusCode;
+
+      Map<String, dynamic> jsonData = json.decode(response.responseBody);
+      int responseCode = jsonData['code'];
+      String responseMsg = jsonData['msg'];
+      String responseData = jsonData['data'];
+
+      if (statusCode == 200) {
+        if (responseCode == 0) {
+          uploadCustomerAvatarModel = UploadCustomerAvatarModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return uploadCustomerAvatarModel;
+        } else {
+          uploadCustomerAvatarModel = UploadCustomerAvatarModel(
+              code: responseCode, msg: responseMsg, data: responseData);
+
+          return uploadCustomerAvatarModel;
+        }
+      }
+    } catch (e) {
+      print("Error in upload avatar: $e");
     }
   }
 }

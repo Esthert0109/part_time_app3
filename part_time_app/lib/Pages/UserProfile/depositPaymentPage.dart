@@ -30,7 +30,6 @@ class DepositPaymentPage extends StatefulWidget {
 }
 
 class _DepositPaymentPageState extends State<DepositPaymentPage> {
-  final String textToCopy = "THE USDT TALALA";
   XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
@@ -47,8 +46,8 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
 
   Future<void> _loadDataFromShared() async {
     setState(() {
-      username = userData.username;
-      customerId = userData.customerId;
+      username = userData?.username;
+      customerId = userData?.customerId;
       print("username:${username}");
     });
   }
@@ -69,6 +68,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
 
   void _copyToClipboard() {
     Clipboard.setData(ClipboardData(text: depositList?.depositNetwork ?? ""));
+    Fluttertoast.showToast(
+        msg: "已复制",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: kMainGreyColor,
+        textColor: kThirdGreyColor);
   }
 
   Future<void> _loadData() async {
@@ -151,12 +156,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                 ),
                 UserDetailCardComponent(
                   isEditProfile: false,
-                  nameInitial: userData.username,
-                  countryInitial: userData.country,
-                  fieldInitial: userData.businessScopeName,
-                  sexInitial: userData.gender,
-                  walletNetworkInitial: userData.billingNetwork,
-                  walletAddressInitial: userData.billingAddress,
+                  nameInitial: userData?.username,
+                  countryInitial: userData?.country,
+                  fieldInitial: userData?.businessScopeId,
+                  sexInitial: userData?.gender,
+                  walletNetworkInitial: userData?.billingNetwork,
+                  walletAddressInitial: userData?.billingAddress,
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -312,7 +317,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                                 uploadedPayment = await imagePicker.pickImage(
                                     source: ImageSource.gallery);
                                 setState(() {
-                                  payment = File(uploadedPayment?.path ?? "");
+                                  payment = File(uploadedPayment!.path);
                                   isUploadLoading = true;
                                 });
                                 try {
@@ -454,13 +459,77 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                 setState(() {
                   isLoading = true;
                 });
+                bool validatePaymentDetail(PaymentDetail paymentDetail) {
+                  if (paymentDetail.paymentFromCustomerId == null ||
+                      paymentDetail.paymentFromCustomerId!.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "用户ID不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    if (mounted) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                    return false;
+                  }
+                  if (paymentDetail.paymentUsername == null ||
+                      paymentDetail.paymentUsername!.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "真实姓名不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    return false;
+                  }
+                  if (paymentDetail.paymentBillingAddress == null ||
+                      paymentDetail.paymentBillingAddress!.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "收款地址不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    return false;
+                  }
+                  if (paymentDetail.paymentBillingNetwork == null ||
+                      paymentDetail.paymentBillingNetwork!.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "收款网路不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    return false;
+                  }
+                  if (paymentDetail.paymentBillingUrl == null ||
+                      paymentDetail.paymentBillingUrl!.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "收款链接不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    if (mounted) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                    return false;
+                  }
+                  return true;
+                }
+
                 try {
                   setState(() {
                     PaymentDetail? paymentDetailForPay = PaymentDetail(
                       paymentFromCustomerId: customerId,
                       paymentType: 0,
                       paymentStatus: 0,
-                      paymentUsername: "hendrik",
+                      paymentUsername: nameControllerPayment.text,
                       paymentBillingAddress:
                           walletAddressControllerPayment.text,
                       paymentBillingNetwork:
@@ -473,40 +542,44 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       paymentTotalAmount: 20,
                     );
 
-                    PaymentServices paymentServices = PaymentServices();
-                    paymentServices
-                        .createDeposit(paymentDetailForPay)
-                        .then((success) {
-                      // Handle success or failure accordingly
-                      if (success != null && success) {
-                        print("Submitted success");
-                        setState(() {
-                          uploadedPaymentSS = "";
-                          paymentDetailForPay = null;
-                          Navigator.pop(context);
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return StatusDialogComponent(
-                                complete: true,
-                                successText: "系统将审核你的支付押金，审核通过后将发布该悬赏。",
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Get.offAllNamed('/home');
-                                },
-                              );
-                            },
-                          );
-                        });
-                      } else {
-                        print("Submitted FAILED");
-                      }
+                    if (validatePaymentDetail(paymentDetailForPay)) {
+                      PaymentServices paymentServices = PaymentServices();
+                      paymentServices
+                          .createDeposit(paymentDetailForPay)
+                          .then((success) {
+                        if (success != null && success) {
+                          print("Submitted success");
+                          setState(() {
+                            uploadedPaymentSS = "";
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatusDialogComponent(
+                                  complete: true,
+                                  successText: "系统将审核你的支付押金，审核通过后将发布该悬赏。",
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Get.offAllNamed('/home');
+                                  },
+                                );
+                              },
+                            );
+                          });
+                        } else {
+                          print("Submitted FAILED");
+                          if (mounted) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        }
 
-                      setState(() {
-                        isLoading =
-                            false; // Set loading state back to false after request is completed
+                        setState(() {
+                          isLoading = false;
+                        });
                       });
-                    });
+                    }
                   });
                 } catch (e) {
                   print("Error: $e");
@@ -516,6 +589,11 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       isLoading = false;
                     });
                   }
+                }
+                if (mounted) {
+                  setState(() {
+                    isLoading = false;
+                  });
                 }
               },
             ),

@@ -5,7 +5,8 @@ import '../Model/Advertisement/advertisementModel.dart';
 import '../Model/Task/missionClass.dart';
 import '../Model/notification/messageModel.dart';
 
-UserData userData = UserData();
+UserData? userData;
+bool isLogin = false;
 
 // Explore module
 List<CategoryListData> exploreCategoryList = [];

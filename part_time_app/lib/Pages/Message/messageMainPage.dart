@@ -15,7 +15,7 @@ import '../../Components/Title/secondaryTitleComponent.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Services/notification/systemMessageServices.dart';
 import 'package:provider/provider.dart';
-import '../../Services/webSocketService.dart';
+import '../../Services/WebSocket/webSocketService.dart';
 
 List<V2TimConversation> _conversationList = [];
 
@@ -130,7 +130,7 @@ class _MessageMainPageState extends State<MessageMainPage>
               color: kTransparent,
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: SecondaryTitleComponent(
-                titleList: const ["我接收的"],
+                titleList: const ["消息"],
                 selectedIndex: titleSelection,
                 onTap: (index) {},
               ),
