@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                           Positioned(
                             child: Container(
                               child: InternationalPhoneNumberInput(
-                                errorMessage: "请正确的电话号码",
+                                errorMessage: "请输入正确的电话号码",
                                 initialValue: phoneNumber,
                                 textFieldController: phoneControllerLogin,
                                 formatInput: true,

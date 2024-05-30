@@ -575,7 +575,7 @@ class UserServices {
       'businessScopeId': userData.businessScopeId,
       'billingNetwork': userData.billingNetwork,
       'billingAddress': userData.billingAddress,
-      'billingCurrency': userData.billingCurrency
+      // 'billingCurrency': userData.billingCurrency
     };
 
     try {

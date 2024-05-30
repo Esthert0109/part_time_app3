@@ -18,6 +18,9 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Services/Upload/uploadServices.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
+
+import '../../Model/User/userModel.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -31,18 +34,15 @@ final ImagePicker _picker = ImagePicker();
 class _EditProfilePageState extends State<EditProfilePage> {
   bool isLoading = false;
   bool isUploading = false;
+  bool isUpdating = false;
   ScrollController _scrollController = ScrollController();
   UploadServices uploadServices = UploadServices();
-  String? updatedAvatar;
+  UserServices services = UserServices();
+  String? updatedAvatar = userData!.avatar;
 
   @override
   void initState() {
     super.initState();
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // });
   }
 
   void selectAvatar() async {
@@ -54,19 +54,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
         isUploading = true;
       });
       avatarPath = File(newAvatar.path);
-      // String? path = await uploadServices.uploadAvatar(avatarPath);
-      // if (path != null) {
-      //   setState(() {
-      //     updatedAvatar = path;
-      //     isUploading = false;
-      //     Fluttertoast.showToast(
-      //         msg: "已上传",
-      //         toastLength: Toast.LENGTH_LONG,
-      //         gravity: ToastGravity.BOTTOM,
-      //         backgroundColor: kMainGreyColor,
-      //         textColor: kThirdGreyColor);
-      //   });
-      // }
+      String? path = await uploadServices.uploadAvatar(avatarPath);
+      if (path != null) {
+        setState(() {
+          updatedAvatar = path;
+          isUploading = false;
+          Fluttertoast.showToast(
+              msg: "已上传",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+        });
+      }
     }
   }
 
@@ -85,8 +85,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           leading: IconButton(
             icon: SvgPicture.asset(
               "assets/common/arrow_back.svg",
-              // height: 58,
-              // width: 58,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -171,11 +169,83 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       walletAddressInitial: userData?.billingAddress,
                       walletNetworkInitial: userData?.billingNetwork,
                       usdtLinkInitial: userData?.billingCurrency,
+                      profilePic: updatedAvatar,
                     ),
                   ),
                 ],
               ),
             ),
+      bottomNavigationBar: Container(
+        height: 84,
+        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        alignment: Alignment.topCenter,
+        decoration: BoxDecoration(color: kMainWhiteColor, boxShadow: [
+          BoxShadow(
+            color: Color(0x1A000000),
+            offset: Offset(1, 0),
+            blurRadius: 2,
+            spreadRadius: 0,
+          ),
+        ]),
+        child: SizedBox(
+          width: double.infinity,
+          child: primaryButtonComponent(
+            isLoading: isUpdating,
+            buttonColor: kMainYellowColor,
+            disableButtonColor: buttonLoadingColor,
+            text: "立刻保存",
+            textStyle: buttonTextStyle,
+            onPressed: () async {
+              isUpdating = true;
+              print(
+                  "check update profile: ${usernameControllerPayment.text}, ${countryControllerPayment.text}, ${sexControllerPayment.text}, ${emailControllerPayment.text}, ${nameControllerPayment.text}, ${phone}, ${walletNetworkControllerPayment.text}, ${walletAddressControllerPayment.text}, ${bussinessIdSelected}, $updatedAvatar");
+
+              try {
+                UserData updateProfile = UserData(
+                  nickname: usernameControllerPayment.text,
+                  username: nameControllerPayment.text,
+                  country: countryControllerPayment.text,
+                  gender: sexControllerPayment.text,
+                  avatar: updatedAvatar,
+                  secondPhoneNo: phone,
+                  email: emailControllerPayment.text,
+                  businessScopeId: bussinessIdSelected,
+                  billingAddress: walletAddressControllerPayment.text,
+                  billingNetwork: walletNetworkControllerPayment.text,
+                );
+
+                UpdateCustomerInfoModel? model =
+                    await services.updateCustomerInfo(updateProfile);
+
+                if (model!.code == 0) {
+                  await services.getUserInfo();
+                  Fluttertoast.showToast(
+                      msg: "已更新",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: kMainGreyColor,
+                      textColor: kThirdGreyColor);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "更新失败，请重试",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: kMainGreyColor,
+                      textColor: kThirdGreyColor);
+                }
+              } catch (e) {
+                Fluttertoast.showToast(
+                    msg: "$e",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: kMainGreyColor,
+                    textColor: kThirdGreyColor);
+              }
+              isUpdating = false;
+            },
+          ),
+        ),
+      ),
     );
   }
 }

@@ -11,13 +11,18 @@ import '../../Utils/sharedPreferencesUtils.dart';
 
 late TextEditingController usernameControllerPayment;
 late TextEditingController countryControllerPayment;
-late TextEditingController fieldControllerPayment;
 late TextEditingController sexControllerPayment;
 late TextEditingController emailControllerPayment;
 late TextEditingController nameControllerPayment;
 late TextEditingController walletNetworkControllerPayment;
 late TextEditingController walletAddressControllerPayment;
 TextEditingController usdtLinkControllerPayment = TextEditingController();
+// String secondPhoneNumber = "";
+PhoneNumber phoneNumber = PhoneNumber(isoCode: 'MY');
+int bussinessIdSelected = 0;
+String dialCode = '';
+String phone = '';
+String countryCode = '';
 
 class UserDetailCardComponent extends StatefulWidget {
   bool isEditProfile;
@@ -40,6 +45,7 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? walletNetworkInitial;
   final String? walletAddressInitial;
   final String? usdtLinkInitial;
+  final String? profilePic;
 
   UserDetailCardComponent({
     super.key,
@@ -63,6 +69,7 @@ class UserDetailCardComponent extends StatefulWidget {
     this.walletNetworkInitial,
     this.walletAddressInitial,
     this.usdtLinkInitial,
+    this.profilePic,
   });
 
   @override
@@ -72,20 +79,18 @@ class UserDetailCardComponent extends StatefulWidget {
 
 class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   TextEditingController phoneControllerLogin = TextEditingController();
-  PhoneNumber phoneNumber = PhoneNumber(isoCode: 'MY');
-  String dialCode = '';
-  String phone = '';
-  String countryCode = '';
+
   String? firstContact;
   String? code;
   String? username;
   String? dropdownValue;
+  bool isError = true;
 
   // services
   BusinessScopeServices businessScopeServices = BusinessScopeServices();
   List<BusinessScopeData> businessScope = [];
-  int bussinessIdSelected = 0;
-  String initialBussiness = "";
+
+  BusinessScopeData? selectedBussinessScope;
 
   @override
   void initState() {
@@ -107,10 +112,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         TextEditingController(text: widget.usdtLinkInitial);
     dropdownValue = widget.sexInitial;
     bussinessIdSelected = widget.fieldInitial!;
-    // phoneControllerLogin = TextEditingController(
-    //     text: separatePhoneNumber(widget.phoneNumber!)['phoneNumber']);
-    // phoneNumber = PhoneNumber(
-    //     dialCode: separatePhoneNumber(widget.phoneNumber!)['countryCode']);
+
     getPhoneNumberWithRegion();
   }
 
@@ -129,7 +131,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         fetchedBusinessScopeList!.isNotEmpty) {
       setState(() {
         businessScope = fetchedBusinessScopeList;
-        initialBussiness = businessScope[bussinessIdSelected].businessScopeName;
+        selectedBussinessScope = businessScope[bussinessIdSelected];
       });
     }
   }
@@ -229,9 +231,9 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                     decoration: BoxDecoration(
                         color: kInputBackGreyColor,
                         borderRadius: BorderRadius.circular(8)),
-                    child: DropdownButton<String>(
+                    child: DropdownButton<BusinessScopeData>(
                       underline: Container(),
-                      value: initialBussiness,
+                      value: selectedBussinessScope,
                       isExpanded: true,
                       icon: const Icon(Icons.arrow_drop_down),
                       iconSize: 24,
@@ -239,13 +241,15 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                       style: missionUsernameTextStyle,
                       onChanged: (newValue) {
                         setState(() {
-                          initialBussiness = newValue!;
+                          selectedBussinessScope = newValue!;
+                          bussinessIdSelected =
+                              selectedBussinessScope?.businessScopeId ?? 0;
                         });
                       },
                       items: businessScope
-                          .map<DropdownMenuItem<String>>((business) {
-                        return DropdownMenuItem<String>(
-                          value: business.businessScopeName,
+                          .map<DropdownMenuItem<BusinessScopeData>>((business) {
+                        return DropdownMenuItem<BusinessScopeData>(
+                          value: business,
                           child: Text(business.businessScopeName),
                         );
                       }).toList(),
@@ -355,48 +359,59 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Container(
                 child: Stack(children: [
-              Positioned(
-                child: Container(
-                  height: 31,
-                  child: InternationalPhoneNumberInput(
-                    // autoValidateMode: AutovalidateMode.onUserInteraction,
-                    errorMessage: "手机号码不正确",
-                    initialValue: phoneNumber,
-                    textFieldController: phoneControllerLogin,
-                    formatInput: true,
-                    selectorConfig: const SelectorConfig(
-                        trailingSpace: true,
-                        leadingPadding: 10,
-                        setSelectorButtonAsPrefixIcon: true,
-                        showFlags: false,
-                        selectorType: PhoneInputSelectorType.DIALOG),
-                    onInputChanged: (PhoneNumber number) {
-                      phone = number.phoneNumber.toString();
-                      dialCode = number.dialCode.toString();
-                      countryCode = number.isoCode.toString();
-                    },
-                    cursorColor: Colors.black,
-                    inputDecoration: InputDecoration(
-                        errorBorder: OutlineInputBorder(
+              Container(
+                height: isError ? 31 : 50,
+                child: InternationalPhoneNumberInput(
+                  onInputValidated: (value) {
+                    setState(() {
+                      isError = value;
+                    });
+                  },
+                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                  errorMessage: "手机号码不正确",
+                  initialValue: phoneNumber,
+                  textFieldController: phoneControllerLogin,
+                  formatInput: true,
+                  selectorConfig: const SelectorConfig(
+                      trailingSpace: true,
+                      leadingPadding: 10,
+                      setSelectorButtonAsPrefixIcon: true,
+                      showFlags: false,
+                      selectorType: PhoneInputSelectorType.DIALOG),
+                  onInputChanged: (PhoneNumber number) {
+                    phone = number.phoneNumber.toString();
+                    dialCode = number.dialCode.toString();
+                    countryCode = number.isoCode.toString();
+
+                    if (isError) {
+                      phoneNumber = PhoneNumber(
+                          phoneNumber: phone,
+                          dialCode: dialCode,
+                          isoCode: countryCode);
+                    }
+                  },
+                  cursorColor: Colors.black,
+                  inputDecoration: InputDecoration(
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.red, width: 1),
+                      ),
+                      filled: true,
+                      fillColor: kInputBackGreyColor,
+                      contentPadding:
+                          EdgeInsets.only(right: 100, left: 100, top: 10),
+                      border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.red, width: 1),
-                        ),
-                        filled: true,
-                        fillColor: kInputBackGreyColor,
-                        contentPadding: EdgeInsets.only(right: 100, left: 100),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none),
-                        hintText: "请输入电话号码",
-                        hintStyle: missionDetailText2),
-                  ),
+                          borderSide: BorderSide.none),
+                      hintText: "请输入电话号码",
+                      hintStyle: missionDetailText2),
                 ),
               ),
               Positioned(
                 child: Container(
                   margin: EdgeInsets.fromLTRB(68, 0, 12, 0),
                   width: 3,
-                  height: 31,
+                  height: isError ? 31 : 50,
                   decoration: BoxDecoration(
                     color: kMainWhiteColor,
                   ),

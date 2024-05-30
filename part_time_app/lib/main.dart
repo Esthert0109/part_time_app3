@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Pages/Search/sortPage.dart';
 import 'package:part_time_app/Pages/Onboarding/onboradingPage.dart';
 import 'package:part_time_app/Pages/Onboarding/openingPage.dart';
@@ -12,6 +13,7 @@ import 'Pages/UserProfile/ticketDetailsRecordPage.dart';
 import 'Pages/homePage.dart';
 import 'Services/notification/notifacationServices.dart';
 import 'Services/WebSocket/webSocketService.dart';
+import 'Utils/sharedPreferencesUtils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
