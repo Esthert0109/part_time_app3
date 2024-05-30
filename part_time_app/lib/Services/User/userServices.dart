@@ -359,7 +359,7 @@ class UserServices {
     }
   }
 
-  Future<UpdateCollectionModel?> updateCollectionViewable() async {
+  Future<bool?> updateCollectionViewable() async {
     url = port + updateCollectionViewUrl;
     UpdateCollectionModel? updateCollectionModel;
 
@@ -384,12 +384,12 @@ class UserServices {
 
       if (statusCode == 200) {
         if (responseCode == 0) {
-          if (data) {
-            return updateCollectionModel;
-          }
+          return data;
         } else {
-          return updateCollectionModel;
+          return false;
         }
+      } else {
+        return false;
       }
     } catch (e) {
       print("Error in updateCollectionViewable: $e");

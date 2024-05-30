@@ -285,7 +285,7 @@ class UserData {
         billingCurrency: json['billingCurrency'],
         validIdentity: json['validIdentity'],
         valid: json['valid'],
-        collectionValid: json['collection_valid'],
+        collectionValid: json['collectionValid'],
         createdTime: json['createdTime'],
         updatedTime: json['updatedTime'],
         status: json['status'],

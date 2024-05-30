@@ -314,8 +314,10 @@ class _SettingPageState extends State<SettingPage> {
     UserData? data = await SharedPreferencesUtils.getUserDataInfo();
     setState(() {
       userData = data!;
-      isPrivate =
-          data.collectionValid == 0; // Assuming 0 is private and 1 is public
+      if (data.collectionValid == 0) {
+        isPrivate = true;
+      }
+      ; // Assuming 0 is private and 1 is public
     });
   }
 
@@ -325,16 +327,34 @@ class _SettingPageState extends State<SettingPage> {
         isPrivate = privateStatus;
       });
 
-      // Fetch user data from SharedPreferencesUtils
-      UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-      userData = data!;
+      print("check private: ${isPrivate}");
 
-      // Save the switch state
-      data.collectionValid = isPrivate ? 0 : 1; // Update the userData object
-      await SharedPreferencesUtils.saveUserDataInfo(data);
-
-      // Call the updateCollectionViewable method
-      await _userServices.updateCollectionViewable();
+      try {
+        bool? update = await _userServices.updateCollectionViewable();
+        if (update!) {
+          await _userServices.getUserInfo();
+          Fluttertoast.showToast(
+              msg: "已更新",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+        } else {
+          Fluttertoast.showToast(
+              msg: "更新失败，请重试",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: kMainGreyColor,
+              textColor: kThirdGreyColor);
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: "$e",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: kMainGreyColor,
+            textColor: kThirdGreyColor);
+      }
     } else {
       Fluttertoast.showToast(
           msg: "请登录以继续操作",

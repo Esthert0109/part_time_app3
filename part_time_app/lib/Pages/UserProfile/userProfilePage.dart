@@ -96,7 +96,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         isAutho = false;
       }
 
-      if (userDetails!.collectionValid == 0) {
+      if (userDetails!.collectionValid == 1) {
         isPrivate = false;
       }
 

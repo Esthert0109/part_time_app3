@@ -114,12 +114,6 @@ class _DepositReturnPageState extends State<DepositReturnPage> {
                     onPressed: () {
                       setState(() {
                         Get.back();
-                        // Fluttertoast.showToast(
-                        //     msg: "已提交",
-                        //     toastLength: Toast.LENGTH_LONG,
-                        //     gravity: ToastGravity.BOTTOM,
-                        //     backgroundColor: kMainGreyColor,
-                        //     textColor: kThirdGreyColor);
                       });
                     },
                   ),
