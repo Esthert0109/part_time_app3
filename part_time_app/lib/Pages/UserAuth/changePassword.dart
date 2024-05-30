@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Status/primaryStatusResponseComponent.dart';
@@ -219,6 +221,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                     isLoading = false;
                                   });
                                   Navigator.pop(context);
+                                  setState(() {
+                                    isLogin = false;
+                                  });
+                                  await SharedPreferencesUtils
+                                      .clearSharedPreferences();
                                   PrimaryStatusBottomSheetComponent.show(
                                       context, true);
                                 }
