@@ -98,9 +98,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   @override
   void initState() {
     super.initState();
-
-    getBusinessScopeList();
-    initializeControllers();
     _loadDataFromShared();
     fetchBusinessScopeList();
     usernameControllerPayment =
@@ -151,27 +148,15 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     UserData? user = await SharedPreferencesUtils.getUserDataInfo();
     if (phoneNo != null) {
       Map<String, String> separated = separatePhoneNumber(phoneNo);
-      Map<String, String> separatedSecond =
-          separatePhoneNumber(user?.secondPhoneNo ?? '');
       setState(() {
         code = separated["countryCode"];
         firstContact = separated["phoneNumber"];
-        secondCode = separatedSecond["countryCode"];
-        secondContact = separatedSecond["phoneNumber"];
         username = user?.username;
       });
     }
   }
 
   Map<String, String> separatePhoneNumber(String phoneNumber) {
-    // Ensure phoneNumber is at least 3 characters long
-    if (phoneNumber.length < 3) {
-      return {
-        "countryCode": "",
-        "phoneNumber": phoneNumber,
-      };
-    }
-
     String countryCode = phoneNumber.substring(0, 3); // Extracts "+60"
     String remainingNumber =
         phoneNumber.substring(3); // Extracts the rest of the number
