@@ -46,15 +46,14 @@ class _MyAppState extends State<MyApp> {
 
   getUserInfo() async {
     UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-
-    setState(() {
-      userData = data!;
-    });
-    bool isLoginTencent = await userTencentLogin(data!.customerId!);
+    isLoginTencent = await userTencentLogin(data!.customerId!);
     bool isChangeNicknameTencent =
         await setNickNameTencent(data.customerId!, data.nickname!);
     bool isChangeAvatarTencent =
         await setAvatarTencent(data.customerId!, data.avatar!);
+    setState(() {
+      userData = data!;
+    });
   }
 
   // This widget is the root of your application.

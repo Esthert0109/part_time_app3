@@ -39,3 +39,6 @@ List<OrderData> taskReturned = [];
 
 int orderPage = 1;
 int taskPage = 1;
+
+//tencent
+late bool isLoginTencent;

@@ -48,9 +48,6 @@ class _RecommendationPageState extends State<RecommendationPage>
 
   List<CategoryListData> exploreCategory = [];
   List<AdvertisementData> advertisement = [];
-  // List<TaskClass> missionAvailableList = [];
-  // List<TaskClass> missionAvailableAsec = [];
-  // List<TaskClass> missionAvailableDesc = [];
 
   @override
   bool get wantKeepAlive => true;
@@ -60,6 +57,7 @@ class _RecommendationPageState extends State<RecommendationPage>
     super.initState();
     // getUserInfo();
     _scrollController.addListener(_scrollListener);
+    _loadData();
     adsLoading();
   }
 

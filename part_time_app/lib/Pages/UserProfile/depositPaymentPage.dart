@@ -525,10 +525,14 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
 
                 try {
                   setState(() {
+                    DateTime now = DateTime.now();
+                    String submitDate = now.toIso8601String();
                     PaymentDetail? paymentDetailForPay = PaymentDetail(
                       paymentFromCustomerId: customerId,
                       paymentType: 0,
                       paymentStatus: 0,
+                      paymentToCustomerId: "admin",
+                      paymentToCustomerName: "admin",
                       paymentUsername: nameControllerPayment.text,
                       paymentBillingAddress:
                           walletAddressControllerPayment.text,
@@ -540,6 +544,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       paymentAmount: 20,
                       paymentFee: 0,
                       paymentTotalAmount: 20,
+                      paymentCreatedTime: submitDate,
                     );
 
                     if (validatePaymentDetail(paymentDetailForPay)) {
@@ -568,6 +573,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                           });
                         } else {
                           print("Submitted FAILED");
+                          Fluttertoast.showToast(
+                              msg: "提交失败，请稍后重试",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
                           if (mounted) {
                             setState(() {
                               isLoading = false;
