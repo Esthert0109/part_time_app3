@@ -116,7 +116,9 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     gender = widget.sexInitial;
     bussinessIdSelected = widget.fieldInitial!;
 
-    getPhoneNumberWithRegion();
+    if (widget.phoneNumber != null) {
+      getPhoneNumberWithRegion();
+    }
   }
 
   getPhoneNumberWithRegion() async {
