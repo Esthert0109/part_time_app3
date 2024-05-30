@@ -13,6 +13,7 @@ import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dar
 import 'package:part_time_app/Components/Card/userDetailCardComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Model/Payment/paymentModel.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Dialog/paymentUploadDialogComponent.dart';
 import '../../Components/Status/statusDialogComponent.dart';
@@ -160,6 +161,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                   countryInitial: userData?.country,
                   fieldInitial: userData?.businessScopeId,
                   sexInitial: userData?.gender,
+                  phoneNumber: userData?.secondPhoneNo,
                   walletNetworkInitial: userData?.billingNetwork,
                   walletAddressInitial: userData?.billingAddress,
                 ),
