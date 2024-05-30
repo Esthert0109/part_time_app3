@@ -19,6 +19,7 @@ import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Services/Upload/uploadServices.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../../Model/User/userModel.dart';
 
@@ -43,6 +44,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
+    // fetchData();
+  }
+
+  fetchData() async {
+    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
+    setState(() {
+      userData = data;
+    });
   }
 
   void selectAvatar() async {
@@ -78,6 +87,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    fetchData();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kTextTabBarHeight),
@@ -169,7 +179,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       walletAddressInitial: userData?.billingAddress,
                       walletNetworkInitial: userData?.billingNetwork,
                       usdtLinkInitial: userData?.billingCurrency,
-                      profilePic: updatedAvatar,
                     ),
                   ),
                 ],
@@ -218,13 +227,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     await services.updateCustomerInfo(updateProfile);
 
                 if (model!.code == 0) {
-                  await services.getUserInfo();
-                  Fluttertoast.showToast(
-                      msg: "已更新",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: kMainGreyColor,
-                      textColor: kThirdGreyColor);
+                  UserModel? model = await services.getUserInfo();
+                  if (model!.code == 0) {
+                    Fluttertoast.showToast(
+                        msg: "已更新",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainGreyColor,
+                        textColor: kThirdGreyColor);
+                    isUpdating = false;
+                    Get.back();
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: "更新失败，请重试",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainGreyColor,
+                        textColor: kThirdGreyColor);
+                    isUpdating = false;
+                  }
                 } else {
                   Fluttertoast.showToast(
                       msg: "更新失败，请重试",

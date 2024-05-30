@@ -49,7 +49,6 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? walletNetworkInitial;
   final String? walletAddressInitial;
   final String? usdtLinkInitial;
-  final String? profilePic;
 
   UserDetailCardComponent({
     super.key,
@@ -73,7 +72,6 @@ class UserDetailCardComponent extends StatefulWidget {
     this.walletNetworkInitial,
     this.walletAddressInitial,
     this.usdtLinkInitial,
-    this.profilePic,
   });
 
   @override
@@ -136,7 +134,11 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         fetchedBusinessScopeList!.isNotEmpty) {
       setState(() {
         businessScope = fetchedBusinessScopeList;
-        selectedBussinessScope = businessScope[bussinessIdSelected];
+        for (BusinessScopeData bussiness in businessScope) {
+          if (bussiness.businessScopeId == bussinessIdSelected) {
+            selectedBussinessScope = bussiness;
+          }
+        }
       });
     }
   }

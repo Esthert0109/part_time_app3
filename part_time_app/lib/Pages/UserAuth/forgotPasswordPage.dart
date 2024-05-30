@@ -97,7 +97,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       Positioned(
                         child: Container(
                           child: InternationalPhoneNumberInput(
-                            errorMessage: "请正确的电话号码",
+                            errorMessage: "请输入正确的电话号码",
                             initialValue: phoneNumber,
                             formatInput: true,
                             selectorConfig: SelectorConfig(
@@ -107,6 +107,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               phone = number.phoneNumber.toString();
                               dialCode = number.dialCode.toString();
                               countryCode = number.isoCode.toString();
+                              setState(() {
+                                isError = false;
+                              });
                             },
                             autoValidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -185,14 +188,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               );
                             } else {
                               setState(() {
+                                isError = true;
                                 isLoading = false;
                                 errorDisplay = value.msg!;
                               });
                             }
                           } catch (error) {
-                            isLoading = false;
-                            errorDisplay = error.toString();
-                            print('Error: $error');
+                            setState(() {
+                              isLoading = false;
+                              isError = true;
+                              errorDisplay = "手机号码不存在";
+                              print('Error: $error');
+                            });
                           }
                         }
                       },
