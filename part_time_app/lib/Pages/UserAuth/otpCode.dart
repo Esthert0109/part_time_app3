@@ -57,11 +57,6 @@ class _OtpCodePageState extends State<OtpCodePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // if (widget.type == 3) {
-    //   setState(() {
-    //     isCountDown = false;
-    //   });
-    // }
     convertCountDownTime(widget.countdownTime);
   }
 

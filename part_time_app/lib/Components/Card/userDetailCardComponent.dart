@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dart';
+import 'package:part_time_app/Constants/globalConstant.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/BusinessScope/businessScopeModel.dart';
 import '../../Model/User/userModel.dart';
+import '../../Pages/UserAuth/otpCode.dart';
 import '../../Services/BusinessScope/businessScopeServices.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
 
@@ -88,6 +92,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
 
   // services
   BusinessScopeServices businessScopeServices = BusinessScopeServices();
+  UserServices userServices = UserServices();
   List<BusinessScopeData> businessScope = [];
 
   BusinessScopeData? selectedBussinessScope;
@@ -465,10 +470,31 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 readOnly: true),
             SizedBox(height: 15),
             GestureDetector(
+                onTap: () async {
+                  OTPUserModel? value = await userServices.sendOTP(userData!.firstPhoneNo!, 2);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    useSafeArea: true,
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(30.0),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.9,
+                          child: OtpCodePage(
+                            phone: userData!.firstPhoneNo!,
+                            type: 2,
+                            countdownTime: value!.data!.datetime,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
                 child: Text(
-              "修改密码",
-              style: editProfilePassTextStyle,
-            ))
+                  "修改密码",
+                  style: editProfilePassTextStyle,
+                ))
           ] else ...[
             SizedBox(height: 15),
             Text("收款信息", style: depositTextStyle2),
