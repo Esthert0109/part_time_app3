@@ -9,9 +9,8 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/notification/messageModel.dart';
+import '../../Services/WebSocket/webSocketService.dart';
 import '../../Services/notification/systemMessageServices.dart';
-
-bool noInitialRefresh = true;
 
 class TicketingMessagePage extends StatefulWidget {
   const TicketingMessagePage({Key? key}) : super(key: key);
@@ -29,9 +28,16 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
   @override
   void initState() {
     super.initState();
+    webSocketService.addListener(_updateState);
     _scrollController.addListener(_scrollListener);
-    _loadData();
     _readStatus();
+    _refresh();
+  }
+
+  void _updateState() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -52,6 +58,7 @@ class _TicketingMessagePageState extends State<TicketingMessagePage> {
   Future<void> _readStatus() async {
     try {
       final response = await SystemMessageServices().patchUpdateRead(4);
+      notificationTips?.responseData['工单通知']?.notificationTotalUnread = 0;
     } catch (e) {
       print("Error: $e");
     }

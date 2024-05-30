@@ -48,6 +48,7 @@ class _PublishMessagePageState extends State<PublishMessagePage> {
   Future<void> _readStatus() async {
     try {
       final response = await SystemMessageServices().patchUpdateRead(3);
+      notificationTips?.responseData['发布通知']?.notificationTotalUnread = 0;
     } catch (e) {
       print("Error: $e");
     }

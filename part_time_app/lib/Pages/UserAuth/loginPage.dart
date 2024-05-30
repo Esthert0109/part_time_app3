@@ -17,6 +17,7 @@ import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/User/userModel.dart';
+import '../../Services/WebSocket/webSocketService.dart';
 import '../Message/user/chatConfig.dart';
 import '../Message/user/userMessagePage.dart';
 
@@ -287,7 +288,6 @@ class _LoginPageState extends State<LoginPage> {
                                 } else {
                                   UserModel? user =
                                       await services.getUserInfo();
-
                                   Get.offAllNamed('/');
                                   setState(() {
                                     isLoading = false;

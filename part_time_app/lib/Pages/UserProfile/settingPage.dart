@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Model/User/userModel.dart';
 import 'package:part_time_app/Services/User/userServices.dart';
+import 'package:part_time_app/Services/WebSocket/webSocketService.dart';
 import '../../Components/Dialog/alertDialogComponent.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
@@ -255,6 +256,7 @@ class _SettingPageState extends State<SettingPage> {
                                         });
                                       },
                                       secondButtonOnTap: () async {
+                                        // webSocketService.disconnect();
                                         await SharedPreferencesUtils
                                             .clearSharedPreferences();
                                         setState(() {
