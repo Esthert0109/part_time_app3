@@ -49,7 +49,6 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? walletNetworkInitial;
   final String? walletAddressInitial;
   final String? usdtLinkInitial;
-  final String? profilePic;
 
   UserDetailCardComponent({
     super.key,
@@ -73,7 +72,6 @@ class UserDetailCardComponent extends StatefulWidget {
     this.walletNetworkInitial,
     this.walletAddressInitial,
     this.usdtLinkInitial,
-    this.profilePic,
   });
 
   @override
@@ -139,7 +137,11 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         fetchedBusinessScopeList!.isNotEmpty) {
       setState(() {
         businessScope = fetchedBusinessScopeList;
-        selectedBussinessScope = businessScope[bussinessIdSelected];
+        for (BusinessScopeData bussiness in businessScope) {
+          if (bussiness.businessScopeId == bussinessIdSelected) {
+            selectedBussinessScope = bussiness;
+          }
+        }
       });
     }
   }
@@ -296,6 +298,8 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                       onChanged: (newValue) {
                         setState(() {
                           dropdownValue = newValue!;
+                          sexControllerPayment =
+                              TextEditingController(text: dropdownValue);
                           print(dropdownValue);
                         });
                       },
@@ -486,7 +490,8 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
             SizedBox(height: 15),
             GestureDetector(
                 onTap: () async {
-                  OTPUserModel? value = await userServices.sendOTP(userData!.firstPhoneNo!, 2);
+                  OTPUserModel? value =
+                      await userServices.sendOTP(userData!.firstPhoneNo!, 2);
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -552,12 +557,13 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         readOnly: readOnly,
         controller: controller,
         onChanged: onChanged,
+        maxLines: 1,
         decoration: InputDecoration(
           filled: true,
           fillColor: kInputBackGreyColor,
           hintText: hintText,
           hintStyle: missionDetailText2,
-          contentPadding: const EdgeInsets.all(10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
