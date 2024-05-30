@@ -18,6 +18,7 @@ import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Constants/globalConstant.dart';
 import 'package:part_time_app/Constants/textStyleConstant.dart';
 import 'package:part_time_app/Services/Upload/uploadServices.dart';
+import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -38,11 +39,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
+    _loadUserData();
     // Future.delayed(const Duration(seconds: 2), () {
     //   setState(() {
     //     isLoading = false;
     //   });
     // });
+  }
+
+  void _loadUserData() async {
+    setState(() {
+      isLoading = true;
+    });
+    await SharedPreferencesUtils.getUserDataInfo();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void selectAvatar() async {

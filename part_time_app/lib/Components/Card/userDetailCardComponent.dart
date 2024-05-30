@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:part_time_app/Components/Button/primaryButtonComponent.dart';
 import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
@@ -80,12 +82,14 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String? code;
   String? username;
   String? dropdownValue;
+  bool isLoading = false;
 
   // services
   BusinessScopeServices businessScopeServices = BusinessScopeServices();
   List<BusinessScopeData> businessScope = [];
   int bussinessIdSelected = 0;
   String initialBussiness = "";
+  UserServices userServices = UserServices();
 
   @override
   void initState() {
@@ -106,7 +110,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     usdtLinkControllerPayment =
         TextEditingController(text: widget.usdtLinkInitial);
     dropdownValue = widget.sexInitial;
-    bussinessIdSelected = widget.fieldInitial!;
+    bussinessIdSelected = widget.fieldInitial ?? 0;
     // phoneControllerLogin = TextEditingController(
     //     text: separatePhoneNumber(widget.phoneNumber!)['phoneNumber']);
     // phoneNumber = PhoneNumber(
@@ -143,6 +147,42 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         code = separated["countryCode"];
         firstContact = separated["phoneNumber"];
         username = user?.username;
+      });
+    }
+  }
+
+  Future<void> _updateUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      UserData updatedUser = UserData(
+        username: usernameControllerPayment.text,
+        country: countryControllerPayment.text,
+        businessScopeId: bussinessIdSelected,
+        gender: dropdownValue,
+        email: emailControllerPayment.text,
+        nickname: nameControllerPayment.text,
+        secondPhoneNo: phoneControllerLogin.text,
+        billingNetwork: walletNetworkControllerPayment.text,
+        billingAddress: walletAddressControllerPayment.text,
+        billingCurrency: usdtLinkControllerPayment.text,
+      );
+
+      await userServices.updateCustomerInfo(updatedUser);
+      await SharedPreferencesUtils.saveUserDataInfo(updatedUser);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User information updated successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -478,6 +518,23 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                 },
                 readOnly: false),
           ],
+          Material(
+            elevation: 20,
+            child: Container(
+                padding: const EdgeInsets.only(
+                    bottom: 5, left: 10, right: 10, top: 5),
+                decoration: const BoxDecoration(color: kMainWhiteColor),
+                width: double.infinity,
+                child: primaryButtonComponent(
+                  isLoading: isLoading,
+                  text: "立刻保存",
+                  onPressed: () {
+                    _updateUser();
+                  },
+                  buttonColor: kMainYellowColor,
+                  textStyle: missionCheckoutTotalPriceTextStyle,
+                )),
+          )
         ],
       ),
     );
