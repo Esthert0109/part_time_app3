@@ -24,7 +24,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(
     ChangeNotifierProvider(
-      create: (context) => WebSocketService("${userData.customerId}"),
+      create: (context) => WebSocketService("${userData?.customerId}"),
       child: const MyApp(),
     ),
   );
