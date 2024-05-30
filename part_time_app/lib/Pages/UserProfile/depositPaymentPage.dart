@@ -159,7 +159,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                   isEditProfile: false,
                   nameInitial: userData?.username,
                   countryInitial: userData?.country,
-                  fieldInitial: userData?.businessScopeId,
+                  fieldInitial: userData?.businessScopeId ?? 0,
                   sexInitial: userData?.gender,
                   phoneNumber: userData?.secondPhoneNo,
                   walletNetworkInitial: userData?.billingNetwork,
