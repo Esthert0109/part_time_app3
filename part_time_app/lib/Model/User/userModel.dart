@@ -188,7 +188,6 @@ class UploadCustomerAvatarModel {
   }
 }
 
-
 class UserData {
   final String? customerId;
   final String? nickname;
@@ -207,37 +206,37 @@ class UserData {
   final String? billingCurrency;
   final int? validIdentity;
   final int? valid;
-  int?
-      collectionValid; //system setting, default 1 = public, while 0 = private
+  int? collectionValid; //system setting, default 1 = public, while 0 = private
   final String? createdTime;
   final String? updatedTime;
   final int? status;
   final String? rejectReason;
+  final String? rejectedReason;
 
-  UserData({
-    this.customerId,
-    this.nickname,
-    this.username,
-    this.password,
-    this.country,
-    this.gender,
-    this.avatar,
-    this.firstPhoneNo,
-    this.secondPhoneNo,
-    this.email,
-    this.businessScopeId,
-    this.billingNetwork,
-    this.billingAddress,
-    this.billingCurrency,
-    this.validIdentity,
-    this.valid,
-    this.collectionValid,
-    this.createdTime,
-    this.updatedTime,
-    this.businessScopeName,
-    this.status,
-    this.rejectReason,
-  });
+  UserData(
+      {this.customerId,
+      this.nickname,
+      this.username,
+      this.password,
+      this.country,
+      this.gender,
+      this.avatar,
+      this.firstPhoneNo,
+      this.secondPhoneNo,
+      this.email,
+      this.businessScopeId,
+      this.billingNetwork,
+      this.billingAddress,
+      this.billingCurrency,
+      this.validIdentity,
+      this.valid,
+      this.collectionValid,
+      this.createdTime,
+      this.updatedTime,
+      this.businessScopeName,
+      this.status,
+      this.rejectReason,
+      this.rejectedReason});
 
   Map<String, dynamic> toJson() {
     return {
@@ -263,34 +262,35 @@ class UserData {
       "updatedTime": updatedTime,
       "status": status,
       "rejectReason": rejectReason,
+      "rejectedReason": rejectedReason
     };
   }
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
-      customerId: json['customerId'],
-      nickname: json['nickname'],
-      username: json['username'],
-      password: json['password'],
-      country: json['country'],
-      gender: json['gender'],
-      avatar: json['avatar'],
-      firstPhoneNo: json['firstPhoneNo'],
-      secondPhoneNo: json['secondPhoneNo'],
-      email: json['email'],
-      businessScopeId: json['businessScopeId'],
-      businessScopeName: json['businessScopeName'],
-      billingNetwork: json['billingNetwork'],
-      billingAddress: json['billingAddress'],
-      billingCurrency: json['billingCurrency'],
-      validIdentity: json['validIdentity'],
-      valid: json['valid'],
-      collectionValid: json['collection_valid'],
-      createdTime: json['createdTime'],
-      updatedTime: json['updatedTime'],
-      status: json['status'],
-      rejectReason: json['rejectReason'],
-    );
+        customerId: json['customerId'],
+        nickname: json['nickname'],
+        username: json['username'],
+        password: json['password'],
+        country: json['country'],
+        gender: json['gender'],
+        avatar: json['avatar'],
+        firstPhoneNo: json['firstPhoneNo'],
+        secondPhoneNo: json['secondPhoneNo'],
+        email: json['email'],
+        businessScopeId: json['businessScopeId'],
+        businessScopeName: json['businessScopeName'],
+        billingNetwork: json['billingNetwork'],
+        billingAddress: json['billingAddress'],
+        billingCurrency: json['billingCurrency'],
+        validIdentity: json['validIdentity'],
+        valid: json['valid'],
+        collectionValid: json['collection_valid'],
+        createdTime: json['createdTime'],
+        updatedTime: json['updatedTime'],
+        status: json['status'],
+        rejectReason: json['rejectReason'],
+        rejectedReason: json['rejectedReason']);
   }
 
   void clear() {}

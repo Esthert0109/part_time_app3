@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/colorConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import '../../Model/User/userModel.dart';
+import 'depositPaymentPage.dart';
 
 class DepositPaymentStatusPage extends StatefulWidget {
   const DepositPaymentStatusPage({
@@ -242,6 +244,16 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                                         text: isFailed
                                                             ? "重新编辑"
                                                             : "",
+                                                        recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap = () {
+                                                                Get.to(
+                                                                    () =>
+                                                                        DepositPaymentPage(),
+                                                                    transition:
+                                                                        Transition
+                                                                            .rightToLeft);
+                                                              },
                                                         style:
                                                             missionNoticeCardBlueTextStyle)
                                                   ]))
@@ -277,7 +289,7 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                                       height: 6,
                                     ),
                                     Text(
-                                      "您所提交的存在图片不够清晰问题，请及时修改及时上传。您所提交的存在图片不够清晰问题，请及时修改及时上传。您所提交的存在图片不够清晰问题，请及时修改及时上传。您所提交的存在图片不够清晰问题，请及时修改及时上传。",
+                                      depositStatus?.rejectedReason ?? "",
                                       style: rejectReasonTextStyle,
                                     )
                                   ],

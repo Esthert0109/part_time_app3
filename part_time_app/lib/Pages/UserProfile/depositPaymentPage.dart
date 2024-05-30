@@ -68,6 +68,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
 
   void _copyToClipboard() {
     Clipboard.setData(ClipboardData(text: depositList?.depositNetwork ?? ""));
+    Fluttertoast.showToast(
+        msg: "已复制",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: kMainGreyColor,
+        textColor: kThirdGreyColor);
   }
 
   Future<void> _loadData() async {
