@@ -11,6 +11,8 @@ import 'package:part_time_app/Pages/UserProfile/depositReturnPage.dart';
 import '../../Components/Title/thirdTitleComponent.dart';
 import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
+import '../../Model/User/userModel.dart';
+import '../../Services/payment/paymentServices.dart';
 import 'depositPaymentStatusPage.dart';
 
 class DepositMainPage extends StatefulWidget {
@@ -22,6 +24,26 @@ class DepositMainPage extends StatefulWidget {
 }
 
 class _DepositMainPageState extends State<DepositMainPage> {
+  PaymentServices paymentService = PaymentServices();
+  bool depositSubmitted = false;
+  UserData? depositStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStatus();
+  }
+
+  fetchStatus() async {
+    UserData? data = await paymentService.depositStatus();
+    setState(() {
+      if (data != null) {
+        depositStatus = data;
+        depositSubmitted = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,10 +90,10 @@ class _DepositMainPageState extends State<DepositMainPage> {
               //card 1 false is NOT verify, then CANT return deposit.
               //condition(card1,2 is false)
               if (userData?.validIdentity == 1) ...[
-                cardComponent1("• 押金认证", true),
+                cardComponent1("• 押金认证", depositSubmitted),
                 cardComponent2("• 退还押金", true),
               ] else ...[
-                cardComponent1("• 押金认证", false),
+                cardComponent1("• 押金认证", depositSubmitted),
                 cardComponent2("• 退还押金", false),
               ],
             ],
