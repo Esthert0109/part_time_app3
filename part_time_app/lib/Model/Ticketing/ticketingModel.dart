@@ -16,8 +16,8 @@ class ComplaintType {
 }
 
 class TicketingModel {
-  final int code;
-  final String msg;
+  final int? code;
+  final String? msg;
   final List<TicketingData>? data;
 
   TicketingModel({
@@ -117,15 +117,15 @@ class TicketingData {
       print('Error parsing ticketComplaintAttachment: $e');
     }
     return TicketingData(
-      ticketId: json['ticketId'] ?? "",
+      ticketId: json['ticketId'] ?? 1,
       customerId: json['customerId'] ?? "",
       ticketCustomerUsername: json['ticketCustomerUsername'] ?? "",
       ticketCustomerPhoneNum: json['ticketCustomerPhoneNum'] ?? "",
       ticketCustomerEmail: json['ticketCustomerEmail'] ?? "",
       ticketDate: json['ticketDate'] ?? "",
       taskId: json['taskId'] ?? 0,
-      complaintTypeId: json['complaintTypeId'] ?? 1,
-      complaintUserId: json['complaintUserId'] ?? 1,
+      complaintTypeId: json['complaintTypeId'] ?? "1",
+      complaintUserId: json['complaintUserId'] ?? "1",
       ticketComplaintDescription: json['ticketComplaintDescription'] ?? "",
       ticketComplaintAttachment: ticketComplaintAttachment ?? [],
       ticketStatus: json['ticketStatus'] ?? 0,
