@@ -42,3 +42,6 @@ int taskPage = 1;
 
 //tencent
 late bool isLoginTencent;
+
+//websocket
+late String customerIDWebsocket;

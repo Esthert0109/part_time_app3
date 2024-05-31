@@ -20,14 +20,8 @@ import 'Utils/sharedPreferencesUtils.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationController.initializeNotification();
-  initAndLoginIm();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => WebSocketService("${userData?.customerId}"),
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -38,26 +32,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    getUserInfo();
-  }
-
-  getUserInfo() async {
-    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-    isLoginTencent = await userTencentLogin(data!.customerId!);
-    bool isChangeNicknameTencent =
-        await setNickNameTencent(data.customerId!, data.nickname!);
-    bool isChangeAvatarTencent =
-        await setAvatarTencent(data.customerId!, data.avatar!);
-    setState(() {
-      userData = data!;
-    });
-  }
-
-  // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
