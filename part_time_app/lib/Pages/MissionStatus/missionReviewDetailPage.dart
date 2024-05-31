@@ -61,6 +61,9 @@ class _MissionReviewDetailPageState extends State<MissionReviewDetailPage> {
     if (orderModel!.data != null) {
       setState(() {
         orderDetails = orderModel!.data!;
+        if (orderDetails!.orderStatus == 2) {
+          isMissionFailed = true;
+        }
       });
     }
 

@@ -128,14 +128,14 @@ class _MissionDetailStatusIssuerPageState
   }
 
   checkNoRecipient() async {
-    for (int i = 0; i < 3; i++) {
-      CustomerListModel? model =
-          await services.getCustomerListByOrderStatusId(i, widget.taskId, 1);
-      setState(() {
-        noRecipient += model?.data?.totalCount ?? 0;
-        print("check number: $noRecipient");
-      });
-    }
+    // for (int i = 0; i < 3; i++) {
+    CustomerListModel? model =
+        await services.getCustomerListByOrderStatusId(0, widget.taskId, 1);
+    setState(() {
+      noRecipient = model?.data?.totalCount ?? 0;
+      print("check number: $noRecipient");
+    });
+    // }
   }
 
   fetchData() async {
