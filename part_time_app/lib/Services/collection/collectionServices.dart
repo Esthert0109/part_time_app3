@@ -53,4 +53,28 @@ class CollectionService {
       return null;
     }
   }
+
+  Future<List<TaskClass>?> getHomePageCollectionList(
+      String customerId, int page) async {
+    url = port + customerHomePageCollectionUrl + customerId + "?page=$page";
+    String? _token = await SharedPreferencesUtils.getToken();
+
+    final Map<String, String> headers = {
+      'Token': '$_token',
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+    try {
+      final response = await getRequest(url, headers);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.responseBody);
+        final List<dynamic> data = jsonResponse['data'];
+        return data.map((item) => TaskClass.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
+  }
 }
