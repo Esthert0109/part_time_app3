@@ -170,6 +170,11 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(20),
