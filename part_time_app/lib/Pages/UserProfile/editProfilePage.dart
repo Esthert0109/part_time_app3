@@ -171,7 +171,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       isEditProfile: true,
                       usernameInitial: userData?.nickname,
                       countryInitial: userData?.country,
-                      fieldInitial: userData?.businessScopeId,
+                      fieldInitial: userData?.businessScopeId??0,
                       emailInitial: userData?.email,
                       nameInitial: userData?.username,
                       sexInitial: userData?.gender,

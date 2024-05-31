@@ -324,59 +324,71 @@ class _DepositPaymentStatusPageState extends State<DepositPaymentStatusPage> {
                               ),
                             ),
                             Container(
-                              height: 190,
-                              child: isTaskLoading
-                                  ? DepositPaymentStatusLoading()
-                                  : SingleChildScrollView(
-                                      child: Column(children: [
-                                        Container(
-                                          margin: EdgeInsets.all(2),
-                                          child: MissionSuggestCardComponent(
-                                            userAvatar: taskList![0].avatar ??
-                                                "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
-                                            title: taskList![0].taskTitle ??
-                                                '文案写作文案写作文',
-                                            tags: taskList![0]
-                                                    .taskTagNames
-                                                    ?.map((tag) => tag.tagName)
-                                                    .toList() ??
-                                                [],
-                                            price: taskList![0]
-                                                .taskSinglePrice
-                                                .toString(),
-                                            requiredNo: 100,
-                                            completedNo: 50,
-                                            isLoading: isTaskLoading,
-                                            taskId: taskList![0].taskId!,
-                                          ),
-                                        ),
-                                        Divider(
-                                          color: kThirdGreyColor,
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.all(2),
-                                          child: MissionSuggestCardComponent(
-                                              userAvatar: taskList![1].avatar ??
-                                                  "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
-                                              title: taskList![1].taskTitle ??
-                                                  '文案写作文案写作文',
-                                              tags: taskList![1]
-                                                      .taskTagNames
-                                                      ?.map(
-                                                          (tag) => tag.tagName)
-                                                      .toList() ??
-                                                  [],
-                                              price: taskList![1]
-                                                  .taskSinglePrice
-                                                  .toString(),
-                                              requiredNo: 100,
-                                              completedNo: 50,
-                                              isLoading: isTaskLoading,
-                                              taskId: taskList![1].taskId!),
-                                        ),
-                                      ]),
-                                    ),
-                            )
+                                height: 190,
+                                child: isTaskLoading
+                                    ? DepositPaymentStatusLoading()
+                                    : (taskList!.length > 0 && taskList != [])
+                                        ? SingleChildScrollView(
+                                            child: Column(children: [
+                                              Container(
+                                                margin: EdgeInsets.all(2),
+                                                child:
+                                                    MissionSuggestCardComponent(
+                                                  userAvatar: taskList![0]
+                                                          .avatar ??
+                                                      "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
+                                                  title:
+                                                      taskList![0].taskTitle ??
+                                                          '文案写作文案写作文',
+                                                  tags: taskList![0]
+                                                          .taskTagNames
+                                                          ?.map((tag) =>
+                                                              tag.tagName)
+                                                          .toList() ??
+                                                      [],
+                                                  price: taskList![0]
+                                                      .taskSinglePrice
+                                                      .toString(),
+                                                  requiredNo: 100,
+                                                  completedNo: 50,
+                                                  isLoading: isTaskLoading,
+                                                  taskId: taskList![0].taskId!,
+                                                ),
+                                              ),
+                                              Divider(
+                                                color: kThirdGreyColor,
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.all(2),
+                                                child: MissionSuggestCardComponent(
+                                                    userAvatar: taskList![1]
+                                                            .avatar ??
+                                                        "https://img12.360buyimg.com/n1/jfs/t1/92208/30/34431/74002/653c811dF23d72da4/a57277448cc9f1ff.jpg",
+                                                    title: taskList![1]
+                                                            .taskTitle ??
+                                                        '文案写作文案写作文',
+                                                    tags: taskList![1]
+                                                            .taskTagNames
+                                                            ?.map((tag) =>
+                                                                tag.tagName)
+                                                            .toList() ??
+                                                        [],
+                                                    price: taskList![1]
+                                                        .taskSinglePrice
+                                                        .toString(),
+                                                    requiredNo: 100,
+                                                    completedNo: 50,
+                                                    isLoading: isTaskLoading,
+                                                    taskId:
+                                                        taskList![1].taskId!),
+                                              ),
+                                            ]),
+                                          )
+                                        : Container(
+                                            child: Center(
+                                            child: SvgPicture.asset(
+                                                "assets/mission/statusNullHandle.svg"),
+                                          )))
                           ],
                         ),
                       )

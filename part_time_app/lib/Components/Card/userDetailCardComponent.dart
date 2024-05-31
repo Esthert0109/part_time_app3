@@ -41,7 +41,7 @@ class UserDetailCardComponent extends StatefulWidget {
   final String? usernameInitial;
   final String? countryInitial;
   final int? fieldInitial;
-  final String? sexInitial;
+  String? sexInitial;
   final String? emailInitial;
   final String? nameInitial;
   final String? countryCode;
@@ -85,7 +85,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
   String? firstContact;
   String? code;
   String? username;
-  String? dropdownValue;
+  String? gender;
   bool isError = true;
 
   // services
@@ -113,10 +113,12 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
         TextEditingController(text: widget.walletAddressInitial);
     usdtLinkControllerPayment =
         TextEditingController(text: widget.usdtLinkInitial);
-    dropdownValue = widget.sexInitial;
+    gender = widget.sexInitial;
     bussinessIdSelected = widget.fieldInitial!;
 
-    getPhoneNumberWithRegion();
+    if (widget.phoneNumber != null) {
+      getPhoneNumberWithRegion();
+    }
   }
 
   getPhoneNumberWithRegion() async {
@@ -275,17 +277,17 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         borderRadius: BorderRadius.circular(8)),
                     child: DropdownButton<String>(
                       underline: Container(),
-                      value: dropdownValue,
+                      value: gender,
                       icon: Icon(Icons.arrow_drop_down),
                       iconSize: 24,
                       elevation: 16,
                       style: missionUsernameTextStyle,
                       onChanged: (newValue) {
                         setState(() {
-                          dropdownValue = newValue!;
-                          sexControllerPayment =
-                              TextEditingController(text: dropdownValue);
-                          print(dropdownValue);
+                          gender = newValue!;
+                          sexControllerPayment.text = gender ?? "";
+                          print(gender);
+                          print(sexControllerPayment.text);
                         });
                       },
                       items: <String>['男', '女']
@@ -539,16 +541,20 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
       margin: EdgeInsets.only(top: 5),
       height: 31,
       child: TextFormField(
+        scrollPhysics: AlwaysScrollableScrollPhysics(),
+        minLines: 1,
+        maxLines: 1,
+        expands: false,
         readOnly: readOnly,
         controller: controller,
         onChanged: onChanged,
-        maxLines: 1,
         decoration: InputDecoration(
           filled: true,
           fillColor: kInputBackGreyColor,
           hintText: hintText,
           hintStyle: missionDetailText2,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+          contentPadding:
+              const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,

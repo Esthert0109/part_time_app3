@@ -9,6 +9,7 @@ import 'package:part_time_app/Pages/Message/ticketingMessagePage.dart';
 import 'package:part_time_app/Pages/Message/user/userMessagePage.dart';
 import 'package:tencent_cloud_chat_uikit/tencent_cloud_chat_uikit.dart';
 import '../../Constants/colorConstant.dart';
+import '../../Constants/globalConstant.dart';
 import '../../Constants/textStyleConstant.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -319,8 +320,10 @@ Widget _buildUserMessageCard(
                     ),
                     Container(
                       padding: EdgeInsets.only(left: 35),
-                      child: TIMUIKitConversationTotalUnread(
-                          width: 16, height: 16),
+                      child: isLoginTencent == true
+                          ? TIMUIKitConversationTotalUnread(
+                              width: 16, height: 16)
+                          : SizedBox(),
                     ),
                   ],
                 ),

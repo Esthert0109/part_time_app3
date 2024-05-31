@@ -41,13 +41,16 @@ class _UserProfileMainPageState extends State<UserProfileMainPage> {
     // TODO: implement initState
     super.initState();
 
-    if (isLogin) {
-      getUserInfo();
-    }
+    // if (isLogin) {
+    //   getUserInfo();
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLogin) {
+      getUserInfo();
+    }
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(

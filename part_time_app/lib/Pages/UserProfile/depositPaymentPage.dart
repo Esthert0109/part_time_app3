@@ -13,6 +13,7 @@ import 'package:part_time_app/Components/Card/missionSubmissionCardComponent.dar
 import 'package:part_time_app/Components/Card/userDetailCardComponent.dart';
 import 'package:part_time_app/Constants/colorConstant.dart';
 import 'package:part_time_app/Model/Payment/paymentModel.dart';
+import 'package:part_time_app/Model/User/userModel.dart';
 import '../../Components/Button/primaryButtonComponent.dart';
 import '../../Components/Dialog/paymentUploadDialogComponent.dart';
 import '../../Components/Status/statusDialogComponent.dart';
@@ -158,8 +159,9 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                   isEditProfile: false,
                   nameInitial: userData?.username,
                   countryInitial: userData?.country,
-                  fieldInitial: userData?.businessScopeId,
+                  fieldInitial: userData?.businessScopeId ?? 0,
                   sexInitial: userData?.gender,
+                  phoneNumber: userData?.secondPhoneNo,
                   walletNetworkInitial: userData?.billingNetwork,
                   walletAddressInitial: userData?.billingAddress,
                 ),
@@ -520,15 +522,33 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                     }
                     return false;
                   }
+                  if (uploadedPaymentSS == "" || uploadedPaymentSS.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "押金截图不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    if (mounted) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                    return false;
+                  }
                   return true;
                 }
 
                 try {
                   setState(() {
+                    DateTime now = DateTime.now();
+                    String submitDate = now.toIso8601String();
                     PaymentDetail? paymentDetailForPay = PaymentDetail(
                       paymentFromCustomerId: customerId,
                       paymentType: 0,
                       paymentStatus: 0,
+                      paymentToCustomerId: "admin",
+                      paymentToCustomerName: "admin",
                       paymentUsername: nameControllerPayment.text,
                       paymentBillingAddress:
                           walletAddressControllerPayment.text,
@@ -540,6 +560,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                       paymentAmount: 20,
                       paymentFee: 0,
                       paymentTotalAmount: 20,
+                      paymentCreatedTime: submitDate,
                     );
 
                     if (validatePaymentDetail(paymentDetailForPay)) {
@@ -568,6 +589,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                           });
                         } else {
                           print("Submitted FAILED");
+                          Fluttertoast.showToast(
+                              msg: "提交失败，请稍后重试",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: kMainRedColor,
+                              textColor: kThirdGreyColor);
                           if (mounted) {
                             setState(() {
                               isLoading = false;

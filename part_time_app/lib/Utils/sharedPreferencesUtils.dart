@@ -107,7 +107,6 @@ class SharedPreferencesUtils {
   static Future<UserData?> getUserDataInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonString = prefs.getString('userModel');
-    print("check json: ${jsonString}");
     if (jsonString != null) {
       Map<String, dynamic> json = jsonDecode(jsonString);
       return UserData.fromJson(json);

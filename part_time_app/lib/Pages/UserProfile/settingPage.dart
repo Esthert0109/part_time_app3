@@ -256,7 +256,7 @@ class _SettingPageState extends State<SettingPage> {
                                         });
                                       },
                                       secondButtonOnTap: () async {
-                                        // webSocketService.disconnect();
+                                        webSocketService.disconnect();
                                         await SharedPreferencesUtils
                                             .clearSharedPreferences();
                                         setState(() {
