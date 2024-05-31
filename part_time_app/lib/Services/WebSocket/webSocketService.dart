@@ -12,7 +12,7 @@ import '../../Model/notification/messageModel.dart';
 import '../../Utils/sharedPreferencesUtils.dart';
 
 late int total;
-WebSocketService webSocketService = WebSocketService("${userData?.customerId}");
+late WebSocketService webSocketService;
 
 class WebSocketService with ChangeNotifier {
   String? _url;

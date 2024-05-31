@@ -121,7 +121,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     }
   }
 
-  getPhoneNumberWithRegion() async {
+  Future<void> getPhoneNumberWithRegion() async {
     PhoneNumber phone =
         await PhoneNumber.getRegionInfoFromPhoneNumber(widget.phoneNumber!);
     setState(() {
@@ -129,7 +129,7 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     });
   }
 
-  fetchBusinessScopeList() async {
+  Future<void> fetchBusinessScopeList() async {
     List<BusinessScopeData>? fetchedBusinessScopeList =
         await businessScopeServices.getBusinessScopeList();
     if (fetchedBusinessScopeList != null ||
@@ -291,8 +291,6 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
                         setState(() {
                           gender = newValue!;
                           sexControllerPayment.text = gender ?? "";
-                          print(gender);
-                          print(sexControllerPayment.text);
                         });
                       },
                       items: <String>['男', '女']
@@ -543,13 +541,9 @@ class _UserDetailCardComponentState extends State<UserDetailCardComponent> {
     required bool readOnly,
   }) {
     return Container(
-      margin: EdgeInsets.only(top: 5),
+      margin: const EdgeInsets.only(top: 5),
       height: 31,
       child: TextFormField(
-        scrollPhysics: AlwaysScrollableScrollPhysics(),
-        minLines: 1,
-        maxLines: 1,
-        expands: false,
         readOnly: readOnly,
         controller: controller,
         onChanged: onChanged,

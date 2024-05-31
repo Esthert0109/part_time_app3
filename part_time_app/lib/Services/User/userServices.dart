@@ -68,7 +68,7 @@ class UserServices {
               bool isChangeAvatarTencent = await setAvatarTencent(
                   userModel.data!.customerId!, userModel.data!.avatar!);
               customerIDWebsocket = userModel.data!.customerId!;
-              WebSocketService(customerIDWebsocket);
+              webSocketService = WebSocketService(customerIDWebsocket);
               initAndLoginIm();
               isLogin = true;
 

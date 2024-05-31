@@ -4,6 +4,7 @@ import 'package:part_time_app/Model/User/userModel.dart';
 import '../Model/Advertisement/advertisementModel.dart';
 import '../Model/Task/missionClass.dart';
 import '../Model/notification/messageModel.dart';
+import '../Services/WebSocket/webSocketService.dart';
 
 UserData? userData;
 bool isLogin = false;
@@ -44,4 +45,5 @@ int taskPage = 1;
 late bool isLoginTencent;
 
 //websocket
+// WebSocketService webSocketService = WebSocketService(customerIDWebsocket);
 late String customerIDWebsocket;

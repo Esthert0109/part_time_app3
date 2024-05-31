@@ -219,7 +219,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ],
       ),
       bottomNavigationBar: Container(
-        height: 84,
+        height: 105,
         padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         alignment: Alignment.topCenter,
         decoration: BoxDecoration(color: kMainWhiteColor, boxShadow: [
