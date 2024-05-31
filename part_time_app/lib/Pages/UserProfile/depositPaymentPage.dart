@@ -522,6 +522,20 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                     }
                     return false;
                   }
+                  if (uploadedPaymentSS == "" || uploadedPaymentSS.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: "押金截图不能为空",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: kMainRedColor,
+                        textColor: kThirdGreyColor);
+                    if (mounted) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                    return false;
+                  }
                   return true;
                 }
 
