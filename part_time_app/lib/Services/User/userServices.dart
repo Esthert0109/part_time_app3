@@ -12,6 +12,7 @@ import '../../Model/Task/missionClass.dart';
 import '../../Model/User/userModel.dart';
 import '../../Model/notification/messageModel.dart';
 import '../../Pages/Message/user/chatConfig.dart';
+import '../WebSocket/webSocketService.dart';
 import '../explore/categoryServices.dart';
 import '../explore/exploreServices.dart';
 import '../notification/systemMessageServices.dart';
@@ -59,6 +60,16 @@ class UserServices {
 
             try {
               UserModel? userModel = await getUserInfo();
+
+              isLoginTencent =
+                  await userTencentLogin(userModel!.data!.customerId!);
+              bool isChangeNicknameTencent = await setNickNameTencent(
+                  userModel.data!.customerId!, userModel.data!.nickname!);
+              bool isChangeAvatarTencent = await setAvatarTencent(
+                  userModel.data!.customerId!, userModel.data!.avatar!);
+              customerIDWebsocket = userModel.data!.customerId!;
+              WebSocketService(customerIDWebsocket);
+              initAndLoginIm();
               isLogin = true;
 
               CategoryModel? model = await categoryServices.getCategoryList();
