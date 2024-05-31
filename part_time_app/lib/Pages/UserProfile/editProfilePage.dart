@@ -40,18 +40,48 @@ class _EditProfilePageState extends State<EditProfilePage> {
   UploadServices uploadServices = UploadServices();
   UserServices services = UserServices();
   String? updatedAvatar = userData!.avatar;
+  String? nickname;
+  String? username;
+  String? country;
+  int? field;
+  String? secPhoneNumber;
+  String? email;
+  String? gender;
+  String? walletAddress;
+  String? walletNetwork;
+  String? usdtLink;
 
   @override
   void initState() {
     super.initState();
-    // fetchData();
+    fetchData();
   }
 
-  fetchData() async {
-    UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-    setState(() {
-      userData = data;
-    });
+  Future<void> fetchData() async {
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    try {
+      UserData? data = await SharedPreferencesUtils.getUserDataInfo();
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        nickname = data!.nickname;
+        username = data.username;
+        country = data.country;
+        field = data?.businessScopeId ?? 0;
+        email = data.email;
+        gender = data.gender;
+        secPhoneNumber = data.secondPhoneNo;
+        walletAddress = data.billingAddress;
+        walletNetwork = data.billingNetwork;
+        usdtLink = data.billingCurrency;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("problem");
+    }
   }
 
   void selectAvatar() async {
@@ -81,13 +111,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    fetchData();
+    // fetchData();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kTextTabBarHeight),
@@ -121,69 +150,74 @@ class _EditProfilePageState extends State<EditProfilePage> {
           centerTitle: true,
         ),
       ),
-      body: isLoading
-          ? const EditProfilePageLoadingComponent()
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Stack(
+      body: Column(
+        children: [
+          Expanded(
+              child: SingleChildScrollView(
+            child: isLoading
+                ? EditProfilePageLoadingComponent()
+                : Column(
                     children: [
-                      CircleAvatar(
-                        radius: 29,
-                        backgroundColor: kSecondGreyColor,
-                        child: ClipOval(
-                          child: Image.network(
-                            updatedAvatar ?? userData!.avatar!,
-                            fit: BoxFit.cover,
-                            height: 58,
-                            width: 58,
-                          ),
-                        ),
+                      SizedBox(
+                        height: 12,
                       ),
-                      GestureDetector(
-                        onTap: isUploading
-                            ? null
-                            : () {
-                                selectAvatar();
-                              },
-                        child: CircleAvatar(
-                          radius: 29,
-                          backgroundColor: Colors.black38,
-                          child: Center(
-                            child: isUploading
-                                ? LoadingAnimationWidget.stretchedDots(
-                                    color: kMainYellowColor, size: 20)
-                                : Icon(
-                                    Icons.camera_alt,
-                                    color: kMainWhiteColor,
-                                  ),
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 29,
+                            backgroundColor: kSecondGreyColor,
+                            child: ClipOval(
+                              child: Image.network(
+                                updatedAvatar ?? userData!.avatar!,
+                                fit: BoxFit.cover,
+                                height: 58,
+                                width: 58,
+                              ),
+                            ),
                           ),
+                          GestureDetector(
+                            onTap: isUploading
+                                ? null
+                                : () {
+                                    selectAvatar();
+                                  },
+                            child: CircleAvatar(
+                              radius: 29,
+                              backgroundColor: Colors.black38,
+                              child: Center(
+                                child: isUploading
+                                    ? LoadingAnimationWidget.stretchedDots(
+                                        color: kMainYellowColor, size: 20)
+                                    : Icon(
+                                        Icons.camera_alt,
+                                        color: kMainWhiteColor,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        child: UserDetailCardComponent(
+                          isEditProfile: true,
+                          usernameInitial: nickname,
+                          countryInitial: country,
+                          fieldInitial: field,
+                          emailInitial: email,
+                          nameInitial: username,
+                          sexInitial: gender,
+                          phoneNumber: secPhoneNumber,
+                          walletAddressInitial: walletAddress,
+                          walletNetworkInitial: walletNetwork,
+                          usdtLinkInitial: usdtLink,
                         ),
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(12),
-                    child: UserDetailCardComponent(
-                      isEditProfile: true,
-                      usernameInitial: userData?.nickname,
-                      countryInitial: userData?.country,
-                      fieldInitial: userData?.businessScopeId??0,
-                      emailInitial: userData?.email,
-                      nameInitial: userData?.username,
-                      sexInitial: userData?.gender,
-                      phoneNumber: userData?.secondPhoneNo,
-                      walletAddressInitial: userData?.billingAddress,
-                      walletNetworkInitial: userData?.billingNetwork,
-                      usdtLinkInitial: userData?.billingCurrency,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          ))
+        ],
+      ),
       bottomNavigationBar: Container(
         height: 84,
         padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -210,7 +244,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   "check update profile: ${usernameControllerPayment.text}, ${countryControllerPayment.text}, ${sexControllerPayment.text}, ${emailControllerPayment.text}, ${nameControllerPayment.text}, ${phone}, ${walletNetworkControllerPayment.text}, ${walletAddressControllerPayment.text}, ${bussinessIdSelected}, $updatedAvatar");
 
               try {
-                UserData updateProfile = UserData(
+                UserData? updateProfile = UserData(
                   nickname: usernameControllerPayment.text,
                   username: nameControllerPayment.text,
                   country: countryControllerPayment.text,
@@ -236,6 +270,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         backgroundColor: kMainGreyColor,
                         textColor: kThirdGreyColor);
                     isUpdating = false;
+                    updateProfile = null;
                     Get.back();
                   } else {
                     Fluttertoast.showToast(
