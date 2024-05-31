@@ -65,7 +65,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     try {
       UserData? data = await SharedPreferencesUtils.getUserDataInfo();
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 0));
       setState(() {
         nickname = data!.nickname;
         username = data.username;

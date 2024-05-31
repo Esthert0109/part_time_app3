@@ -230,7 +230,6 @@ class _PaymentUploadDialogComponentState
                         ? null
                         : () async {
                             try {
-                              print("aa?");
                               bool? create =
                                   await paymentServices.createPayment(
                                       widget.orderDetails,

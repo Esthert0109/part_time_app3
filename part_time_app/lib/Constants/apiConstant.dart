@@ -86,6 +86,7 @@ const customerHomePageUrl = "api/v1/customers/detailsByCustomerId/";
 const customerTotalPostUrl = "api/v1/customers/totalPostCount?";
 const customerTotalCollectionUrl = "api/v1/collection/totalCount/";
 const customerHomePageTaskUrl = "api/v1/customers/getCustomerHomePageTask/";
+const customerHomePageCollectionUrl = "api/v1/customers/getCustomerHomePageCollection/";
 
 //Business Scope Services
 const getBusinessScopeListUrl = "api/v1/business-scope/";

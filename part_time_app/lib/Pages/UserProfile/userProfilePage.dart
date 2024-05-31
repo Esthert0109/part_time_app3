@@ -116,8 +116,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
       OrderModel? model =
           await services.getCustomerHomePageTask(widget.userID!, page);
 
-      List<TaskClass>? collection =
-          await collectionService.fetchCollection(page);
+      List<TaskClass>? collection = await collectionService
+          .getHomePageCollectionList(widget.userID!, page);
 
       if (model != null && model.data != null && model.data!.isNotEmpty) {
         setState(() {
@@ -130,7 +130,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           isContinueLoading = false;
         });
       }
-      if (collection != [] && collection.isNotEmpty) {
+      if (collection != [] && collection!.isNotEmpty) {
         setState(() {
           taskCollected?.addAll(collection ?? []);
         });
