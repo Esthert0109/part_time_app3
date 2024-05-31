@@ -22,7 +22,9 @@ class TicketingService {
         Map<String, dynamic>? jsonData = json.decode(response.responseBody);
         if (jsonData != null) {
           int responseCode = jsonData['code'];
+          print(responseCode);
           String responseMsg = jsonData['msg'];
+          print(responseMsg);
           List<dynamic> data = jsonData['data'] ?? [];
 
           if (responseCode == 0) {

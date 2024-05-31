@@ -1,15 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:part_time_app/Components/Dialog/alertDialogComponent.dart';
-import 'package:part_time_app/Components/Dialog/paymentUploadDialogComponent.dart';
-import 'package:part_time_app/Components/TextField/primaryTextFieldComponent.dart';
-import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:intl/intl.dart';
