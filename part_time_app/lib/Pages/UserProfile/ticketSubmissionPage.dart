@@ -20,9 +20,9 @@ import '../../Services/ticketing/ticketingServices.dart';
 class TicketSubmissionPage extends StatefulWidget {
   final int? reportTaskIDInitial;
   final String? reportUserIDInitial;
-  final int? complainType;
+  int? complainType;
 
-  const TicketSubmissionPage(
+  TicketSubmissionPage(
       {super.key,
       this.reportTaskIDInitial,
       this.reportUserIDInitial,
@@ -228,6 +228,9 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                       }
 
                       try {
+                        setState(() {
+                          widget.complainType = 0;
+                        });
                         TicketingData? ticketToSubmit = TicketingData(
                           customerId: customerId,
                           ticketCustomerUsername: nameControllerTicket.text,
@@ -269,6 +272,12 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                               });
                             } else {
                               print("Submitted FAILED");
+                              Fluttertoast.showToast(
+                                  msg: "提交失败，请稍后重试",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: kMainRedColor,
+                                  textColor: kThirdGreyColor);
                             }
 
                             setState(() {
@@ -278,6 +287,12 @@ class _TicketSubmissionPageState extends State<TicketSubmissionPage> {
                         }
                       } catch (e) {
                         print("Error: $e");
+                        Fluttertoast.showToast(
+                            msg: "提交失败，请稍后重试",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: kMainRedColor,
+                            textColor: kThirdGreyColor);
                         // Handle error
                         if (mounted) {
                           setState(() {

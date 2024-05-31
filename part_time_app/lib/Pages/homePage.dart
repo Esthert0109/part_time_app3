@@ -7,6 +7,7 @@ import 'package:part_time_app/Pages/Message/messageMainPage.dart';
 import 'package:part_time_app/Pages/MissionIssuer/missionPublishMainPage.dart';
 import 'package:part_time_app/Pages/MissionStatus/missionStatusMainPage.dart';
 import 'package:part_time_app/Pages/UserProfile/userProfileMainPage.dart';
+import 'package:part_time_app/Services/User/userServices.dart';
 import 'package:part_time_app/Utils/sharedPreferencesUtils.dart';
 
 import '../Constants/colorConstant.dart';
@@ -26,6 +27,8 @@ class _HomePageState extends State<HomePage> {
   int selectionIndex = 0;
   double size = 24;
 
+  UserServices service = UserServices();
+
   @override
   void initState() {
     super.initState();
@@ -33,25 +36,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   fetchUserData() async {
+    await service.getUserInfo();
     UserData? user = await SharedPreferencesUtils.getUserDataInfo()!;
     setState(() {
       userData = user;
     });
   }
-
-  static List<Widget> homePageOptions = <Widget>[
-    ExploreMainPage(),
-    MissionStatusMainPage(),
-    userData?.validIdentity == 1
-        ? MissionPublishMainPage(
-            isEdit: false,
-          )
-        : DepositMainPage(
-            isHome: true,
-          ),
-    MessageMainPage(),
-    UserProfileMainPage()
-  ];
 
   void homePageOnTap(int option) {
     if (option == 0 || option == 4 || isLogin) {
@@ -77,6 +67,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> homePageOptions = <Widget>[
+      ExploreMainPage(),
+      MissionStatusMainPage(),
+      userData?.validIdentity == 1
+          ? MissionPublishMainPage(
+              isEdit: false,
+            )
+          : DepositMainPage(
+              isHome: true,
+            ),
+      MessageMainPage(),
+      UserProfileMainPage()
+    ];
+
     return Scaffold(
       body: Center(
         child: homePageOptions.elementAt(selectionIndex),

@@ -106,6 +106,13 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    uploadedPaymentSS = "";
+    payment = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -372,11 +379,13 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                                   borderRadius: BorderRadius.circular(8),
                                   color: Colors.transparent,
                                   image: payment != null
-                                      ? DecorationImage(
-                                          image:
-                                              NetworkImage(uploadedPaymentSS),
-                                          fit: BoxFit.cover,
-                                        )
+                                      ? isUploadLoading
+                                          ? null
+                                          : DecorationImage(
+                                              image: NetworkImage(
+                                                  uploadedPaymentSS),
+                                              fit: BoxFit.cover,
+                                            )
                                       : null,
                                 ),
                                 child: payment == null
@@ -572,6 +581,7 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                           print("Submitted success");
                           setState(() {
                             uploadedPaymentSS = "";
+                            payment = null;
                             Navigator.pop(context);
                             showDialog(
                               context: context,
@@ -610,6 +620,12 @@ class _DepositPaymentPageState extends State<DepositPaymentPage> {
                   });
                 } catch (e) {
                   print("Error: $e");
+                  Fluttertoast.showToast(
+                      msg: "提交失败，请稍后重试",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: kMainRedColor,
+                      textColor: kThirdGreyColor);
                   // Handle error
                   if (mounted) {
                     setState(() {

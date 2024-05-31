@@ -28,12 +28,6 @@ class _DepositMainPageState extends State<DepositMainPage> {
   bool depositSubmitted = false;
   UserData? depositStatus;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchStatus();
-  }
-
   fetchStatus() async {
     UserData? data = await paymentService.depositStatus();
     setState(() {
@@ -46,6 +40,7 @@ class _DepositMainPageState extends State<DepositMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    fetchStatus();
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: false,
