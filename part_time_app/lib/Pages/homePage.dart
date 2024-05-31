@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    fetchUserData();
   }
 
   fetchUserData() async {
@@ -66,7 +67,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchUserData();
     List<Widget> homePageOptions = <Widget>[
       ExploreMainPage(),
       MissionStatusMainPage(),
